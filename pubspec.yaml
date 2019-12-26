@@ -23,8 +23,9 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
-  
-  flutter_advanced_networkimage: 
+  empty_widget:
+  fancy_bottom_navigation:
+  flutter_advanced_networkimage: ^0.5.0-alpha.1
   provider:
   flutter_native_splash: ^0.1.9
   firebase_auth:
@@ -67,9 +68,9 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #  - images/a_dot_burr.jpeg
-  #  - images/a_dot_ham.jpeg
+  assets:
+   - assets/images/icon-48.png
+   - assets/images/icon-480.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
@@ -82,10 +83,25 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
+  fonts:
+    - family: HelveticaNeue
+      fonts:
+        - asset: assets/fonts/HelveticaNeue.ttf
+        - asset: assets/fonts/HelveticaNeue400.ttf
+          weight: 400
+        - asset: assets/fonts/HelveticaNeue500.ttf
+          weight: 500
+        - asset: assets/fonts/HelveticaNeue600.ttf
+          weight: 600
+        - asset: assets/fonts/HelveticaNeue700.ttf
+          weight: 700
+        - asset: assets/fonts/HelveticaNeue800.ttf
+          weight: 800
+        - asset: assets/fonts/HelveticaNeue900.ttf
+          weight: 900
+        - asset: assets/fonts/HelveticaNeueIt.ttf
+          style: italic
+          
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
