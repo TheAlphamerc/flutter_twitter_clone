@@ -27,7 +27,7 @@ class _SidebarMenuState extends State<SidebarMenu> {
     if(state.userModel == null){
       return customInkWell(
           context: context, 
-          function2: (){
+          onPressed: (){
               //  Navigator.of(context).pushNamed('/signIn');
             },
           child: ConstrainedBox(

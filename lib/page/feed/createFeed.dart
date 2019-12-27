@@ -163,10 +163,9 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
    
     if(_image != null){
       await state.uploadFile(_image,_model);
-      print('model');
     }
     else{
-       state.createFeed(_model);
+       state.createTweet(_model);
     }
     Navigator.pop(context);
    }

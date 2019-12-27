@@ -100,7 +100,7 @@ class _ProfilePageState extends State<ProfilePage> {
      return _image == null ? Container() :
      customInkWell(
        context: context,
-       function2: (){ 
+       onPressed: (){ 
          var state = Provider.of<FeedState>(context,listen: false);
           state.getpostDetailFromDatabase(key);
           Navigator.pushNamed(context, '/ImageViewPge');

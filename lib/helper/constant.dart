@@ -1,5 +1,5 @@
 String dummyProfilePic = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6TaCLCqU4K0ieF27ayjl51NmitWaJAh_X0r1rLX4gMvOe0MDaYw&s';
-String appFont = 'HelveticaNeue';
+String appFont = 'HelveticaNeuea';
 List<String> dummyProfilePicList = [
   'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6TaCLCqU4K0ieF27ayjl51NmitWaJAh_X0r1rLX4gMvOe0MDaYw&s',
   'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFDjXj1F8Ix-rRFgY_r3GerDoQwfiOMXVt-tZdv_Mcou_yIlUC&s',
@@ -26,4 +26,13 @@ class AppIcon{
   static final int retweet = 0xf152;
   static final int image = 0xf109;
   static final int arrowDown = 0xf196;
+
+  static final int link = 0xf098;
+  static final int unFollow = 0xf097;
+  static final int mute = 0xf101;
+  static final int viewHidden = 0xf156;
+  static final int block = 0xe609;
+  static final int report = 0xf038;
+  static final int pin = 0xf088;
+  static final int delete = 0xf154;
 }

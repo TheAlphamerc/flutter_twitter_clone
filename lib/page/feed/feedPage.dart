@@ -5,7 +5,6 @@ import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/page/common/sidebar.dart';
-import 'package:flutter_twitter_clone/page/feed/createFeed.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
@@ -72,7 +71,7 @@ class _FeedPageState extends State<FeedPage> {
             },
             leading: customInkWell(
               context:context,
-              function2:(){
+              onPressed:(){
                 Navigator.of(context).pushNamed('/ProfilePage/'+model?.userId);
               },
               child:customImage(context, model.profilePic)
@@ -127,7 +126,7 @@ class _FeedPageState extends State<FeedPage> {
      return _image == null ? Container() :
      customInkWell(
        context: context,
-       function2: (){ 
+       onPressed: (){ 
          var state = Provider.of<FeedState>(context,listen: false);
           state.getpostDetailFromDatabase(key);
           Navigator.pushNamed(context, '/ImageViewPge');

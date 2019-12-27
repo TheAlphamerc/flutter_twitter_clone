@@ -40,7 +40,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget{
               padding: EdgeInsets.all(10),
               child: customInkWell(
                 context: context,
-                function2: (){scaffoldKey.currentState.openDrawer();},
+                onPressed: (){scaffoldKey.currentState.openDrawer();},
                 child: customImage(context, authState.userModel?.photoUrl,height: 30)
               ),
             );
@@ -65,7 +65,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget{
             child: customInkWell(
             context: context,
             radius: BorderRadius.circular(40),
-            function2: (){if(onActionPressed!=null) onActionPressed();},
+            onPressed: (){if(onActionPressed!=null) onActionPressed();},
             child: Container(
               alignment: Alignment.center,
               padding: EdgeInsets.symmetric(horizontal:20,vertical: 0),

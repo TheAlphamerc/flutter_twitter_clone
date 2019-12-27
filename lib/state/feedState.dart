@@ -131,52 +131,78 @@ class FeedState extends AuthState {
     }
   }
  
- void createRecord(String description, String userId) async {
-    ///  Create feed in [Firebase fireSore]
-    FeedModel feed = FeedModel(description: description, userId: userId);
-    await databaseReference
-        .collection("feed")
-        .document(userId)
-        .setData(feed.toJson());
-    //  DocumentReference ref = await databaseReference.collection("feed")
-    //      .add({
-    //        'title': 'Flutter in Action',
-    //        'description': 'Complete Programming Guide to learn Flutter'
-    //      });
-    //  print(ref.documentID);
-  }
-
-  createFeed(FeedModel model) {
+  createTweet(FeedModel model) {
     ///  Create feed in [Firebase database]
     try {
-      
         _database
             .reference()
             .child('feed')
             .push()
             .set(model.toJson());
-      
+    } catch (error) {
+      cprint(error);
+    }
+  }
+  deleteTweet(String tweetId) {
+    ///  Delete feed in [Firebase database]
+    try {
+        _database
+            .reference()
+            .child('feed')
+            .child(tweetId)
+            .remove().then((_){
+                if(_feedlist.any((x)=>x.key == tweetId)){
+                  if(_feedModel.imagePath != null && _feedModel.imagePath.length >0){
+                    deleteFile(_feedModel.imagePath,'feeds');
+                  }
+                  _feedlist.removeWhere((x)=>x.key == tweetId);
+                  notifyListeners();
+                  cprint('Tweet deleted');
+                }
+            });
+        _database
+            .reference()
+            .child('comment')
+            .child(tweetId)
+            .remove();
     } catch (error) {
       cprint(error);
     }
   }
  
-  Future<void> uploadFile(File file,FeedModel model) async {    
+  Future<void> uploadFile(File file,FeedModel model) async {  
    try{
-     StorageReference storageReference = FirebaseStorage.instance.ref().child('feeds/${Path.basename(file.path)}');    
+     StorageReference storageReference = FirebaseStorage.instance.ref().child('feeds${Path.basename(file.path)}');    
      StorageUploadTask uploadTask = storageReference.putFile(file);    
      await uploadTask.onComplete.then((value){
           storageReference.getDownloadURL().then((fileURL) {    
               print(fileURL);
               model.imagePath = fileURL;
-              createFeed(model);
+              createTweet(model);
          });
       }); 
    } catch(error){
      cprint(error);
    }   
  } 
-  
+ Future<void> deleteFile(String url,String baseUrl)async{
+    try{
+       String filePath = url.replaceAll(new RegExp(r'https://firebasestorage.googleapis.com/v0/b/twitter-clone-4fce9.appspot.com/o/'), '');
+       filePath = filePath.replaceAll(new RegExp(r'%2F'), '/');
+       filePath = filePath.replaceAll(new RegExp(r'(\?alt).*'), '');
+      //  filePath = filePath.replaceAll('feeds/', '');
+    //  cprint('[Path]'+filePath);
+     StorageReference storageReference = FirebaseStorage.instance.ref();    
+     await storageReference.child(filePath).delete().catchError((val){
+        cprint('[Error]'+val);
+     }) .then((_){
+       cprint('[Sucess] Image deleted');
+     });
+     
+   } catch(error){
+     cprint(error);
+   } 
+ } 
   addLikeToComment({String postId,String commentId,String userId}){
      try {
       if (commentId != null) {

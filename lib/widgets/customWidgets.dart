@@ -75,7 +75,8 @@ Widget customText(String msg, {Key key, TextStyle style,TextAlign textAlign = Te
   }
   else{
     if(context != null && style != null){
-      style =  style.copyWith(fontSize: style.fontSize - ( fullWidth(context) <= 375  ? 2 : 0));
+      var fontSize = style.fontSize ?? Theme.of(context).textTheme.body1.fontSize;
+      style =  style.copyWith(fontSize: fontSize - ( fullWidth(context) <= 375  ? 2 : 0));
     }
     return Text(msg,style: style,textAlign: textAlign,overflow:overflow,softWrap: softwrap,key: key,);
   }
@@ -101,7 +102,7 @@ double fullWidth(BuildContext context) {
 double fullHeight(BuildContext context) {
   return MediaQuery.of(context).size.height;
 } 
-Widget customInkWell({Widget child,BuildContext context,Function(bool,int) function1,Function function2,bool isEnable = false, int no = 0,Color color = Colors.transparent,Color splashColor,BorderRadius radius}){
+Widget customInkWell({Widget child,BuildContext context,Function(bool,int) function1,Function onPressed,bool isEnable = false, int no = 0,Color color = Colors.transparent,Color splashColor,BorderRadius radius}){
   if(splashColor == null){
     splashColor = Theme.of(context).primaryColorLight;
   }
@@ -117,8 +118,8 @@ Widget customInkWell({Widget child,BuildContext context,Function(bool,int) funct
         if(function1 != null){
           function1(isEnable,no);
         }
-        else if(function2 != null){
-          function2();
+        else if(onPressed != null){
+          onPressed();
         }
       },
       splashColor: splashColor,
@@ -286,7 +287,7 @@ Widget emptyListWidget(BuildContext context, String title,{String subTitle,Strin
 Widget customListTile(BuildContext context,{Widget title,Widget subtitle, Widget leading,Widget trailing,Function onTap}){
    return customInkWell(
      context: context,
-     function2: (){if(onTap != null){onTap();}},
+     onPressed: (){if(onTap != null){onTap();}},
      child: Padding(
        padding: EdgeInsets.symmetric(vertical: 0),
        child:Row(
