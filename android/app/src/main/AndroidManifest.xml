@@ -8,7 +8,7 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="flutter_twitter_clone"
+        android:label="Twitter_clone"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
