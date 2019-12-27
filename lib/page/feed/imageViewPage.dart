@@ -125,7 +125,7 @@ class _ImageViewPgeState extends State<ImageViewPge> {
           customText(model.likeCount.toString(),
               style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
            IconButton(
-            onPressed:(){addLikeToPost();},
+            onPressed:(){addLikeToTweet();},
             icon:Icon( model.likeList.any((x)=>x.userId == state.userId) ? Icons.favorite : Icons.favorite_border,color: model.likeList.any((x)=>x.userId == state.userId) ? Colors.red : Colors.white),
           ),
           IconButton(
@@ -146,10 +146,10 @@ class _ImageViewPgeState extends State<ImageViewPge> {
                 child: customNetworkImage(_image, fit: BoxFit.fitWidth)));
   }
 
-  void addLikeToPost() {
+  void addLikeToTweet() {
     var state = Provider.of<FeedState>(context,);
     var authState = Provider.of<AuthState>(context,);
-    state.addLikeToPost(state.feedModel.key, authState.userId);
+    state.addLikeToTweet(state.feedModel.key, authState.userId);
   }
   void _submitButton(){
      var state = Provider.of<FeedState>(context,);

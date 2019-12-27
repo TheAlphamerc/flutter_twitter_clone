@@ -9,6 +9,7 @@ import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
+import 'package:flutter_twitter_clone/widgets/tweet.dart';
 import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -18,115 +19,16 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  PageController _pageController;
   int pageIndex = 0;
   bool isMyProfile = false;
   @override
   void initState() {
-    _pageController = PageController();
     var authstate = Provider.of<AuthState>(context,listen:false);
     authstate.getProfileUser(userProfileId: widget.profileId);
      isMyProfile =  widget.profileId == null || widget.profileId  == authstate.userId ;
     super.initState();
   }
-  Widget _body(){
-    var state = Provider.of<AppState>(context);
-    return Container(
-      child: PageView(
-        controller: _pageController,
-        // scrollDirection: Axis.vertical,
-        physics:PageScrollPhysics(),
-        dragStartBehavior: DragStartBehavior.start,
-        onPageChanged: (index){
-          pageIndex = index;
-          state.setpageIndex = index;
-        },
-        children: <Widget>[
-          FeedPage(),
-         
-        ],
-      )
-    );
-  }
-   Widget _listRow(FeedModel model){
-    var state = Provider.of<AuthState>(context,);
-    return Column(
-      children: <Widget>[
-        Container(
-          padding: EdgeInsets.symmetric(vertical: 5),
-          decoration: BoxDecoration(
-          ),
-          child: customListTile(
-            context,
-            onTap: (){
-               Navigator.of(context).pushNamed('/FeedPostDetail/'+model.key);
-            },
-            leading: customImage(context, model.profilePic),
-            title: Row(
-              children: <Widget>[
-                customText(model.name,style: titleStyle),
-                SizedBox(width: 10,),
-                customText('- ${getChatTime(model.createdAt)}',style: subtitleStyle)
-              ],
-            ),
-            subtitle: UrlText(text:model.description),
-          )
-        ),
-        _imageFeed(model.imagePath,model.key),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-          SizedBox(width: 80,),
-            IconButton(
-                onPressed: (){
-                  Navigator.of(context).pushNamed('/FeedPostReplyPage/'+model.key);
-                },
-                icon:  Icon(Icons.message,color :  Colors.black38,),
-              ),
-            customText(model.commentCount.toString()),
-            SizedBox(width: 20,),
-           IconButton(
-                onPressed:(){addLikeToPost(model.key);},
-                icon:  Icon( model.likeList.any((x)=>x.userId == state.userId) ? Icons.favorite : Icons.favorite_border,color: model.likeList.any((x)=>x.userId == state.userId) ? Colors.red : Colors.black38),
-              ),
-          customText(model.likeCount.toString()),
-          ],
-        ),
-        Divider()
-      ],
-    );
-  }
-   Widget _imageFeed(String _image,String key){
-     return _image == null ? Container() :
-     customInkWell(
-       context: context,
-       onPressed: (){ 
-         var state = Provider.of<FeedState>(context,listen: false);
-          state.getpostDetailFromDatabase(key);
-          Navigator.pushNamed(context, '/ImageViewPge');
-        //  Navigator.of(context).pushNamed('/FeedPostDetail/'+key);
-         },
-       child:Container(
-          alignment: Alignment.centerRight,
-          padding: EdgeInsets.only(right: 10),
-          child:Container(
-          height: 190,
-          width: fullWidth(context) *.8,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(20)),
-            image:DecorationImage(image: customAdvanceNetworkImage(_image),fit:BoxFit.cover)
-          ),
-          // child: Image.file(_image),
-        )
-      )
-     );
-      
-   }
-  void addLikeToPost(String postId){
-      var state = Provider.of<FeedState>(context,);
-      var authState = Provider.of<AuthState>(context,);
-      state.addLikeToPost(postId, authState.userId);
-  }
+ 
   @override
   Widget build(BuildContext context) {
    var state = Provider.of<FeedState>(context,);
@@ -280,7 +182,7 @@ class _ProfilePageState extends State<ProfilePage> {
              [ Container(child:Center(
                 child: Text('No post created yet',style: subtitleStyle,),
              ))]
-             :list.map((x)=> _listRow(x)).toList()
+             :list.map((x)=> Tweet(model:x)).toList()
            ),)
         ])
     );

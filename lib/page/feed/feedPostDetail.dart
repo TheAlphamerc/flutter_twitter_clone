@@ -111,7 +111,7 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
                   iconColor: model.likeList != null &&
                           model.likeList.any((x) => x.userId == state.userId)
                       ? Colors.red
-                      : Colors.black38),
+                      : Theme.of(context).textTheme.caption.color),
             ),
             customText(model.likeCount.toString()),
           ],
@@ -269,17 +269,17 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
                 Navigator.of(context)
                     .pushNamed('/FeedPostReplyPage/' + model.key);
               },
-              icon: customIcon(
-                context,
-                size: 22,
-                icon: AppIcon.reply,
-                istwitterIcon: true,
-              ),
+              icon: customIcon(context,size: 22,icon: AppIcon.reply,istwitterIcon: true,),
             ),
-            SizedBox(width: 10),
+            SizedBox(width: 20,),
+            IconButton(
+                 onPressed:(){},
+                 icon:  customIcon(context,size: 20, icon:AppIcon.retweet, istwitterIcon: true,),
+            ), 
+            SizedBox(width: 20,),
             IconButton(
               onPressed: () {
-                addLikeToPost(model.key);
+                addLikeToTweet(model.key);
               },
               icon: customIcon(context,
                   size: 22,
@@ -289,7 +289,7 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
                   istwitterIcon: true,
                   iconColor: model.likeList.any((x) => x.userId == state.userId)
                       ? Colors.red
-                      : AppColor.darkGrey),
+                      : Theme.of(context).textTheme.caption.color),
             ),
             SizedBox(width: 10),
             IconButton(
@@ -297,7 +297,7 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
                 share('social.flutter.dev/feed/${model.key}',
                     subject: '${model.name}\'s post');
               },
-              icon: Icon(Icons.share, color: AppColor.darkGrey),
+              icon: Icon(Icons.share, color: Theme.of(context).textTheme.caption.color),
             ),
             SizedBox(width: 0),
           ],
@@ -363,10 +363,10 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
     );
   }
 
-  void addLikeToPost(String postId) {
+  void addLikeToTweet(String postId) {
     var state = Provider.of<FeedState>(context,);
     var authState = Provider.of<AuthState>(context,);
-    state.addLikeToPost(postId, authState.userId);
+    state.addLikeToTweet(postId, authState.userId);
   }
 
   void addLikeToComment(String commentId) {

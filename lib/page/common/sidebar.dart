@@ -69,10 +69,10 @@ class _SidebarMenuState extends State<SidebarMenu> {
               child:Row(
                 children: <Widget>[
                 SizedBox(width: 40,),
-                customText(state.userModel.followers.toString() ?? '0',style:TextStyle(fontWeight: FontWeight.bold,fontSize:17)),
+                customText('${state.userModel.followers ?? 0 }',style:TextStyle(fontWeight: FontWeight.bold,fontSize:17)),
                 customText(' Followors',style:TextStyle(color: Colors.black54,fontSize:17)),
                 SizedBox(width: 10,),
-                customText(state.userModel.following.toString()?? '0',style:TextStyle(fontWeight: FontWeight.bold,fontSize:17)),
+                customText('${state.userModel.following ?? 0 }'?? '0',style:TextStyle(fontWeight: FontWeight.bold,fontSize:17)),
                 customText(' Following',style:TextStyle(color: Colors.black54,fontSize:17)),
               ],)
             )

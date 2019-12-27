@@ -47,8 +47,8 @@ class FeedState extends AuthState {
       if (_feedQuery == null) {
         _feedQuery = _database.reference().child("feed");
         _commentQuery = _database.reference().child("comment");
-        _feedQuery.onChildAdded.listen(_onFeedAdded);
-        _feedQuery.onChildChanged.listen(_onFeedChanged);
+        _feedQuery.onChildAdded.listen(_onTweetAdded);
+        _feedQuery.onChildChanged.listen(_onTweetChanged);
 
         _commentQuery.onChildAdded.listen(_onCommentChanged);
         _commentQuery.onChildChanged.listen(_onCommentAdded);
@@ -234,7 +234,7 @@ class FeedState extends AuthState {
       cprint(error);
     }
   }
-  addLikeToPost(String postId,String userId){
+  addLikeToTweet(String postId,String userId){
      try {
       if (postId != null) {
          FeedModel model = _feedlist.firstWhere((x)=>x.key == postId);
@@ -288,7 +288,7 @@ class FeedState extends AuthState {
     }
   }
   
-  _onFeedChanged(Event event) {
+  _onTweetChanged(Event event) {
     var oldEntry = _feedlist.singleWhere((entry) {
       return entry.key == event.snapshot.key;
     });
@@ -304,7 +304,7 @@ class FeedState extends AuthState {
     }
   }
 
-  _onFeedAdded(Event event) {
+  _onTweetAdded(Event event) {
      FeedModel _feed  = FeedModel.setFeedModel(event.snapshot.value);
     _feed.key = event.snapshot.key;
     if (_feedlist == null) {
