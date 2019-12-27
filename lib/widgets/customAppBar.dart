@@ -12,7 +12,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget{
   final GlobalKey<ScaffoldState> scaffoldKey;
   final Function onActionPressed;
   final TextEditingController textController;
-  final IconData icon;
+  final int icon;
   final bool isBackButton;
   final bool isCrossButton;
   final String submitButtonText;
@@ -80,7 +80,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget{
           : icon == null ? Container()
           : IconButton(
             onPressed: (){if(onActionPressed!=null) onActionPressed();},
-            icon: Icon(icon),
+            icon: customIcon(context,icon:icon,istwitterIcon: true),
           )
         ],
         bottom: PreferredSize(child: Container(color:  isbootomLine ? Colors.grey.shade200 : Theme.of(context).backgroundColor, height:1.0 ,), preferredSize: Size.fromHeight(0.0))

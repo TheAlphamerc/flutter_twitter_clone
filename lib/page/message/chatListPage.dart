@@ -83,7 +83,7 @@ class _ChatListPageState extends State<ChatListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(scaffoldKey: widget.scaffoldKey,title: customTitleText('Messages',),icon: Icons.settings,onActionPressed: onSettingIconPressed,),
+      appBar: CustomAppBar(scaffoldKey: widget.scaffoldKey,title: customTitleText('Messages',),icon:AppIcon.settings,onActionPressed: onSettingIconPressed,),
       backgroundColor: TwitterColor.mystic,
       body:_body()
     );

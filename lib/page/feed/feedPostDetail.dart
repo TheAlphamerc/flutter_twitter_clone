@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/model/commentModel.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
@@ -37,6 +38,7 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
   }
   
   Widget _commentRow(CommentModel model){
+    var state = Provider.of<AuthState>(context,);
     return Container(
       child:  Column(
       children: <Widget>[
@@ -53,7 +55,7 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
                 SizedBox(width: 5,),
                 Expanded(
                   child:Row(children: <Widget>[
-                    customText('@${model.user.displayName}',style: subtitleStyle,overflow:TextOverflow.ellipsis),
+                    customText('${model.user.userName}',style:userNameStyle,overflow:TextOverflow.ellipsis),
                     SizedBox(width: 10,),
                     customText('- ${getChatTime(model.createdAt)}',style: TextStyle(fontSize: 12)),
                   ],)
@@ -72,13 +74,13 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
                 onPressed: (){
                   Navigator.of(context).pushNamed('/FeedPostReplyPage/'+model.key);
                 },
-                icon:  Icon(Icons.message,color: Colors.black38,size: 20),
+                icon:customIcon(context,size: 18, icon:AppIcon.reply , istwitterIcon: true,),
               ),
             customText(model.commentCount.toString()),
             SizedBox(width: 20,),
            IconButton(
-                onPressed:(){addLikeToPost(model.key);},
-                icon:  Icon(Icons.favorite_border,color: Colors.black38,size: 20,),
+                onPressed:(){addLikeToComment(model.key);},
+                icon:customIcon(context,size: 18, icon:model.likeList != null && model.likeList.any((x)=>x.userId == state.userId) ? AppIcon.heartFill : AppIcon.heartEmpty, istwitterIcon: true, iconColor:model.likeList != null && model.likeList.any((x)=>x.userId == state.userId) ? Colors.red : Colors.black38),
               ),
           customText(model.likeCount.toString()),
           ],
@@ -98,7 +100,11 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
           child: ListTile(
             leading: customImage(context, model?.profilePic),
             title: customText(model.name,style:titleStyle),
-            subtitle: customText('${model.username}',style: subtitleStyle),
+            subtitle: customText('${model.username}',style: userNameStyle),
+            trailing: IconButton(
+              onPressed: openbottomSheet,
+              icon: customIcon(context,icon:AppIcon.arrowDown,istwitterIcon: true, iconColor: AppColor.lightGrey),
+            )
           )
         ),
        Padding(
@@ -146,7 +152,7 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
         ),
         SizedBox(height: 10,),
         Padding(padding: EdgeInsets.symmetric(horizontal: 10),child: Divider(),),
-        _likeCommentsIcons(model),
+        _likeCommentShareIcon(model),
         Divider(height: 0,),
         Container(
           height: 6,
@@ -170,7 +176,7 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
         )
       );
    }
-  Widget _likeCommentsIcons(FeedModel model) {
+  Widget _likeCommentShareIcon(FeedModel model) {
     var state = Provider.of<AuthState>(context,);
     return Container(
       padding: EdgeInsets.only(bottom: 0,top:0),
@@ -180,27 +186,50 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
          SizedBox(width: 0),
           IconButton(
             onPressed:(){Navigator.of(context).pushNamed('/FeedPostReplyPage/'+model.key);},
-            icon:Icon(Icons.message,color: Colors.black54,size: 20,),
+            icon:customIcon(context,size: 22, icon:AppIcon.reply , istwitterIcon: true,),
           ),
           SizedBox(width: 10),
            IconButton(
             onPressed:(){addLikeToPost(model.key);},
-            icon:Icon( model.likeList.any((x)=>x.userId == state.userId) ? Icons.favorite : Icons.favorite_border,color: model.likeList.any((x)=>x.userId == state.userId) ? TwitterColor.ceriseRed: Colors.black54),
+            icon:customIcon(context,size: 22, icon:model.likeList.any((x)=>x.userId == state.userId) ? AppIcon.heartFill : AppIcon.heartEmpty, istwitterIcon: true, iconColor: model.likeList.any((x)=>x.userId == state.userId) ? Colors.red : AppColor.darkGrey),
           ),SizedBox(width: 10),
           IconButton(
                 onPressed:(){share('social.flutter.dev/feed/${model.key}',subject:'${model.name}\'s post');},
-                icon:  Icon( Icons.share,color:Colors.black54),
+                icon:  Icon( Icons.share,color:AppColor.darkGrey),
               ),
               SizedBox(width: 0),
         ],
     )
     );
   }
-  
+  void openbottomSheet()async{
+       await showModalBottomSheet(
+         backgroundColor: Colors.transparent,
+        context: context,
+        builder: (context){
+          return Container(
+            height: fullHeight(context) *.4,
+            width: fullWidth(context),
+            decoration: BoxDecoration(
+              color: Theme.of(context).bottomSheetTheme.backgroundColor,
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.circular(20))
+            ),
+            child: Column(children: <Widget>[
+              Container()
+            ],),
+          );
+        }
+      );
+  }
   void addLikeToPost(String postId){
       var state = Provider.of<FeedState>(context,);
       var authState = Provider.of<AuthState>(context,);
       state.addLikeToPost(postId, authState.userId);
+  }
+  void addLikeToComment(String commentId){
+      var state = Provider.of<FeedState>(context,);
+      var authState = Provider.of<AuthState>(context,);
+      state.addLikeToComment(postId:state.feedModel.key , commentId:commentId,userId: authState.userId);
   }
   void openImage()async{
     Navigator.pushNamed(context, '/ImageViewPge');
@@ -210,12 +239,15 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
      var state = Provider.of<FeedState>(context,);
     return Scaffold(
       floatingActionButton: _floatingActionButton(),
+      backgroundColor: Theme.of(context).backgroundColor,
      body:CustomScrollView(
           slivers: <Widget>[
             SliverAppBar(
+              pinned: true,
              title: customTitleText('Thread'),
              iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
-             backgroundColor: Colors.transparent,
+             backgroundColor: Theme.of(context).appBarTheme.color,
+             bottom: PreferredSize(child: Container(color:  Colors.grey.shade200 , height:1.0 ,), preferredSize: Size.fromHeight(0.0))
             ),
              SliverList(
                delegate: SliverChildListDelegate([ _postBody(state.feedModel),],),
@@ -224,7 +256,7 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
               delegate: SliverChildListDelegate(
                 state.commentlist == null || state.commentlist.length == 0 ? 
                 [ Container(child:Center(
-                   child: Text('No comments'),
+                  //  child: Text('No comments'),
                 ))]
                 :state.commentlist.map((x)=> _commentRow(x)).toList()
               ),)

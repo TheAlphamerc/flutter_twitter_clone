@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
@@ -31,7 +32,7 @@ class SearchPage extends StatefulWidget{
     @override
     Widget build(BuildContext context) {
       return Scaffold(
-        appBar:CustomAppBar(scaffoldKey: widget.scaffoldKey,textController:textController,icon:Icons.search,onActionPressed: onSearch,),
+        appBar:CustomAppBar(scaffoldKey: widget.scaffoldKey,textController:textController,icon:AppIcon.settings,onActionPressed: onSearch,),
         body: Container()
       );
     }

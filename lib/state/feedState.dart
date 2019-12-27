@@ -111,20 +111,8 @@ class FeedState extends AuthState {
            if(snapshot.value != null){
              var map = snapshot.value;
              map.forEach((key,value){
-               var _user = User(
-                  key: value['user']['key'],
-                  displayName: value['user']['displayName'],
-                  photoUrl: value['user']['photoUrl'],
-                  userId: value['user']['userId'],
-                );
-              var  commentmodel = CommentModel(
-                  key: key,
-                  user: _user,
-                  createdAt: value['createdAt'],
-                  description: value['description'],
-                  likeCount: value['likeCount'] ?? 0,
-                  commentCount: value['commentCount'] ?? 0,
-                );
+              var commentmodel = CommentModel.fromJson(value);
+               commentmodel.key = key;
                 if(_commentlist == null){
                   _commentlist = List<CommentModel>();
                 }
@@ -189,18 +177,49 @@ class FeedState extends AuthState {
    }   
  } 
   
+  addLikeToComment({String postId,String commentId,String userId}){
+     try {
+      if (commentId != null) {
+       var model = _commentlist.firstWhere((x)=>x.key == commentId);
+        if(model.likeList != null && model.likeList.length >0 && model.likeList.any((x)=>x.userId == userId)){
+          model.likeList.removeWhere((x)=>x.userId == userId);
+          model.likeCount -= 1; 
+          _database
+            .reference()
+            .child('comment')
+            .child(postId)
+            .child(commentId)
+            .set(model.toJson());
+        }
+        else{
+          /// If there is no like available
+           _database
+            .reference()
+            .child('comment')
+            .child(postId)
+            .child(commentId)
+            .child('likeList')
+            .child(userId)
+            .set({'userId':userId});
+        }
+       
+      }
+    } catch (error) {
+      cprint(error);
+    }
+  }
   addLikeToPost(String postId,String userId){
      try {
       if (postId != null) {
-        FeedModel todo = _feedlist.firstWhere((x)=>x.key == postId);
-        if(todo.likeList.any((x)=>x.userId == userId)){
-          todo.likeList.removeWhere((x)=>x.userId == userId);
-          todo.likeCount -= 1; 
+         FeedModel model = _feedlist.firstWhere((x)=>x.key == postId);
+        if(model.likeList != null && model.likeList.length >0 && model.likeList.any((x)=>x.userId == userId)){
+          model.likeList.removeWhere((x)=>x.userId == userId);
+          model.likeCount -= 1; 
           _database
             .reference()
             .child('feed')
             .child(postId)
-            .set(todo.toJson());
+            .set(model.toJson());
         }
         else{
            _database
@@ -280,15 +299,8 @@ class FeedState extends AuthState {
       _commentlist = List<CommentModel>();
     }
      event.snapshot.value.forEach((key,value){
-      User _user = User(displayName: value['user']['displayName'], photoUrl:value['user']['photoUrl'], key: value['user']['key'], userId: value['user']['userId'], email: value['user']['email'] );
-       _comment = CommentModel(
-       key:          key,
-       description: value["description"],
-       user:        _user,
-       createdAt:   value['createdAt'],
-       likeCount:   value['likeCount'] ?? 0,
-       commentCount:   value['commentCount'] ?? 0,
-       imagePath:   value['imagePath']);
+      _comment = CommentModel.fromJson(value);
+      _comment.key = key;
        _commentlist.add(_comment);
     });
         
@@ -305,15 +317,8 @@ class FeedState extends AuthState {
     }
        _commentlist.clear();
     event.snapshot.value.forEach((key,value){
-       User _user = User(displayName: value['user']['displayName'], photoUrl:value['user']['photoUrl'], key: value['user']['key'], userId: value['user']['userId'], email: value['user']['email'] );
-        _comment = CommentModel(
-        key:          key,
-        description: value["description"],
-        user:        _user,
-        createdAt:   value['createdAt'],
-        likeCount:   value['likeCount'] ?? 0,
-        commentCount:   value['commentCount'] ?? 0,
-        imagePath:   value['imagePath']);
+      _comment = CommentModel.fromJson(value);
+      _comment.key = key;
         _commentlist.add(_comment);
     });
     _feedModel.commentCount = _commentlist.length;

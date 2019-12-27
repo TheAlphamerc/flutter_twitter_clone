@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
       ],
       child:  MaterialApp(
         title: 'Flutter Demo',
-        theme:apptheme,
+        theme:AppTheme.apptheme,
         //  Theme.of(context).copyWith(
         //   appBarTheme: apptheme.appBarTheme, 
          

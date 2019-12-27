@@ -19,7 +19,7 @@ Widget  heading(String heading,{double horizontalPadding = 10,BuildContext conte
   }
     return Padding(
                padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-                child: Text(heading,style: apptheme.typography.dense.display1.copyWith(fontSize: fontSize),),);
+                child: Text(heading,style: AppTheme.apptheme.typography.dense.display1.copyWith(fontSize: fontSize),),);
   }
 Widget userImage(String path, {double height = 100}){
   return  Container(
@@ -34,17 +34,20 @@ Widget userImage(String path, {double height = 100}){
             ),
           ));
 }
-Widget customIcon(BuildContext context,{int icon, bool isEnable = false,double size = 18,bool isFontAwesomeRegular = false,bool isFontAwesomeSolid = false,Color iconColor}){
+Widget customIcon(BuildContext context,{int icon, bool isEnable = false,double size = 18,bool istwitterIcon = false, bool isFontAwesomeRegular = false,bool isFontAwesomeSolid = false,Color iconColor}){
   iconColor = iconColor ?? Theme.of(context).textTheme.caption.color;
-  return  Icon(
+  return  Padding(
+    padding: EdgeInsets.only( bottom:istwitterIcon ? 10 : 0),
+    child: Icon(
              IconData(
-               icon,fontFamily: isFontAwesomeRegular ? 'AwesomeRegular' : isFontAwesomeSolid ? 'AwesomeSolid' : 'Fontello'),
+               icon,fontFamily: istwitterIcon ? 'TwitterIcon' : isFontAwesomeRegular ? 'AwesomeRegular' : isFontAwesomeSolid ? 'AwesomeSolid' : 'Fontello'),
                size: size,color: isEnable 
                ? Theme.of(context).primaryColor :
-                iconColor,);
+                iconColor,),
+  );
 }
 Widget customTappbleIcon(BuildContext context,int icon ,{double size = 16,bool isEnable =false, Function(bool,int) onPressed1,bool isBoolValue,int id,
-                         Function onPressed2,bool isFontAwesomeRegular = false,bool isFontAwesomeSolid = false,Color iconColor,EdgeInsetsGeometry padding}){
+                         Function onPressed2,bool isFontAwesomeRegular = false,bool istwitterIcon = false,bool isFontAwesomeSolid = false,Color iconColor,EdgeInsetsGeometry padding}){
  if(padding == null){
    padding  = EdgeInsets.all(10);
  }
@@ -63,7 +66,7 @@ Widget customTappbleIcon(BuildContext context,int icon ,{double size = 16,bool i
         onPressed2();
       }
   }
-  ,child:  customIcon(context,icon:icon,size: size,isEnable: isEnable,isFontAwesomeRegular:isFontAwesomeRegular,isFontAwesomeSolid: isFontAwesomeSolid,iconColor: iconColor ));
+  ,child:  customIcon(context,icon:icon,size: size,isEnable: isEnable,istwitterIcon:istwitterIcon,isFontAwesomeRegular:isFontAwesomeRegular,isFontAwesomeSolid: isFontAwesomeSolid,iconColor: iconColor ));
 }
 Widget customText(String msg, {Key key, TextStyle style,TextAlign textAlign = TextAlign.justify,overflow = TextOverflow.visible,BuildContext context,bool softwrap = true}){
 
@@ -285,7 +288,7 @@ Widget customListTile(BuildContext context,{Widget title,Widget subtitle, Widget
      context: context,
      function2: (){if(onTap != null){onTap();}},
      child: Padding(
-       padding: EdgeInsets.symmetric(vertical: 10),
+       padding: EdgeInsets.symmetric(vertical: 0),
        child:Row(
          crossAxisAlignment: CrossAxisAlignment.start,
          children: <Widget>[

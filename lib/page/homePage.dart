@@ -6,6 +6,7 @@ import 'package:flutter_twitter_clone/widgets/bottomMenuBar/bottomMenuBar.dart';
 import 'package:provider/provider.dart';
 import 'SearchPage.dart';
 import 'common/sidebar.dart';
+import 'notification/notificationPage.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -31,7 +32,8 @@ class _HomePageState extends State<HomePage> {
     switch (index) {
       case 0: return FeedPage(scaffoldKey: _scaffoldKey,); break;
       case 1: return SearchPage(scaffoldKey: _scaffoldKey); break;
-      case 2: return ChatListPage(scaffoldKey: _scaffoldKey); break;
+      case 2: return NotificationPage(scaffoldKey: _scaffoldKey); break;
+      case 3: return ChatListPage(scaffoldKey: _scaffoldKey); break;
         default: return FeedPage(scaffoldKey: _scaffoldKey); break;
     }
   }

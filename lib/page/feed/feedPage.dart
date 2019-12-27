@@ -33,7 +33,7 @@ class _FeedPageState extends State<FeedPage> {
       onPressed: (){
          Navigator.of(context).pushNamed('/CreateFeedPage');
        },
-      child: Icon(Icons.add,),
+      child: customIcon(context,icon:AppIcon.fabTweet,istwitterIcon: true, iconColor:Theme.of(context).colorScheme.onPrimary, size:25)
     );
   }
   Widget _body(){
@@ -67,6 +67,7 @@ class _FeedPageState extends State<FeedPage> {
           child: customListTile(
             context,
             onTap: (){
+              feedstate.setFeedModel = model;
                Navigator.of(context).pushNamed('/FeedPostDetail/'+model.key);
             },
             leading: customInkWell(
@@ -79,8 +80,10 @@ class _FeedPageState extends State<FeedPage> {
             title: Row(
               children: <Widget>[
                 customText(model.name,style: titleStyle),
+                SizedBox(width: 5,),
+                customText('${model.username}',style: userNameStyle),
                 SizedBox(width: 10,),
-                customText('- ${getChatTime(model.createdAt)}',style: subtitleStyle)
+                customText('- ${getChatTime(model.createdAt)}',style: userNameStyle)
               ],
             ),
             subtitle: UrlText(text: model.description,style:TextStyle(color: Colors.black, fontWeight: FontWeight.w400),urlStyle: TextStyle(color: Colors.blue, fontWeight: FontWeight.w400),),
@@ -96,14 +99,14 @@ class _FeedPageState extends State<FeedPage> {
                   feedstate.setFeedModel = model;
                   Navigator.of(context).pushNamed('/FeedPostReplyPage/'+model.key);
                 },
-                icon:  Icon(Icons.message,color :  Colors.black38,),
+               icon: customIcon(context,size: 22, icon:AppIcon.reply , istwitterIcon: true,),
               ),
             customText(model.commentCount.toString()),
            
            SizedBox(width: 20,),
            IconButton(
                 onPressed:(){addLikeToPost(model.key);},
-                icon:  Icon( model.likeList.any((x)=>x.userId == state.userId) ? Icons.favorite : Icons.favorite_border,color: model.likeList.any((x)=>x.userId == state.userId) ? Colors.red : Colors.black38),
+                icon:  customIcon(context,size: 22, icon:model.likeList.any((x)=>x.userId == state.userId) ? AppIcon.heartFill : AppIcon.heartEmpty, istwitterIcon: true, iconColor: model.likeList.any((x)=>x.userId == state.userId) ? Colors.red : Colors.black38),
            ),
            customSwitcherWidget(
               duraton: Duration(milliseconds: 300),
@@ -128,7 +131,6 @@ class _FeedPageState extends State<FeedPage> {
          var state = Provider.of<FeedState>(context,listen: false);
           state.getpostDetailFromDatabase(key);
           Navigator.pushNamed(context, '/ImageViewPge');
-        //  Navigator.of(context).pushNamed('/FeedPostDetail/'+key);
          },
        child:Container(
           alignment: Alignment.centerRight,
@@ -141,7 +143,6 @@ class _FeedPageState extends State<FeedPage> {
             borderRadius: BorderRadius.all(Radius.circular(20)),
             image:DecorationImage(image: customAdvanceNetworkImage(_image),fit:BoxFit.cover)
           ),
-          // child: Image.file(_image),
         )
       )
      );
