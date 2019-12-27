@@ -8,6 +8,7 @@ import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class CreateFeedPage extends StatefulWidget {
@@ -18,27 +19,32 @@ class CreateFeedPage extends StatefulWidget {
 class _CreateFeedPageState extends State<CreateFeedPage> {
   TextEditingController _textEditingController;
    File _image;
+   bool reachToWarning = false;
+   bool reachToOver = false;
+   Color wordCountColor ;
   @override
   void initState() { 
-   initDatabase();
-
+    wordCountColor  = Colors.blue;
     _textEditingController = TextEditingController();
     super.initState();
   }
  
-  void initDatabase()async{
-    //  var state = Provider.of<FeedState>(context,listen: false);
-    //  await state.databaseInit().then((value){
-    //   if(value){
-    //     cprint('database initilize');
-    //   }
-    // });
-  }
    Widget _descriptionEntry(){
-     return TextField(
+     return 
+     TextField(
        controller: _textEditingController,
        onChanged: (value){setState(() {
-         
+         if(_textEditingController.text != null && _textEditingController.text.isNotEmpty){
+           if(_textEditingController.text.length > 259 && _textEditingController.text.length < 280){
+              wordCountColor  = Colors.orange;
+           }
+           else if(_textEditingController.text.length >= 280){
+            wordCountColor  = Theme.of(context).errorColor;
+           }
+           else{
+              wordCountColor  = Colors.blue;
+           }
+         }
        });},
        maxLines: null,
        decoration: InputDecoration(
@@ -86,21 +92,60 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
      ],)
       ;
    }
-   void _selectImageButton()async{
-      openImagePicker(context,(value){
+  void setImage(ImageSource source){
+      ImagePicker.pickImage(source: source,imageQuality: 50).then((File file) {
         setState(() {
-          _image= value;
+           _image = file;
         });
-      });
-   }
-   Widget _floatingActionButton(){
-     return FloatingActionButton(
-       onPressed: _selectImageButton,
-       child:Icon(Icons.image)
+    });
+  }
+   
+  Widget _bottomIconWidget(){
+    return  Container(
+       width: fullWidth(context),
+       height: 50,
+       decoration: BoxDecoration(
+         border: Border(top: BorderSide(color: Theme.of(context).dividerColor)),
+         color: Theme.of(context).backgroundColor
+       ),
+       child: Row(children: <Widget>[
+         IconButton(
+           onPressed: (){setImage(ImageSource.gallery);},
+           icon: Icon(Icons.image,color: Theme.of(context).primaryColor,),
+         ),
+         IconButton(
+           onPressed: (){setImage(ImageSource.camera);},
+           icon: Icon(Icons.camera_alt,color: Theme.of(context).primaryColor,),
+         ),
+         Expanded(
+           child: Align(
+             alignment: Alignment.centerRight,
+             child: Padding(
+               padding: EdgeInsets.symmetric(vertical: 0,horizontal: 20),
+               child: _textEditingController.text != null && _textEditingController.text.length > 289 ?
+                 Padding(
+                   padding: EdgeInsets.only(right: 10),
+                   child: customText('${280 - _textEditingController.text.length}',style: TextStyle(color: Theme.of(context).errorColor)),)
+                 : Stack(
+                   alignment: Alignment.center,
+                   children: <Widget>[
+                     CircularProgressIndicator(
+                       value: getTweetLimit(),
+                       backgroundColor: Colors.grey,
+                       valueColor: AlwaysStoppedAnimation<Color>(wordCountColor),
+                     ),
+                    _textEditingController.text.length > 259 ? customText('${280 - _textEditingController.text.length}',style: TextStyle(color: wordCountColor))
+                    :customText('',style: TextStyle(color: wordCountColor))
+                   ],
+                 )
+             ),
+           )
+         )
+       ],),
      );
    }
    void _submitButton()async{
-     if(_textEditingController.text == null || _textEditingController.text.isEmpty){
+     if(_textEditingController.text == null || _textEditingController.text.isEmpty || _textEditingController.text.length > 280){
        return;
      }
      var state = Provider.of<FeedState>(context,);
@@ -125,6 +170,17 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
     }
     Navigator.pop(context);
    }
+   double getTweetLimit(){
+     if(_textEditingController.text == null || _textEditingController.text.isEmpty){
+       return 0.0;
+     }
+     if(_textEditingController.text.length > 280){
+       return 1.0;
+     }
+     var length = _textEditingController.text.length;
+      var val = length * 100/ 28000.0;
+      return val;
+   }
   @override
   Widget build(BuildContext context) {
     var state = Provider.of<AuthState>(context,);
@@ -134,30 +190,38 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
         title: customTitleText('',),
         onActionPressed: _submitButton,
         isCrossButton :true,
-         submitButtonText:'Tweet',
-         isSubmitDisable: _textEditingController.text == null || _textEditingController.text.isEmpty,
+        submitButtonText:'Tweet',
+        isSubmitDisable: _textEditingController.text == null || _textEditingController.text.isEmpty || _textEditingController.text.length > 280,
       ),
-     floatingActionButton:_floatingActionButton() ,
-      body:
-      SingleChildScrollView(
-        child: Container(
-        padding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
-          child: Column(
-            children: <Widget>[
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  customImage(context, state.userModel?.photoUrl ?? dummyProfilePic),
-                  SizedBox(width: 20,),
-                  Expanded(
-                    child: _descriptionEntry(),
-                  )
-                ],
+      body:Container(
+        child:  Stack(
+          children: <Widget>[
+            SingleChildScrollView(
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        customImage(context, state.userModel?.photoUrl ?? dummyProfilePic),
+                        SizedBox(width: 20,),
+                        Expanded(
+                          child: _descriptionEntry(),
+                        )
+                      ],
+                    ),
+                    _imageFeed(),
+                  ],
+                ),
               ),
-              _imageFeed(),
-            ],
-          ),
-        ),
+            ),
+            Align(
+             alignment: Alignment.bottomCenter,
+             child:_bottomIconWidget()
+            ),
+          ],
+        )
       )
     );
   }

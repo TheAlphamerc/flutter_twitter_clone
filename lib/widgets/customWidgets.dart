@@ -65,7 +65,7 @@ Widget customTappbleIcon(BuildContext context,int icon ,{double size = 16,bool i
   }
   ,child:  customIcon(context,icon:icon,size: size,isEnable: isEnable,isFontAwesomeRegular:isFontAwesomeRegular,isFontAwesomeSolid: isFontAwesomeSolid,iconColor: iconColor ));
 }
-Widget customText(String msg, {TextStyle style,TextAlign textAlign = TextAlign.justify,overflow = TextOverflow.visible,BuildContext context,bool softwrap = true}){
+Widget customText(String msg, {Key key, TextStyle style,TextAlign textAlign = TextAlign.justify,overflow = TextOverflow.visible,BuildContext context,bool softwrap = true}){
 
   if(msg == null){
     return SizedBox(height: 0,width: 0,);
@@ -74,7 +74,7 @@ Widget customText(String msg, {TextStyle style,TextAlign textAlign = TextAlign.j
     if(context != null && style != null){
       style =  style.copyWith(fontSize: style.fontSize - ( fullWidth(context) <= 375  ? 2 : 0));
     }
-    return Text(msg,style: style,textAlign: textAlign,overflow:overflow,softWrap: softwrap,);
+    return Text(msg,style: style,textAlign: textAlign,overflow:overflow,softWrap: softwrap,key: key,);
   }
 }
 Widget customImage(BuildContext context, String path,{double height = 50, bool isBorder = false,}){
@@ -338,7 +338,7 @@ openImagePicker(BuildContext context,Function onImageSelected) {
                     color: Theme.of(context).primaryColor,
                     child: Text('Use Camera',style: TextStyle(color: Theme.of(context).backgroundColor),),
                       onPressed: () {
-                        _getImage(context, ImageSource.camera,onImageSelected);
+                        getImage(context, ImageSource.camera,onImageSelected);
                       },
                     ),
                   ),
@@ -350,7 +350,7 @@ openImagePicker(BuildContext context,Function onImageSelected) {
                     color: Theme.of(context).primaryColor,
                     child: Text('Use Gallery',style: TextStyle(color: Theme.of(context).backgroundColor),),
                     onPressed: () {
-                       _getImage(context, ImageSource.gallery,onImageSelected);
+                       getImage(context, ImageSource.gallery,onImageSelected);
                     },
                   ),
                 )
@@ -360,8 +360,7 @@ openImagePicker(BuildContext context,Function onImageSelected) {
           );
         });
   }
- _getImage(BuildContext context, ImageSource source,Function onImageSelected) {
-     
+  getImage(BuildContext context, ImageSource source,Function onImageSelected) {
     ImagePicker.pickImage(source: source,imageQuality: 50).then((File file) {
       onImageSelected(file);
       Navigator.pop(context);

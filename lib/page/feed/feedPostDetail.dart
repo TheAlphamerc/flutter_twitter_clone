@@ -37,7 +37,6 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
   }
   
   Widget _commentRow(CommentModel model){
-     var state = Provider.of<FeedState>(context,);
     return Container(
       child:  Column(
       children: <Widget>[
@@ -53,13 +52,15 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
                 customText(model.user.displayName,style:titleStyle.copyWith(fontSize: 15)),
                 SizedBox(width: 5,),
                 Expanded(
-                  child:customText('@${model.user.displayName}',style: subtitleStyle,overflow:TextOverflow.ellipsis),
+                  child:Row(children: <Widget>[
+                    customText('@${model.user.displayName}',style: subtitleStyle,overflow:TextOverflow.ellipsis),
+                    SizedBox(width: 10,),
+                    customText('- ${getChatTime(model.createdAt)}',style: TextStyle(fontSize: 12)),
+                  ],)
                 ),
                 SizedBox(width: 10,),
-                // customText('- ${getChatTime(model.createdAt)}',style: TextStyle(fontSize: 12))
               ],
             ),
-            trailing: customText('- ${getChatTime(model.createdAt)}',style: TextStyle(fontSize: 12)),
             subtitle: customText(model.description),
           )
         ),
@@ -114,7 +115,7 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
             },
             child:_imageFeed(model.imagePath),
           ),
-          SizedBox(height: 10,),
+          SizedBox(height: 15,),
           Row(
             children: <Widget>[
               customText(getPostTime2(model.createdAt),style: TextStyle(fontSize: 14,fontWeight: FontWeight.w500,color: Colors.black54)),
@@ -124,8 +125,9 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
           )
         ],)
        ),
-       Divider(),
-        // SizedBox(height: 10,),
+       SizedBox(height: 5,),
+       Padding(padding: EdgeInsets.symmetric(horizontal: 10),child: Divider(),),
+        SizedBox(height: 5,),
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
@@ -134,13 +136,16 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
             SizedBox(width: 10,),
             customText('comments',style:TextStyle(color: Colors.black54)),
             SizedBox(width: 20,),
-            customText(model.likeCount.toString(),style:TextStyle(fontWeight: FontWeight.bold)),
+            customSwitcherWidget(
+              duraton: Duration(milliseconds: 300),
+              child: customText(model.likeCount.toString(),style:TextStyle(fontWeight: FontWeight.bold), key: ValueKey(model.likeCount)),
+            ),
             SizedBox(width: 10,),
             customText('Likes',style:TextStyle(color: Colors.black54))
           ],
         ),
         SizedBox(height: 10,),
-        Divider(height: 0,),
+        Padding(padding: EdgeInsets.symmetric(horizontal: 10),child: Divider(),),
         _likeCommentsIcons(model),
         Divider(height: 0,),
         Container(

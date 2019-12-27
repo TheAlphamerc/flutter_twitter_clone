@@ -99,12 +99,16 @@ class _FeedPageState extends State<FeedPage> {
                 icon:  Icon(Icons.message,color :  Colors.black38,),
               ),
             customText(model.commentCount.toString()),
+           
            SizedBox(width: 20,),
            IconButton(
                 onPressed:(){addLikeToPost(model.key);},
                 icon:  Icon( model.likeList.any((x)=>x.userId == state.userId) ? Icons.favorite : Icons.favorite_border,color: model.likeList.any((x)=>x.userId == state.userId) ? Colors.red : Colors.black38),
-              ),
-          customText(model.likeCount.toString()),
+           ),
+           customSwitcherWidget(
+              duraton: Duration(milliseconds: 300),
+              child: customText(model.likeCount.toString(), key: ValueKey(model.likeCount)),
+            ),
            SizedBox(width: 20,),
            IconButton(
                 onPressed:(){share('social.flutter.dev/feed/${model.key}');},
