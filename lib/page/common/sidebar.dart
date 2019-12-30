@@ -1,9 +1,7 @@
-// import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
-import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:provider/provider.dart';
 
@@ -16,11 +14,6 @@ class SidebarMenu extends StatefulWidget {
 
 class _SidebarMenuState extends State<SidebarMenu> {
   int myId;
-  @override
-  void initState() {
-    
-    super.initState();
-  }
 
   Widget _menuHeader() {
     final state = Provider.of<AuthState>(context);
@@ -39,36 +32,56 @@ class _SidebarMenuState extends State<SidebarMenu> {
    else{
      return Center(
        child: Column(
+         crossAxisAlignment: CrossAxisAlignment.start,
          mainAxisAlignment: MainAxisAlignment.center,
          children: <Widget>[
+            Container(
+                height: 56,
+                width: 56,
+                margin:EdgeInsets.only(left:17,top:10),
+                decoration: BoxDecoration(
+                  border: Border.all(color:Colors.white,width:2),
+                    borderRadius: BorderRadius.circular(28),
+                    image: DecorationImage(image: customAdvanceNetworkImage(state.userModel.profilePic ?? dummyProfilePic,),fit:BoxFit.cover)
+                )
+              ),
             ListTile(
               onTap: (){
                 Navigator.of(context).pushNamed('/ProfilePage');
               },
-              leading: Container(
-                height: 56,
-                width: 56,
-                decoration: BoxDecoration(
-                  border: Border.all(color:Colors.white,width:2),
-                    borderRadius: BorderRadius.circular(28),
-                    image: DecorationImage(image: customAdvanceNetworkImage(state.userModel.photoUrl ?? dummyProfilePic,),fit:BoxFit.cover)
-                )
-              ),
+              // leading: Container(
+              //   height: 56,
+              //   width: 56,
+              //   decoration: BoxDecoration(
+              //     border: Border.all(color:Colors.white,width:2),
+              //       borderRadius: BorderRadius.circular(28),
+              //       image: DecorationImage(image: customAdvanceNetworkImage(state.userModel.profilePic ?? dummyProfilePic,),fit:BoxFit.cover)
+              //   )
+              // ),
               title: customText(
                 state.userModel.displayName ?? state.userModel.email.split('.')[0],
-                style: onPrimaryTitleText.copyWith(color: Colors.black),
+                style: onPrimaryTitleText.copyWith(color: Colors.black,fontSize: 20),
               ),
               subtitle: customText(
                 state.userModel.userName,
-                style: onPrimarySubTitleText.copyWith(color: Colors.black54),
+                style: onPrimarySubTitleText.copyWith(color: Colors.black54,fontSize: 18),
               ),
+              trailing: customIcon(context,icon:AppIcon.arrowDown, iconColor: AppColor.primary, paddingIcon: 20),
             ),
-            SizedBox(height: 20,),
+            //  customText(
+            //     state.userModel.displayName ?? state.userModel.email.split('.')[0],
+            //     style: onPrimaryTitleText.copyWith(color: Colors.black),
+            //   ),
+            //   customText(
+            //     state.userModel.userName,
+            //     style: onPrimarySubTitleText.copyWith(color: Colors.black54),
+            //   ),
+            
             Container(
               alignment: Alignment.center,
               child:Row(
                 children: <Widget>[
-                SizedBox(width: 40,),
+                SizedBox(width: 17,),
                 customText('${state.userModel.followers ?? 0 }',style:TextStyle(fontWeight: FontWeight.bold,fontSize:17)),
                 customText(' Followors',style:TextStyle(color: Colors.black54,fontSize:17)),
                 SizedBox(width: 10,),
@@ -81,7 +94,7 @@ class _SidebarMenuState extends State<SidebarMenu> {
      );
    }
  }
- ListTile _menuListRowButton(String title,{Function onPressed,IconData icon}) {
+ ListTile _menuListRowButton(String title,{Function onPressed,int icon, bool isEnable = false}) {
     return ListTile(
        onTap: (){
             if(onPressed != null){
@@ -90,9 +103,9 @@ class _SidebarMenuState extends State<SidebarMenu> {
           },
         leading: Padding(
           padding: EdgeInsets.only(top: 5),
-          child:Icon(icon),
+          child:icon == null ? SizedBox() : customIcon(context,icon: icon, size: 25 ,iconColor: isEnable ? AppColor.darkGrey : AppColor.lightGrey),
         ),
-        title:customText(title),
+        title:customText(title,style: TextStyle(fontSize: 22, color: isEnable ? AppColor.secondary : AppColor.lightGrey)),
     );
   }
  void _logOut(){
@@ -109,16 +122,20 @@ dispose() {
         child: Column(
             children: <Widget>[
               Container(
-                height: 150,
+                height: 160,
                 child: _menuHeader(),
               ),
             Divider(),
-            _menuListRowButton('Profile',icon: Icons.verified_user,onPressed: (){Navigator.of(context).pushNamed('/ProfilePage');}),
-            _menuListRowButton('Lists',icon: Icons.list),
-            _menuListRowButton('Settings',icon: Icons.settings),
-            _menuListRowButton('Help Center',icon: Icons.help),
+            _menuListRowButton('Profile',icon: AppIcon.profile,isEnable: true, onPressed: (){Navigator.of(context).pushNamed('/ProfilePage');}),
+            _menuListRowButton('Lists',icon: AppIcon.lists),
+            _menuListRowButton('Bookamrks',icon:AppIcon.bookmark),
+            _menuListRowButton('Moments',icon: AppIcon.moments),
+            _menuListRowButton('Twitter ads',icon: AppIcon.twitterAds),
             Divider(),
-            _menuListRowButton('Logout',onPressed: _logOut,icon: Icons.block,)
+            _menuListRowButton('Settings and privacy',),
+            _menuListRowButton('Help Center',),
+            Divider(),
+            _menuListRowButton('Logout',onPressed: _logOut,isEnable: true)
           ],
         ),  
     ));

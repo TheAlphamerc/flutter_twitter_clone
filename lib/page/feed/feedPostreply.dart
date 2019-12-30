@@ -103,18 +103,18 @@ class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
                  child: UrlText(text: model.description,style:TextStyle(color: Colors.black, fontWeight: FontWeight.w400),urlStyle: TextStyle(color: Colors.blue, fontWeight: FontWeight.w400),),
                ),
                SizedBox(height: 30,),
-               UrlText(text: 'Replying to ${model.username ?? model.name}',style: TextStyle(color: TwitterColor.paleSky,fontSize: 13,fontFamily: appFont)),
+               UrlText(text: 'Replying to ${model.user.userName ?? model.user.displayName}',style: TextStyle(color: TwitterColor.paleSky,fontSize: 13,fontFamily: appFont)),
              ],)
            ),
            Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-               customImage(context, model.profilePic),
+               customImage(context, model.user.profilePic),
                SizedBox(width: 10,),
-               customText(model.name,style: titleStyle),
+               customText(model.user.displayName,style: titleStyle),
                SizedBox(width: 10,),
-               customText( model.username,style: TextStyle(color: TwitterColor.paleSky,fontSize: 17,fontWeight: FontWeight.w500,fontFamily: appFont )),
+               customText( model.user.userName,style: TextStyle(color: TwitterColor.paleSky,fontSize: 17,fontWeight: FontWeight.w500,fontFamily: appFont )),
                SizedBox(width: 10,),
                customText('- ${getChatTime(model.createdAt)}',style: subtitleStyle)
              ],
@@ -130,8 +130,9 @@ class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
      var authState = Provider.of<AuthState>(context,);
      var user = authState.user;
      var profilePic = user.photoUrl ?? dummyProfilePic ;
-     var commentedUser = User(displayName: user.displayName ?? user.email.split('@')[0],photoUrl: profilePic,userId: user.uid,userName: authState.userModel.userName);
-     state.addcommentToPost(postId,userId:authState.user.uid,comment: _textEditingController.text,user: commentedUser);
+     var tags = getHashTags(_textEditingController.text);
+     var commentedUser = User(displayName: user.displayName ?? user.email.split('@')[0],profilePic: profilePic,userId: user.uid,userName: authState.userModel.userName);
+     state.addcommentToPost(postId,userId:authState.user.uid,comment: _textEditingController.text,user: commentedUser,tags: tags);
     Navigator.pop(context);
   }
  

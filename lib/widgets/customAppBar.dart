@@ -41,7 +41,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget{
               child: customInkWell(
                 context: context,
                 onPressed: (){scaffoldKey.currentState.openDrawer();},
-                child: customImage(context, authState.userModel?.photoUrl,height: 30)
+                child: customImage(context, authState.userModel?.profilePic,height: 30)
               ),
             );
           },

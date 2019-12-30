@@ -1,19 +1,19 @@
 
+import 'package:flutter_twitter_clone/model/user.dart';
+
 class FeedModel {
   String key;
   String description;
   String userId;
-  String name;
-  String username;
-  String profilePic;
+  bool isVerifiedUser;
   int likeCount;
   List<LikeList> likeList;
   int commentCount;
   String createdAt;
   String imagePath;
   List<String> tags;
-
-  FeedModel({this.key,this.description, this.userId,this.name,this.profilePic,this.likeCount,this.commentCount,this.createdAt,this.imagePath,this.likeList,this.tags,this.username});
+  User user;
+  FeedModel({this.key,this.description, this.userId,this.likeCount,this.commentCount,this.createdAt,this.imagePath,this.likeList,this.tags,this.isVerifiedUser,this.user});
   toJson() {
     Map<dynamic,dynamic> map;
     if(likeList != null && likeList.length > 0){
@@ -22,46 +22,49 @@ class FeedModel {
       return list.toJson();
     });
     }
-   
-      
     return {
       "userId": userId,
       "description": description,
-      "name": name, 
-      "profilePic": profilePic,
-      "likeCount":likeCount,
+     "likeCount":likeCount,
       "commentCount":commentCount ?? 0,
       "createdAt":createdAt,
       "imagePath":imagePath,
       "likeList":map,
       "tags":tags,
-      "username":username
+      "isVerifiedUser":isVerifiedUser ?? false,
+      "user":user == null ? null : user.toJson()
     };
   }
   dynamic getLikeList(List<String> list){
     if(list != null && list.length > 0){
-      // var val = Map.fromIterable(list,)
-      // var result = { for (var v in list) v[0]: v[1] };
-    var result = Map.fromIterable(list, key: (v) =>'userId', value: (v) => v[0]);
+   var result = Map.fromIterable(list, key: (v) =>'userId', value: (v) => v[0]);
       return result;
     }
   }
-  FeedModel.setFeedModel(Map<dynamic, dynamic> map) {
+  FeedModel.fromJson(Map<dynamic, dynamic> map) {
     if(likeList == null){
       likeList = [];
     }
    key = map['key'];
    description = map['description'];
    userId = map['userId'];
-   name = map['name'];
-   profilePic = map['profilePic'];
+  //  name = map['name'];
+  //  profilePic = map['profilePic'];
    likeCount = map['likeCount'];
    commentCount = map['commentCount'];
    imagePath = map['imagePath'];
    createdAt = map['createdAt'];
    imagePath = map['imagePath'];
-   username = map['username'];
-   tags = map['tags'];
+  //  username = map['username'];
+   isVerifiedUser = map['isVerifiedUser'] ?? false;
+   user = User.fromJson(map['user']);
+  //  tags = map['tags'];
+   if(map['tags'] != null){
+      tags = List<String>();
+      map['tags'].forEach((value){
+         tags.add(value);
+     });
+   }
    if(map['likeList'] != null){
       map['likeList'].forEach((key,value){
        if(value.containsKey('userId')){

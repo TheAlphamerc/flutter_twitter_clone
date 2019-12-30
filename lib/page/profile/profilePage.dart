@@ -35,7 +35,7 @@ class _ProfilePageState extends State<ProfilePage> {
    var authstate = Provider.of<AuthState>(context,);
    List<FeedModel> list;
    String id = widget.profileId ?? authstate.userId;
-   if(state.feedlist != null || state.feedlist.length > 0 ){
+   if(state.feedlist != null && state.feedlist.length > 0 ){
        list = state.feedlist.where((x)=>x.userId == id).toList();
    }
     return Scaffold(
@@ -79,7 +79,7 @@ class _ProfilePageState extends State<ProfilePage> {
                            border:Border.all(color: Colors.white,width: 5),
                           shape: BoxShape.circle
                          ),
-                         child: customImage(context, authstate.profileUserModel.photoUrl,height: 80,)
+                         child: customImage(context, authstate.profileUserModel.profilePic,height: 80,)
                        ),
                        Container(
                         margin: EdgeInsets.only(top:60,right:30),
@@ -180,7 +180,7 @@ class _ProfilePageState extends State<ProfilePage> {
            delegate: SliverChildListDelegate(
              list == null || list.length < 1? 
              [ Container(child:Center(
-                child: Text('No post created yet',style: subtitleStyle,),
+                child: Text('No tweet posted yet',style: subtitleStyle,),
              ))]
              :list.map((x)=> Tweet(model:x)).toList()
            ),)

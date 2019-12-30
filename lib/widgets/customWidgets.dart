@@ -34,10 +34,10 @@ Widget userImage(String path, {double height = 100}){
             ),
           ));
 }
-Widget customIcon(BuildContext context,{int icon, bool isEnable = false,double size = 18,bool istwitterIcon = false, bool isFontAwesomeRegular = false,bool isFontAwesomeSolid = false,Color iconColor}){
+Widget customIcon(BuildContext context,{int icon, bool isEnable = false,double size = 18,bool istwitterIcon = true, bool isFontAwesomeRegular = false,bool isFontAwesomeSolid = false,Color iconColor, double paddingIcon  = 10}){
   iconColor = iconColor ?? Theme.of(context).textTheme.caption.color;
   return  Padding(
-    padding: EdgeInsets.only( bottom:istwitterIcon ? 10 : 0),
+    padding: EdgeInsets.only( bottom:istwitterIcon ?  paddingIcon: 0),
     child: Icon(
              IconData(
                icon,fontFamily: istwitterIcon ? 'TwitterIcon' : isFontAwesomeRegular ? 'AwesomeRegular' : isFontAwesomeSolid ? 'AwesomeSolid' : 'Fontello'),

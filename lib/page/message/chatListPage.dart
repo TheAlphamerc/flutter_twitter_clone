@@ -59,7 +59,7 @@ class _ChatListPageState extends State<ChatListPage> {
                  decoration: BoxDecoration(
                    border: Border.all(color:Colors.white,width:2),
                      borderRadius: BorderRadius.circular(28),
-                     image: DecorationImage(image: customAdvanceNetworkImage(model.photoUrl ?? dummyProfilePic,),fit:BoxFit.cover)
+                     image: DecorationImage(image: customAdvanceNetworkImage(model.profilePic ?? dummyProfilePic,),fit:BoxFit.cover)
                  )
                ),
               ),

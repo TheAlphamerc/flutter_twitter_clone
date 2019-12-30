@@ -70,11 +70,11 @@ Widget _userImage(AuthState authstate) {
      BoxDecoration(
        border:Border.all(color: Colors.white,width: 5),
       shape: BoxShape.circle,
-      image:  DecorationImage(image: customAdvanceNetworkImage(authstate.userModel.photoUrl),fit: BoxFit.cover)
+      image:  DecorationImage(image: customAdvanceNetworkImage(authstate.userModel.profilePic),fit: BoxFit.cover)
      ),
      child: CircleAvatar(
       radius: 40,
-       backgroundImage: _image != null ? FileImage(_image) :  customAdvanceNetworkImage(authstate.userModel.photoUrl),
+       backgroundImage: _image != null ? FileImage(_image) :  customAdvanceNetworkImage(authstate.userModel.profilePic),
        child: Container(
          decoration: BoxDecoration(
            shape: BoxShape.circle,
@@ -134,7 +134,7 @@ Widget _userImage(AuthState authstate) {
       dob: state.userModel.dob,
       email: state.userModel.email,
       location: state.userModel.location,
-      photoUrl: state.userModel.photoUrl,
+      profilePic: state.userModel.profilePic,
       userId: state.userModel.userId
     );
     if(_name.text != null && _name.text.isNotEmpty){

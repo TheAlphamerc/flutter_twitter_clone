@@ -24,6 +24,7 @@ class _BottomMenubarState extends State<BottomMenubar>{
     
   }
   Widget _iconRow(){
+    var state = Provider.of<AppState>(context,);
     return Container(
       height: 50,
       decoration: BoxDecoration(color: Theme.of(context).bottomAppBarColor, boxShadow: [
@@ -34,10 +35,10 @@ class _BottomMenubarState extends State<BottomMenubar>{
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  _icon(null,0,icon:0xf187,isCustomIcon:true),
-                  _icon(null,1,icon:AppIcon.search,isCustomIcon:true),
-                  _icon(null,2,icon:AppIcon.notification,isCustomIcon:true),
-                  _icon(null,3,icon:AppIcon.messageEmpty,isCustomIcon:true),
+                  _icon(null,0,icon:0 == state.pageIndex ? AppIcon.homeFill : AppIcon.home,isCustomIcon:true),
+                  _icon(null,1,icon:1 == state.pageIndex ? AppIcon.searchFill : AppIcon.search,isCustomIcon:true),
+                  _icon(null,2,icon: 2 == state.pageIndex ? AppIcon.notificationFill : AppIcon.notification,isCustomIcon:true),
+                  _icon(null,3,icon:3 == state.pageIndex ? AppIcon.messageFill :AppIcon.messageEmpty,isCustomIcon:true),
                 ],
               ),
     );

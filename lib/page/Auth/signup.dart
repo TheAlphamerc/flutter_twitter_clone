@@ -134,8 +134,8 @@ class _SignupState extends State<Signup>{
       displayName: _nameController.text,
       dob:  DateTime(1950,DateTime.now().month,DateTime.now().day+3).toString(),
       location: 'Somewhere in universe',
-      photoUrl: dummyProfilePicList[randomNumber],
-      // userName: _userNameController.text,
+      profilePic: dummyProfilePicList[randomNumber],
+      isVerified: false
        );
     state.signUp(user,password: _passwordController.text,scaffoldKey: _scaffoldKey).then((status)=>{
           print(status),

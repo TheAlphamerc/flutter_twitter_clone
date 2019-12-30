@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
+import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
-import 'package:flutter_twitter_clone/state/authState.dart';
+import 'package:flutter_twitter_clone/page/feed/widgets/tweetIconsRow.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:provider/provider.dart';
 
@@ -11,9 +12,11 @@ import 'customWidgets.dart';
 import 'newWidget/customUrlText.dart';
 
 class Tweet extends StatefulWidget {
-   final FeedModel model;
-
-  const Tweet({Key key, this.model}) : super(key: key);
+  final FeedModel model;
+  final bool isTweetDetail;
+  final Widget trailing;
+  final TweetType type;
+  const Tweet({Key key, this.model, this.isTweetDetail = false, this.trailing, this.type = TweetType.Tweet}) : super(key: key);
   _TweetState createState() => _TweetState();
 }
 
@@ -44,58 +47,16 @@ class _TweetState extends State<Tweet> {
           )
       );
   }
-  void addLikeToTweet(String postId){
-      var state = Provider.of<FeedState>(context,);
-      var authState = Provider.of<AuthState>(context,);
-      state.addLikeToTweet(postId, authState.userId);
-  }
-  Widget _tweetBottpmIcon(){
-    var feedstate = Provider.of<FeedState>(context,);
-    var state = Provider.of<AuthState>(context,);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[
-      SizedBox(width: 80,),
-        IconButton(
-            onPressed: (){
-              feedstate.setFeedModel = _model;
-              Navigator.of(context).pushNamed('/FeedPostReplyPage/'+_model.key);
-            },
-           icon: customIcon(context,size: 20, icon:AppIcon.reply , istwitterIcon: true,),
-          ),
-       customText(_model.commentCount.toString()),
-      SizedBox(width: 20,),
-       IconButton(
-            onPressed:(){addLikeToTweet(_model.key);},
-            icon:  customIcon(context,size: 20, icon:AppIcon.retweet, istwitterIcon: true,),
-       ),
-        // customSwitcherWidget(
-        //   duraton: Duration(milliseconds: 300),
-        //   child: customText(_model.likeCount.toString(), key: ValueKey(_model.likeCount)),
-        // ),
-       SizedBox(width: 20,),
-       IconButton(
-            onPressed:(){addLikeToTweet(_model.key);},
-            icon:  customIcon(context,size: 20, icon:_model.likeList.any((x)=>x.userId == state.userId) ? AppIcon.heartFill : AppIcon.heartEmpty, istwitterIcon: true, iconColor: _model.likeList.any((x)=>x.userId == state.userId) ? Colors.red :Theme.of(context).textTheme.caption.color),
-       ),
-       customSwitcherWidget(
-          duraton: Duration(milliseconds: 300),
-          child: customText(_model.likeCount.toString(), key: ValueKey(_model.likeCount)),
-        ),
-       SizedBox(width: 20,),
-       IconButton(
-            onPressed:(){share('social.flutter.dev/feed/${_model.key}');},
-            icon:  Icon( Icons.share,color:Theme.of(context).textTheme.caption.color,size:20),
-          ),
-      ],
-    );
-  }
+  
   @override
   Widget build(BuildContext context) {
     _model = widget.model;
    var feedstate = Provider.of<FeedState>(context,);
     return InkWell(
       onTap: (){
+            if(widget.isTweetDetail || widget.type == TweetType.Reply ){
+              return;
+            }
            feedstate.setFeedModel = _model;
            Navigator.of(context).pushNamed('/FeedPostDetail/'+_model.key);
       },
@@ -114,7 +75,7 @@ class _TweetState extends State<Tweet> {
                       onTap: (){
                          Navigator.of(context).pushNamed('/ProfilePage/'+_model?.userId);
                       },
-                      child: customImage(context, _model.profilePic),
+                      child: customImage(context, _model.user.profilePic),
                     ),
                   ),
               SizedBox(width: 20,),
@@ -128,11 +89,22 @@ class _TweetState extends State<Tweet> {
                         Expanded(
                           child: Row(
                             children: <Widget>[
-                              customText(_model.name,style: titleStyle),
+                              customText(_model.user.displayName,style: titleStyle),
+                              SizedBox(width: 3,),
+                              _model.isVerifiedUser ?
+                              customIcon(context,icon:AppIcon.blueTick, istwitterIcon: true,iconColor:  AppColor.primary, size:13,paddingIcon:3)
+                              :SizedBox(),
                               SizedBox(width: 5,),
-                              customText('${_model.username}',style: userNameStyle),
+                              customText('${_model.user.userName}',style: userNameStyle),
                               SizedBox(width: 10,),
-                              customText('- ${getChatTime(_model.createdAt)}',style: userNameStyle)
+                              customText('- ${getChatTime(_model.createdAt)}',style: userNameStyle),
+                              Expanded(
+                                child: SizedBox()
+                              ),
+                              Container(
+                                  child: widget.trailing == null ? SizedBox()
+                                  : widget.trailing
+                                ),
                             ],
                           ) 
                           ),
@@ -148,7 +120,16 @@ class _TweetState extends State<Tweet> {
           )
         ),
         _tweetImage(_model.imagePath,_model.key),
-        _tweetBottpmIcon(),
+        Padding(
+          padding: EdgeInsets.only(left: widget.isTweetDetail ? 10 : 60),
+          child:TweetIconsRow(
+            type: widget.type,
+            model:_model,
+            isTweetDetail:widget.isTweetDetail,
+            iconColor: Theme.of(context).textTheme.caption.color,
+            iconEnableColor: TwitterColor.ceriseRed,
+            size: 20,),
+        ),
         Divider(height: 0,)
       ],
     )

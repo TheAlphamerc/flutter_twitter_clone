@@ -97,12 +97,13 @@ class AuthState extends AppState {
      bio: 'Edit profile to update bio',
      dob:  DateTime(1950,DateTime.now().month,DateTime.now().day+3).toString(),
      location: 'Somewhere in universe',
-     photoUrl: user.photoUrl,
+     profilePic: user.photoUrl,
      displayName: user.displayName,
      email: user.email,
      key: user.uid,
      userId: user.uid,
-     contact: user.phoneNumber
+     contact: user.phoneNumber,
+     isVerified: true
    );
    createUser(model);
  }
@@ -115,7 +116,7 @@ class AuthState extends AppState {
 
           UserUpdateInfo updateInfo = UserUpdateInfo();
           updateInfo.displayName = userModel.displayName;
-          updateInfo.photoUrl = userModel.photoUrl;
+          updateInfo.photoUrl = userModel.profilePic;
           await result.user.updateProfile(updateInfo);
           _userModel = userModel;
           _userModel.key = user.uid;
@@ -208,11 +209,11 @@ class AuthState extends AppState {
                updateInfo.photoUrl = fileURL;
                await user.updateProfile(updateInfo);
                if(userModel != null){
-                   userModel.photoUrl = fileURL;
+                   userModel.profilePic = fileURL;
                   createUser(userModel);
                }
                else{
-                  _userModel.photoUrl = fileURL;
+                  _userModel.profilePic = fileURL;
                   createUser(_userModel);
                }
          });

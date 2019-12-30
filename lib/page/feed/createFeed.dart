@@ -1,9 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_twitter_clone/helper/theme.dart' as prefix0;
+import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
+import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
@@ -111,11 +114,11 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
        child: Row(children: <Widget>[
          IconButton(
            onPressed: (){setImage(ImageSource.gallery);},
-           icon: Icon(Icons.image,color: Theme.of(context).primaryColor,),
+           icon: customIcon(context, icon:AppIcon.image, istwitterIcon: true, iconColor: AppColor.primary)
          ),
          IconButton(
            onPressed: (){setImage(ImageSource.camera);},
-           icon: Icon(Icons.camera_alt,color: Theme.of(context).primaryColor,),
+           icon: customIcon(context, icon:AppIcon.camera, istwitterIcon: true, iconColor: AppColor.primary)
          ),
          Expanded(
            child: Align(
@@ -143,24 +146,30 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
          )
        ],),
      );
-   }
-   void _submitButton()async{
+  }
+  void _submitButton()async{
      if(_textEditingController.text == null || _textEditingController.text.isEmpty || _textEditingController.text.length > 280){
        return;
      }
      var state = Provider.of<FeedState>(context,);
      var authState = Provider.of<AuthState>(context,);
      var name = authState.userModel.displayName ?? authState.userModel.email.split('@')[0];
-     var pic = authState.userModel.photoUrl ?? dummyProfilePic;
+     var pic = authState.userModel.profilePic ?? dummyProfilePic;
      var tags = getHashTags(_textEditingController.text);
-      FeedModel _model = FeedModel(
-        description: _textEditingController.text,
-        userId: authState.user.uid,
-        name: name,
-        profilePic: pic,
-        username: authState.userModel.userName,
-        createdAt:  DateTime.now().toString());
-   
+     User user = User(
+       displayName: name,
+       userName: authState.userModel.userName,
+       isVerified: authState.userModel.isVerified,
+       profilePic: pic,
+
+     );
+    FeedModel _model = FeedModel(
+      description: _textEditingController.text,
+      userId: authState.user.uid,
+      tags: tags,
+      user: user,
+      createdAt:  DateTime.now().toString()
+    );
     if(_image != null){
       await state.uploadFile(_image,_model);
     }
@@ -203,7 +212,7 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        customImage(context, state.userModel?.photoUrl ?? dummyProfilePic),
+                        customImage(context, state.userModel?.profilePic ?? dummyProfilePic),
                         SizedBox(width: 20,),
                         Expanded(
                           child: _descriptionEntry(),
