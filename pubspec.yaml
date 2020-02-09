@@ -25,7 +25,7 @@ dependencies:
   cupertino_icons: ^0.1.2
   empty_widget:
   fancy_bottom_navigation:
-  flutter_advanced_networkimage: ^0.5.0-alpha.1
+  flutter_advanced_networkimage: ^0.6.0-alpha.1
   provider:
   flutter_native_splash: ^0.1.9
   firebase_auth:
