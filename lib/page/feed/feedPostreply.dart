@@ -103,7 +103,7 @@ class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
                  child: UrlText(text: model.description,style:TextStyle(color: Colors.black, fontWeight: FontWeight.w400),urlStyle: TextStyle(color: Colors.blue, fontWeight: FontWeight.w400),),
                ),
                SizedBox(height: 30,),
-               UrlText(text: 'Replying to ${model.user.userName ?? model.user.displayName}',style: TextStyle(color: TwitterColor.paleSky,fontSize: 13,fontFamily: appFont)),
+               UrlText(text: 'Replying to ${model.user.userName ?? model.user.displayName}',style: TextStyle(color: TwitterColor.paleSky,fontSize: 13,)),
              ],)
            ),
            Row(
@@ -114,7 +114,7 @@ class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
                SizedBox(width: 10,),
                customText(model.user.displayName,style: titleStyle),
                SizedBox(width: 10,),
-               customText( model.user.userName,style: TextStyle(color: TwitterColor.paleSky,fontSize: 17,fontWeight: FontWeight.w500,fontFamily: appFont )),
+               customText( model.user.userName,style: TextStyle(color: TwitterColor.paleSky,fontSize: 17,fontWeight: FontWeight.w500,)),
                SizedBox(width: 10,),
                customText('- ${getChatTime(model.createdAt)}',style: subtitleStyle)
              ],

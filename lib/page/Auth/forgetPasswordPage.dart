@@ -19,7 +19,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage>{
   void initState() { 
     _focusNode = FocusNode();
     _emailController = TextEditingController();
-    _emailController.text = 'sonu.sharma@kritivity.com';
+    _emailController.text = '';
     _focusNode.requestFocus();
     super.initState();
   }

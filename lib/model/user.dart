@@ -35,7 +35,7 @@ class User {
     following = map['following'] ?? 0;
     userName = map['userName'];
     webSite = map['webSite'];
-    isVerified = map['isVerified'];
+    isVerified = map['isVerified'] ?? false;
   }
   toJson() {
     return {
@@ -54,7 +54,7 @@ class User {
       'following':following ?? 0,
       'userName':userName,
       'webSite':webSite,
-      'isVerified':isVerified
+      'isVerified':isVerified ?? false
     };
   }
 }

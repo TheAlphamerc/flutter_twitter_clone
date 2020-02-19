@@ -64,7 +64,7 @@ class _ChatListPageState extends State<ChatListPage> {
                ),
               ),
               title: customText(
-                model.displayName ?? model.email.split('.')[0],
+                model.displayName ?? (model.email == null ? '' : model.email.split('.')[0]),
                 style: onPrimaryTitleText.copyWith(color: Colors.black),
               ),
               subtitle: customText(

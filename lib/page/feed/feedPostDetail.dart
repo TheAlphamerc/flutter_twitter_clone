@@ -62,7 +62,7 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
 
   Widget _postBody(FeedModel model) {
     return Tweet(model:model,
-      isTweetDetail: true,
+      type: TweetType.Detail,
       trailing: customInkWell(
         radius: BorderRadius.circular(20),
         context: context,
@@ -135,7 +135,7 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
             children: <Widget>[
               customIcon(context, icon:icon, istwitterIcon:true,size: 25,iconColor: isEnable ? AppColor.darkGrey : AppColor.lightGrey),
               SizedBox(width: 15,),
-              customText(text,context:context,style: TextStyle(color: isEnable ? AppColor.secondary : AppColor.lightGrey,fontFamily: appFont, fontSize: 18,fontWeight: FontWeight.w400))
+              customText(text,context:context,style: TextStyle(color: isEnable ? AppColor.secondary : AppColor.lightGrey, fontSize: 18,fontWeight: FontWeight.w400))
             ],
           ),
        ),

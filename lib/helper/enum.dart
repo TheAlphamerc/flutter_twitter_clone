@@ -5,5 +5,6 @@ enum AuthStatus {
 }
 enum TweetType{
   Tweet,
+  Detail,
   Reply
 }

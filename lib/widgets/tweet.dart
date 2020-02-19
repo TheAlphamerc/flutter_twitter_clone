@@ -6,6 +6,7 @@ import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/page/feed/widgets/tweetIconsRow.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import 'customWidgets.dart';
@@ -13,10 +14,9 @@ import 'newWidget/customUrlText.dart';
 
 class Tweet extends StatefulWidget {
   final FeedModel model;
-  final bool isTweetDetail;
   final Widget trailing;
   final TweetType type;
-  const Tweet({Key key, this.model, this.isTweetDetail = false, this.trailing, this.type = TweetType.Tweet}) : super(key: key);
+  const Tweet({Key key, this.model,this.trailing, this.type = TweetType.Tweet}) : super(key: key);
   _TweetState createState() => _TweetState();
 }
 
@@ -51,10 +51,11 @@ class _TweetState extends State<Tweet> {
   @override
   Widget build(BuildContext context) {
     _model = widget.model;
+    
    var feedstate = Provider.of<FeedState>(context,);
     return InkWell(
       onTap: (){
-            if(widget.isTweetDetail || widget.type == TweetType.Reply ){
+            if(widget.type == TweetType.Detail || widget.type == TweetType.Reply ){
               return;
             }
            feedstate.setFeedModel = _model;
@@ -89,12 +90,15 @@ class _TweetState extends State<Tweet> {
                         Expanded(
                           child: Row(
                             children: <Widget>[
-                              customText(_model.user.displayName,style: titleStyle),
+                              UrlText(
+                                text: _model.user.displayName,
+                                style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.w800,),
+                              ),
                               SizedBox(width: 3,),
-                              _model.isVerifiedUser ?
+                              _model.user.isVerified ?
                               customIcon(context,icon:AppIcon.blueTick, istwitterIcon: true,iconColor:  AppColor.primary, size:13,paddingIcon:3)
-                              :SizedBox(),
-                              SizedBox(width: 5,),
+                              :SizedBox(width: 0,),
+                              SizedBox(width: _model.user.isVerified ? 5 : 0,),
                               customText('${_model.user.userName}',style: userNameStyle),
                               SizedBox(width: 10,),
                               customText('- ${getChatTime(_model.createdAt)}',style: userNameStyle),
@@ -111,7 +115,11 @@ class _TweetState extends State<Tweet> {
                       //  trailing ?? Container(),
                       ],
                     ),
-                    UrlText(text: _model.description,style:TextStyle(color: Colors.black, fontWeight: FontWeight.w400),urlStyle: TextStyle(color: Colors.blue, fontWeight: FontWeight.w400),),
+                    UrlText(
+                      text: _model.description,
+                      style: TextStyle(color: Colors.black,fontSize: widget.type == TweetType.Tweet ? 15 : widget.type == TweetType.Detail ? 18 : 14,
+                      fontWeight:widget.type == TweetType.Tweet || widget.type == TweetType.Tweet  ? FontWeight.w300 : FontWeight.w400),
+                      urlStyle: TextStyle(color: Colors.blue, fontWeight: FontWeight.w400),),
                   ],
                 ),
               ),
@@ -121,11 +129,11 @@ class _TweetState extends State<Tweet> {
         ),
         _tweetImage(_model.imagePath,_model.key),
         Padding(
-          padding: EdgeInsets.only(left: widget.isTweetDetail ? 10 : 60),
+          padding: EdgeInsets.only(left: widget.type == TweetType.Detail ? 10 : 60),
           child:TweetIconsRow(
             type: widget.type,
             model:_model,
-            isTweetDetail:widget.isTweetDetail,
+            isTweetDetail:widget.type == TweetType.Detail,
             iconColor: Theme.of(context).textTheme.caption.color,
             iconEnableColor: TwitterColor.ceriseRed,
             size: 20,),

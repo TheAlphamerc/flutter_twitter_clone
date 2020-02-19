@@ -20,6 +20,7 @@ import 'state/authState.dart';
 import 'state/chats/chatState.dart';
 import 'state/feedState.dart';
 import 'widgets/customWidgets.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,7 +39,11 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
-        theme: AppTheme.apptheme,
+        theme: AppTheme.apptheme.copyWith(
+          textTheme: GoogleFonts.muliTextTheme(
+            Theme.of(context).textTheme,
+          ),
+        ),
         debugShowCheckedModeBanner: false,
         home: MyHomePage(),
         onGenerateRoute: (settings) => Routes.onGenerateRoute(settings),
