@@ -47,18 +47,10 @@ class _SidebarMenuState extends State<SidebarMenu> {
               ),
             ListTile(
               onTap: (){
+                Navigator.pop(context);
                 Navigator.of(context).pushNamed('/ProfilePage');
               },
-              // leading: Container(
-              //   height: 56,
-              //   width: 56,
-              //   decoration: BoxDecoration(
-              //     border: Border.all(color:Colors.white,width:2),
-              //       borderRadius: BorderRadius.circular(28),
-              //       image: DecorationImage(image: customAdvanceNetworkImage(state.userModel.profilePic ?? dummyProfilePic,),fit:BoxFit.cover)
-              //   )
-              // ),
-              title: customText(
+                title: customText(
                 state.userModel.displayName ?? state.userModel.email.split('.')[0],
                 style: onPrimaryTitleText.copyWith(color: Colors.black,fontSize: 20),
               ),
@@ -68,16 +60,7 @@ class _SidebarMenuState extends State<SidebarMenu> {
               ),
               trailing: customIcon(context,icon:AppIcon.arrowDown, iconColor: AppColor.primary, paddingIcon: 20),
             ),
-            //  customText(
-            //     state.userModel.displayName ?? state.userModel.email.split('.')[0],
-            //     style: onPrimaryTitleText.copyWith(color: Colors.black),
-            //   ),
-            //   customText(
-            //     state.userModel.userName,
-            //     style: onPrimarySubTitleText.copyWith(color: Colors.black54),
-            //   ),
-            
-            Container(
+             Container(
               alignment: Alignment.center,
               child:Row(
                 children: <Widget>[

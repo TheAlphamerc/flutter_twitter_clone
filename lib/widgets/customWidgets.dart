@@ -231,7 +231,7 @@ Widget emptyListWidget(BuildContext context, String title,{String subTitle,Strin
    }
    else{
      return Center(
-       child: CircularProgressIndicator(),
+       child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),),
      );
    }
  }

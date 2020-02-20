@@ -16,7 +16,7 @@ import 'authState.dart';
 
 class FeedState extends AuthState {
   final databaseReference = Firestore.instance;
-
+   bool isBusy = false;
   final FirebaseDatabase _database = FirebaseDatabase.instance;
   List<FeedModel> _feedlist;
   // bool isbbusy = false;
@@ -132,8 +132,10 @@ class FeedState extends AuthState {
     }
   }
  
- createTweet(FeedModel model) {
+  createTweet(FeedModel model) {
     ///  Create feed in [Firebase database]
+    isBusy = true;
+    notifyListeners();
     try {
         _database
             .reference()
@@ -143,7 +145,10 @@ class FeedState extends AuthState {
     } catch (error) {
       cprint(error);
     }
+    isBusy = false;
+    notifyListeners();
   }
+  
   deleteTweet(String tweetId,TweetType type) {
     ///  Delete feed in [Firebase database]
     try {
@@ -194,22 +199,26 @@ class FeedState extends AuthState {
     }
   }
  
-  Future<void> uploadFile(File file,FeedModel model) async {  
+  Future<String> uploadFile(File file) async {  
    try{
+     isBusy = true;
+     notifyListeners();
      StorageReference storageReference = FirebaseStorage.instance.ref().child('feeds${Path.basename(file.path)}');    
      StorageUploadTask uploadTask = storageReference.putFile(file);    
-     await uploadTask.onComplete.then((value){
-          storageReference.getDownloadURL().then((fileURL) {    
-              print(fileURL);
-              model.imagePath = fileURL;
-              createTweet(model);
-         });
-      }); 
+     var snapshot = await uploadTask.onComplete;
+     if(snapshot != null){
+       var url = await storageReference.getDownloadURL();
+        if(url != null){
+          return url;
+        }
+     }
    } catch(error){
      cprint(error);
+     return null;
    }   
  } 
- Future<void> deleteFile(String url,String baseUrl)async{
+ 
+  Future<void> deleteFile(String url,String baseUrl)async{
     try{
        String filePath = url.replaceAll(new RegExp(r'https://firebasestorage.googleapis.com/v0/b/twitter-clone-4fce9.appspot.com/o/'), '');
        filePath = filePath.replaceAll(new RegExp(r'%2F'), '/');
@@ -227,6 +236,7 @@ class FeedState extends AuthState {
      cprint(error);
    } 
  } 
+  
   addLikeToComment({String postId,FeedModel commentModel,String userId}){
      try {
       if (commentModel != null) {
@@ -258,6 +268,7 @@ class FeedState extends AuthState {
       cprint(error);
     }
   }
+  
   /// [postId] is tweet id, [userId] is user's id
   addLikeToTweet(String postId,String userId){
      try {
@@ -292,15 +303,16 @@ class FeedState extends AuthState {
       cprint(error);
     }
   }
-  addcommentToPost(String postId,{String userId,String comment,User user,List<String> tags}){
-    if(comment == null || comment.isEmpty){
-      return;
-    }
+  
+  addcommentToPost(String postId,FeedModel replyTweet){
+    
      try {
+       isBusy = true;
+       notifyListeners();
       if (postId != null) {
         FeedModel tweet = _feedlist.firstWhere((x)=>x.key == postId);
-        FeedModel reply = FeedModel(description: comment,user:user,createdAt: DateTime.now().toString(),tags:tags,userId: user.userId );
-        var json = reply.toJson();
+        // FeedModel reply = FeedModel(description: comment,user:user,createdAt: DateTime.now().toString(),tags:tags,userId: user.userId );
+        var json = replyTweet.toJson();
         _database
             .reference()
             .child('comment')
@@ -316,6 +328,8 @@ class FeedState extends AuthState {
     } catch (error) {
       cprint(error);
     }
+    isBusy = false;
+    notifyListeners();
   }
   
   _onTweetChanged(Event event) {
@@ -330,6 +344,7 @@ class FeedState extends AuthState {
       }
     if (event.snapshot != null) {
       cprint('feed updated');
+      isBusy = false;
       notifyListeners();
     }
   }
@@ -346,6 +361,7 @@ class FeedState extends AuthState {
     if (event.snapshot != null) {
       cprint('feed created');
     }
+    isBusy = false;
     notifyListeners();
   }
 
@@ -362,6 +378,7 @@ class FeedState extends AuthState {
         
     if (event.snapshot != null) {
       cprint('feed updated');
+      isBusy = false;
       notifyListeners();
     }
   }
@@ -381,6 +398,7 @@ class FeedState extends AuthState {
     if (event.snapshot != null) {
       cprint('Comment created');
     }
+    isBusy = false;
     notifyListeners();
   }
 

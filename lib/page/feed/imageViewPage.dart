@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
+import 'package:flutter_twitter_clone/helper/utility.dart';
+import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
@@ -129,7 +131,9 @@ class _ImageViewPgeState extends State<ImageViewPge> {
      }
      var commentedUser = User(displayName: user.displayName ?? user.email.split('@')[0],profilePic: profilePic,userId: user.uid,);
      var postId = state.feedModel.key;
-     state.addcommentToPost(postId,userId:authState.user.uid,comment: _textEditingController.text,user: commentedUser);
+     var tags = getHashTags(_textEditingController.text);
+     FeedModel reply = FeedModel(description:  _textEditingController.text,user:commentedUser,createdAt: DateTime.now().toString(),tags:tags,userId: commentedUser.userId );
+     state.addcommentToPost(postId,reply);
      FocusScope.of(context).requestFocus(_focusNode);
       setState(() {
         _textEditingController.text = '';
