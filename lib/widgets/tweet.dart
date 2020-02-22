@@ -6,7 +6,6 @@ import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/page/feed/widgets/tweetIconsRow.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import 'customWidgets.dart';
@@ -55,7 +54,7 @@ class _TweetState extends State<Tweet> {
    var feedstate = Provider.of<FeedState>(context,);
     return InkWell(
       onTap: (){
-            if(widget.type == TweetType.Detail || widget.type == TweetType.Reply ){
+            if(widget.type == TweetType.Detail){
               return;
             }
            feedstate.setFeedModel = _model;

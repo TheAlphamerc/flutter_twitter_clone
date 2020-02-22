@@ -12,8 +12,22 @@ class FeedModel {
   String createdAt;
   String imagePath;
   List<String> tags;
+  List<String> replyTweetKeyList;
   User user;
-  FeedModel({this.key,this.description, this.userId,this.likeCount,this.commentCount,this.createdAt,this.imagePath,this.likeList,this.tags,this.isVerifiedUser,this.user});
+  FeedModel({
+    this.key,
+    this.description,
+    this.userId,
+    this.likeCount,
+    this.commentCount,
+    this.createdAt,
+    this.imagePath,
+    this.likeList,
+    this.tags,
+    this.isVerifiedUser,
+    this.user,
+    this.replyTweetKeyList
+    });
   toJson() {
     Map<dynamic,dynamic> map;
     if(likeList != null && likeList.length > 0){
@@ -31,6 +45,7 @@ class FeedModel {
       "imagePath":imagePath,
       "likeList":map,
       "tags":tags,
+      "replyTweetKeyList":replyTweetKeyList,
       "isVerifiedUser":isVerifiedUser ?? false,
       "user":user == null ? null : user.toJson()
     };
@@ -77,6 +92,19 @@ class FeedModel {
    else{
      likeList = [];
      likeCount = 0;
+   }
+   if(map['replyTweetKeyList'] != null){
+      map['replyTweetKeyList'].forEach((value){
+       replyTweetKeyList = List<String>();
+        map['replyTweetKeyList'].forEach((value){
+           replyTweetKeyList.add(value);
+       });
+     });
+     commentCount = replyTweetKeyList.length;
+   }
+   else{
+     replyTweetKeyList = [];
+     commentCount = 0;
    }
   }
 }

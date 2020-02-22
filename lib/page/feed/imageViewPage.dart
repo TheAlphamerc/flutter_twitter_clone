@@ -40,7 +40,7 @@ class _ImageViewPgeState extends State<ImageViewPge> {
                    isToolAvailable = !isToolAvailable;
                 });
               },
-               child:_imageFeed(state.feedModel.imagePath)
+               child:_imageFeed(state.feedModel.last.imagePath)
             )
           ),
         ),
@@ -68,7 +68,7 @@ class _ImageViewPgeState extends State<ImageViewPge> {
                 child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                TweetIconsRow(model:state.feedModel,iconColor: Theme.of(context).colorScheme.onPrimary,iconEnableColor:  Theme.of(context).colorScheme.onPrimary,),
+                TweetIconsRow(model:state.feedModel.last,iconColor: Theme.of(context).colorScheme.onPrimary,iconEnableColor:  Theme.of(context).colorScheme.onPrimary,),
                 Container(
                   color: Colors.brown.shade700.withAlpha(200),
                   padding: EdgeInsets.only(right: 10,left:10,bottom:10),
@@ -119,7 +119,7 @@ class _ImageViewPgeState extends State<ImageViewPge> {
   void addLikeToTweet() {
     var state = Provider.of<FeedState>(context,);
     var authState = Provider.of<AuthState>(context,);
-    state.addLikeToTweet(state.feedModel.key, authState.userId);
+    state.addLikeToTweet(state.feedModel.last.key, authState.userId);
   }
   void _submitButton(){
      var state = Provider.of<FeedState>(context,);
@@ -130,7 +130,7 @@ class _ImageViewPgeState extends State<ImageViewPge> {
        profilePic = dummyProfilePic;
      }
      var commentedUser = User(displayName: user.displayName ?? user.email.split('@')[0],profilePic: profilePic,userId: user.uid,);
-     var postId = state.feedModel.key;
+     var postId = state.feedModel.last.key;
      var tags = getHashTags(_textEditingController.text);
      FeedModel reply = FeedModel(description:  _textEditingController.text,user:commentedUser,createdAt: DateTime.now().toString(),tags:tags,userId: commentedUser.userId );
      state.addcommentToPost(postId,reply);

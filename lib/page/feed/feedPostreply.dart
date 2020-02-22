@@ -49,8 +49,6 @@ class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
       if (!isScrollingDown) {
         setState(() {
           isScrollingDown = true;
-          //  scrollcontroller.animateTo(scrollcontroller.position.maxScrollExtent,
-          //   duration: Duration(milliseconds: 300), curve: Curves.ease);
         });
       }
     }
@@ -62,14 +60,6 @@ class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
             duration: Duration(milliseconds: 300), curve: Curves.ease);
       });
     }
-    // if (scrollcontroller.offset >= scrollcontroller.position.maxScrollExtent &&
-    //   !scrollcontroller.position.outOfRange) {
-    //   cprint("List reach the bottom");
-    //   }
-    // if (scrollcontroller.offset <= scrollcontroller.position.minScrollExtent &&
-    //     !scrollcontroller.position.outOfRange) {
-    //    cprint("List reach the top");
-    // }
   }
 
   Widget _descriptionEntry() {
@@ -86,11 +76,11 @@ class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
     );
   }
 
-  Widget _postCard() {
+  Widget _tweerCard() {
     var feedState = Provider.of<FeedState>(
       context,
     );
-    var model = feedState.feedModel;
+    var model = feedState.feedModel.last;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -115,9 +105,9 @@ class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
                       width: fullWidth(context) - 82,
                       child: UrlText(
                         text: model.description,
-                        style: TextStyle(
-                            color: Colors.black, fontWeight: FontWeight.w400),
-                        urlStyle: TextStyle(
+                          style: TextStyle(color: Colors.black,fontSize: 18 ,
+                            fontWeight: FontWeight.w400),
+                            urlStyle: TextStyle(
                             color: Colors.blue, fontWeight: FontWeight.w400),
                       ),
                     ),
@@ -137,25 +127,22 @@ class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                customImage(context, model.user.profilePic),
+                customImage(context, model.user.profilePic, height: 40),
                 SizedBox(
-                  width: 10,
+                  width: 20,
                 ),
-                customText(model.user.displayName, style: titleStyle),
-                SizedBox(
-                  width: 10,
+                UrlText(
+                  text: model.user.displayName,
+                  style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.w800,),
                 ),
-                customText(model.user.userName,
-                    style: TextStyle(
-                      color: TwitterColor.paleSky,
-                      fontSize: 17,
-                      fontWeight: FontWeight.w500,
-                    )),
-                SizedBox(
-                  width: 10,
-                ),
-                customText('- ${getChatTime(model.createdAt)}',
-                    style: subtitleStyle)
+                SizedBox(width: 3,),
+                model.user.isVerified ?
+                customIcon(context,icon:AppIcon.blueTick, istwitterIcon: true,iconColor:  AppColor.primary, size:13,paddingIcon:3)
+                :SizedBox(width: 0,),
+                SizedBox(width: model.user.isVerified ? 5 : 0,),
+                customText('${model.user.userName}',style: userNameStyle),
+                SizedBox(width: 10,),
+                customText('- ${getChatTime(model.createdAt)}',style: userNameStyle),
               ],
             ),
           ],
@@ -276,7 +263,7 @@ class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    _postCard(),
+                    _tweerCard(),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
