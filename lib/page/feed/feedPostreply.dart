@@ -80,7 +80,7 @@ class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
     var feedState = Provider.of<FeedState>(
       context,
     );
-    var model = feedState.feedModel.last;
+    var model = feedState.tweetDetailModel.last;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,

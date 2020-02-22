@@ -87,7 +87,7 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
   void openbottomSheet(TweetType type,String tweetId) async {
      var state = Provider.of<FeedState>(context,);
      var authState = Provider.of<AuthState>(context,);
-     bool isMyTweet = authState.userId == state.feedModel.last.userId;
+     bool isMyTweet = authState.userId == state.tweetDetailModel.last.userId;
     await showModalBottomSheet(
         backgroundColor: Colors.transparent,
         context: context,
@@ -111,12 +111,12 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
                         borderRadius: BorderRadius.all(Radius.circular(10)))
                 ),
                 widgetBottomSheetRow(AppIcon.link,text:'Copy link to tweet'),
-                isMyTweet ? widgetBottomSheetRow(AppIcon.unFollow,text:'Pin to profile') : widgetBottomSheetRow(AppIcon.unFollow,text:'Unfollow ${state.feedModel.last.user.userName}'),
-                isMyTweet ? widgetBottomSheetRow(AppIcon.delete,text:'Delete Tweet', onPressed: (){deleteTweet(type,tweetId);},isEnable:true) : widgetBottomSheetRow(AppIcon.unFollow,text:'Unfollow ${state.feedModel.last.user.userName}'),
-                isMyTweet ? Container() : widgetBottomSheetRow(AppIcon.mute,text:'Mute ${state.feedModel.last.user.userName}'),
+                isMyTweet ? widgetBottomSheetRow(AppIcon.unFollow,text:'Pin to profile') : widgetBottomSheetRow(AppIcon.unFollow,text:'Unfollow ${state.tweetDetailModel.last.user.userName}'),
+                isMyTweet ? widgetBottomSheetRow(AppIcon.delete,text:'Delete Tweet', onPressed: (){deleteTweet(type,tweetId);},isEnable:true) : widgetBottomSheetRow(AppIcon.unFollow,text:'Unfollow ${state.tweetDetailModel.last.user.userName}'),
+                isMyTweet ? Container() : widgetBottomSheetRow(AppIcon.mute,text:'Mute ${state.tweetDetailModel.last.user.userName}'),
                 widgetBottomSheetRow(AppIcon.mute,text:'Mute this convertion'),
                 widgetBottomSheetRow(AppIcon.viewHidden,text:'View hidden replies'),
-                isMyTweet ? Container() : widgetBottomSheetRow(AppIcon.block,text:'Block ${state.feedModel.last.user.userName}'),
+                isMyTweet ? Container() : widgetBottomSheetRow(AppIcon.block,text:'Block ${state.tweetDetailModel.last.user.userName}'),
                 isMyTweet ? Container() : widgetBottomSheetRow(AppIcon.report,text:'Report Tweet'),
               ],
             ),
@@ -143,11 +143,11 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
     );
   }
 
-  void addLikeToTweet(String postId) {
-    var state = Provider.of<FeedState>(context,);
-    var authState = Provider.of<AuthState>(context,);
-    state.addLikeToTweet(postId, authState.userId);
-  }
+  // void addLikeToTweet(String postId) {
+  //   var state = Provider.of<FeedState>(context,);
+  //   var authState = Provider.of<AuthState>(context,);
+  //   state.addLikeToTweet(postId, authState.userId);
+  // }
 
   void addLikeToComment(String commentId) {
     var state = Provider.of<FeedState>(
@@ -156,7 +156,7 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
     var authState = Provider.of<AuthState>(
       context,
     );
-    state.addLikeToTweet(state.feedModel.last.key,authState.userId);
+    state.addLikeToTweet(state.tweetDetailModel.last,authState.userId);
   }
 
   void openImage() async {
@@ -197,7 +197,7 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
           SliverList(
             delegate: SliverChildListDelegate(
               [
-                _postBody(state.feedModel.last),
+                _postBody(state.tweetDetailModel.last),
                 Container(
                 height: 6,
                 width: fullWidth(context),
@@ -208,14 +208,14 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
           ),
           SliverList(
             delegate: SliverChildListDelegate(
-                state.tweetReplyList == null || state.tweetReplyList.length == 0 || state.tweetReplyList[postId] == null
+                state.tweetReplyMap == null || state.tweetReplyMap.length == 0 || state.tweetReplyMap[postId] == null
                     ? [
                         Container(
                             child: Center(
                                 //  child: Text('No comments'),
                                 ))
                       ]
-                    : state.tweetReplyList[postId].map((x) => _commentRow(x)).toList()),
+                    : state.tweetReplyMap[postId].map((x) => _commentRow(x)).toList()),
           )
         ]))
     );

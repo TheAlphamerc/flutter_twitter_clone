@@ -40,7 +40,7 @@ class _TweetIconsRowState extends State<TweetIconsRow> {
               if(widget.type == TweetType.Reply){
                 return;
               }
-              feedstate.setFeedModel = model;
+              // feedstate.setFeedModel = model;
               Navigator.of(context).pushNamed('/FeedPostReplyPage/'+model.key);
             },),
           _iconWidget(
@@ -152,7 +152,7 @@ class _TweetIconsRowState extends State<TweetIconsRow> {
   void addLikeToTweet() {
     var state = Provider.of<FeedState>(context,);
     var authState = Provider.of<AuthState>(context,);
-    state.addLikeToTweet(widget.model.key, authState.userId);
+    state.addLikeToTweet(widget.model, authState.userId);
   }
   @override
   Widget build(BuildContext context) {
