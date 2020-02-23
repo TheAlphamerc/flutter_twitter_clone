@@ -57,7 +57,7 @@ class _TweetState extends State<Tweet> {
             if(widget.type == TweetType.Detail){
               return;
             }
-           feedstate.setFeedModel = _model;
+          //  feedstate.setFeedModel = _model;
            Navigator.of(context).pushNamed('/FeedPostDetail/'+_model.key);
       },
       child: Column(

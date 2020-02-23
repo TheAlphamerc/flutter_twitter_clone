@@ -132,7 +132,12 @@ class _ImageViewPgeState extends State<ImageViewPge> {
      var commentedUser = User(displayName: user.displayName ?? user.email.split('@')[0],profilePic: profilePic,userId: user.uid,);
      var postId = state.tweetDetailModel.last.key;
      var tags = getHashTags(_textEditingController.text);
-     FeedModel reply = FeedModel(description:  _textEditingController.text,user:commentedUser,createdAt: DateTime.now().toString(),tags:tags,userId: commentedUser.userId );
+     FeedModel reply = FeedModel(
+       description:  _textEditingController.text,
+       user:commentedUser,createdAt: DateTime.now().toString(),
+       tags:tags,userId: commentedUser.userId,
+       parentkey : postId,
+     );
      state.addcommentToPost(postId,reply);
      FocusScope.of(context).requestFocus(_focusNode);
       setState(() {

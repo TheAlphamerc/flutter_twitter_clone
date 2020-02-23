@@ -34,6 +34,7 @@ class FeedState extends AuthState {
         _tweetDetailModel.length > 0 &&
         !_tweetDetailModel.any((x) => x.key == model.key)) {
          _tweetDetailModel.add(model);
+         notifyListeners();
        }
   }
 
@@ -59,7 +60,7 @@ class FeedState extends AuthState {
       return List.from(_commentlist);
     }
   }
-
+  /// [Intitilise firebase Database]
   Future<bool> databaseInit() {
     try {
       if (_feedQuery == null) {
@@ -67,9 +68,7 @@ class FeedState extends AuthState {
         _commentQuery = _database.reference().child("comment");
         _feedQuery.onChildAdded.listen(_onTweetAdded);
         _feedQuery.onChildChanged.listen(_onTweetChanged);
-
-        _commentQuery.onChildAdded.listen(_onCommentChanged);
-        _commentQuery.onChildChanged.listen(_onCommentAdded);
+        // _commentQuery.onChildAdded.listen(_onCommentChanged);
       }
 
       return Future.value(true);
@@ -78,7 +77,7 @@ class FeedState extends AuthState {
       return Future.value(false);
     }
   }
-
+ /// get [Tweet list] from firebase realtime database
   void getDataFromDatabase() {
     try {
       isBusy = true;
@@ -105,7 +104,7 @@ class FeedState extends AuthState {
       cprint(error);
     }
   }
-
+  /// get [Tweet Detail] from firebase realtime database
   void getpostDetailFromDatabase(String postID) {
     try {
       FeedModel _tweetDetail;
@@ -124,9 +123,9 @@ class FeedState extends AuthState {
           // _tweetDetailModel = null;
         }
       }).then((value) {
+          _commentlist = List<FeedModel>();
         if (_tweetDetail.replyTweetKeyList != null &&
             _tweetDetail.replyTweetKeyList.length > 0) {
-          _commentlist = List<FeedModel>();
           _tweetDetail.replyTweetKeyList.forEach((x) {
             if (x == null) {
               return;
@@ -145,7 +144,9 @@ class FeedState extends AuthState {
                 if (!_commentlist.any((x) => x.key == key)) {
                   _commentlist.add(commentmodel);
                 }
-              } else {}
+              } else {
+
+              }
               if (x == _tweetDetail.replyTweetKeyList.last) {
                 tweetReplyMap.putIfAbsent(postID, () => _commentlist);
                 notifyListeners();
@@ -153,12 +154,16 @@ class FeedState extends AuthState {
             });
           });
         }
+        else{
+          tweetReplyMap.putIfAbsent(postID, () => _commentlist);
+                notifyListeners();
+        }
       });
     } catch (error) {
       cprint(error);
     }
   }
-
+  /// create [New Tweet]
   createTweet(FeedModel model) {
     ///  Create feed in [Firebase database]
     isBusy = true;
@@ -171,35 +176,10 @@ class FeedState extends AuthState {
     isBusy = false;
     notifyListeners();
   }
-
+  /// [Delete tweet]
   deleteTweet(String tweetId, TweetType type) {
     ///  Delete feed in [Firebase database]
     try {
-      if (type == TweetType.Reply) {
-        _database
-            .reference()
-            .child('comment')
-            .child(_tweetDetailModel.last.key)
-            .remove()
-            .then((_) {
-          _commentlist.removeWhere((x) => x.key == tweetId);
-          if (_commentlist.length == 0) {
-            _commentlist = null;
-          }
-          _tweetDetailModel.last.commentCount =
-              _commentlist == null ? 0 : _commentlist.length;
-          _database
-              .reference()
-              .child('feed')
-              .child(_tweetDetailModel.last.key)
-              .set(_tweetDetailModel.last.toJson())
-              .then((_) {
-            cprint('Reply  deleted');
-            notifyListeners();
-          });
-        });
-        return;
-      } else {
         _database.reference().child('feed').child(tweetId).remove().then((_) {
           if (_feedlist.any((x) => x.key == tweetId)) {
             if (_tweetDetailModel.last.imagePath != null &&
@@ -215,12 +195,12 @@ class FeedState extends AuthState {
           }
         });
         _database.reference().child('comment').child(tweetId).remove();
-      }
+      
     } catch (error) {
       cprint(error);
     }
   }
-
+  /// upload [file] to firebase storage and return its  path url
   Future<String> uploadFile(File file) async {
     try {
       isBusy = true;
@@ -241,7 +221,7 @@ class FeedState extends AuthState {
       return null;
     }
   }
-
+  /// [Delete file] from firebase storage 
   Future<void> deleteFile(String url, String baseUrl) async {
     try {
       String filePath = url.replaceAll(
@@ -262,7 +242,7 @@ class FeedState extends AuthState {
       cprint(error);
     }
   }
-
+  /// add [Like] to tweet
   addLikeToComment({String postId, FeedModel commentModel, String userId}) {
     try {
       if (commentModel != null) {
@@ -294,7 +274,6 @@ class FeedState extends AuthState {
       cprint(error);
     }
   }
-
   /// [postId] is tweet id, [userId] is user's id
   addLikeToTweet(FeedModel tweet, String userId) {
     try {
@@ -324,23 +303,20 @@ class FeedState extends AuthState {
       cprint("[addLikeToTweet] $error");
     }
   }
-
+  /// add [new comment tweet] to any tweet
   addcommentToPost(String postId, FeedModel replyTweet) {
     try {
       isBusy = true;
       notifyListeners();
       if (postId != null) {
         FeedModel tweet = _feedlist.firstWhere((x) => x.key == postId);
-
-        // FeedModel reply = FeedModel(description: comment,user:user,createdAt: DateTime.now().toString(),tags:tags,userId: user.userId );
+        
         var json = replyTweet.toJson();
         _database.reference().child('feed').push().set(json).then((value) {
-          FeedModel model = _feedlist.firstWhere((x) => x.key == postId);
-          model.commentCount += 1;
+        
           tweet.replyTweetKeyList.add(_feedlist.last.key);
           _database.reference().child('feed').child(postId).set(tweet.toJson());
         });
-        // child(postId)
       }
     } catch (error) {
       cprint(error);
@@ -350,8 +326,6 @@ class FeedState extends AuthState {
   }
 
   _onTweetChanged(Event event) {
-    
-
     var model = FeedModel.fromJson(event.snapshot.value);
     model.key = event.snapshot.key;
     if (_feedlist.any((x) => x.key == model.key)) {
@@ -371,9 +345,16 @@ class FeedState extends AuthState {
       }
       if(tweetReplyMap != null && tweetReplyMap.length > 0){
           if(true){
-            var list = tweetReplyMap.values.firstWhere((x) => x.any((y) => y.key == model.key));
-            list.firstWhere((x) => x.key == model.key).likeCount = model.likeCount;
-            list.firstWhere((x) => x.key == model.key).likeList = model.likeList;
+            var list = tweetReplyMap[model.parentkey];
+            //  var list = tweetReplyMap.values.firstWhere((x) => x.any((y) => y.key == model.key));
+            if(list != null && list.length > 0){
+              list.firstWhere((x) => x.key == model.key).likeCount = model.likeCount;
+              list.firstWhere((x) => x.key == model.key).likeList = model.likeList;
+            }
+            else{
+              list = [];
+              list.add(model);
+            }
           }
       }
     }
@@ -385,56 +366,32 @@ class FeedState extends AuthState {
   }
 
   _onTweetAdded(Event event) {
-    FeedModel _feed = FeedModel.fromJson(event.snapshot.value);
-    _feed.key = event.snapshot.key;
+    FeedModel tweet = FeedModel.fromJson(event.snapshot.value);
+    tweet.key = event.snapshot.key;
+    _onCommentAdded(tweet);
+    tweet.key = event.snapshot.key;
     if (_feedlist == null) {
       _feedlist = List<FeedModel>();
     }
-    if (_feedlist.length == 0 || _feedlist.any((x) => x.key != _feed.key)) {
-      _feedlist.add(_feed);
+    if (_feedlist.length == 0 || _feedlist.any((x) => x.key != tweet.key)) {
+      _feedlist.add(tweet);
     }
-    if (event.snapshot != null) {
-      cprint('feed created');
-    }
+    cprint('feed created');
     isBusy = false;
     notifyListeners();
   }
 
-  _onCommentChanged(Event event) {
-    FeedModel _comment;
-    if (_commentlist == null) {
-      _commentlist = List<FeedModel>();
+  _onCommentAdded(FeedModel tweet) {
+    /// add [new tweet] comment to comment list 
+    if(tweetReplyMap != null && tweetReplyMap.length > 0){
+       var list = tweetReplyMap[tweet.parentkey];
+       if(list != null){
+          list.add(tweet);
+       }
     }
-    event.snapshot.value.forEach((key, value) {
-      _comment = FeedModel.fromJson(value);
-      _comment.key = key;
-      _commentlist.add(_comment);
-    });
-
-    if (event.snapshot != null) {
-      cprint('feed updated');
-      isBusy = false;
-      notifyListeners();
-    }
-  }
-
-  _onCommentAdded(Event event) {
-    FeedModel _comment;
-    if (_commentlist == null) {
-      _commentlist = List<FeedModel>();
-    }
-    _commentlist.clear();
-    event.snapshot.value.forEach((key, value) {
-      _comment = FeedModel.fromJson(value);
-      _comment.key = key;
-      _commentlist.add(_comment);
-    });
-
-    _tweetDetailModel.last.commentCount = _commentlist.length;
-    if (event.snapshot != null) {
       cprint('Comment created');
-    }
     isBusy = false;
     notifyListeners();
   }
+
 }

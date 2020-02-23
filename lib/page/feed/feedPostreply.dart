@@ -218,6 +218,7 @@ class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
         user: commentedUser,
         createdAt: DateTime.now().toString(),
         tags: tags,
+        parentkey : postId,
         userId: commentedUser.userId);
     if (_image != null) {
       await state.uploadFile(_image).then((imagePath) {
