@@ -143,12 +143,6 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
     );
   }
 
-  // void addLikeToTweet(String postId) {
-  //   var state = Provider.of<FeedState>(context,);
-  //   var authState = Provider.of<AuthState>(context,);
-  //   state.addLikeToTweet(postId, authState.userId);
-  // }
-
   void addLikeToComment(String commentId) {
     var state = Provider.of<FeedState>(
       context,

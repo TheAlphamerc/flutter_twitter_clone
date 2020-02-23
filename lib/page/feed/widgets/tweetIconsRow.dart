@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
+import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
@@ -8,7 +9,7 @@ import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:provider/provider.dart';
 
-class TweetIconsRow extends StatefulWidget {
+class TweetIconsRow extends StatelessWidget {
   final FeedModel model;
   final Color iconColor;
   final Color iconEnableColor;
@@ -17,14 +18,8 @@ class TweetIconsRow extends StatefulWidget {
   final TweetType type;
   const TweetIconsRow({Key key, this.model, this.iconColor, this.iconEnableColor, this.size, this.isTweetDetail = false, this.type}) : super(key: key);
 
-  _TweetIconsRowState createState() => _TweetIconsRowState();
-}
-
-class _TweetIconsRowState extends State<TweetIconsRow> {
- 
-  Widget _likeCommentsIcons(FeedModel model) {
+  Widget _likeCommentsIcons(BuildContext context, FeedModel model) {
     var state = Provider.of<AuthState>(context,);
-    var feedstate = Provider.of<FeedState>(context,);
     return Container(
       color: Colors.transparent,
       padding: EdgeInsets.only(bottom: 0,top:0),
@@ -33,38 +28,42 @@ class _TweetIconsRowState extends State<TweetIconsRow> {
         children: <Widget>[
           SizedBox(width: 20,),
           _iconWidget(
-            text: widget.isTweetDetail ? '' : model.commentCount.toString(),
-            icon:AppIcon.reply,iconColor: widget.iconColor,
-            size : widget.size ?? 20,
+            context,
+            text: isTweetDetail ? '' : model.commentCount.toString(),
+            icon:AppIcon.reply,iconColor: iconColor,
+            size : size ?? 20,
             onPressed: (){
              Navigator.of(context).pushNamed('/FeedPostReplyPage/'+model.key);
             },),
           _iconWidget(
-            text:widget.isTweetDetail ? '' : model.commentCount.toString(),
-            icon:AppIcon.retweet,iconColor: widget.iconColor,size : widget.size ?? 20),
+            context,
+            text:isTweetDetail ? '' : model.commentCount.toString(),
+            icon:AppIcon.retweet,iconColor: iconColor,size : size ?? 20),
           _iconWidget(
-            text:widget.isTweetDetail ? '' : model.likeCount.toString(),
+            context,
+            text:isTweetDetail ? '' : model.likeCount.toString(),
             icon:model.likeList.any((x)=>x.userId == state.userId) 
             ? AppIcon.heartFill 
             : AppIcon.heartEmpty,
-            onPressed:(){addLikeToTweet();},
-            iconColor: model.likeList.any((x)=>x.userId == state.userId )? widget.iconEnableColor : widget.iconColor ,
-            size : widget.size ?? 20
+            onPressed:(){addLikeToTweet(context);},
+            iconColor: model.likeList.any((x)=>x.userId == state.userId )? iconEnableColor : iconColor ,
+            size : size ?? 20
           ),
           _iconWidget(
+            context,
             text:'',
             icon:null,
             sysIcon:Icons.share,
             onPressed: (){share('${model.description}',
             subject:'${model.user.displayName}\'s post');},
-            iconColor: widget.iconColor,
-            size : widget.size ?? 20),
+            iconColor: iconColor,
+            size : size ?? 20),
          
         ],
     )
     );
   }
-  Widget _iconWidget({String text, int icon,Function onPressed,IconData sysIcon,Color iconColor, double size = 20}){
+  Widget _iconWidget(BuildContext context,{String text, int icon,Function onPressed,IconData sysIcon,Color iconColor, double size = 20}){
     return Expanded(
       child:Container(
         child: Row(
@@ -80,16 +79,17 @@ class _TweetIconsRowState extends State<TweetIconsRow> {
       )
     );
   }
-  Widget _timeWidget(){
+  Widget _timeWidget(BuildContext context){
    return Column(children: <Widget>[
-     SizedBox(height: 15,),
+     SizedBox(height: 5,),
       Row(
         children: <Widget>[
-          customText(getPostTime2(widget.model.createdAt),
+          SizedBox(width: 5,),
+          customText(getPostTime2(model.createdAt),
               style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: Colors.black54)),
+                  color: TwitterColor.woodsmoke_50)),
           SizedBox(
             width: 10,
           ),
@@ -115,7 +115,7 @@ class _TweetIconsRowState extends State<TweetIconsRow> {
             SizedBox(
               width: 10,
             ),
-            customText(widget.model.commentCount.toString(),
+            customText(model.commentCount.toString(),
                 style: TextStyle(fontWeight: FontWeight.bold)),
             SizedBox(
               width: 10,
@@ -126,9 +126,9 @@ class _TweetIconsRowState extends State<TweetIconsRow> {
             ),
             customSwitcherWidget(
               duraton: Duration(milliseconds: 300),
-              child: customText(widget.model.likeCount.toString(),
+              child: customText(model.likeCount.toString(),
                   style: TextStyle(fontWeight: FontWeight.bold),
-                  key: ValueKey(widget.model.likeCount)),
+                  key: ValueKey(model.likeCount)),
             ),
             SizedBox(
               width: 10,
@@ -145,19 +145,19 @@ class _TweetIconsRowState extends State<TweetIconsRow> {
         ),
     ],);
   }
-  void addLikeToTweet() {
+  void addLikeToTweet(BuildContext context) {
     var state = Provider.of<FeedState>(context,);
     var authState = Provider.of<AuthState>(context,);
-    state.addLikeToTweet(widget.model, authState.userId);
+    state.addLikeToTweet(model, authState.userId);
   }
   @override
   Widget build(BuildContext context) {
     return Container(
        child:Column(children: <Widget>[
-          widget.isTweetDetail ?  _timeWidget() : SizedBox(),
-          widget.isTweetDetail ? _likeCommentWidget() : SizedBox(),
+          isTweetDetail ?  _timeWidget(context): SizedBox(),
+          isTweetDetail ? _likeCommentWidget() : SizedBox(),
         
-         _likeCommentsIcons(widget.model)
+         _likeCommentsIcons(context, model)
        ],)
     );
   }

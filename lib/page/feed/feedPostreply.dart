@@ -15,6 +15,7 @@ import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
 import 'package:provider/provider.dart';
 
 import 'widgets/bottomIconWidget.dart';
+import 'widgets/tweetImage.dart';
 
 class FeedPostReplyPage extends StatefulWidget {
   FeedPostReplyPage({Key key, this.postId}) : super(key: key);
@@ -36,12 +37,12 @@ class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
     
     /// if tweet is detail tweet
     if(feedState.tweetDetailModel.any((x)=>x.key == postId)){
-      cprint('Search tweet from tweet detail page stack tweet');
+      // cprint('Search tweet from tweet detail page stack tweet');
       model = feedState.tweetDetailModel.last;
     }
     /// if tweet is reply tweet
     else if(feedState.tweetReplyMap.values.any((x)=> x.any((y)=>y.key == postId))){
-      cprint('Search tweet from twee detail page  roply tweet');
+      // cprint('Search tweet from twee detail page  roply tweet');
         feedState.tweetReplyMap.forEach((key,value){
             if(value.any((x)=> x.key == postId)){
               model = value.firstWhere((x)=>x.key == postId);
@@ -49,7 +50,7 @@ class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
         });
     }
     else{
-      cprint('Search tweet from home page tweet');
+      // cprint('Search tweet from home page tweet');
       model = feedState.feedlist.firstWhere((x)=> x.key == postId);
     }
     scrollcontroller = ScrollController();
@@ -171,43 +172,6 @@ class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
     );
   }
 
-  Widget _imageFeed() {
-    return _image == null
-        ? Container()
-        : Stack(
-            children: <Widget>[
-              Container(
-                  alignment: Alignment.topRight,
-                  child: Container(
-                    height: 300,
-                    width: fullWidth(context) * .8,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        image: DecorationImage(
-                            image: FileImage(_image), fit: BoxFit.cover)),
-                  )),
-              Align(
-                  alignment: Alignment.topRight,
-                  child: Container(
-                    padding: EdgeInsets.all(0),
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle, color: Colors.black26),
-                    child: IconButton(
-                      padding: EdgeInsets.all(0),
-                      iconSize: 20,
-                      onPressed: () {
-                        setState(() {
-                          _image = null;
-                        });
-                      },
-                      icon: Icon(Icons.close,
-                          color: Theme.of(context).colorScheme.onPrimary),
-                    ),
-                  ))
-            ],
-          );
-  }
-
   void _submitButton() async {
     if (_textEditingController.text == null ||
         _textEditingController.text.isEmpty ||
@@ -297,8 +261,14 @@ class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
                         )
                       ],
                     ),
-                    _imageFeed(),
-                    //  Divider(),
+                    TweetImage(
+                      image: _image,
+                      onCrossIconPressed: () {
+                        setState(() {
+                          _image = null;
+                        });
+                      },
+                    ),
                     Expanded(
                       child: Container(),
                     )
