@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/firebase_database.dart' as dabase;
@@ -17,12 +15,10 @@ class FeedState extends AuthState {
   bool isBusy = false;
   final FirebaseDatabase _database = FirebaseDatabase.instance;
   List<FeedModel> _feedlist;
-  // bool isbbusy = false;
   List<FeedModel> _tweetDetailModel;
   List<FeedModel> _commentlist;
   Map<String, List<FeedModel>> tweetReplyMap = {};
   dabase.Query _feedQuery;
-  dabase.Query _commentQuery;
   List<FeedModel> get tweetDetailModel => _tweetDetailModel;
   set setFeedModel(FeedModel model) {
     if (_tweetDetailModel == null) {
@@ -37,14 +33,24 @@ class FeedState extends AuthState {
          notifyListeners();
        }
   }
-
+  /// remove last tweet available from tweet detail page stack
   void removeLastTweetDetail(String tweetKey) {
     if (_tweetDetailModel != null && _tweetDetailModel.length > 0) {
       _tweetDetailModel.removeWhere((x) => x.key == tweetKey);
       tweetReplyMap.removeWhere((key, value) => key == tweetKey);
     }
   }
-
+  /// [clear all tweets] if any tweet present in tweet detail page or comment tweet
+  void clearAllDetailAndReplyTweetStack(){
+    if(_tweetDetailModel != null){
+      _tweetDetailModel.clear();
+    }
+   if(tweetReplyMap != null){
+     tweetReplyMap.clear();
+   }
+    cprint('Empty tweets from stack');
+  }
+  /// contain tweet list for home page
   List<FeedModel> get feedlist {
     if (_feedlist == null) {
       return null;
@@ -65,10 +71,8 @@ class FeedState extends AuthState {
     try {
       if (_feedQuery == null) {
         _feedQuery = _database.reference().child("feed");
-        _commentQuery = _database.reference().child("comment");
         _feedQuery.onChildAdded.listen(_onTweetAdded);
         _feedQuery.onChildChanged.listen(_onTweetChanged);
-        // _commentQuery.onChildAdded.listen(_onCommentChanged);
       }
 
       return Future.value(true);

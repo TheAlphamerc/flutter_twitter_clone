@@ -37,11 +37,7 @@ class _TweetIconsRowState extends State<TweetIconsRow> {
             icon:AppIcon.reply,iconColor: widget.iconColor,
             size : widget.size ?? 20,
             onPressed: (){
-              if(widget.type == TweetType.Reply){
-                return;
-              }
-              // feedstate.setFeedModel = model;
-              Navigator.of(context).pushNamed('/FeedPostReplyPage/'+model.key);
+             Navigator.of(context).pushNamed('/FeedPostReplyPage/'+model.key);
             },),
           _iconWidget(
             text:widget.isTweetDetail ? '' : model.commentCount.toString(),
@@ -59,7 +55,7 @@ class _TweetIconsRowState extends State<TweetIconsRow> {
             text:'',
             icon:null,
             sysIcon:Icons.share,
-            onPressed: (){share('social.flutter.dev/feed/${model.key}',
+            onPressed: (){share('${model.description}',
             subject:'${model.user.displayName}\'s post');},
             iconColor: widget.iconColor,
             size : widget.size ?? 20),

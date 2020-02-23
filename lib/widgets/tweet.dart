@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
@@ -53,11 +54,24 @@ class _TweetState extends State<Tweet> {
     
    var feedstate = Provider.of<FeedState>(context,);
     return InkWell(
+      onLongPress: (){
+        if(widget.type == TweetType.Detail){
+          var text = ClipboardData(text:_model.description);
+          Clipboard.setData(text);
+          Scaffold.of(context)
+          .showSnackBar(
+            SnackBar(
+              backgroundColor: Theme.of(context).disabledColor,
+              content: Text('Tweet copied',)));
+        }
+      },
       onTap: (){
             if(widget.type == TweetType.Detail){
               return;
             }
-          //  feedstate.setFeedModel = _model;
+            if(widget.type == TweetType.Tweet){
+              feedstate.clearAllDetailAndReplyTweetStack();
+            }
            Navigator.of(context).pushNamed('/FeedPostDetail/'+_model.key);
       },
       child: Column(

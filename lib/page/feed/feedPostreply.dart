@@ -28,9 +28,30 @@ class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
   bool isScrollingDown = false;
   String postId;
   File _image;
+  FeedModel  model;
   @override
   void initState() {
     postId = widget.postId;
+     var feedState = Provider.of<FeedState>(context,listen: false);
+    
+    /// if tweet is detail tweet
+    if(feedState.tweetDetailModel.any((x)=>x.key == postId)){
+      cprint('Search tweet from tweet detail page stack tweet');
+      model = feedState.tweetDetailModel.last;
+    }
+    /// if tweet is reply tweet
+    else if(feedState.tweetReplyMap.values.any((x)=> x.any((y)=>y.key == postId))){
+      cprint('Search tweet from twee detail page  roply tweet');
+        feedState.tweetReplyMap.forEach((key,value){
+            if(value.any((x)=> x.key == postId)){
+              model = value.firstWhere((x)=>x.key == postId);
+            }
+        });
+    }
+    else{
+      cprint('Search tweet from home page tweet');
+      model = feedState.feedlist.firstWhere((x)=> x.key == postId);
+    }
     scrollcontroller = ScrollController();
     _textEditingController = TextEditingController();
     scrollcontroller..addListener(_scrollListener);
@@ -40,6 +61,7 @@ class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
   @override
   void dispose() {
     scrollcontroller.dispose();
+    _textEditingController.dispose();
     super.dispose();
   }
 
@@ -77,10 +99,8 @@ class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
   }
 
   Widget _tweerCard() {
-    var feedState = Provider.of<FeedState>(
-      context,
-    );
-    var model = feedState.tweetDetailModel.last;
+   
+    
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -104,7 +124,7 @@ class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
                     Container(
                       width: fullWidth(context) - 82,
                       child: UrlText(
-                        text: model.description,
+                        text: model.description ?? '',
                           style: TextStyle(color: Colors.black,fontSize: 18 ,
                             fontWeight: FontWeight.w400),
                             urlStyle: TextStyle(

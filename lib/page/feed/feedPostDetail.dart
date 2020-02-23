@@ -197,7 +197,7 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
           SliverList(
             delegate: SliverChildListDelegate(
               [
-                state.tweetDetailModel.length == 0 ? Container()
+                state.tweetDetailModel == null || state.tweetDetailModel.length == 0 ? Container()
                 : _postBody(state.tweetDetailModel?.last),
                 Container(
                 height: 6,
