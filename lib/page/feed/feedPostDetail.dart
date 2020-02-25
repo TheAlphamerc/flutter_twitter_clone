@@ -42,7 +42,7 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
       trailing: customInkWell(
         radius: BorderRadius.circular(20),
         context: context,
-        onPressed: (){openbottomSheet(TweetType.Reply,model.key);},
+        onPressed: (){openbottomSheet(TweetType.Reply,model);},
         child:Container(
           width: 25,
           height: 25,
@@ -62,11 +62,11 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
 
   Widget _postBody(FeedModel model) {
     return Tweet(model:model,
-      isTweetDetail: true,
+      type: TweetType.Detail,
       trailing: customInkWell(
         radius: BorderRadius.circular(20),
         context: context,
-        onPressed: (){openbottomSheet(TweetType.Tweet,model.key);},
+        onPressed: (){openbottomSheet(TweetType.Detail,model);},
         child:Container(
           width: 25,
           height: 25,
@@ -84,10 +84,10 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
     );
   }
 
-  void openbottomSheet(TweetType type,String tweetId) async {
-     var state = Provider.of<FeedState>(context,);
+  void openbottomSheet(TweetType type,FeedModel model) async {
+    //  var state = Provider.of<FeedState>(context,);
      var authState = Provider.of<AuthState>(context,);
-     bool isMyTweet = authState.userId == state.feedModel.userId;
+     bool isMyTweet = authState.userId == model.userId;
     await showModalBottomSheet(
         backgroundColor: Colors.transparent,
         context: context,
@@ -111,12 +111,12 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
                         borderRadius: BorderRadius.all(Radius.circular(10)))
                 ),
                 widgetBottomSheetRow(AppIcon.link,text:'Copy link to tweet'),
-                isMyTweet ? widgetBottomSheetRow(AppIcon.unFollow,text:'Pin to profile') : widgetBottomSheetRow(AppIcon.unFollow,text:'Unfollow ${state.feedModel.user.userName}'),
-                isMyTweet ? widgetBottomSheetRow(AppIcon.delete,text:'Delete Tweet', onPressed: (){deleteTweet(type,tweetId);},isEnable:true) : widgetBottomSheetRow(AppIcon.unFollow,text:'Unfollow ${state.feedModel.user.userName}'),
-                isMyTweet ? Container() : widgetBottomSheetRow(AppIcon.mute,text:'Mute ${state.feedModel.user.userName}'),
+                isMyTweet ? widgetBottomSheetRow(AppIcon.unFollow,text:'Pin to profile') : widgetBottomSheetRow(AppIcon.unFollow,text:'Unfollow ${model.user.userName}'),
+                isMyTweet ? widgetBottomSheetRow(AppIcon.delete,text:'Delete Tweet', onPressed: (){deleteTweet(type,model.key, parentkey: model.parentkey);},isEnable:true) : widgetBottomSheetRow(AppIcon.unFollow,text:'Unfollow ${model.user.userName}'),
+                isMyTweet ? Container() : widgetBottomSheetRow(AppIcon.mute,text:'Mute ${model.user.userName}'),
                 widgetBottomSheetRow(AppIcon.mute,text:'Mute this convertion'),
                 widgetBottomSheetRow(AppIcon.viewHidden,text:'View hidden replies'),
-                isMyTweet ? Container() : widgetBottomSheetRow(AppIcon.block,text:'Block ${state.feedModel.user.userName}'),
+                isMyTweet ? Container() : widgetBottomSheetRow(AppIcon.block,text:'Block ${model.user.userName}'),
                 isMyTweet ? Container() : widgetBottomSheetRow(AppIcon.report,text:'Report Tweet'),
               ],
             ),
@@ -135,18 +135,12 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
             children: <Widget>[
               customIcon(context, icon:icon, istwitterIcon:true,size: 25,iconColor: isEnable ? AppColor.darkGrey : AppColor.lightGrey),
               SizedBox(width: 15,),
-              customText(text,context:context,style: TextStyle(color: isEnable ? AppColor.secondary : AppColor.lightGrey,fontFamily: appFont, fontSize: 18,fontWeight: FontWeight.w400))
+              customText(text,context:context,style: TextStyle(color: isEnable ? AppColor.secondary : AppColor.lightGrey, fontSize: 18,fontWeight: FontWeight.w400))
             ],
           ),
        ),
       )
     );
-  }
-
-  void addLikeToTweet(String postId) {
-    var state = Provider.of<FeedState>(context,);
-    var authState = Provider.of<AuthState>(context,);
-    state.addLikeToTweet(postId, authState.userId);
   }
 
   void addLikeToComment(String commentId) {
@@ -156,17 +150,17 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
     var authState = Provider.of<AuthState>(
       context,
     );
-    state.addLikeToTweet(state.feedModel.key,authState.userId);
+    state.addLikeToTweet(state.tweetDetailModel.last,authState.userId);
   }
 
   void openImage() async {
     Navigator.pushNamed(context, '/ImageViewPge');
   }
-  void deleteTweet(TweetType type,String tweetId){
+  void deleteTweet(TweetType type,String tweetId, {String parentkey}){
       var state = Provider.of<FeedState>(context,);
-      state.deleteTweet(tweetId,type);
+      state.deleteTweet(tweetId,type,parentkey:parentkey);
       Navigator.of(context).pop();
-      if(type == TweetType.Tweet)
+      if(type == TweetType.Detail)
       Navigator.of(context).pop();
   }
   @override
@@ -174,7 +168,12 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
     var state = Provider.of<FeedState>(
       context,
     );
-    return Scaffold(
+    return WillPopScope(
+      onWillPop: ()async{
+        Provider.of<FeedState>(context,).removeLastTweetDetail(postId);
+        return Future.value(true);
+      },
+      child: Scaffold(
         floatingActionButton: _floatingActionButton(),
         backgroundColor: Theme.of(context).backgroundColor,
         body: CustomScrollView(slivers: <Widget>[
@@ -192,7 +191,8 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
           SliverList(
             delegate: SliverChildListDelegate(
               [
-                _postBody(state.feedModel),
+                state.tweetDetailModel == null || state.tweetDetailModel.length == 0 ? Container()
+                : _postBody(state.tweetDetailModel?.last),
                 Container(
                 height: 6,
                 width: fullWidth(context),
@@ -203,15 +203,16 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
           ),
           SliverList(
             delegate: SliverChildListDelegate(
-                state.commentlist == null || state.commentlist.length == 0
+                state.tweetReplyMap == null || state.tweetReplyMap.length == 0 || state.tweetReplyMap[postId] == null
                     ? [
                         Container(
                             child: Center(
                                 //  child: Text('No comments'),
                                 ))
                       ]
-                    : state.commentlist.map((x) => _commentRow(x)).toList()),
+                    : state.tweetReplyMap[postId].map((x) => _commentRow(x)).toList()),
           )
-        ]));
+        ]))
+    );
   }
 }

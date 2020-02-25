@@ -10,7 +10,7 @@ import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:image_picker/image_picker.dart';
 Widget customTitleText(String title, {BuildContext context}){
-  return Text(title,style: TextStyle(color: Colors.black87,fontFamily: 'HelveticaNeue', fontWeight:FontWeight.w900),);
+  return Text(title,style: TextStyle(color: Colors.black87,fontFamily: 'HelveticaNeue', fontWeight:FontWeight.w900, fontSize: 20),);
 }
 Widget  heading(String heading,{double horizontalPadding = 10,BuildContext context}){
   double fontSize =  16;
@@ -231,7 +231,7 @@ Widget emptyListWidget(BuildContext context, String title,{String subTitle,Strin
    }
    else{
      return Center(
-       child: CircularProgressIndicator(),
+       child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),),
      );
    }
  }

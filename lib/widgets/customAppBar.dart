@@ -80,7 +80,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget{
           : icon == null ? Container()
           : IconButton(
             onPressed: (){if(onActionPressed!=null) onActionPressed();},
-            icon: customIcon(context,icon:icon,istwitterIcon: true),
+            icon: customIcon(context,icon:icon,istwitterIcon: true, size: 25),
           )
         ],
         bottom: PreferredSize(child: Container(color:  isbootomLine ? Colors.grey.shade200 : Theme.of(context).backgroundColor, height:1.0 ,), preferredSize: Size.fromHeight(0.0))

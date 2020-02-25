@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
+import 'package:flutter_twitter_clone/helper/utility.dart';
+import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
@@ -38,7 +40,7 @@ class _ImageViewPgeState extends State<ImageViewPge> {
                    isToolAvailable = !isToolAvailable;
                 });
               },
-               child:_imageFeed(state.feedModel.imagePath)
+               child:_imageFeed(state.tweetDetailModel.last.imagePath)
             )
           ),
         ),
@@ -66,7 +68,7 @@ class _ImageViewPgeState extends State<ImageViewPge> {
                 child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                TweetIconsRow(model:state.feedModel,iconColor: Theme.of(context).colorScheme.onPrimary,iconEnableColor:  Theme.of(context).colorScheme.onPrimary,),
+                TweetIconsRow(model:state.tweetDetailModel.last,iconColor: Theme.of(context).colorScheme.onPrimary,iconEnableColor:  Theme.of(context).colorScheme.onPrimary,),
                 Container(
                   color: Colors.brown.shade700.withAlpha(200),
                   padding: EdgeInsets.only(right: 10,left:10,bottom:10),
@@ -117,7 +119,7 @@ class _ImageViewPgeState extends State<ImageViewPge> {
   void addLikeToTweet() {
     var state = Provider.of<FeedState>(context,);
     var authState = Provider.of<AuthState>(context,);
-    state.addLikeToTweet(state.feedModel.key, authState.userId);
+    state.addLikeToTweet(state.tweetDetailModel.last, authState.userId);
   }
   void _submitButton(){
      var state = Provider.of<FeedState>(context,);
@@ -128,8 +130,15 @@ class _ImageViewPgeState extends State<ImageViewPge> {
        profilePic = dummyProfilePic;
      }
      var commentedUser = User(displayName: user.displayName ?? user.email.split('@')[0],profilePic: profilePic,userId: user.uid,);
-     var postId = state.feedModel.key;
-     state.addcommentToPost(postId,userId:authState.user.uid,comment: _textEditingController.text,user: commentedUser);
+     var postId = state.tweetDetailModel.last.key;
+     var tags = getHashTags(_textEditingController.text);
+     FeedModel reply = FeedModel(
+       description:  _textEditingController.text,
+       user:commentedUser,createdAt: DateTime.now().toString(),
+       tags:tags,userId: commentedUser.userId,
+       parentkey : postId,
+     );
+     state.addcommentToPost(postId,reply);
      FocusScope.of(context).requestFocus(_focusNode);
       setState(() {
         _textEditingController.text = '';

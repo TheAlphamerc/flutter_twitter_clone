@@ -37,44 +37,43 @@ class _ChatListPageState extends State<ChatListPage> {
         return Center(child:Text('No chat available!!',style: TextStyle(color: Colors.grey,fontWeight: FontWeight.bold),),);
       }
       else{
-       return ListView.builder(
+       return ListView.separated(
          itemCount: state.chatUserList.length,
          itemBuilder: (context,index) => _userCard(state.chatUserList[index]),
+         separatorBuilder: (context, index){
+           return Divider(height: 0,);
+         },
         );
       }
   }
  Widget _userCard(User model){
    return Container(
-     child:Column(
-       children: <Widget>[
-          ListTile(
-              onTap: (){
-                Navigator.of(context).pushNamed('/ProfilePage/${model.userId}');
-              },
-              leading: GestureDetector(
-                onTap: (){ Navigator.of(context).pushNamed('/ProfilePage/${model.userId}');},
-                child:  Container(
-                 height: 56,
-                 width: 56,
-                 decoration: BoxDecoration(
-                   border: Border.all(color:Colors.white,width:2),
-                     borderRadius: BorderRadius.circular(28),
-                     image: DecorationImage(image: customAdvanceNetworkImage(model.profilePic ?? dummyProfilePic,),fit:BoxFit.cover)
-                 )
-               ),
-              ),
-              title: customText(
-                model.displayName ?? model.email.split('.')[0],
-                style: onPrimaryTitleText.copyWith(color: Colors.black),
-              ),
-              subtitle: customText(
-                '@${model.displayName}',
-                style: onPrimarySubTitleText.copyWith(color: Colors.black54),
-              ),
-            ),
-            Divider()
-       ],
-     )
+     color: TwitterColor.mystic,
+     child: ListTile(
+       onTap: (){
+         Navigator.of(context).pushNamed('/ProfilePage/${model.userId}');
+       },
+       leading: GestureDetector(
+         onTap: (){ Navigator.of(context).pushNamed('/ProfilePage/${model.userId}');},
+         child:  Container(
+          height: 56,
+          width: 56,
+          decoration: BoxDecoration(
+            border: Border.all(color:Colors.white,width:2),
+              borderRadius: BorderRadius.circular(28),
+              image: DecorationImage(image: customAdvanceNetworkImage(model.profilePic ?? dummyProfilePic,),fit:BoxFit.cover)
+          )
+        ),
+       ),
+       title: customText(
+         model.displayName ?? (model.email == null ? '' : model.email.split('.')[0]),
+         style: onPrimaryTitleText.copyWith(color: Colors.black),
+       ),
+       subtitle: customText(
+         '@${model.displayName}',
+         style: onPrimarySubTitleText.copyWith(color: Colors.black54),
+       ),
+     ),
    );
  }
  void onSettingIconPressed(){
@@ -84,7 +83,7 @@ class _ChatListPageState extends State<ChatListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(scaffoldKey: widget.scaffoldKey,title: customTitleText('Messages',),icon:AppIcon.settings,onActionPressed: onSettingIconPressed,),
-      backgroundColor: TwitterColor.mystic,
+      backgroundColor: Theme.of(context).backgroundColor,
       body:_body()
     );
   }

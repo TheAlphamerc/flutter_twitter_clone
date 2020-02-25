@@ -131,7 +131,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 SizedBox(height:10),
                  Padding(
                    padding:EdgeInsets.symmetric(horizontal: 10,),
-                   child:customText(authstate.profileUserModel.displayName,style:titleStyle),
+                   child:UrlText(text :authstate.profileUserModel.displayName,style:titleStyle),
                  ),
                  Padding(
                    padding:EdgeInsets.symmetric(horizontal: 9),

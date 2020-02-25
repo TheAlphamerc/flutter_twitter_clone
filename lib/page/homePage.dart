@@ -18,33 +18,44 @@ class _HomePageState extends State<HomePage> {
   int pageIndex = 0;
   @override
   void initState() {
-    var state = Provider.of<AppState>(context,listen: false);
+    var state = Provider.of<AppState>(context, listen: false);
     state.setpageIndex = 0;
     super.initState();
   }
-  Widget _body(){
+
+  Widget _body() {
     var state = Provider.of<AppState>(context);
-    return Container(
-      child: _getPage(state.pageIndex) 
-    );
+    return Container(child: _getPage(state.pageIndex));
   }
-  Widget _getPage(int index){
+
+  Widget _getPage(int index) {
     switch (index) {
-      case 0: return FeedPage(scaffoldKey: _scaffoldKey,); break;
-      case 1: return SearchPage(scaffoldKey: _scaffoldKey); break;
-      case 2: return NotificationPage(scaffoldKey: _scaffoldKey); break;
-      case 3: return ChatListPage(scaffoldKey: _scaffoldKey); break;
-        default: return FeedPage(scaffoldKey: _scaffoldKey); break;
+      case 0:
+        return FeedPage(
+          scaffoldKey: _scaffoldKey,
+        );
+        break;
+      case 1:
+        return SearchPage(scaffoldKey: _scaffoldKey);
+        break;
+      case 2:
+        return NotificationPage(scaffoldKey: _scaffoldKey);
+        break;
+      case 3:
+        return ChatListPage(scaffoldKey: _scaffoldKey);
+        break;
+      default:
+        return FeedPage(scaffoldKey: _scaffoldKey);
+        break;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
-      bottomNavigationBar: BottomMenubar(),
-      drawer: SidebarMenu(),
-      body: _body()
-   );
+        key: _scaffoldKey,
+        bottomNavigationBar: BottomMenubar(),
+        drawer: SidebarMenu(),
+        body: _body());
   }
 }

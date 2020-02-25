@@ -45,7 +45,7 @@ final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
             ],
           ),
           _labelButton('Forget password?',onPressed: (){
-            Navigator.of(context).pushNamed('/CreateFeedPage');
+            Navigator.of(context).pushNamed('/ForgetPasswordPage');
           }),
           SizedBox(height: 100,),
           _labelButton('Create new account',onPressed: _createAccount),
@@ -134,7 +134,7 @@ final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
           // widget.loginCallback();
         },
         padding: EdgeInsets.symmetric(horizontal: 30,vertical: 10),
-        child: Text('google Login',style:TextStyle(color: Colors.white)),
+        child: Text('Google Login',style:TextStyle(color: Colors.white)),
       )
     );
   }

@@ -3,6 +3,7 @@ import 'package:flutter_twitter_clone/model/user.dart';
 
 class FeedModel {
   String key;
+  String parentkey;
   String description;
   String userId;
   bool isVerifiedUser;
@@ -12,8 +13,23 @@ class FeedModel {
   String createdAt;
   String imagePath;
   List<String> tags;
+  List<String> replyTweetKeyList;
   User user;
-  FeedModel({this.key,this.description, this.userId,this.likeCount,this.commentCount,this.createdAt,this.imagePath,this.likeList,this.tags,this.isVerifiedUser,this.user});
+  FeedModel({
+    this.key,
+    this.description,
+    this.userId,
+    this.likeCount,
+    this.commentCount,
+    this.createdAt,
+    this.imagePath,
+    this.likeList,
+    this.tags,
+    this.isVerifiedUser,
+    this.user,
+    this.replyTweetKeyList,
+    this.parentkey,
+    });
   toJson() {
     Map<dynamic,dynamic> map;
     if(likeList != null && likeList.length > 0){
@@ -31,8 +47,10 @@ class FeedModel {
       "imagePath":imagePath,
       "likeList":map,
       "tags":tags,
+      "replyTweetKeyList":replyTweetKeyList,
       "isVerifiedUser":isVerifiedUser ?? false,
-      "user":user == null ? null : user.toJson()
+      "user":user == null ? null : user.toJson(),
+      "parentkey": parentkey
     };
   }
   dynamic getLikeList(List<String> list){
@@ -58,7 +76,7 @@ class FeedModel {
   //  username = map['username'];
    isVerifiedUser = map['isVerifiedUser'] ?? false;
    user = User.fromJson(map['user']);
-  //  tags = map['tags'];
+   parentkey = map['parentkey'];
    if(map['tags'] != null){
       tags = List<String>();
       map['tags'].forEach((value){
@@ -77,6 +95,19 @@ class FeedModel {
    else{
      likeList = [];
      likeCount = 0;
+   }
+   if(map['replyTweetKeyList'] != null){
+      map['replyTweetKeyList'].forEach((value){
+       replyTweetKeyList = List<String>();
+        map['replyTweetKeyList'].forEach((value){
+           replyTweetKeyList.add(value);
+       });
+     });
+     commentCount = replyTweetKeyList.length;
+   }
+   else{
+     replyTweetKeyList = [];
+     commentCount = 0;
    }
   }
 }
