@@ -227,6 +227,11 @@ class FeedState extends AuthState {
           if (tweetReplyMap[parentkey].length == 0) {
             tweetReplyMap[parentkey] = null;
           }
+          var parentModel =
+              _tweetDetailModel.firstWhere((x) => x.key == parentkey);
+          parentModel.replyTweetKeyList.remove(deletedTweet.key);
+          parentModel.commentCount = parentModel.replyTweetKeyList.length;
+          updateTweet(parentModel);
           cprint(
               'Tweet deleted from nested ttweet detail comment section page');
         }
@@ -287,6 +292,15 @@ class FeedState extends AuthState {
     }
   }
 
+  /// [update] tweet
+  updateTweet(FeedModel model) async {
+    await _database
+        .reference()
+        .child('feed')
+        .child(model.key)
+        .set(model.toJson());
+  }
+
   /// add [Like] to tweet
   addLikeToComment({String postId, FeedModel commentModel, String userId}) {
     try {
@@ -331,11 +345,7 @@ class FeedState extends AuthState {
           (x) => x.userId == userId,
         );
         tweet.likeCount -= 1;
-        _database
-            .reference()
-            .child('feed')
-            .child(tweet.key)
-            .set(tweet.toJson());
+        updateTweet(tweet);
       } else {
         _database
             .reference()
@@ -361,7 +371,7 @@ class FeedState extends AuthState {
         var json = replyTweet.toJson();
         _database.reference().child('feed').push().set(json).then((value) {
           tweet.replyTweetKeyList.add(_feedlist.last.key);
-          _database.reference().child('feed').child(postId).set(tweet.toJson());
+          updateTweet(tweet);
         });
       }
     } catch (error) {
@@ -393,10 +403,9 @@ class FeedState extends AuthState {
           var list = tweetReplyMap[model.parentkey];
           //  var list = tweetReplyMap.values.firstWhere((x) => x.any((y) => y.key == model.key));
           if (list != null && list.length > 0) {
-            list.firstWhere((x) => x.key == model.key).likeCount =
-                model.likeCount;
-            list.firstWhere((x) => x.key == model.key).likeList =
-                model.likeList;
+            var index =
+                list.indexOf(list.firstWhere((x) => x.key == model.key));
+            list[index] = model;
           } else {
             list = [];
             list.add(model);
@@ -430,9 +439,10 @@ class FeedState extends AuthState {
   _onCommentAdded(FeedModel tweet) {
     /// add [new tweet] comment to comment list
     if (tweetReplyMap != null && tweetReplyMap.length > 0) {
-      var list = tweetReplyMap[tweet.parentkey];
-      if (list != null) {
-        list.add(tweet);
+      if (tweetReplyMap[tweet.parentkey] != null) {
+        tweetReplyMap[tweet.parentkey].add(tweet);
+      } else {
+        tweetReplyMap[tweet.parentkey] = [tweet];
       }
     }
     cprint('Comment created');
