@@ -42,7 +42,7 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
       trailing: customInkWell(
         radius: BorderRadius.circular(20),
         context: context,
-        onPressed: (){openbottomSheet(TweetType.Reply,model.key);},
+        onPressed: (){openbottomSheet(TweetType.Reply,model);},
         child:Container(
           width: 25,
           height: 25,
@@ -66,7 +66,7 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
       trailing: customInkWell(
         radius: BorderRadius.circular(20),
         context: context,
-        onPressed: (){openbottomSheet(TweetType.Tweet,model.key);},
+        onPressed: (){openbottomSheet(TweetType.Detail,model);},
         child:Container(
           width: 25,
           height: 25,
@@ -84,10 +84,10 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
     );
   }
 
-  void openbottomSheet(TweetType type,String tweetId) async {
-     var state = Provider.of<FeedState>(context,);
+  void openbottomSheet(TweetType type,FeedModel model) async {
+    //  var state = Provider.of<FeedState>(context,);
      var authState = Provider.of<AuthState>(context,);
-     bool isMyTweet = authState.userId == state.tweetDetailModel.last.userId;
+     bool isMyTweet = authState.userId == model.userId;
     await showModalBottomSheet(
         backgroundColor: Colors.transparent,
         context: context,
@@ -111,12 +111,12 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
                         borderRadius: BorderRadius.all(Radius.circular(10)))
                 ),
                 widgetBottomSheetRow(AppIcon.link,text:'Copy link to tweet'),
-                isMyTweet ? widgetBottomSheetRow(AppIcon.unFollow,text:'Pin to profile') : widgetBottomSheetRow(AppIcon.unFollow,text:'Unfollow ${state.tweetDetailModel.last.user.userName}'),
-                isMyTweet ? widgetBottomSheetRow(AppIcon.delete,text:'Delete Tweet', onPressed: (){deleteTweet(type,tweetId);},isEnable:true) : widgetBottomSheetRow(AppIcon.unFollow,text:'Unfollow ${state.tweetDetailModel.last.user.userName}'),
-                isMyTweet ? Container() : widgetBottomSheetRow(AppIcon.mute,text:'Mute ${state.tweetDetailModel.last.user.userName}'),
+                isMyTweet ? widgetBottomSheetRow(AppIcon.unFollow,text:'Pin to profile') : widgetBottomSheetRow(AppIcon.unFollow,text:'Unfollow ${model.user.userName}'),
+                isMyTweet ? widgetBottomSheetRow(AppIcon.delete,text:'Delete Tweet', onPressed: (){deleteTweet(type,model.key, parentkey: model.parentkey);},isEnable:true) : widgetBottomSheetRow(AppIcon.unFollow,text:'Unfollow ${model.user.userName}'),
+                isMyTweet ? Container() : widgetBottomSheetRow(AppIcon.mute,text:'Mute ${model.user.userName}'),
                 widgetBottomSheetRow(AppIcon.mute,text:'Mute this convertion'),
                 widgetBottomSheetRow(AppIcon.viewHidden,text:'View hidden replies'),
-                isMyTweet ? Container() : widgetBottomSheetRow(AppIcon.block,text:'Block ${state.tweetDetailModel.last.user.userName}'),
+                isMyTweet ? Container() : widgetBottomSheetRow(AppIcon.block,text:'Block ${model.user.userName}'),
                 isMyTweet ? Container() : widgetBottomSheetRow(AppIcon.report,text:'Report Tweet'),
               ],
             ),
@@ -156,11 +156,11 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
   void openImage() async {
     Navigator.pushNamed(context, '/ImageViewPge');
   }
-  void deleteTweet(TweetType type,String tweetId){
+  void deleteTweet(TweetType type,String tweetId, {String parentkey}){
       var state = Provider.of<FeedState>(context,);
-      state.deleteTweet(tweetId,type);
+      state.deleteTweet(tweetId,type,parentkey:parentkey);
       Navigator.of(context).pop();
-      if(type == TweetType.Tweet)
+      if(type == TweetType.Detail)
       Navigator.of(context).pop();
   }
   @override
