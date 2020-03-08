@@ -3,6 +3,7 @@ import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
+import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
 import 'package:provider/provider.dart';
 
 class SidebarMenu extends StatefulWidget {
@@ -50,13 +51,34 @@ class _SidebarMenuState extends State<SidebarMenu> {
                 Navigator.pop(context);
                 Navigator.of(context).pushNamed('/ProfilePage');
               },
-                title: customText(
-                state.userModel.displayName ?? state.userModel.email.split('.')[0],
-                style: onPrimaryTitleText.copyWith(color: Colors.black,fontSize: 20),
-              ),
+                title:Row(
+              children: <Widget>[
+                UrlText(
+                  text: state.userModel.displayName ?? state.userModel.email.split('.')[0],
+                  style: onPrimaryTitleText.copyWith(color: Colors.black,fontSize: 20),
+                ),
+                SizedBox(
+                  width: 3,
+                ),
+                state.userModel.isVerified
+                    ? customIcon(context,
+                        icon: AppIcon.blueTick,
+                        istwitterIcon: true,
+                        iconColor: AppColor.primary,
+                        size: 18,
+                        paddingIcon: 3)
+                    : SizedBox(
+                        width: 0,
+                      ),
+              ],
+            ),
+              //    customText(
+              //   state.userModel.displayName ?? state.userModel.email.split('.')[0],
+              //   style: onPrimaryTitleText.copyWith(color: Colors.black,fontSize: 20),
+              // ),
               subtitle: customText(
                 state.userModel.userName,
-                style: onPrimarySubTitleText.copyWith(color: Colors.black54,fontSize: 18),
+                style: onPrimarySubTitleText.copyWith(color: Colors.black54,fontSize: 15),
               ),
               trailing: customIcon(context,icon:AppIcon.arrowDown, iconColor: AppColor.primary, paddingIcon: 20),
             ),
