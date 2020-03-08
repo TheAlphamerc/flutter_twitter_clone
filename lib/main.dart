@@ -1,25 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
-import 'helper/customRoute.dart';
+import 'package:flutter_twitter_clone/state/searchState.dart';
 import 'helper/routes.dart';
 import 'page/Auth/selectAuthMethod.dart';
-import 'page/feed/createFeed.dart';
-import 'page/feed/imageViewPage.dart';
-import 'page/SearchPage.dart';
 import 'state/appState.dart';
 import 'package:provider/provider.dart';
-import 'page/Auth/forgetPasswordPage.dart';
-import 'page/Auth/signin.dart';
-import 'page/Auth/signup.dart';
-import 'page/feed/feedPostDetail.dart';
-import 'page/feed/feedPostreply.dart';
-import 'page/profile/EditProfilePage.dart';
-import 'page/message/chatScreenPage.dart';
-import 'page/profile/profilePage.dart';
 import 'state/authState.dart';
 import 'state/chats/chatState.dart';
 import 'state/feedState.dart';
-import 'widgets/customWidgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() {
@@ -36,9 +24,10 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<AuthState>(create: (_) => AuthState()),
         ChangeNotifierProvider<FeedState>(create: (_) => FeedState()),
         ChangeNotifierProvider<ChatState>(create: (_) => ChatState()),
+        ChangeNotifierProvider<SearchState>(create: (_) => SearchState()),
       ],
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Twitter Clone',
         theme: AppTheme.apptheme.copyWith(
           textTheme: GoogleFonts.muliTextTheme(
             Theme.of(context).textTheme,

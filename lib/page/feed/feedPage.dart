@@ -18,9 +18,7 @@ class _FeedPageState extends State<FeedPage> {
   @override
   void initState() { 
     super.initState();
-    var state = Provider.of<FeedState>(context,listen: false);
-    state.databaseInit();
-    state.getDataFromDatabase();
+   
   }
   Widget _floatingActionButton(){
     return FloatingActionButton(
