@@ -32,15 +32,21 @@ class Tweet extends StatelessWidget {
               state.getpostDetailFromDatabase(key);
               Navigator.pushNamed(context, '/ImageViewPge');
             },
-            child:Container(
-              height: 190,
+            child:ClipRRect(
+               borderRadius: BorderRadius.all(Radius.circular(20)),
+              child:Container(
               width: fullWidth(context) *  (type == TweetType.Detail ? .95 : .8),
               decoration: BoxDecoration(
                 color: Theme.of(context).backgroundColor,
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-                image:DecorationImage(image: customAdvanceNetworkImage(_image),fit:BoxFit.cover)
-              ),
+
+                ),
+              child: AspectRatio(
+                aspectRatio: 4/3,
+                child:customNetworkImage( _image, fit: BoxFit.cover),
+              )
             )
+            )
+            
           )
       );
   }
