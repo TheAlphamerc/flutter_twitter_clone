@@ -24,6 +24,10 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     textController = TextEditingController();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final state = Provider.of<SearchState>(context);
+      state.filterByUsername("");
+    });
     super.initState();
   }
 
@@ -43,19 +47,17 @@ class _SearchPageState extends State<SearchPage> {
               fontWeight: FontWeight.w800,
             ),
           ),
-          SizedBox(
-            width: 3,
-          ),
+          SizedBox(width: 3),
           user.isVerified
-              ? customIcon(context,
+              ? customIcon(
+                  context,
                   icon: AppIcon.blueTick,
                   istwitterIcon: true,
                   iconColor: AppColor.primary,
                   size: 13,
-                  paddingIcon: 3)
-              : SizedBox(
-                  width: 0,
-                ),
+                  paddingIcon: 3,
+                )
+              : SizedBox(width: 0),
         ],
       ),
       subtitle: Text(user.userName),
@@ -72,19 +74,21 @@ class _SearchPageState extends State<SearchPage> {
     var list = state.userlist;
     return Scaffold(
       appBar: CustomAppBar(
-          scaffoldKey: widget.scaffoldKey,
-          textController: textController,
-          icon: AppIcon.settings,
-          onActionPressed: onSearch,
-          onSearchChanged: (text) {
-            state.filterByUsername(text);
-          }),
+        scaffoldKey: widget.scaffoldKey,
+        textController: textController,
+        icon: AppIcon.settings,
+        onActionPressed: onSearch,
+        onSearchChanged: (text) {
+          state.filterByUsername(text);
+        },
+      ),
       body: ListView.separated(
-          itemBuilder: (context, index) => _userTile(list[index]),
-          separatorBuilder: (_, index) => Divider(
-                height: 0,
-              ),
-          itemCount: list.length),
+        itemBuilder: (context, index) => _userTile(list[index]),
+        separatorBuilder: (_, index) => Divider(
+          height: 0,
+        ),
+        itemCount: list.length,
+      ),
     );
   }
 }

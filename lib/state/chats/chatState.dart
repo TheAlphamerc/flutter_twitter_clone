@@ -9,6 +9,11 @@ class ChatState extends AppState{
   final FirebaseDatabase _database = FirebaseDatabase.instance;
   List<ChatMessage> _messageList;
   List<User> _chatUserList;
+  User _chatUser;
+  User get chatUser => _chatUser;
+  set setChatUser(User model){
+    _chatUser = model;
+  }
   String _channelName;
   Query messageQuery;
 

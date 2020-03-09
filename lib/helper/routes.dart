@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_twitter_clone/page/message/newMessagePage.dart';
 import '../page/Auth/signin.dart';
 import '../helper/customRoute.dart';
 import '../page/feed/createFeed.dart';
@@ -58,6 +59,9 @@ class Routes{
              }
              else if(pathElements[1].contains('ChatScreenPage')){
                 return CustomRoute<bool>(builder:(BuildContext context)=> ChatScreenPage());
+             }
+              else if(pathElements[1].contains('NewMessagePage')){
+                return CustomRoute<bool>(builder:(BuildContext context)=> NewMessagePage());
              }
           }
 

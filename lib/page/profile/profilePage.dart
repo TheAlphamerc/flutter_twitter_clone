@@ -7,6 +7,7 @@ import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/page/feed/feedPage.dart';
 import 'package:flutter_twitter_clone/state/appState.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
+import 'package:flutter_twitter_clone/state/chats/chatState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
@@ -96,6 +97,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                                 onTap: () {
                                   if (!isMyProfile) {
+                                     final chatState = Provider.of<ChatState>(context, listen: false);
+                                     chatState.setChatUser = authstate.profileUserModel;
                                     Navigator.pushNamed(
                                         context, '/ChatScreenPage');
                                   }

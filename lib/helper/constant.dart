@@ -48,4 +48,5 @@ class AppIcon{
   static final int moments = 0xf160;
   static final int twitterAds = 0xf504;
   static final int bulb = 0xf567;
+  static final int newMessage = 0xf035;
 }
