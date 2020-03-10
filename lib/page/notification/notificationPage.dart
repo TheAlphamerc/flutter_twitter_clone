@@ -37,11 +37,12 @@ class _NotificationPageState extends State<NotificationPage> {
     }
     return ListView.separated(
       addAutomaticKeepAlives: true,
-        itemBuilder: (context, index) => _notificationRow(list[index]),
-        separatorBuilder: (context, index) => Divider(
-              height: 1,
-            ),
-        itemCount: list.length);
+      itemBuilder: (context, index) => _notificationRow(list[index]),
+      separatorBuilder: (context, index) => Divider(
+        height: 20,
+      ),
+      itemCount: list.length,
+    );
   }
 
   void onSettingIconPressed() {
@@ -63,18 +64,14 @@ class _NotificationPageState extends State<NotificationPage> {
                   .pushNamed('/FeedPostDetail/' + model.tweetKey);
             },
             title: _userList(snapshot.data.likeList),
-            leading: IconButton(
-              icon: Icon(
-                Icons.favorite,
-                color: TwitterColor.ceriseRed,
-              ),
-              onPressed: null,
-            ),
-            subtitle: UrlText(
-              text: des,
-              style: TextStyle(
-                color: AppColor.darkGrey,
-                fontWeight: FontWeight.w400,
+            subtitle: Padding(
+              padding: EdgeInsets.only(left: 60),
+              child: UrlText(
+                text: des,
+                style: TextStyle(
+                  color: AppColor.darkGrey,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
             ),
           );
@@ -96,34 +93,49 @@ class _NotificationPageState extends State<NotificationPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Row(
-          children: list.map((x) {
-            return FutureBuilder(
-              future: state.getuserDetail(x.userId),
-              //  initialData: InitialData,
-              builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
-                if (snapshot.hasData) {
-                  name.add(snapshot.data.displayName);
-                  return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 3),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.of(context)
-                            .pushNamed('/ProfilePage/' + snapshot.data?.userId);
-                      },
-                      child: customImage(context, snapshot.data.profilePic,
-                          height: 30),
-                    ),
-                  );
-                } else {
-                  return Container();
-                }
-              },
-            );
-          }).toList(),
+          children: <Widget>[
+            SizedBox(width: 20),
+            customIcon(context,
+                icon: AppIcon.heartFill,
+                iconColor: TwitterColor.ceriseRed,
+                istwitterIcon: true,
+                size: 25),
+            SizedBox(width: 10),
+            Row(
+              children: list.map((x) {
+                return FutureBuilder(
+                  future: state.getuserDetail(x.userId),
+                  //  initialData: InitialData,
+                  builder:
+                      (BuildContext context, AsyncSnapshot<User> snapshot) {
+                    if (snapshot.hasData) {
+                      name.add(snapshot.data.displayName);
+                      return Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 3),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pushNamed(
+                                '/ProfilePage/' + snapshot.data?.userId);
+                          },
+                          child: customImage(context, snapshot.data.profilePic,
+                              height: 30),
+                        ),
+                      );
+                    } else {
+                      return Container();
+                    }
+                  },
+                );
+              }).toList(),
+            ),
+          ],
         ),
-        UrlText(
-          text: '$length people like your Tweet',
-          style: TextStyle(fontSize: 18, color: Colors.black87),
+        Padding(
+          padding: EdgeInsets.only(left: 60, bottom: 5, top: 5),
+          child: UrlText(
+            text: '$length people like your Tweet',
+            style: TextStyle(fontSize: 18, color: Colors.black87),
+          ),
         )
       ],
     );
@@ -133,14 +145,15 @@ class _NotificationPageState extends State<NotificationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: CustomAppBar(
-          scaffoldKey: widget.scaffoldKey,
-          title: customTitleText(
-            'Notifications',
-          ),
-          icon: AppIcon.settings,
-          onActionPressed: onSettingIconPressed,
+      appBar: CustomAppBar(
+        scaffoldKey: widget.scaffoldKey,
+        title: customTitleText(
+          'Notifications',
         ),
-        body: _body());
+        icon: AppIcon.settings,
+        onActionPressed: onSettingIconPressed,
+      ),
+      body: _body(),
+    );
   }
 }
