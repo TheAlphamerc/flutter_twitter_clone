@@ -9,12 +9,14 @@ import 'package:flutter_twitter_clone/model/notificationModel.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
 
 class NotificationState extends ChangeNotifier {
-  List<NotificationModel> notificationList = [];
+  List<NotificationModel> _notificationList;
+  List<NotificationModel> get  notificationList => _notificationList;
+  List<User> userList = [];
   dabase.Query query;
 
   final FirebaseDatabase _database = FirebaseDatabase.instance;
 
-  /// [Intitilise firebase Database]
+  /// [Intitilise firebase notification database]
   Future<bool> databaseInit(String userId) {
     try {
       if (query == null) {
@@ -30,10 +32,10 @@ class NotificationState extends ChangeNotifier {
     }
   }
 
-  /// get [Tweet list] from firebase realtime database
+  /// get [Notification list] from firebase realtime database
   void getDataFromDatabase(String userId) {
     try {
-      notificationList.clear();
+      _notificationList = [];
       final databaseReference = FirebaseDatabase.instance.reference();
       databaseReference
           .child('notification')
@@ -44,12 +46,8 @@ class NotificationState extends ChangeNotifier {
           var map = snapshot.value;
           if (map != null) {
             map.forEach((tweetKey, value) {
-              value.forEach((key, listValue) {
-                listValue.forEach((key, jsonValue) {
-                  var model = NotificationModel.fromJson(jsonValue, tweetKey);
-                  notificationList.add(model);
-                });
-              });
+               var model = NotificationModel.fromJson(tweetKey);
+                _notificationList.add(model);
             });
           }
         }
@@ -59,7 +57,7 @@ class NotificationState extends ChangeNotifier {
       cprint(error);
     }
   }
-
+  /// get notification `Tweet`
   Future<FeedModel> getTweetDetail(String tweetId) async {
     FeedModel _tweetDetail;
     final databaseReference = FirebaseDatabase.instance.reference();
@@ -73,9 +71,12 @@ class NotificationState extends ChangeNotifier {
       return null;
     }
   }
-
+  /// get user who liked your tweet
   Future<User> getuserDetail(String userId) async {
     User user;
+    if(userList.length > 0 && userList.any((x)=>x.userId == userId)){
+        return Future.value(userList.firstWhere((x)=>x.userId == userId));
+    }
     final databaseReference = FirebaseDatabase.instance.reference();
     var snapshot =
         await databaseReference.child('profile').child(userId).once();
@@ -83,6 +84,7 @@ class NotificationState extends ChangeNotifier {
       var map = snapshot.value;
       user = User.fromJson(map);
       user.key = snapshot.key;
+      userList.add(user);
       return user;
     } else {
       return null;

@@ -5,7 +5,7 @@ class NotificationModel {
     this.tweetKey,
   });
 
-  NotificationModel.fromJson(Map<dynamic, dynamic> json, String tweetId) {
+  NotificationModel.fromJson(String tweetId) {
     tweetKey = tweetId;
   }
 
