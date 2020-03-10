@@ -346,11 +346,31 @@ class FeedState extends AuthState {
         );
         tweet.likeCount -= 1;
         updateTweet(tweet);
+         _database
+            .reference()
+            .child('notification')
+            .child(tweet.userId)
+            .child(tweet.key,)
+            .child('likeList')
+            .child(userId)
+            .remove();
+          //  .set({
+          //     'tweetKey':tweet.key,
+          //     'likeList':{'userId': userId}
+          //   });
       } else {
         _database
             .reference()
             .child('feed')
             .child(tweet.key)
+            .child('likeList')
+            .child(userId)
+            .set({'userId': userId});
+        _database
+            .reference()
+            .child('notification')
+            .child(tweet.userId)
+            .child(tweet.key,)
             .child('likeList')
             .child(userId)
             .set({'userId': userId});
