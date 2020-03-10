@@ -131,16 +131,17 @@ class AuthState extends AppState {
   }
   createUser(User user){
     user.userName = getUserName(id: user.userId, name: user.displayName);
+    user.createdAt = DateTime.now().toUtc().toString();
     FirebaseDatabase.instance
-            .reference()
-            .child('profile')
-            .child(user.userId)
-            .set(user.toJson());
-            _userModel = user;
-            if(_profileUserModel != null){
-              _profileUserModel = _userModel;
-            }
-             notifyListeners();
+      .reference()
+      .child('profile')
+      .child(user.userId)
+      .set(user.toJson());
+      _userModel = user;
+      if(_profileUserModel != null){
+        _profileUserModel = _userModel;
+      }
+       notifyListeners();
   }
   
   Future<FirebaseUser> getCurrentUser() async {
