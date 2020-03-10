@@ -10,8 +10,10 @@ import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
 import 'package:provider/provider.dart';
 
 class ChatScreenPage extends StatefulWidget {
-  ChatScreenPage({Key key,this.userProfileId}) : super(key: key);
+  ChatScreenPage({Key key, this.userProfileId}) : super(key: key);
+
   final String userProfileId;
+
   _ChatScreenPageState createState() => _ChatScreenPageState();
 }
 
@@ -142,7 +144,6 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
   }
 
   Widget _bottomEntryField() {
-    final state = Provider.of<ChatState>(context, listen: false);
     return Align(
       alignment: Alignment.bottomLeft,
       child: Column(
@@ -187,7 +188,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
         message: messageController.text,
         createdAt: DateTime.now().toIso8601String(),
         senderId: authstate.user.uid,
-        receiverId: authstate.profileUserModel.userId,
+        receiverId: state.chatUser.userId,
         seen: false,
         timeStamp: DateTime.now().millisecondsSinceEpoch.toString(),
         senderName: authstate.user.displayName);
@@ -197,15 +198,33 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
     User myUser = User(
         displayName: authstate.user.displayName,
         userId: authstate.user.uid,
+        userName: authstate.userModel.userName,
         profilePic: authstate.user.photoUrl);
-    state.onMessageSubmitted(message,
-        myUser: myUser, secondUser: authstate.profileUserModel);
-    messageController.text = '';
-    _controller.animateTo(
-      0.0,
-      curve: Curves.easeOut,
-      duration: const Duration(milliseconds: 300),
+    User secondUser = User(
+      displayName: state.chatUser.displayName,
+      userId: state.chatUser.userId,
+      userName: state.chatUser.userName,
+      profilePic: state.chatUser.profilePic,
     );
+    state.onMessageSubmitted(message,
+        myUser: myUser, secondUser: secondUser);
+    Future.delayed(Duration(milliseconds: 50)).then((_) {
+      messageController.clear();
+    });
+    try {
+      final state = Provider.of<ChatState>(context);
+      if (state.messageList != null &&
+          state.messageList.length > 1 &&
+          _controller.offset > 0) {
+        _controller.animateTo(
+          0.0,
+          curve: Curves.easeOut,
+          duration: const Duration(milliseconds: 300),
+        );
+      }
+    } catch (e) {
+      print("[Error] $e");
+    }
   }
 
   @override
@@ -234,15 +253,15 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
           iconTheme: IconThemeData(color: Colors.blue),
           backgroundColor: Colors.white,
           actions: <Widget>[
-            IconButton(icon: Icon(Icons.info, color:AppColor.primary), onPressed: (){
-
-            })
+            IconButton(
+                icon: Icon(Icons.info, color: AppColor.primary),
+                onPressed: () {})
           ],
         ),
         body: Stack(
           children: <Widget>[
             Align(
-              alignment:Alignment.topRight,
+              alignment: Alignment.topRight,
               child: Padding(
                 padding: EdgeInsets.only(bottom: 50),
                 child: _chatScreenBody(),

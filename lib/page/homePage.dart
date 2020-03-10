@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/page/feed/feedPage.dart';
 import 'package:flutter_twitter_clone/page/message/chatListPage.dart';
 import 'package:flutter_twitter_clone/state/appState.dart';
+import 'package:flutter_twitter_clone/state/authState.dart';
+import 'package:flutter_twitter_clone/state/chats/chatState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
+import 'package:flutter_twitter_clone/state/notificationState.dart';
 import 'package:flutter_twitter_clone/state/searchState.dart';
 import 'package:flutter_twitter_clone/widgets/bottomMenuBar/bottomMenuBar.dart';
 import 'package:provider/provider.dart';
@@ -24,6 +27,8 @@ class _HomePageState extends State<HomePage> {
     state.setpageIndex = 0;
     initTweets();
     initSearch();
+    initNotificaiton();
+    initChat();
     super.initState();
   }
   void initTweets(){
@@ -34,6 +39,16 @@ class _HomePageState extends State<HomePage> {
   void initSearch(){
     var searchState = Provider.of<SearchState>(context,listen: false);
     searchState.getDataFromDatabase();
+  }
+  void initNotificaiton(){
+    var state = Provider.of<NotificationState>(context,listen: false);
+    var authstate = Provider.of<AuthState>(context,listen: false);
+    state.databaseInit(authstate.userId);
+  }
+  void initChat(){
+    final chatState = Provider.of<ChatState>(context, listen: false);
+    final state = Provider.of<AuthState>(context, listen: false);
+    chatState.databaseInit(state.userId,state.userId);
   }
   Widget _body() {
     var state = Provider.of<AppState>(context);

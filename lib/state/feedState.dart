@@ -354,11 +354,7 @@ class FeedState extends AuthState {
             .child('likeList')
             .child(userId)
             .remove();
-          //  .set({
-          //     'tweetKey':tweet.key,
-          //     'likeList':{'userId': userId}
-          //   });
-      } else {
+       } else {
         _database
             .reference()
             .child('feed')

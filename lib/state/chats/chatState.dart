@@ -42,6 +42,7 @@ class ChatState extends AppState{
       if(_channelName == null){
         getChannelName(userId, myId);
       }
+      _database.reference().child("chatUsers").child(myId).onChildAdded.listen(_onChatUserAdded);
       if (messageQuery == null || _channelName != getChannelName(userId, myId)) {
         messageQuery = _database.reference()
         .child("chats")
@@ -113,13 +114,6 @@ class ChatState extends AppState{
     try {
         if(_messageList == null || _messageList.length < 1){
         
-          secondUser.bio = null;
-          secondUser.contact = null;
-          secondUser.dob = null;
-          secondUser.email = null;
-          secondUser.location = null;
-          secondUser.location = null;
-         
           _database
             .reference()
             .child('chatUsers')
@@ -201,7 +195,27 @@ class ChatState extends AppState{
         }
          notifyListeners();
   }
-
+  
+  void _onChatUserAdded(Event event){
+     if(_chatUserList == null){
+      _chatUserList = List<User>();
+    }
+    if(event.snapshot.value != null){
+          var map = event.snapshot.value;
+          if(map != null){
+             var  model = User.fromJson(map);
+             model.key = event.snapshot.key;
+             if(_chatUserList.length > 0 && _chatUserList.any((x)=>x.key == model.key)){
+                return;
+             }
+             _chatUserList.add(model);
+          }
+        }
+        else{
+            _chatUserList = null;
+        }
+        notifyListeners();
+  }
   void dispose(){
     // messageQuery = null;
     _messageList = null;

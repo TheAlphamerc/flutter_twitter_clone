@@ -10,6 +10,8 @@ import 'state/chats/chatState.dart';
 import 'state/feedState.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'state/notificationState.dart';
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
@@ -25,6 +27,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<FeedState>(create: (_) => FeedState()),
         ChangeNotifierProvider<ChatState>(create: (_) => ChatState()),
         ChangeNotifierProvider<SearchState>(create: (_) => SearchState()),
+        ChangeNotifierProvider<NotificationState>(create: (_) => NotificationState()),
       ],
       child: MaterialApp(
         title: 'Twitter Clone',

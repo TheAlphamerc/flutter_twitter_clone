@@ -4,6 +4,7 @@ import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
+import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/page/feed/feedPage.dart';
 import 'package:flutter_twitter_clone/state/appState.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
@@ -186,7 +187,7 @@ class _ProfilePageState extends State<ProfilePage> {
               slivers: <Widget>[
                 getAppbar(),
                 UserNameRowWidget(
-                  authstate: authstate,
+                  user: authstate.profileUserModel,
                   isMyProfile: isMyProfile,
                 ),
                 SliverList(
@@ -218,11 +219,11 @@ class _ProfilePageState extends State<ProfilePage> {
 class UserNameRowWidget extends StatelessWidget {
   const UserNameRowWidget({
     Key key,
-    @required this.authstate,
+    @required this.user,
     @required this.isMyProfile,
   }) : super(key: key);
 
-  final AuthState authstate;
+  final User user;
   final bool isMyProfile;
 
   String getBio(String bio) {
@@ -248,7 +249,7 @@ class UserNameRowWidget extends StatelessWidget {
             child: Row(
               children: <Widget>[
                 UrlText(
-                  text: authstate.profileUserModel.displayName,
+                  text: user.displayName,
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 16,
@@ -258,7 +259,7 @@ class UserNameRowWidget extends StatelessWidget {
                 SizedBox(
                   width: 3,
                 ),
-                authstate.profileUserModel.isVerified
+                user.isVerified
                     ? customIcon(context,
                         icon: AppIcon.blueTick,
                         istwitterIcon: true,
@@ -274,14 +275,14 @@ class UserNameRowWidget extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 9),
             child: customText(
-              '${authstate.profileUserModel.userName}',
+              '${user.userName}',
               style: subtitleStyle.copyWith(fontSize: 13),
             ),
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             child: customText(
-              getBio(authstate.profileUserModel.bio),
+              getBio(user.bio),
             ),
           ),
           Padding(
@@ -293,7 +294,7 @@ class UserNameRowWidget extends StatelessWidget {
                   width: 10,
                 ),
                 customText(
-                  authstate.profileUserModel.location,
+                  user.location,
                   style: TextStyle(color: Colors.black54),
                 ),
               ],
@@ -308,7 +309,7 @@ class UserNameRowWidget extends StatelessWidget {
                   width: 10,
                 ),
                 customText(
-                  getdob(authstate.profileUserModel.dob),
+                  getdob(user.dob),
                   style: TextStyle(color: Colors.black54),
                 ),
               ],
@@ -323,7 +324,7 @@ class UserNameRowWidget extends StatelessWidget {
                   height: 30,
                 ),
                 customText(
-                  '${authstate.profileUserModel.followers} ',
+                  '${user.followers} ',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
                 ),
                 customText(
@@ -334,7 +335,7 @@ class UserNameRowWidget extends StatelessWidget {
                   width: 40,
                 ),
                 customText(
-                  '${authstate.profileUserModel.following} ',
+                  '${user.following} ',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
                 ),
                 customText(
