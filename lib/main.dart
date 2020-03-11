@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
         debugShowCheckedModeBanner: false,
-        home: MyHomePage(),
+        routes: Routes.route(),
         onGenerateRoute: (settings) => Routes.onGenerateRoute(settings),
         onUnknownRoute: (settings) => Routes.onUnknownRoute(settings),
       ),

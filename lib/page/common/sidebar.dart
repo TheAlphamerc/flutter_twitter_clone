@@ -208,6 +208,10 @@ class _SidebarMenuState extends State<SidebarMenu> {
     state.logoutCallback();
   }
 
+  void _navigateTo(String path) {
+    Navigator.of(context).pushNamed('/$path');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -223,20 +227,21 @@ class _SidebarMenuState extends State<SidebarMenu> {
                     child: _menuHeader(),
                   ),
                   Divider(),
-                  _menuListRowButton(
-                    'Profile',
-                    icon: AppIcon.profile,
-                    isEnable: true,
-                    onPressed: () {
-                      Navigator.of(context).pushNamed('/ProfilePage');
-                    },
-                  ),
+                  _menuListRowButton('Profile',
+                      icon: AppIcon.profile, isEnable: true, onPressed: () {
+                    _navigateTo('ProfilePage');
+                  }),
                   _menuListRowButton('Lists', icon: AppIcon.lists),
                   _menuListRowButton('Bookamrks', icon: AppIcon.bookmark),
                   _menuListRowButton('Moments', icon: AppIcon.moments),
                   _menuListRowButton('Twitter ads', icon: AppIcon.twitterAds),
                   Divider(),
-                  _menuListRowButton('Settings and privacy'),
+                  _menuListRowButton('Settings and privacy',
+                  isEnable: true,
+                   onPressed: () {
+                     Navigator.pop(context);
+                    _navigateTo('SettingsAndPrivacyPage');
+                  }),
                   _menuListRowButton('Help Center'),
                   Divider(),
                   _menuListRowButton('Logout',

@@ -10,7 +10,7 @@ import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:image_picker/image_picker.dart';
 Widget customTitleText(String title, {BuildContext context}){
-  return Text(title,style: TextStyle(color: Colors.black87,fontFamily: 'HelveticaNeue', fontWeight:FontWeight.w900, fontSize: 20),);
+  return Text(title ?? '',style: TextStyle(color: Colors.black87,fontFamily: 'HelveticaNeue', fontWeight:FontWeight.w900, fontSize: 20),);
 }
 Widget  heading(String heading,{double horizontalPadding = 10,BuildContext context}){
   double fontSize =  16;
