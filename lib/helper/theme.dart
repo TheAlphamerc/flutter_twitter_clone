@@ -27,7 +27,7 @@ class TwitterColor {
   static final Color mystic = Color.fromRGBO(230, 236, 240, 1.0);
   static final Color dodgetBlue = Color.fromRGBO(29, 162, 240, 1.0);
   static final Color dodgetBlue_50 = Color.fromRGBO(29, 162, 240, 0.5);
-  static final Color paleSky = Color.fromRGBO(101, 118, 133, 1.0);
+  static final Color paleSky = Color.fromRGBO(101, 119, 133, 1.0);
   static final Color ceriseRed = Color.fromRGBO(224, 36, 94, 1.0);
   static final Color paleSky50 = Color.fromRGBO(101, 118, 133, 0.5);
 }
@@ -46,7 +46,7 @@ class AppTheme{
     primarySwatch: Colors.blue,
     // fontFamily: 'HelveticaNeue',
     backgroundColor: Colors.white,
-    accentColor: TwitterColor.dodgetBlue.withAlpha(20),
+    accentColor: TwitterColor.dodgetBlue,
     brightness: Brightness.light,
     primaryColor: AppColor.primary,
     cardColor: Colors.white,

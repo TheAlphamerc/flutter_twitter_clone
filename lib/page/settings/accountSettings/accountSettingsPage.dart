@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/page/settings/widgets/headerWidget.dart';
+import 'package:flutter_twitter_clone/page/settings/widgets/settingsAppbar.dart';
 import 'package:flutter_twitter_clone/page/settings/widgets/settingsRowWidget.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
@@ -17,26 +18,7 @@ class AccountSettingsPage extends StatelessWidget {
     var user = Provider.of<AuthState>(context).userModel ?? User();
     return Scaffold(
       backgroundColor: TwitterColor.white,
-      appBar: AppBar(
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              UrlText(
-                text: 'Account',
-                style: TextStyle(
-                    color: Colors.black87,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
-              ),
-              Text(
-                user.userName,
-                style: TextStyle(color: AppColor.darkGrey, fontSize: 15),
-              )
-            ],
-          ),
-          iconTheme: IconThemeData(color: Colors.blue),
-          backgroundColor: Colors.white,
-        ),
+      appBar: SettingsAppBar(title: 'Account',subtitle:user.userName,),
       body: ListView(
         children: <Widget>[
           HeaderWidget('Login and security'),

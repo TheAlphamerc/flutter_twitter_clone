@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/page/settings/widgets/headerWidget.dart';
+import 'package:flutter_twitter_clone/page/settings/widgets/settingsRowWidget.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
 import 'package:provider/provider.dart';
-import 'widgets/settingsRowWidget.dart';
 
-class SettingsAndPrivacyPage extends StatelessWidget {
-  const SettingsAndPrivacyPage({Key key}) : super(key: key);
+class ContentPrefrencePage extends StatelessWidget {
+  const ContentPrefrencePage({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,31 +20,33 @@ class SettingsAndPrivacyPage extends StatelessWidget {
       appBar: CustomAppBar(
         isBackButton: true,
         title: customTitleText(
-          'Settings and privacy',
+          'Content prefrences',
         ),
       ),
       body: ListView(
+        physics: BouncingScrollPhysics(),
         children: <Widget>[
-          HeaderWidget(user.userName),
+          HeaderWidget('Explore'),
           SettingRowWidget(
-            "Account",
-            navigateTo: 'AccountSettingsPage',
+            "Trends",
+            navigateTo: null,
           ),
           Divider(height: 0),
-          SettingRowWidget("Privacy and Policy",
-              navigateTo: 'PrivacyAndSaftyPage'),
-          SettingRowWidget("Notification", navigateTo: 'NotificationPage'),
-          SettingRowWidget("Content prefrences",
-              navigateTo: 'ContentPrefrencePage'),
-          HeaderWidget(
-            'General',
-            secondHeader: true,
-          ),
-          SettingRowWidget("Display and Sound",navigateTo: 'DisplayAndSoundPage'),
-          SettingRowWidget("Data usage"),
-          SettingRowWidget("Accessibility"),
-          SettingRowWidget("Proxy"),
-          SettingRowWidget("About Twitter"),
+          SettingRowWidget(
+            "Search settings",
+            navigateTo:null,
+            ),
+         
+          HeaderWidget('Languages', secondHeader: true,),
+          SettingRowWidget(
+            "Recommendations",
+            vPadding: 15,
+            subtitle: "Select which language you want recommended Tweets, people, and trends to include",
+            ),
+          HeaderWidget('Safety', secondHeader: true,),
+          SettingRowWidget("Blocked accounts"),
+          SettingRowWidget("Muted accounts"),
+
         ],
       ),
     );

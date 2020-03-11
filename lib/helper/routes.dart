@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/main.dart';
 import 'package:flutter_twitter_clone/page/message/newMessagePage.dart';
 import 'package:flutter_twitter_clone/page/settings/accountSettings/accountSettingsPage.dart';
+import 'package:flutter_twitter_clone/page/settings/accountSettings/contentPrefrences/contentPreference.dart';
+import 'package:flutter_twitter_clone/page/settings/accountSettings/displaySettings/displayAndSoundPage.dart';
+import 'package:flutter_twitter_clone/page/settings/accountSettings/notifications/notificationPage.dart';
 import 'package:flutter_twitter_clone/page/settings/accountSettings/privacyAndSafety/privacyAndSafetyPage.dart';
 import 'package:flutter_twitter_clone/page/settings/settingsAndPrivacyPage.dart';
 import '../page/Auth/signin.dart';
@@ -81,6 +84,16 @@ class Routes{
      else if(pathElements[1].contains('PrivacyAndSaftyPage')){
         return SlideLeftRoute<bool>(builder:(BuildContext context)=> PrivacyAndSaftyPage());
      }
+     else if(pathElements[1].contains('NotificationPage')){
+        return SlideLeftRoute<bool>(builder:(BuildContext context)=> NotificationPage());
+     }
+     else if(pathElements[1].contains('ContentPrefrencePage')){
+        return SlideLeftRoute<bool>(builder:(BuildContext context)=> ContentPrefrencePage());
+     }
+     else if(pathElements[1].contains('DisplayAndSoundPage')){
+        return SlideLeftRoute<bool>(builder:(BuildContext context)=> DisplayAndSoundPage());
+     }
+     
   }
 
    static Route onUnknownRoute(RouteSettings settings){
