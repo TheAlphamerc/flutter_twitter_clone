@@ -5,6 +5,7 @@ import 'package:flutter_twitter_clone/page/settings/accountSettings/accountSetti
 import 'package:flutter_twitter_clone/page/settings/accountSettings/contentPrefrences/contentPreference.dart';
 import 'package:flutter_twitter_clone/page/settings/accountSettings/displaySettings/displayAndSoundPage.dart';
 import 'package:flutter_twitter_clone/page/settings/accountSettings/notifications/notificationPage.dart';
+import 'package:flutter_twitter_clone/page/settings/accountSettings/privacyAndSafety/directMessage/directMessage.dart';
 import 'package:flutter_twitter_clone/page/settings/accountSettings/privacyAndSafety/privacyAndSafetyPage.dart';
 import 'package:flutter_twitter_clone/page/settings/settingsAndPrivacyPage.dart';
 import '../page/Auth/signin.dart';
@@ -93,7 +94,9 @@ class Routes{
      else if(pathElements[1].contains('DisplayAndSoundPage')){
         return SlideLeftRoute<bool>(builder:(BuildContext context)=> DisplayAndSoundPage());
      }
-     
+     else if(pathElements[1].contains('DirectMessagesPage')){
+        return SlideLeftRoute<bool>(builder:(BuildContext context)=> DirectMessagesPage());
+     }
   }
 
    static Route onUnknownRoute(RouteSettings settings){

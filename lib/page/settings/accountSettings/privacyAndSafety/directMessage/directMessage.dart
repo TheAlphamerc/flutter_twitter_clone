@@ -7,11 +7,10 @@ import 'package:flutter_twitter_clone/page/settings/widgets/settingsRowWidget.da
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
-import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
 import 'package:provider/provider.dart';
 
-class ContentPrefrencePage extends StatelessWidget {
-  const ContentPrefrencePage({Key key}) : super(key: key);
+class DirectMessagesPage extends StatelessWidget {
+  const DirectMessagesPage({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,33 +18,28 @@ class ContentPrefrencePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: TwitterColor.white,
       appBar: SettingsAppBar(
-        title: 'Content preferences',
+        title: 'Direct Messages',
         subtitle: user.userName,
       ),
       body: ListView(
         physics: BouncingScrollPhysics(),
         children: <Widget>[
-          HeaderWidget('Explore'),
+          HeaderWidget('Direct Messages', secondHeader: true,),
           SettingRowWidget(
-            "Trends",
+            "Receive message requests",
             navigateTo: null,
+            showDivider: false,
+            visibleSwitch: true,
+            vPadding: 20,
+            subtitle: 'You will be able to receive Direct Message requests from anyone on Twitter, even if you don\'t follow them.',
           ),
-          Divider(height: 0),
           SettingRowWidget(
-            "Search settings",
+            "Show read receipts",
             navigateTo:null,
+            showDivider: false,
+            visibleSwitch: true,
+            subtitle: 'When someone sends you a message, people in the conversation will know you\'ve seen it. If you turn off this setting, you won\'t be able to see read receipt from others.',
             ),
-         
-          HeaderWidget('Languages', secondHeader: true,),
-          SettingRowWidget(
-            "Recommendations",
-            vPadding: 15,
-            subtitle: "Select which language you want recommended Tweets, people, and trends to include",
-            ),
-          HeaderWidget('Safety', secondHeader: true,),
-          SettingRowWidget("Blocked accounts"),
-          SettingRowWidget("Muted accounts"),
-
         ],
       ),
     );

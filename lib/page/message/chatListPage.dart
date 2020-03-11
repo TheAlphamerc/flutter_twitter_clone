@@ -104,7 +104,7 @@ class _ChatListPageState extends State<ChatListPage> {
     );
   }
   void onSettingIconPressed() {
-    cprint('Settings');
+    Navigator.pushNamed(context, '/DirectMessagesPage');
   }
 
   @override

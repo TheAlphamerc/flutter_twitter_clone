@@ -40,7 +40,10 @@ class PrivacyAndSaftyPage extends StatelessWidget {
             'Direct Message',
             secondHeader: true,
           ),
-          SettingRowWidget('Direct Message'),
+          SettingRowWidget(
+            'Direct Message',
+             navigateTo: 'DirectMessagesPage',
+            ),
           HeaderWidget(
             'Live Video',
             secondHeader: true,

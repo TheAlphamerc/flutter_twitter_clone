@@ -17,7 +17,7 @@ class NotificationPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: TwitterColor.white,
       appBar: SettingsAppBar(
-        title: 'Notification',
+        title: 'Notifications',
         subtitle: user.userName,
       ),
       body: ListView(

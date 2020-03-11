@@ -46,7 +46,7 @@ class _NotificationPageState extends State<NotificationPage> {
   }
 
   void onSettingIconPressed() {
-    cprint('Settings');
+    Navigator.pushNamed(context, '/NotificationPage');
   }
 
   Widget _notificationRow(NotificationModel model) {
