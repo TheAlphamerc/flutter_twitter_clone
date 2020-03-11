@@ -3,6 +3,7 @@ import 'package:flutter_twitter_clone/main.dart';
 import 'package:flutter_twitter_clone/page/message/newMessagePage.dart';
 import 'package:flutter_twitter_clone/page/settings/accountSettings/accountSettingsPage.dart';
 import 'package:flutter_twitter_clone/page/settings/accountSettings/contentPrefrences/contentPreference.dart';
+import 'package:flutter_twitter_clone/page/settings/accountSettings/contentPrefrences/trends/trendsPage.dart';
 import 'package:flutter_twitter_clone/page/settings/accountSettings/displaySettings/displayAndSoundPage.dart';
 import 'package:flutter_twitter_clone/page/settings/accountSettings/notifications/notificationPage.dart';
 import 'package:flutter_twitter_clone/page/settings/accountSettings/privacyAndSafety/directMessage/directMessage.dart';
@@ -96,6 +97,9 @@ class Routes{
      }
      else if(pathElements[1].contains('DirectMessagesPage')){
         return SlideLeftRoute<bool>(builder:(BuildContext context)=> DirectMessagesPage());
+     }
+     else if(pathElements[1].contains('TrendsPage')){
+        return SlideLeftRoute<bool>(builder:(BuildContext context)=> TrendsPage());
      }
   }
 

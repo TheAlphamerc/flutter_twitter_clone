@@ -28,7 +28,7 @@ class ContentPrefrencePage extends StatelessWidget {
           HeaderWidget('Explore'),
           SettingRowWidget(
             "Trends",
-            navigateTo: null,
+            navigateTo: 'TrendsPage',
           ),
           Divider(height: 0),
           SettingRowWidget(
