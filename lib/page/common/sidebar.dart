@@ -221,6 +221,7 @@ class _SidebarMenuState extends State<SidebarMenu> {
             Padding(
               padding: EdgeInsets.only(bottom: 45),
               child: ListView(
+                physics: BouncingScrollPhysics(),
                 children: <Widget>[
                   Container(
                     height: 160,

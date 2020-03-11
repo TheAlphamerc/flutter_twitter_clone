@@ -10,7 +10,7 @@ class CustomRoute<T> extends MaterialPageRoute<T> {
       return child;
     }
     return FadeTransition(
-      opacity: animation,
+      opacity: CurvedAnimation(parent: animation, curve: Curves.fastOutSlowIn),
       child: child,
     );
   }
@@ -29,7 +29,7 @@ class SlideLeftRoute<T> extends MaterialPageRoute<T> {
       position: new Tween<Offset>(
         begin: const Offset(1.0, 0.0),
         end: Offset.zero,
-      ).animate(CurvedAnimation(parent: animation, curve: Curves.easeIn)),
+      ).animate(CurvedAnimation(parent: animation, curve: Curves.fastOutSlowIn)),
       child: child,
     );
   }

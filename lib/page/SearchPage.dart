@@ -65,7 +65,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   void onSearch() {
-    cprint('Search');
+     Navigator.pushNamed(context, '/TrendsPage');
   }
 
   @override
@@ -83,6 +83,7 @@ class _SearchPageState extends State<SearchPage> {
         },
       ),
       body: ListView.separated(
+        physics: BouncingScrollPhysics(),
         itemBuilder: (context, index) => _userTile(list[index]),
         separatorBuilder: (_, index) => Divider(
           height: 0,

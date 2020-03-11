@@ -44,6 +44,7 @@ class _ChatListPageState extends State<ChatListPage> {
       );
     } else {
       return ListView.separated(
+        physics: BouncingScrollPhysics(),
         itemCount: state.chatUserList.length,
         itemBuilder: (context, index) => _userCard(state.chatUserList[index]),
         separatorBuilder: (context, index) {

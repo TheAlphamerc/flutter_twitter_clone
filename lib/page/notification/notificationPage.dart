@@ -36,6 +36,7 @@ class _NotificationPageState extends State<NotificationPage> {
       return Container();
     }
     return ListView.separated(
+      physics: BouncingScrollPhysics(),
       addAutomaticKeepAlives: true,
       itemBuilder: (context, index) => _notificationRow(list[index]),
       separatorBuilder: (context, index) => Divider(

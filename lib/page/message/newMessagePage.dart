@@ -106,6 +106,7 @@ class _NewMessagePageState extends State<NewMessagePage> {
                 ),
                 Expanded(
                   child: ListView.separated(
+                    physics: BouncingScrollPhysics(),
                     itemBuilder: (context, index) => _userTile(
                       state.userlist[index],
                     ),

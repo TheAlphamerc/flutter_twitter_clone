@@ -42,6 +42,7 @@ class _FeedPageState extends State<FeedPage> {
       }
       else{
         return ListView.builder(
+          physics: BouncingScrollPhysics(),
           itemCount: state.feedlist.length,
           itemBuilder: (context,index) => Tweet(model:state.feedlist[index]),
         );
