@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "473051771699",
+    "firebase_url": "https://twitter-clone-4fce9.firebaseio.com",
+    "project_id": "twitter-clone-4fce9",
+    "storage_bucket": "twitter-clone-4fce9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:473051771699:android:ab32734b7885f65f9a0446",
+        "android_client_info": {
+          "package_name": "com.thealphamerc.flutter_twitter_clone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "473051771699-4mhqi28i5049hsrtd5huipaqen61v6dc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.thealphamerc.flutter_twitter_clone",
+            "certificate_hash": "81dab969f050b3ed49257f489d73e7bef9c3c949"
+          }
+        },
+        {
+          "client_id": "473051771699-d6ik3765ln970j6c17tsjv48045jud9l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3l6yzaGJ4i0QXfM9RqfUWGKY57qXSIN8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "473051771699-d6ik3765ln970j6c17tsjv48045jud9l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

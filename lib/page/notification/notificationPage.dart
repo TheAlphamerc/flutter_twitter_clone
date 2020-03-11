@@ -39,7 +39,7 @@ class _NotificationPageState extends State<NotificationPage> {
       addAutomaticKeepAlives: true,
       itemBuilder: (context, index) => _notificationRow(list[index]),
       separatorBuilder: (context, index) => Divider(
-        height: 20,
+        height: 0,
       ),
       itemCount: list.length,
     );
@@ -58,7 +58,10 @@ class _NotificationPageState extends State<NotificationPage> {
           var des = snapshot.data.description.length > 150
               ? snapshot.data.description.substring(0, 150) + '...'
               : snapshot.data.description;
-          return ListTile(
+          return Container(
+            padding: EdgeInsets.symmetric(vertical: 10),
+            color: TwitterColor.white,
+            child:ListTile(
             onTap: () {
               Navigator.of(context)
                   .pushNamed('/FeedPostDetail/' + model.tweetKey);
@@ -74,6 +77,7 @@ class _NotificationPageState extends State<NotificationPage> {
                 ),
               ),
             ),
+          )
           );
         } else {
           return CircularProgressIndicator();
@@ -145,6 +149,7 @@ class _NotificationPageState extends State<NotificationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: TwitterColor.mystic,
       appBar: CustomAppBar(
         scaffoldKey: widget.scaffoldKey,
         title: customTitleText(
