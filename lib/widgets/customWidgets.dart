@@ -68,7 +68,7 @@ Widget customTappbleIcon(BuildContext context,int icon ,{double size = 16,bool i
   }
   ,child:  customIcon(context,icon:icon,size: size,isEnable: isEnable,istwitterIcon:istwitterIcon,isFontAwesomeRegular:isFontAwesomeRegular,isFontAwesomeSolid: isFontAwesomeSolid,iconColor: iconColor ));
 }
-Widget customText(String msg, {Key key, TextStyle style,TextAlign textAlign = TextAlign.justify,overflow = TextOverflow.visible,BuildContext context,bool softwrap = true}){
+Widget customText(String msg, {Key key, TextStyle style,TextAlign textAlign = TextAlign.justify,TextOverflow overflow = TextOverflow.visible,BuildContext context,bool softwrap = true}){
 
   if(msg == null){
     return SizedBox(height: 0,width: 0,);

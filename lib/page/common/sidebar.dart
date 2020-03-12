@@ -224,7 +224,6 @@ class _SidebarMenuState extends State<SidebarMenu> {
                 physics: BouncingScrollPhysics(),
                 children: <Widget>[
                   Container(
-                    height: 160,
                     child: _menuHeader(),
                   ),
                   Divider(),
