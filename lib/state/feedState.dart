@@ -13,13 +13,17 @@ import 'authState.dart';
 class FeedState extends AuthState {
   final databaseReference = Firestore.instance;
   bool isBusy = false;
+  Map<String, List<FeedModel>> tweetReplyMap = {};
+
+  List<FeedModel> _commentlist;
   final FirebaseDatabase _database = FirebaseDatabase.instance;
   List<FeedModel> _feedlist;
-  List<FeedModel> _tweetDetailModel;
-  List<FeedModel> _commentlist;
-  Map<String, List<FeedModel>> tweetReplyMap = {};
   dabase.Query _feedQuery;
+  List<FeedModel> _tweetDetailModel;
+
   List<FeedModel> get tweetDetailModel => _tweetDetailModel;
+
+  /// set tweet for detail tweet page
   set setFeedModel(FeedModel model) {
     if (_tweetDetailModel == null) {
       _tweetDetailModel = [];
@@ -62,6 +66,7 @@ class FeedState extends AuthState {
     }
   }
 
+  /// contain reply tweets list for parent tweet
   List<FeedModel> get commentlist {
     if (_commentlist == null) {
       return null;
@@ -115,25 +120,36 @@ class FeedState extends AuthState {
   }
 
   /// get [Tweet Detail] from firebase realtime database
-  void getpostDetailFromDatabase(String postID) {
+  void getpostDetailFromDatabase(String postID, {FeedModel model}) async {
     try {
       FeedModel _tweetDetail;
       final databaseReference = FirebaseDatabase.instance.reference();
-      databaseReference
-          .child('feed')
-          .child(postID)
-          .once()
-          .then((DataSnapshot snapshot) {
-        if (snapshot.value != null) {
-          var map = snapshot.value;
-          _tweetDetail = FeedModel.fromJson(map);
-          _tweetDetail.key = snapshot.key;
-          setFeedModel = _tweetDetail;
-        } else {
-          // _tweetDetailModel = null;
-        }
-      }).then((value) {
+      if (model != null) {
+        // set tweet data from tweet list data.
+        // No need to fetch tweet from firebase db if data already present in tweet list
+        _tweetDetail = model;
+        setFeedModel = _tweetDetail;
+        postID = model.key;
+      } else {
+        // Fetch tweet data from firebase
+        databaseReference
+            .child('feed')
+            .child(postID)
+            .once()
+            .then((DataSnapshot snapshot) {
+          if (snapshot.value != null) {
+            var map = snapshot.value;
+            _tweetDetail = FeedModel.fromJson(map);
+            _tweetDetail.key = snapshot.key;
+            setFeedModel = _tweetDetail;
+          }
+        });
+      }
+
+      if (_tweetDetail != null) {
+        // Fetch comment tweets
         _commentlist = List<FeedModel>();
+        // Check if parent tweet has reply tweets or not
         if (_tweetDetail.replyTweetKeyList != null &&
             _tweetDetail.replyTweetKeyList.length > 0) {
           _tweetDetail.replyTweetKeyList.forEach((x) {
@@ -150,7 +166,8 @@ class FeedState extends AuthState {
                 var key = snapshot.key;
                 commentmodel.key = key;
 
-                /// add comment tweet to list if [tweet is not present in list]
+                /// add comment tweet to list if tweet is not present in [comment tweet ]list
+                /// To reduce duplicacy
                 if (!_commentlist.any((x) => x.key == key)) {
                   _commentlist.add(commentmodel);
                 }
@@ -165,7 +182,7 @@ class FeedState extends AuthState {
           tweetReplyMap.putIfAbsent(postID, () => _commentlist);
           notifyListeners();
         }
-      });
+      }
     } catch (error) {
       cprint(error);
     }
@@ -346,15 +363,17 @@ class FeedState extends AuthState {
         );
         tweet.likeCount -= 1;
         updateTweet(tweet);
-         _database
+        _database
             .reference()
             .child('notification')
             .child(tweet.userId)
-            .child(tweet.key,)
+            .child(
+              tweet.key,
+            )
             .child('likeList')
             .child(userId)
             .remove();
-       } else {
+      } else {
         _database
             .reference()
             .child('feed')
@@ -366,7 +385,9 @@ class FeedState extends AuthState {
             .reference()
             .child('notification')
             .child(tweet.userId)
-            .child(tweet.key,)
+            .child(
+              tweet.key,
+            )
             .child('likeList')
             .child(userId)
             .set({'userId': userId});
@@ -397,6 +418,7 @@ class FeedState extends AuthState {
     notifyListeners();
   }
 
+  /// Trigger when any tweet changes or update
   _onTweetChanged(Event event) {
     var model = FeedModel.fromJson(event.snapshot.value);
     model.key = event.snapshot.key;
@@ -436,6 +458,7 @@ class FeedState extends AuthState {
     }
   }
 
+  /// Trigger when new tweet added
   _onTweetAdded(Event event) {
     FeedModel tweet = FeedModel.fromJson(event.snapshot.value);
     tweet.key = event.snapshot.key;
@@ -452,6 +475,7 @@ class FeedState extends AuthState {
     notifyListeners();
   }
 
+  /// Trigger when comment tweet added
   _onCommentAdded(FeedModel tweet) {
     /// add [new tweet] comment to comment list
     if (tweetReplyMap != null && tweetReplyMap.length > 0) {

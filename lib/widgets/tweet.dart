@@ -182,6 +182,7 @@ class Tweet extends StatelessWidget {
             if(type == TweetType.Tweet){
               feedstate.clearAllDetailAndReplyTweetStack();
             }
+          feedstate.getpostDetailFromDatabase(null,model:model);
            Navigator.of(context).pushNamed('/FeedPostDetail/'+model.key);
       },
       child: Column(

@@ -22,8 +22,8 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
   @override
   void initState() {
     postId = widget.postId;
-    var state = Provider.of<FeedState>(context, listen: false);
-    state.getpostDetailFromDatabase(postId);
+    // var state = Provider.of<FeedState>(context, listen: false);
+    // state.getpostDetailFromDatabase(postId);
     super.initState();
   }
 

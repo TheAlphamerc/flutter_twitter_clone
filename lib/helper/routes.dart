@@ -53,7 +53,7 @@ class Routes{
      }
      else if(pathElements[1].contains('FeedPostDetail')){
        var postId = pathElements[2];
-        return CustomRoute<bool>(builder:(BuildContext context)=> FeedPostDetail(postId: postId,));
+        return SlideLeftRoute<bool>(builder:(BuildContext context)=> FeedPostDetail(postId: postId,));
      }
     else if(pathElements[1].contains('ForgetPasswordPage')){
         return CustomRoute<bool>(builder:(BuildContext context)=> ForgetPasswordPage());

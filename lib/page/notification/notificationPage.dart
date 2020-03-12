@@ -6,6 +6,7 @@ import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/model/notificationModel.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
+import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/state/notificationState.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
@@ -64,6 +65,8 @@ class _NotificationPageState extends State<NotificationPage> {
             color: TwitterColor.white,
             child:ListTile(
             onTap: () {
+              var state = Provider.of<FeedState>(context);
+               state.getpostDetailFromDatabase(null,model:snapshot.data);
               Navigator.of(context)
                   .pushNamed('/FeedPostDetail/' + model.tweetKey);
             },
@@ -80,8 +83,11 @@ class _NotificationPageState extends State<NotificationPage> {
             ),
           )
           );
-        } else {
-          return CircularProgressIndicator();
+        } else  if(snapshot.connectionState == ConnectionState.waiting || snapshot.connectionState == ConnectionState.active){
+          return LinearProgressIndicator();
+        }
+        else{
+          return SizedBox();
         }
       },
     );
