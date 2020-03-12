@@ -18,7 +18,7 @@ class AccountSettingsPage extends StatelessWidget {
     var user = Provider.of<AuthState>(context).userModel ?? User();
     return Scaffold(
       backgroundColor: TwitterColor.white,
-      appBar: SettingsAppBar(title: 'Account',subtitle:user.userName,),
+      appBar: SettingsAppBar(title: 'Account',subtitle:user?.userName,),
       body: ListView(
         children: <Widget>[
           HeaderWidget('Login and security'),

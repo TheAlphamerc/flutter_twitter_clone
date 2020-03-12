@@ -25,7 +25,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       : super(key: key);
 
   final List<Widget> actions;
-  final Size appBarHeight = Size.fromHeight(60.0);
+  final Size appBarHeight = Size.fromHeight(56.0);
   final int icon;
   final bool isBackButton;
   final bool isbootomLine;
