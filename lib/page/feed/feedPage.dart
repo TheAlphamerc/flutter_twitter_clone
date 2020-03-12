@@ -42,7 +42,20 @@ class _FeedPageState extends State<FeedPage> {
       ),
     );
   }
-
+ Widget _getUserAvatar(BuildContext context) {
+    var authState = Provider.of<AuthState>(context);
+    return Padding(
+      padding: EdgeInsets.all(10),
+      child: customInkWell(
+        context: context,
+        onPressed: () {
+          widget.scaffoldKey.currentState.openDrawer();
+        },
+        child:
+            customImage(context, authState.userModel?.profilePic, height: 30),
+      ),
+    );
+  }
   Widget _body() {
     var state = Provider.of<FeedState>(context);
     if (state.isBusy && state.feedlist == null) {
@@ -54,13 +67,43 @@ class _FeedPageState extends State<FeedPage> {
         packageImage: PackageImage.Image_2,
       );
     } else {
-      return ListView.builder(
-        physics: BouncingScrollPhysics(),
-        itemCount: state.feedlist.length,
-        itemBuilder: (context, index) => Tweet(
-          model: state.feedlist[index],
-          trailing: TweetBottomSheet().tweetOptionIcon(context,state.feedlist[index],TweetType.Tweet),
-          ),
+      return CustomScrollView(
+        // physics: BouncingScrollPhysics(),
+        slivers: <Widget>[
+          //  ListView.builder(
+          //   physics: BouncingScrollPhysics(),
+          //   itemCount: state.feedlist.length,
+          //   itemBuilder: (context, index) => Tweet(
+          //     model: state.feedlist[index],
+          //     trailing: TweetBottomSheet().tweetOptionIcon(context,state.feedlist[index],TweetType.Tweet),
+          //     ),
+          // ),
+           SliverAppBar(
+              floating: true,
+              elevation: 0,
+              leading: _getUserAvatar(context),
+              title: customTitleText('Home'),
+              iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
+              backgroundColor: Theme.of(context).appBarTheme.color,
+              bottom: PreferredSize(
+                child: Container(
+                  color: Colors.grey.shade200,
+                  height: 1.0,
+                ),
+                preferredSize: Size.fromHeight(0.0),
+              ),
+            ),
+          SliverList(
+            delegate:SliverChildListDelegate(
+              state.feedlist.map((model){
+                return Tweet(
+                 model: model,
+                 trailing: TweetBottomSheet().tweetOptionIcon(context,model,TweetType.Tweet),
+                 );
+              }).toList()
+            )
+          )
+        ],
       );
     }
   }
@@ -70,11 +113,12 @@ class _FeedPageState extends State<FeedPage> {
     return Scaffold(
       floatingActionButton: _floatingActionButton(),
       backgroundColor: Theme.of(context).backgroundColor,
-      appBar: CustomAppBar(
-        scaffoldKey: widget.scaffoldKey,
-        title: customTitleText('Home'),
-      ),
-      body: Container(
+      // appBar: CustomAppBar(
+      //   scaffoldKey: widget.scaffoldKey,
+      //   title: customTitleText('Home'),
+      // ),
+      body: SafeArea(
+        child: Container(
         height: fullHeight(context),
         width: fullWidth(context),
         child: RefreshIndicator(
@@ -87,6 +131,7 @@ class _FeedPageState extends State<FeedPage> {
           child: _body(),
         ),
       ),
+      )
     );
   }
 }
