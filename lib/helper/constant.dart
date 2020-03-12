@@ -49,4 +49,11 @@ class AppIcon{
   static final int twitterAds = 0xf504;
   static final int bulb = 0xf567;
   static final int newMessage = 0xf035;
+  
+  static final int sadFace = 0xf430;
+  static final int bulbOn = 0xf066;
+  static final int bulbOff = 0xf567;
+  static final int follow = 0xf175;
+  static final int thumbpinFill = 0xf003;
+
 }

@@ -40,7 +40,7 @@ class TweetBottomSheet {
       builder: (context) {
         return Container(
           padding: EdgeInsets.only(top: 5, bottom: 0),
-          height: fullHeight(context) * (isMyTweet ? .38 : .52),
+          height: fullHeight(context) *  ( type == TweetType.Tweet ?  (isMyTweet ? .25 :  .44) :  (isMyTweet ? .38 :  .52)),
           width: fullWidth(context),
           decoration: BoxDecoration(
             color: Theme.of(context).bottomSheetTheme.backgroundColor,
@@ -49,92 +49,87 @@ class TweetBottomSheet {
               topRight: Radius.circular(20),
             ),
           ),
-          child: Column(
-            children: <Widget>[
-              Container(
-                width: fullWidth(context) * .1,
-                height: 5,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).dividerColor,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(10),
-                  ),
-                ),
-              ),
-              widgetBottomSheetRow(
-                context,
-                AppIcon.link,
-                text: 'Copy link to tweet',
-              ),
-              isMyTweet
-                  ? widgetBottomSheetRow(
-                      context,
-                      AppIcon.unFollow,
-                      text: 'Pin to profile',
-                    )
-                  : widgetBottomSheetRow(
-                      context,
-                      AppIcon.unFollow,
-                      text: 'Unfollow ${model.user.userName}',
-                    ),
-              isMyTweet
-                  ? widgetBottomSheetRow(
-                      context,
-                      AppIcon.delete,
-                      text: 'Delete Tweet',
-                      onPressed: () {
-                        deleteTweet(
-                          context,
-                          type,
-                          model.key,
-                          parentkey: model.parentkey,
-                        );
-                      },
-                      isEnable: true,
-                    )
-                  : widgetBottomSheetRow(
-                      context,
-                      AppIcon.unFollow,
-                      text: 'Unfollow ${model.user.userName}',
-                    ),
-              isMyTweet
-                  ? Container()
-                  : widgetBottomSheetRow(
-                      context,
-                      AppIcon.mute,
-                      text: 'Mute ${model.user.userName}',
-                    ),
-              widgetBottomSheetRow(
-                context,
-                AppIcon.mute,
-                text: 'Mute this convertion',
-              ),
-              widgetBottomSheetRow(
-                context,
-                AppIcon.viewHidden,
-                text: 'View hidden replies',
-              ),
-              isMyTweet
-                  ? Container()
-                  : widgetBottomSheetRow(
-                      context,
-                      AppIcon.block,
-                      text: 'Block ${model.user.userName}',
-                    ),
-              isMyTweet
-                  ? Container()
-                  : widgetBottomSheetRow(
-                      context,
-                      AppIcon.report,
-                      text: 'Report Tweet',
-                    ),
-            ],
-          ),
+          child: type == TweetType.Tweet ?  _tweetOptions(context, isMyTweet, model,type)
+          : _tweetDetailOptions(context, isMyTweet, model,type)
+          
         );
       },
     );
   }
-
+  Widget _tweetDetailOptions(BuildContext context, bool isMyTweet, FeedModel model, TweetType type){
+    return Column(
+      children: <Widget>[
+        Container(
+          width: fullWidth(context) * .1,
+          height: 5,
+          decoration: BoxDecoration(
+            color: Theme.of(context).dividerColor,
+            borderRadius: BorderRadius.all(
+              Radius.circular(10),
+            ),
+          ),
+        ),
+        widgetBottomSheetRow(context,AppIcon.link,text: 'Copy link to tweet',),
+        isMyTweet? widgetBottomSheetRow(context,AppIcon.unFollow,text: 'Pin to profile',)
+            : widgetBottomSheetRow(context,AppIcon.unFollow,text: 'Unfollow ${model.user.userName}',),
+        isMyTweet? widgetBottomSheetRow(context,AppIcon.delete,text: 'Delete Tweet',
+            onPressed: () {
+                  deleteTweet(context,type,model.key,parentkey: model.parentkey,);
+                },
+                isEnable: true,
+              )
+            : Container(),
+              
+        isMyTweet
+            ? Container()
+            : widgetBottomSheetRow(context,AppIcon.mute,text: 'Mute ${model.user.userName}',),
+        widgetBottomSheetRow(context,AppIcon.mute,text: 'Mute this convertion',),
+        widgetBottomSheetRow(context,AppIcon.viewHidden,text: 'View hidden replies',),
+        isMyTweet
+            ? Container()
+            : widgetBottomSheetRow(context,AppIcon.block,text: 'Block ${model.user.userName}',),
+        isMyTweet
+            ? Container()
+            : widgetBottomSheetRow(context,AppIcon.report,text: 'Report Tweet',),
+      ],
+    );
+  }
+   Widget _tweetOptions(BuildContext context, bool isMyTweet, FeedModel model, TweetType type){
+    return Column(
+      children: <Widget>[
+        Container(
+          width: fullWidth(context) * .1,
+          height: 5,
+          decoration: BoxDecoration(
+            color: Theme.of(context).dividerColor,
+            borderRadius: BorderRadius.all(
+              Radius.circular(10),
+            ),
+          ),
+        ),
+        widgetBottomSheetRow(context,AppIcon.link,text: 'Copy link to tweet',),
+        isMyTweet? widgetBottomSheetRow(context,AppIcon.thumbpinFill,text: 'Pin to profile',)
+            : widgetBottomSheetRow(context,AppIcon.sadFace,text: 'Not interested in this',),
+        isMyTweet? widgetBottomSheetRow(context,AppIcon.delete,text: 'Delete Tweet',
+            onPressed: () {deleteTweet(context,type,model.key,parentkey: model.parentkey,);},
+                isEnable: true,
+              )
+            : Container(),
+        isMyTweet
+            ? Container()
+            : widgetBottomSheetRow(context,AppIcon.unFollow,text: 'Unfollow ${model.user.userName}',),
+        isMyTweet
+            ? Container()
+            : widgetBottomSheetRow(context,AppIcon.mute,text: 'Mute ${model.user.userName}',),
+        isMyTweet
+            ? Container()
+            : widgetBottomSheetRow(context,AppIcon.block,text: 'Block ${model.user.userName}',),
+        isMyTweet
+            ? Container()
+            : widgetBottomSheetRow(context,AppIcon.report,text: 'Report Tweet',),
+      ],
+    );
+  }
   Widget widgetBottomSheetRow(BuildContext context, int icon,
       {String text, Function onPressed, bool isEnable = false}) {
     return Expanded(
@@ -142,6 +137,9 @@ class TweetBottomSheet {
         context: context,
         onPressed: () {
           if (onPressed != null) onPressed();
+          else{
+            Navigator.pop(context);
+          }
         },
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20),

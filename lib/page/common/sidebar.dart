@@ -183,9 +183,12 @@ class _SidebarMenuState extends State<SidebarMenu> {
                 width: 10,
                 height: 45,
               ),
-              Image.asset(
-                "assets/images/bulb.png",
-                height: 25,
+              customIcon(
+                context,
+                icon: AppIcon.bulbOn,
+                istwitterIcon: true,
+                size: 25,
+                iconColor: TwitterColor.dodgetBlue
               ),
               Spacer(),
               Image.asset(
