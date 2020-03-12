@@ -209,9 +209,18 @@ class FeedState extends AuthState {
       _database.reference().child('feed').child(tweetId).remove().then((_) {
         FeedModel deletedTweet;
         if (_feedlist.any((x) => x.key == tweetId)) {
+          
           /// Delete tweet if it is in home page tweet.
           deletedTweet = _feedlist.firstWhere((x) => x.key == tweetId);
           _feedlist.remove(deletedTweet);
+          
+          if(deletedTweet.parentkey != null){
+            // Decrease parent Tweet comment count and update
+            var parentModel = _feedlist.firstWhere((x)=>x.key == deletedTweet.parentkey);
+            parentModel.replyTweetKeyList.remove(deletedTweet.key);
+            parentModel.commentCount = parentModel.replyTweetKeyList.length;
+            updateTweet(parentModel);
+          }
           if (_feedlist.length == 0) {
             _feedlist = null;
           }
