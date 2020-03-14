@@ -45,7 +45,7 @@ class AppTheme{
   static final ThemeData apptheme = ThemeData(
     primarySwatch: Colors.blue,
     // fontFamily: 'HelveticaNeue',
-    backgroundColor: Colors.white,
+    backgroundColor: TwitterColor.mystic,
     accentColor: TwitterColor.dodgetBlue,
     brightness: Brightness.light,
     primaryColor: AppColor.primary,

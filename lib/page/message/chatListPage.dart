@@ -10,6 +10,7 @@ import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/chats/chatState.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
+import 'package:flutter_twitter_clone/widgets/newWidget/emptyList.dart';
 import 'package:provider/provider.dart';
 
 class ChatListPage extends StatefulWidget {
@@ -36,11 +37,12 @@ class _ChatListPageState extends State<ChatListPage> {
       context,
     );
     if (state.chatUserList == null) {
-      return Center(
-        child: Text(
-          'No chat available!!',
-          style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
-        ),
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 30),
+        child:EmptyList(
+        'No message available ',
+        subTitle: 'When someonw sends you message,User list\'ll show up here \n  To send message tap message.',
+       )
       );
     } else {
       return ListView.separated(

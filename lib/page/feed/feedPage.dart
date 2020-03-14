@@ -7,6 +7,7 @@ import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
+import 'package:flutter_twitter_clone/widgets/newWidget/emptyList.dart';
 import 'package:flutter_twitter_clone/widgets/tweet.dart';
 import 'package:provider/provider.dart';
 
@@ -58,16 +59,7 @@ class _FeedPageState extends State<FeedPage> {
   }
   Widget _body() {
     var state = Provider.of<FeedState>(context);
-    if (state.isBusy && state.feedlist == null) {
-      return loader();
-    } else if (!state.isBusy && state.feedlist == null) {
-      return EmptyListWidget(
-        title: 'No Feed',
-        subTitle: 'Seems like no feed available yet',
-        packageImage: PackageImage.Image_2,
-      );
-    } else {
-      return CustomScrollView(
+   return CustomScrollView(
         // physics: BouncingScrollPhysics(),
         slivers: <Widget>[
           //  ListView.builder(
@@ -78,7 +70,7 @@ class _FeedPageState extends State<FeedPage> {
           //     trailing: TweetBottomSheet().tweetOptionIcon(context,state.feedlist[index],TweetType.Tweet),
           //     ),
           // ),
-           SliverAppBar(
+          SliverAppBar(
               floating: true,
               elevation: 0,
               leading: _getUserAvatar(context),
@@ -93,9 +85,21 @@ class _FeedPageState extends State<FeedPage> {
                 preferredSize: Size.fromHeight(0.0),
               ),
             ),
-          SliverList(
+          state.isBusy && state.feedlist == null ?
+           SliverToBoxAdapter(
+             child:loader()
+           )  
+        :!state.isBusy && state.feedlist == null ?
+          SliverToBoxAdapter(
+            child:EmptyList(
+              'No Tweet added yet',
+              subTitle: 'When new Tweet added, they\'ll show up here \n Add tweet button to add new',
+              )
+          )
+             
+          : SliverList(
             delegate:SliverChildListDelegate(
-              state.feedlist.map((model){
+               state.feedlist.map((model){
                 return Tweet(
                  model: model,
                  trailing: TweetBottomSheet().tweetOptionIcon(context,model,TweetType.Tweet),
@@ -105,7 +109,6 @@ class _FeedPageState extends State<FeedPage> {
           )
         ],
       );
-    }
   }
 
   @override

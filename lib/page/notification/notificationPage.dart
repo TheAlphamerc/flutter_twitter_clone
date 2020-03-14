@@ -11,6 +11,7 @@ import 'package:flutter_twitter_clone/state/notificationState.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
+import 'package:flutter_twitter_clone/widgets/newWidget/emptyList.dart';
 import 'package:provider/provider.dart';
 
 class NotificationPage extends StatefulWidget {
@@ -34,7 +35,13 @@ class _NotificationPageState extends State<NotificationPage> {
     var state = Provider.of<NotificationState>(context);
     var list = state.notificationList;
     if (list == null || list.isEmpty) {
-      return Container();
+       return Padding(
+         padding: EdgeInsets.symmetric(horizontal: 30),
+         child:EmptyList(
+              'No Notification available yet',
+              subTitle: 'When new notificaion found, they\'ll show up here.',
+           )
+       );
     }
     return ListView.separated(
       physics: BouncingScrollPhysics(),
