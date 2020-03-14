@@ -121,7 +121,7 @@ class AuthState extends AppState {
           _userModel = userModel;
           _userModel.key = user.uid;
           _userModel.userId = user.uid;
-          createUser(_userModel);
+          createUser(_userModel, newUser:true);
           return user.uid;
     }catch(error){
       cprint(error.message);
@@ -129,9 +129,19 @@ class AuthState extends AppState {
       return null;
     }
   }
-  createUser(User user){
-    user.userName = getUserName(id: user.userId, name: user.displayName);
-    user.createdAt = DateTime.now().toUtc().toString();
+
+  /// `Create` and `Update` user
+  /// IF `newUser` is true new user is created
+  /// Else existing user will update with new values
+  createUser(User user, {bool newUser = false}){
+   
+    if(newUser){
+       // Create username by the combination of name and id
+      user.userName = getUserName(id: user.userId, name: user.displayName);
+     
+      // Time at which user is created 
+      user.createdAt = DateTime.now().toUtc().toString();
+    }
     FirebaseDatabase.instance
       .reference()
       .child('profile')

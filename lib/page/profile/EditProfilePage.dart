@@ -126,7 +126,7 @@ Widget _userImage(AuthState authstate) {
   }
   void _submitButton(){
     var state = Provider.of<AuthState>(context,);
-     var model = User(
+     var model = state.userModel.copyWith(
       key: state.userModel.userId,
       displayName: state.userModel.displayName,
       bio: state.userModel.bio,
