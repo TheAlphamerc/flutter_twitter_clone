@@ -110,6 +110,22 @@ class FeedModel {
      commentCount = 0;
    }
   }
+
+  bool  get isValidTweet {
+    bool isValid =false;
+    if(description != null 
+        && description.isNotEmpty
+        && this.user != null
+        && this.user.userName != null
+        && this.user.userName.isNotEmpty
+        ){
+            isValid = true;
+        }
+        else{
+          print("Invalid Tweet found. Id:- $key");
+        }
+        return isValid;
+  }
 }
 class LikeList{
   String key;
