@@ -98,6 +98,9 @@ class NotificationState extends ChangeNotifier {
   void _onNotificationAdded(Event event) {
     if (event.snapshot.value != null) {
       var model = NotificationModel.fromJson(event.snapshot.key);
+      if(_notificationList == null){
+        _notificationList = List<NotificationModel>();
+      }
       _notificationList.add(model);
       // added notification to list
       print("Notification added");
