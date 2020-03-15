@@ -40,11 +40,22 @@ class SettingsAndPrivacyPage extends StatelessWidget {
             'General',
             secondHeader: true,
           ),
-          SettingRowWidget("Display and Sound",navigateTo: 'DisplayAndSoundPage'),
-          SettingRowWidget("Data usage"),
-          SettingRowWidget("Accessibility"),
-          SettingRowWidget("Proxy"),
-          SettingRowWidget("About Twitter"),
+          SettingRowWidget("Display and Sound",
+              navigateTo: 'DisplayAndSoundPage'),
+          SettingRowWidget("Data usage", navigateTo: 'DataUsagePage'),
+          SettingRowWidget("Accessibility", navigateTo: 'AccessibilityPage'),
+          SettingRowWidget("Proxy", navigateTo: "ProxyPage"),
+          SettingRowWidget(
+            "About Twitter",
+            navigateTo: "AboutPage",
+          ),
+          SettingRowWidget(
+            null,
+            showDivider: false,
+            vPadding: 10,
+            subtitle:
+                'These settings affect all of your Twitter accounts on this devce.',
+          )
         ],
       ),
     );

@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/main.dart';
 import 'package:flutter_twitter_clone/page/message/newMessagePage.dart';
+import 'package:flutter_twitter_clone/page/settings/accountSettings/about/aboutTwitter.dart';
+import 'package:flutter_twitter_clone/page/settings/accountSettings/accessibility/accessibility.dart';
 import 'package:flutter_twitter_clone/page/settings/accountSettings/accountSettingsPage.dart';
 import 'package:flutter_twitter_clone/page/settings/accountSettings/contentPrefrences/contentPreference.dart';
 import 'package:flutter_twitter_clone/page/settings/accountSettings/contentPrefrences/trends/trendsPage.dart';
+import 'package:flutter_twitter_clone/page/settings/accountSettings/dataUsage/dataUsagePage.dart';
 import 'package:flutter_twitter_clone/page/settings/accountSettings/displaySettings/displayAndSoundPage.dart';
 import 'package:flutter_twitter_clone/page/settings/accountSettings/notifications/notificationPage.dart';
 import 'package:flutter_twitter_clone/page/settings/accountSettings/privacyAndSafety/directMessage/directMessage.dart';
 import 'package:flutter_twitter_clone/page/settings/accountSettings/privacyAndSafety/privacyAndSafetyPage.dart';
+import 'package:flutter_twitter_clone/page/settings/accountSettings/proxy/proxyPage.dart';
 import 'package:flutter_twitter_clone/page/settings/settingsAndPrivacyPage.dart';
 import '../page/Auth/signin.dart';
 import '../helper/customRoute.dart';
@@ -100,6 +104,18 @@ class Routes{
      }
      else if(pathElements[1].contains('TrendsPage')){
         return SlideLeftRoute<bool>(builder:(BuildContext context)=> TrendsPage());
+     }
+     else if(pathElements[1].contains('DataUsagePage')){
+       return SlideLeftRoute<bool>(builder:(BuildContext context)=> DataUsagePage());
+     }
+     else if(pathElements[1].contains('AccessibilityPage')){
+       return SlideLeftRoute<bool>(builder:(BuildContext context)=> AccessibilityPage());
+     }
+     else if(pathElements[1].contains('ProxyPage')){
+       return SlideLeftRoute<bool>(builder:(BuildContext context)=> ProxyPage());
+     }
+     else if(pathElements[1].contains('AboutPage')){
+       return SlideLeftRoute<bool>(builder:(BuildContext context)=> AboutPage());
      }
   }
 
