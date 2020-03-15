@@ -35,13 +35,12 @@ class _NotificationPageState extends State<NotificationPage> {
     var state = Provider.of<NotificationState>(context);
     var list = state.notificationList;
     if (list == null || list.isEmpty) {
-       return Padding(
-         padding: EdgeInsets.symmetric(horizontal: 30),
-         child:EmptyList(
-              'No Notification available yet',
-              subTitle: 'When new notificaion found, they\'ll show up here.',
-           )
-       );
+      return Padding(
+          padding: EdgeInsets.symmetric(horizontal: 30),
+          child: EmptyList(
+            'No Notification available yet',
+            subTitle: 'When new notificaion found, they\'ll show up here.',
+          ));
     }
     return ListView.separated(
       physics: BouncingScrollPhysics(),
@@ -68,32 +67,34 @@ class _NotificationPageState extends State<NotificationPage> {
               ? snapshot.data.description.substring(0, 150) + '...'
               : snapshot.data.description;
           return Container(
-            padding: EdgeInsets.symmetric(vertical: 10),
-            color: TwitterColor.white,
-            child:ListTile(
-            onTap: () {
-              var state = Provider.of<FeedState>(context);
-               state.getpostDetailFromDatabase(null,model:snapshot.data);
-              Navigator.of(context)
-                  .pushNamed('/FeedPostDetail/' + model.tweetKey);
-            },
-            title: _userList(snapshot.data.likeList),
-            subtitle: Padding(
-              padding: EdgeInsets.only(left: 60),
-              child: UrlText(
-                text: des,
-                style: TextStyle(
-                  color: AppColor.darkGrey,
-                  fontWeight: FontWeight.w400,
+              padding: EdgeInsets.symmetric(vertical: 10),
+              color: TwitterColor.white,
+              child: ListTile(
+                onTap: () {
+                  var state = Provider.of<FeedState>(context);
+                  state.getpostDetailFromDatabase(null, model: snapshot.data);
+                  Navigator.of(context)
+                      .pushNamed('/FeedPostDetail/' + model.tweetKey);
+                },
+                title: _userList(snapshot.data.likeList),
+                subtitle: Padding(
+                  padding: EdgeInsets.only(left: 60),
+                  child: UrlText(
+                    text: des,
+                    style: TextStyle(
+                      color: AppColor.darkGrey,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          )
+              ));
+        } else if (snapshot.connectionState == ConnectionState.waiting ||
+            snapshot.connectionState == ConnectionState.active) {
+          return SizedBox(
+            height: 4,
+            child: LinearProgressIndicator(),
           );
-        } else  if(snapshot.connectionState == ConnectionState.waiting || snapshot.connectionState == ConnectionState.active){
-          return LinearProgressIndicator();
-        }
-        else{
+        } else {
           return SizedBox();
         }
       },

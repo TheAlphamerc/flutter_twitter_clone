@@ -10,7 +10,7 @@ import 'package:flutter_twitter_clone/model/user.dart';
 
 class NotificationState extends ChangeNotifier {
   List<NotificationModel> _notificationList;
-  List<NotificationModel> get  notificationList => _notificationList;
+  List<NotificationModel> get notificationList => _notificationList;
   List<User> userList = [];
   dabase.Query query;
 
@@ -23,6 +23,7 @@ class NotificationState extends ChangeNotifier {
         query = _database.reference().child("notification").child(userId);
         query.onChildAdded.listen(_onNotificationAdded);
         query.onChildChanged.listen(_onNotificationChanged);
+        query.onChildRemoved.listen(_onNotificationRemoved);
       }
 
       return Future.value(true);
@@ -46,8 +47,8 @@ class NotificationState extends ChangeNotifier {
           var map = snapshot.value;
           if (map != null) {
             map.forEach((tweetKey, value) {
-               var model = NotificationModel.fromJson(tweetKey);
-                _notificationList.add(model);
+              var model = NotificationModel.fromJson(tweetKey);
+              _notificationList.add(model);
             });
           }
         }
@@ -57,11 +58,12 @@ class NotificationState extends ChangeNotifier {
       cprint(error);
     }
   }
+
   /// get notification `Tweet`
   Future<FeedModel> getTweetDetail(String tweetId) async {
     FeedModel _tweetDetail;
     final databaseReference = FirebaseDatabase.instance.reference();
-    var snapshot = await databaseReference.child('feed').child(tweetId).once();
+    var snapshot = await databaseReference.child('tweet').child(tweetId).once();
     if (snapshot.value != null) {
       var map = snapshot.value;
       _tweetDetail = FeedModel.fromJson(map);
@@ -71,11 +73,12 @@ class NotificationState extends ChangeNotifier {
       return null;
     }
   }
+
   /// get user who liked your tweet
   Future<User> getuserDetail(String userId) async {
     User user;
-    if(userList.length > 0 && userList.any((x)=>x.userId == userId)){
-        return Future.value(userList.firstWhere((x)=>x.userId == userId));
+    if (userList.length > 0 && userList.any((x) => x.userId == userId)) {
+      return Future.value(userList.firstWhere((x) => x.userId == userId));
     }
     final databaseReference = FirebaseDatabase.instance.reference();
     var snapshot =
@@ -91,11 +94,38 @@ class NotificationState extends ChangeNotifier {
     }
   }
 
+  /// Trigger when somneone like your tweet
   void _onNotificationAdded(Event event) {
-    print("Notification added");
+    if (event.snapshot.value != null) {
+      var model = NotificationModel.fromJson(event.snapshot.key);
+      _notificationList.add(model);
+      // added notification to list
+      print("Notification added");
+      notifyListeners();
+    }
   }
 
+  /// Trigger when someone changed his like preference
   void _onNotificationChanged(Event event) {
-    print("Notification changed");
+    if (event.snapshot.value != null) {
+      var model = NotificationModel.fromJson(event.snapshot.key);
+      //update notification list
+      _notificationList
+          .firstWhere((x) => x.tweetKey == model.tweetKey)
+          .tweetKey = model.tweetKey;
+      notifyListeners();
+      print("Notification changed");
+    }
+  }
+
+  /// Trigger when someone undo his like on tweet
+  void _onNotificationRemoved(Event event) {
+    if (event.snapshot.value != null) {
+      var model = NotificationModel.fromJson(event.snapshot.key);
+      // remove notification from list
+      _notificationList.removeWhere((x) => x.tweetKey == model.tweetKey);
+      notifyListeners();
+      print("Notification Removed");
+    }
   }
 }
