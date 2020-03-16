@@ -78,6 +78,8 @@ flutter:
    - assets/images/icon-48.png
    - assets/images/icon-480.png
    - assets/images/icon-400.png
+   - assets/images/qr.png
+   - assets/images/bulb.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

@@ -57,4 +57,25 @@ class User {
       'isVerified':isVerified ?? false
     };
   }
+
+  User copyWith({String email, String userId,String displayName,String profilePic,String key,String contact,bio,String dob,String location,String createdAt,String userName,int followers,int following,String webSite,bool isVerified}){
+
+     return User(
+       email: email ?? this.email,
+       bio: bio ?? this.bio,
+       contact: contact ?? this.contact,
+       createdAt: createdAt ?? this.createdAt,
+       displayName: displayName ?? this.displayName,
+       dob: dob ?? this.dob,
+       followers: followers ?? this.following,
+       following: following ?? this.following,
+       isVerified: isVerified ?? this.isVerified,
+       key: key ?? this.key,
+       location: location ?? this.location,
+       profilePic: profilePic ?? this.profilePic,
+       userId: userId ?? this.userId,
+       userName: userName ?? this.userName,
+       webSite: webSite ?? this.webSite
+     );
+  }
 }

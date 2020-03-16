@@ -37,6 +37,7 @@
 **/android/gradlew.bat
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
+**/android/app/google-services.json
 
 # iOS/XCode related
 **/ios/**/*.mode1v3
@@ -64,6 +65,9 @@
 **/ios/Flutter/flutter_export_environment.sh
 **/ios/ServiceDefinitions.json
 **/ios/Runner/GeneratedPluginRegistrant.*
+**/ios/Runner/GoogleService-Info.plist
+/Users/ashwindas/Desktop/Workspace/Git Projects/flutter_twitter_clone/ios/Runner/GoogleService-Info.plist
+GoogleService-Info.plist
 
 # Exceptions to above rules.
 !**/ios/**/default.mode1v3
@@ -73,3 +77,5 @@
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 .flutter-plugins-dependencies
 android/app/google-services.json
+google-services.json
+
