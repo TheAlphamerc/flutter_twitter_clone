@@ -124,12 +124,12 @@ class _ImageViewPgeState extends State<ImageViewPge> {
   void _submitButton(){
      var state = Provider.of<FeedState>(context,);
      var authState = Provider.of<AuthState>(context,);
-     var user = authState.user;
-     var profilePic = user.photoUrl ;
+     var user = authState.userModel;
+     var profilePic = user.profilePic ;
      if(profilePic== null){
        profilePic = dummyProfilePic;
      }
-     var commentedUser = User(displayName: user.displayName ?? user.email.split('@')[0],profilePic: profilePic,userId: user.uid,);
+     var commentedUser = User(displayName: user.displayName ?? user.email.split('@')[0],profilePic: profilePic,userId: user.userId,);
      var postId = state.tweetDetailModel.last.key;
      var tags = getHashTags(_textEditingController.text);
      FeedModel reply = FeedModel(

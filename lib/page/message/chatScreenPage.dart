@@ -187,7 +187,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
     message = ChatMessage(
         message: messageController.text,
         createdAt: DateTime.now().toIso8601String(),
-        senderId: authstate.user.uid,
+        senderId: authstate.userModel.userId,
         receiverId: state.chatUser.userId,
         seen: false,
         timeStamp: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -196,10 +196,10 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
       return;
     }
     User myUser = User(
-        displayName: authstate.user.displayName,
-        userId: authstate.user.uid,
+        displayName: authstate.userModel.displayName,
+        userId: authstate.userModel.userId,
         userName: authstate.userModel.userName,
-        profilePic: authstate.user.photoUrl);
+        profilePic: authstate.userModel.profilePic);
     User secondUser = User(
       displayName: state.chatUser.displayName,
       userId: state.chatUser.userId,

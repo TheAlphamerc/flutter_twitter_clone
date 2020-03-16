@@ -122,13 +122,13 @@ class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
       print('API is busy');
       return;
     }
-    var user = authState.user;
-    var profilePic = user.photoUrl ?? dummyProfilePic;
+    var user = authState.userModel;
+    var profilePic = user.profilePic ?? dummyProfilePic;
     var tags = getHashTags(_textEditingController.text);
     var commentedUser = User(
         displayName: user.displayName ?? user.email.split('@')[0],
         profilePic: profilePic,
-        userId: user.uid,
+        userId: user.userId,
         userName: authState.userModel.userName);
 
     FeedModel reply = FeedModel(

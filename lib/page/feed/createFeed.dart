@@ -11,7 +11,6 @@ import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import 'widgets/bottomIconWidget.dart';
@@ -19,15 +18,18 @@ import 'widgets/tweetImage.dart';
 
 class CreateFeedPage extends StatefulWidget {
   CreateFeedPage({Key key}) : super(key: key);
+
   _CreateFeedPageState createState() => _CreateFeedPageState();
 }
 
 class _CreateFeedPageState extends State<CreateFeedPage> {
-  TextEditingController _textEditingController;
-  File _image;
-  bool reachToWarning = false;
   bool reachToOver = false;
+  bool reachToWarning = false;
   Color wordCountColor;
+
+  File _image;
+  TextEditingController _textEditingController;
+
   @override
   void initState() {
     wordCountColor = Colors.blue;
@@ -67,12 +69,8 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
         _textEditingController.text.length > 280) {
       return;
     }
-    var state = Provider.of<FeedState>(
-      context,
-    );
-    var authState = Provider.of<AuthState>(
-      context,
-    );
+    var state = Provider.of<FeedState>(context);
+    var authState = Provider.of<AuthState>(context);
     if (state.isBusy) {
       return;
     }
@@ -88,18 +86,21 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
       profilePic: pic,
     );
     FeedModel _model = FeedModel(
-        description: _textEditingController.text,
-        userId: authState.user.uid,
-        tags: tags,
-        user: user,
-        createdAt: DateTime.now().toString());
+      description: _textEditingController.text,
+      userId: authState.userModel.userId,
+      tags: tags,
+      user: user,
+      createdAt: DateTime.now().toString(),
+    );
     if (_image != null) {
-      await state.uploadFile(_image).then((imagePath) {
-        if (imagePath != null) {
-          _model.imagePath = imagePath;
-          state.createTweet(_model);
-        }
-      });
+      await state.uploadFile(_image).then(
+        (imagePath) {
+          if (imagePath != null) {
+            _model.imagePath = imagePath;
+            state.createTweet(_model);
+          }
+        },
+      );
     } else {
       state.createTweet(_model);
     }
@@ -113,21 +114,21 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
       context,
     );
     return Scaffold(
-        backgroundColor: Theme.of(context).backgroundColor,
-        appBar: CustomAppBar(
-          title: customTitleText(
-            '',
-          ),
-          onActionPressed: _submitButton,
-          isCrossButton: true,
-          submitButtonText: 'Tweet',
-          isSubmitDisable: _textEditingController.text == null ||
-              _textEditingController.text.isEmpty ||
-              _textEditingController.text.length > 280 ||
-              Provider.of<FeedState>(context).isBusy,
+      backgroundColor: Theme.of(context).backgroundColor,
+      appBar: CustomAppBar(
+        title: customTitleText(
+          '',
         ),
-        body: Container(
-            child: Stack(
+        onActionPressed: _submitButton,
+        isCrossButton: true,
+        submitButtonText: 'Tweet',
+        isSubmitDisable: _textEditingController.text == null ||
+            _textEditingController.text.isEmpty ||
+            _textEditingController.text.length > 280 ||
+            Provider.of<FeedState>(context).isBusy,
+      ),
+      body: Container(
+        child: Stack(
           children: <Widget>[
             SingleChildScrollView(
               child: Container(
@@ -160,15 +161,16 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
               ),
             ),
             Align(
-                alignment: Alignment.bottomCenter,
-                child: BottomIconWidget(
-                  textEditingController: _textEditingController,
-                  onImageIconSelcted: (file) {
-                    setState(() {
-                      _image = file;
-                    });
-                  },
-                )),
+              alignment: Alignment.bottomCenter,
+              child: BottomIconWidget(
+                textEditingController: _textEditingController,
+                onImageIconSelcted: (file) {
+                  setState(() {
+                    _image = file;
+                  });
+                },
+              ),
+            ),
             Align(
               alignment: Alignment.center,
               child: Provider.of<FeedState>(context).isBusy
@@ -181,6 +183,8 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
                   : SizedBox(),
             )
           ],
-        )));
+        ),
+      ),
+    );
   }
 }

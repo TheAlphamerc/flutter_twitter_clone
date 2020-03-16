@@ -150,15 +150,15 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
       message = ChatMessage(
         message: messageController.text,
         createdAt: DateTime.now().toIso8601String(),
-        senderId:  authstate.user.uid,
+        senderId:  authstate.userModel.userId,
         receiverId: authstate.profileUserModel.userId,
         seen: false,
         timeStamp:DateTime.now().millisecondsSinceEpoch.toString(),
-        senderName: authstate.user.displayName);
+        senderName: authstate.userModel.displayName);
       if(messageController.text == null || messageController.text.isEmpty){
         return ;
       }
-      User myUser = User(displayName: authstate.user.displayName, userId: authstate.user.uid, profilePic: authstate.user.photoUrl);
+      User myUser = User(displayName: authstate.userModel.displayName, userId: authstate.userModel.userId, profilePic: authstate.userModel.profilePic);
       state.onMessageSubmitted(message, myUser: myUser,secondUser: authstate.profileUserModel);
       messageController.text = '';
       _controller.animateTo(

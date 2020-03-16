@@ -175,7 +175,7 @@ class AuthState extends AppState {
   /// Fetch current user profile
   Future<FirebaseUser> getCurrentUser() async {
     try {
-      FirebaseUser user = await _firebaseAuth.currentUser();
+      user = await _firebaseAuth.currentUser();
       if (user != null) {
         authStatus = AuthStatus.LOGGED_IN;
         userId = user.uid;

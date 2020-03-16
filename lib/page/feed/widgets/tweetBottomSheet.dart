@@ -177,7 +177,13 @@ class TweetBottomSheet {
       context,
     );
     state.deleteTweet(tweetId, type, parentkey: parentkey);
+    // CLose bottom sheet 
     Navigator.of(context).pop();
-    if (type == TweetType.Detail) Navigator.of(context).pop();
+    if (type == TweetType.Detail){
+      // Close Tweet detail page
+      Navigator.of(context).pop();
+      // Remove last tweet from tweet detail stack page
+      state.removeLastTweetDetail(tweetId);
+    } 
   }
 }

@@ -214,8 +214,8 @@ class FeedState extends AuthState {
         if (type == TweetType.Detail &&
             _tweetDetailModel != null &&
             _tweetDetailModel.length > 0) {
-          var deletedTweet =
-              _tweetDetailModel.firstWhere((x) => x.key == tweetId);
+          // var deletedTweet =
+          //     _tweetDetailModel.firstWhere((x) => x.key == tweetId);
           _tweetDetailModel.remove(_tweetDetailModel);
           if (_tweetDetailModel.length == 0) {
             _tweetDetailModel = null;
@@ -437,7 +437,7 @@ class FeedState extends AuthState {
         deletedTweet = _feedlist.firstWhere((x) => x.key == tweetId);
         _feedlist.remove(deletedTweet);
 
-        if (deletedTweet.parentkey != null) {
+        if (deletedTweet.parentkey != null && _feedlist.isNotEmpty && _feedlist.any((x)=>x.key == deletedTweet.parentkey)) {
           // Decrease parent Tweet comment count and update
           var parentModel =
               _feedlist.firstWhere((x) => x.key == deletedTweet.parentkey);
@@ -448,7 +448,7 @@ class FeedState extends AuthState {
         if (_feedlist.length == 0) {
           _feedlist = null;
         }
-        cprint('Tweet deleted from home page tweet');
+        cprint('Tweet deleted from home page tweet list');
       }
 
       /// Delete tweet if it is in nested tweet detail comment section page
@@ -469,10 +469,10 @@ class FeedState extends AuthState {
         parentModel.replyTweetKeyList.remove(deletedTweet.key);
         parentModel.commentCount = parentModel.replyTweetKeyList.length;
         updateTweet(parentModel);
-        cprint('Tweet deleted from nested ttweet detail comment section page');
+        cprint('Tweet deleted from nested tweet detail comment sectionß');
       }
 
-      /// Delete tweet image from firebase if exist.
+      /// Delete tweet image from firebase storage if exist.
       if (deletedTweet.imagePath != null && deletedTweet.imagePath.length > 0) {
         deleteFile(deletedTweet.imagePath, 'tweetImage');
       }

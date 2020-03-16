@@ -109,7 +109,7 @@ final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
         onPressed: (){
           var state = Provider.of<AuthState>(context,listen: false);
           state.signIn(_emailController.text,_passwordController.text,scaffoldKey: _scaffoldKey).then((status)=>{
-               if(state.user != null){
+               if(state.userModel != null){
                  widget.loginCallback()
                }
           });
