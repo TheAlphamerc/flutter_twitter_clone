@@ -47,7 +47,7 @@ class SearchState extends AppState {
       );
     } catch (error) {
       isBusy = false;
-      cprint(error);
+      cprint(error, errorIn: 'getDataFromDatabase');
     }
   }
 

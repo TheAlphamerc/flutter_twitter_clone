@@ -87,7 +87,7 @@ class FeedState extends AuthState {
 
       return Future.value(true);
     } catch (error) {
-      cprint(error);
+      cprint(error, errorIn: 'databaseInit');
       return Future.value(false);
     }
   }
@@ -118,7 +118,7 @@ class FeedState extends AuthState {
       });
     } catch (error) {
       isBusy = false;
-      cprint(error);
+      cprint(error, errorIn: 'getDataFromDatabase');
     }
   }
 
@@ -187,7 +187,7 @@ class FeedState extends AuthState {
         }
       }
     } catch (error) {
-      cprint(error);
+      cprint(error, errorIn: 'getpostDetailFromDatabase');
     }
   }
 
@@ -199,7 +199,7 @@ class FeedState extends AuthState {
     try {
       _database.reference().child('tweet').push().set(model.toJson());
     } catch (error) {
-      cprint(error);
+      cprint(error, errorIn: 'createTweet');
     }
     isBusy = false;
     notifyListeners();
@@ -225,7 +225,7 @@ class FeedState extends AuthState {
         }
       });
     } catch (error) {
-      cprint(error);
+      cprint(error, errorIn: 'deleteTweet');
     }
   }
 
@@ -246,7 +246,7 @@ class FeedState extends AuthState {
         }
       }
     } catch (error) {
-      cprint(error);
+      cprint(error, errorIn: 'uploadFile');
       return null;
     }
   }
@@ -269,7 +269,7 @@ class FeedState extends AuthState {
         cprint('[Sucess] Image deleted');
       });
     } catch (error) {
-      cprint(error);
+      cprint(error, errorIn: 'deleteFile');
     }
   }
 
@@ -324,7 +324,7 @@ class FeedState extends AuthState {
             .set({'userId': userId});
       }
     } catch (error) {
-      cprint("[addLikeToTweet] $error");
+      cprint(error, errorIn: 'addLikeToTweet');
     }
   }
 
@@ -343,7 +343,7 @@ class FeedState extends AuthState {
         });
       }
     } catch (error) {
-      cprint(error);
+      cprint(error, errorIn: 'addcommentToPost');
     }
     isBusy = false;
     notifyListeners();
@@ -437,7 +437,9 @@ class FeedState extends AuthState {
         deletedTweet = _feedlist.firstWhere((x) => x.key == tweetId);
         _feedlist.remove(deletedTweet);
 
-        if (deletedTweet.parentkey != null && _feedlist.isNotEmpty && _feedlist.any((x)=>x.key == deletedTweet.parentkey)) {
+        if (deletedTweet.parentkey != null &&
+            _feedlist.isNotEmpty &&
+            _feedlist.any((x) => x.key == deletedTweet.parentkey)) {
           // Decrease parent Tweet comment count and update
           var parentModel =
               _feedlist.firstWhere((x) => x.key == deletedTweet.parentkey);
@@ -464,12 +466,19 @@ class FeedState extends AuthState {
         if (tweetReplyMap[parentkey].length == 0) {
           tweetReplyMap[parentkey] = null;
         }
-        var parentModel =
-            _tweetDetailModel.firstWhere((x) => x.key == parentkey);
-        parentModel.replyTweetKeyList.remove(deletedTweet.key);
-        parentModel.commentCount = parentModel.replyTweetKeyList.length;
-        updateTweet(parentModel);
-        cprint('Tweet deleted from nested tweet detail comment sectionß');
+
+        if (_tweetDetailModel != null &&
+            _tweetDetailModel.isNotEmpty &&
+            _tweetDetailModel.any((x) => x.key == parentkey)) {
+          var parentModel =
+              _tweetDetailModel.firstWhere((x) => x.key == parentkey);
+          parentModel.replyTweetKeyList.remove(deletedTweet.key);
+          parentModel.commentCount = parentModel.replyTweetKeyList.length;
+          cprint('Parent tweet comment count updated on child tweet removal');
+          updateTweet(parentModel);
+        }
+
+        cprint('Tweet deleted from nested tweet detail comment section');
       }
 
       /// Delete tweet image from firebase storage if exist.
@@ -478,7 +487,7 @@ class FeedState extends AuthState {
       }
       notifyListeners();
     } catch (error) {
-      cprint(error);
+      cprint(error, errorIn: '_onTweetRemoved');
     }
   }
 }

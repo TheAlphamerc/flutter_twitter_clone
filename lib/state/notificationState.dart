@@ -9,12 +9,13 @@ import 'package:flutter_twitter_clone/model/notificationModel.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
 
 class NotificationState extends ChangeNotifier {
-  List<NotificationModel> _notificationList;
-  List<NotificationModel> get notificationList => _notificationList;
-  List<User> userList = [];
   dabase.Query query;
+  List<User> userList = [];
 
   final FirebaseDatabase _database = FirebaseDatabase.instance;
+  List<NotificationModel> _notificationList;
+
+  List<NotificationModel> get notificationList => _notificationList;
 
   /// [Intitilise firebase notification database]
   Future<bool> databaseInit(String userId) {
@@ -28,7 +29,7 @@ class NotificationState extends ChangeNotifier {
 
       return Future.value(true);
     } catch (error) {
-      cprint(error);
+      cprint(error, errorIn: 'databaseInit');
       return Future.value(false);
     }
   }
@@ -55,7 +56,7 @@ class NotificationState extends ChangeNotifier {
         notifyListeners();
       });
     } catch (error) {
-      cprint(error);
+      cprint(error, errorIn: 'getDataFromDatabase');
     }
   }
 
@@ -98,7 +99,7 @@ class NotificationState extends ChangeNotifier {
   void _onNotificationAdded(Event event) {
     if (event.snapshot.value != null) {
       var model = NotificationModel.fromJson(event.snapshot.key);
-      if(_notificationList == null){
+      if (_notificationList == null) {
         _notificationList = List<NotificationModel>();
       }
       _notificationList.add(model);

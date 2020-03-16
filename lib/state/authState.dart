@@ -59,7 +59,7 @@ class AuthState extends AppState {
         _authQuery.onChildChanged.listen(_onProfileChanged);
       }
     } catch (error) {
-      cprint(error);
+      cprint(error, errorIn: 'databaseInit');
     }
   }
 
@@ -73,7 +73,7 @@ class AuthState extends AppState {
       userId = user.uid;
       return user.uid;
     } catch (error) {
-      cprint(error);
+      cprint(error, errorIn: 'signIn');
       customSnackBar(scaffoldKey, error.message);
       // logoutCallback();
       return null;
@@ -100,7 +100,7 @@ class AuthState extends AppState {
       notifyListeners();
       return user;
     } catch (error) {
-      cprint(error);
+      cprint(error, errorIn: 'handleGoogleSignIn');
       return null;
     }
   }
@@ -108,18 +108,19 @@ class AuthState extends AppState {
   /// Create user profile from google login
   createUserFromGoogleSignIn(FirebaseUser user) {
     User model = User(
-        bio: 'Edit profile to update bio',
-        dob: DateTime(1950, DateTime.now().month, DateTime.now().day + 3)
-            .toString(),
-        location: 'Somewhere in universe',
-        profilePic: user.photoUrl,
-        displayName: user.displayName,
-        email: user.email,
-        key: user.uid,
-        userId: user.uid,
-        contact: user.phoneNumber,
-        isVerified: true);
-    createUser(model);
+      bio: 'Edit profile to update bio',
+      dob: DateTime(1950, DateTime.now().month, DateTime.now().day + 3)
+          .toString(),
+      location: 'Somewhere in universe',
+      profilePic: user.photoUrl,
+      displayName: user.displayName,
+      email: user.email,
+      key: user.uid,
+      userId: user.uid,
+      contact: user.phoneNumber,
+      isVerified: true,
+    );
+    createUser(model, newUser: true);
   }
 
   /// Create new user's profile in db
@@ -143,7 +144,7 @@ class AuthState extends AppState {
       createUser(_userModel, newUser: true);
       return user.uid;
     } catch (error) {
-      cprint(error.message);
+      cprint(error, errorIn: 'signUp');
       customSnackBar(scaffoldKey, error.message);
       return null;
     }
@@ -186,7 +187,7 @@ class AuthState extends AppState {
       notifyListeners();
       return user;
     } catch (error) {
-      cprint(error);
+      cprint(error, errorIn: 'getCurrentUser');
       authStatus = AuthStatus.NOT_DETERMINED;
       return null;
     }
@@ -253,13 +254,14 @@ class AuthState extends AppState {
         });
       }
     } catch (error) {
-      cprint(error);
+      cprint(error, errorIn: 'updateUserProfile');
     }
   }
 
   /// Fetch user profile
   getProfileUser({String userProfileId}) {
-    _profileUserModel = null;
+   try{
+      _profileUserModel = null;
     userProfileId = userProfileId == null ? userId : userProfileId;
     FirebaseDatabase.instance
         .reference()
@@ -278,6 +280,10 @@ class AuthState extends AppState {
         }
       }
     });
+   }
+   catch(error){
+     cprint(error, errorIn: 'getProfileUser');
+   }
   }
 
   void _onProfileChanged(Event event) {

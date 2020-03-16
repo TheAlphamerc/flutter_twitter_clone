@@ -13,7 +13,7 @@ class TweetBottomSheet {
     return  customInkWell(
         radius: BorderRadius.circular(20),
         context: context,
-        onPressed: (){openbottomSheet(context,type,model);},
+        onPressed: (){_openbottomSheet(context,type,model);},
         child:Container(
           width: 25,
           height: 25,
@@ -28,7 +28,7 @@ class TweetBottomSheet {
                 
       );
   }
-  void openbottomSheet(
+  void _openbottomSheet(
       BuildContext context, TweetType type, FeedModel model) async {
     var authState = Provider.of<AuthState>(
       context,
@@ -69,12 +69,12 @@ class TweetBottomSheet {
             ),
           ),
         ),
-        widgetBottomSheetRow(context,AppIcon.link,text: 'Copy link to tweet',),
-        isMyTweet? widgetBottomSheetRow(context,AppIcon.unFollow,text: 'Pin to profile',)
-            : widgetBottomSheetRow(context,AppIcon.unFollow,text: 'Unfollow ${model.user.userName}',),
-        isMyTweet? widgetBottomSheetRow(context,AppIcon.delete,text: 'Delete Tweet',
+        _widgetBottomSheetRow(context,AppIcon.link,text: 'Copy link to tweet',),
+        isMyTweet? _widgetBottomSheetRow(context,AppIcon.unFollow,text: 'Pin to profile',)
+            : _widgetBottomSheetRow(context,AppIcon.unFollow,text: 'Unfollow ${model.user.userName}',),
+        isMyTweet? _widgetBottomSheetRow(context,AppIcon.delete,text: 'Delete Tweet',
             onPressed: () {
-                  deleteTweet(context,type,model.key,parentkey: model.parentkey,);
+                  _deleteTweet(context,type,model.key,parentkey: model.parentkey,);
                 },
                 isEnable: true,
               )
@@ -82,15 +82,15 @@ class TweetBottomSheet {
               
         isMyTweet
             ? Container()
-            : widgetBottomSheetRow(context,AppIcon.mute,text: 'Mute ${model.user.userName}',),
-        widgetBottomSheetRow(context,AppIcon.mute,text: 'Mute this convertion',),
-        widgetBottomSheetRow(context,AppIcon.viewHidden,text: 'View hidden replies',),
+            : _widgetBottomSheetRow(context,AppIcon.mute,text: 'Mute ${model.user.userName}',),
+        _widgetBottomSheetRow(context,AppIcon.mute,text: 'Mute this convertion',),
+        _widgetBottomSheetRow(context,AppIcon.viewHidden,text: 'View hidden replies',),
         isMyTweet
             ? Container()
-            : widgetBottomSheetRow(context,AppIcon.block,text: 'Block ${model.user.userName}',),
+            : _widgetBottomSheetRow(context,AppIcon.block,text: 'Block ${model.user.userName}',),
         isMyTweet
             ? Container()
-            : widgetBottomSheetRow(context,AppIcon.report,text: 'Report Tweet',),
+            : _widgetBottomSheetRow(context,AppIcon.report,text: 'Report Tweet',),
       ],
     );
   }
@@ -107,30 +107,30 @@ class TweetBottomSheet {
             ),
           ),
         ),
-        widgetBottomSheetRow(context,AppIcon.link,text: 'Copy link to tweet',),
-        isMyTweet? widgetBottomSheetRow(context,AppIcon.thumbpinFill,text: 'Pin to profile',)
-            : widgetBottomSheetRow(context,AppIcon.sadFace,text: 'Not interested in this',),
-        isMyTweet? widgetBottomSheetRow(context,AppIcon.delete,text: 'Delete Tweet',
-            onPressed: () {deleteTweet(context,type,model.key,parentkey: model.parentkey,);},
+        _widgetBottomSheetRow(context,AppIcon.link,text: 'Copy link to tweet',),
+        isMyTweet? _widgetBottomSheetRow(context,AppIcon.thumbpinFill,text: 'Pin to profile',)
+            : _widgetBottomSheetRow(context,AppIcon.sadFace,text: 'Not interested in this',),
+        isMyTweet? _widgetBottomSheetRow(context,AppIcon.delete,text: 'Delete Tweet',
+            onPressed: () {_deleteTweet(context,type,model.key,parentkey: model.parentkey,);},
                 isEnable: true,
               )
             : Container(),
         isMyTweet
             ? Container()
-            : widgetBottomSheetRow(context,AppIcon.unFollow,text: 'Unfollow ${model.user.userName}',),
+            : _widgetBottomSheetRow(context,AppIcon.unFollow,text: 'Unfollow ${model.user.userName}',),
         isMyTweet
             ? Container()
-            : widgetBottomSheetRow(context,AppIcon.mute,text: 'Mute ${model.user.userName}',),
+            : _widgetBottomSheetRow(context,AppIcon.mute,text: 'Mute ${model.user.userName}',),
         isMyTweet
             ? Container()
-            : widgetBottomSheetRow(context,AppIcon.block,text: 'Block ${model.user.userName}',),
+            : _widgetBottomSheetRow(context,AppIcon.block,text: 'Block ${model.user.userName}',),
         isMyTweet
             ? Container()
-            : widgetBottomSheetRow(context,AppIcon.report,text: 'Report Tweet',),
+            : _widgetBottomSheetRow(context,AppIcon.report,text: 'Report Tweet',),
       ],
     );
   }
-  Widget widgetBottomSheetRow(BuildContext context, int icon,
+  Widget _widgetBottomSheetRow(BuildContext context, int icon,
       {String text, Function onPressed, bool isEnable = false}) {
     return Expanded(
       child: customInkWell(
@@ -171,7 +171,7 @@ class TweetBottomSheet {
     );
   }
 
-  void deleteTweet(BuildContext context, TweetType type, String tweetId,
+  void _deleteTweet(BuildContext context, TweetType type, String tweetId,
       {String parentkey}) {
     var state = Provider.of<FeedState>(
       context,

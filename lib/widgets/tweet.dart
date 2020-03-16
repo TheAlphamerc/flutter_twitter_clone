@@ -259,7 +259,7 @@ class Tweet extends StatelessWidget {
               size: 20,
             ),
           ),
-          Divider(height: 0)
+          Divider(height: .5,thickness: .5,)
         ],
       ),
     );

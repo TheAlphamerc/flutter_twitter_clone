@@ -59,6 +59,15 @@ String getdob(String date){
   return dat;
    
 }
+String getJoiningDate(String date){
+  if(date == null || date.isEmpty){
+    return '';
+  }
+  var dt = DateTime.parse(date);
+  var dat = DateFormat("MMMM yyyy").format(dt) ;
+  return  'Joined $dat';
+   
+}
 String getChatTime(String date){
   if(date == null || date.isEmpty){
     return '';
@@ -141,8 +150,16 @@ launchURL(String url) async {
 
 
 
-void cprint(dynamic data){
-  print(data);
+void cprint(dynamic data,{String errorIn}){
+  if(errorIn != null){
+    print('****************************** error ******************************');
+    print('[Error] $errorIn $data');
+    print('****************************** error ******************************');
+  }
+  else{
+    print(data);
+  }
+  
 }
 
 void share(String message,{String subject}) {

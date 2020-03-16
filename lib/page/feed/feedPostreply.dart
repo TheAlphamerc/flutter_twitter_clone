@@ -129,6 +129,7 @@ class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
         displayName: user.displayName ?? user.email.split('@')[0],
         profilePic: profilePic,
         userId: user.userId,
+        isVerified: authState.userModel.isVerified,
         userName: authState.userModel.userName);
 
     FeedModel reply = FeedModel(

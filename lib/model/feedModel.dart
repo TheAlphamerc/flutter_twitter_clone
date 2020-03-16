@@ -6,7 +6,6 @@ class FeedModel {
   String parentkey;
   String description;
   String userId;
-  bool isVerifiedUser;
   int likeCount;
   List<LikeList> likeList;
   int commentCount;
@@ -25,7 +24,6 @@ class FeedModel {
     this.imagePath,
     this.likeList,
     this.tags,
-    this.isVerifiedUser,
     this.user,
     this.replyTweetKeyList,
     this.parentkey,
@@ -48,7 +46,6 @@ class FeedModel {
       "likeList":map,
       "tags":tags,
       "replyTweetKeyList":replyTweetKeyList,
-      "isVerifiedUser":isVerifiedUser ?? false,
       "user":user == null ? null : user.toJson(),
       "parentkey": parentkey
     };
@@ -74,7 +71,6 @@ class FeedModel {
    createdAt = map['createdAt'];
    imagePath = map['imagePath'];
   //  username = map['username'];
-   isVerifiedUser = map['isVerifiedUser'] ?? false;
    user = User.fromJson(map['user']);
    parentkey = map['parentkey'];
    if(map['tags'] != null){
