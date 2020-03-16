@@ -12,8 +12,8 @@ class User {
   String dob;
   String createdAt;
   bool isVerified;
-  int followers = 0;
-  int following = 0;
+  int followers;
+  int following;
 
   User({this.email, this.userId, this.displayName, this.profilePic,this.key,this.contact,this.bio,this.dob,this.location,this.createdAt,this.userName,this.followers,this.following,this.webSite,this.isVerified});
 
@@ -31,8 +31,8 @@ class User {
     location = map['location'];
     contact = map['contact'];
     createdAt = map['createdAt'];
-    followers = map['followers'] ?? 0;
-    following = map['following'] ?? 0;
+    followers = map['followers'];
+    following = map['following'];
     userName = map['userName'];
     webSite = map['webSite'];
     isVerified = map['isVerified'] ?? false;
@@ -50,8 +50,8 @@ class User {
       'bio':bio,
       'location':location,
       'createdAt':createdAt,
-      'followers':followers ?? 0,
-      'following':following ?? 0,
+      'followers':followers, 
+      'following':following,
       'userName':userName,
       'webSite':webSite,
       'isVerified':isVerified ?? false
@@ -77,5 +77,11 @@ class User {
        userName: userName ?? this.userName,
        webSite: webSite ?? this.webSite
      );
+  }
+  String getFollower(){
+    return '${this.followers ?? 0}';
+  }
+  String getFollowing(){
+    return '${this.following ?? 0}';
   }
 }

@@ -101,7 +101,7 @@ class _SidebarMenuState extends State<SidebarMenu> {
                     width: 17,
                   ),
                   customText(
-                    '${state.userModel.followers ?? 0}',
+                    '${state.userModel.getFollower()}',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 17,
@@ -118,7 +118,7 @@ class _SidebarMenuState extends State<SidebarMenu> {
                     width: 10,
                   ),
                   customText(
-                    '${state.userModel.following ?? 0}' ?? '0',
+                    '${state.userModel.getFollowing()}',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 17,

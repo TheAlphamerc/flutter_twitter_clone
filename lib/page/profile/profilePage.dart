@@ -367,7 +367,7 @@ class UserNameRowWidget extends StatelessWidget {
                 height: 30,
               ),
               customText(
-                '${user.followers} ',
+                '${user.getFollower()} ',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
               ),
               customText(
@@ -376,7 +376,7 @@ class UserNameRowWidget extends StatelessWidget {
               ),
               SizedBox(width: 40),
               customText(
-                '${user.following} ',
+                '${user.getFollowing()} ',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
               ),
               customText(
