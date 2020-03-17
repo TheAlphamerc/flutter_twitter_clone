@@ -161,12 +161,11 @@ Widget _userImage(AuthState authstate) {
   }
   @override
   Widget build(BuildContext context) {
-   var authstate = Provider.of<AuthState>(context,);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(color: Colors.blue),
-        title: Text('Profile Edit',style: TextStyle(color: Colors.black87),),
+        title: customTitleText('Profile Edit',),
         actions: <Widget>[
           InkWell(
             onTap: _submitButton,

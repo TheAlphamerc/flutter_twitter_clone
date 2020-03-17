@@ -57,7 +57,8 @@ class AppTheme{
     ),
     appBarTheme: AppBarTheme(
       brightness: Brightness.light,
-      color: Colors.white,
+      color: TwitterColor.white,
+      iconTheme: IconThemeData(color: TwitterColor.dodgetBlue,),
       elevation: 0,
       textTheme:  TextTheme(
         title: TextStyle(

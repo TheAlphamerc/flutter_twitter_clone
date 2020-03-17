@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/main.dart';
 import 'package:flutter_twitter_clone/page/message/newMessagePage.dart';
+import 'package:flutter_twitter_clone/page/search/SearchPage.dart';
 import 'package:flutter_twitter_clone/page/settings/accountSettings/about/aboutTwitter.dart';
 import 'package:flutter_twitter_clone/page/settings/accountSettings/accessibility/accessibility.dart';
 import 'package:flutter_twitter_clone/page/settings/accountSettings/accountSettingsPage.dart';
@@ -17,9 +18,7 @@ import '../page/Auth/signin.dart';
 import '../helper/customRoute.dart';
 import '../page/feed/createFeed.dart';
 import '../page/feed/imageViewPage.dart';
-import '../page/SearchPage.dart';
 import '../page/Auth/forgetPasswordPage.dart';
-import '../page/Auth/signin.dart';
 import '../page/Auth/signup.dart';
 import '../page/feed/feedPostDetail.dart';
 import '../page/feed/feedPostreply.dart';
@@ -116,6 +115,9 @@ class Routes{
      }
      else if(pathElements[1].contains('AboutPage')){
        return SlideLeftRoute<bool>(builder:(BuildContext context)=> AboutPage());
+     }
+     else{
+       return onUnknownRoute(RouteSettings(name: '/Feature'));
      }
   }
 

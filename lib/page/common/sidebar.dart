@@ -208,6 +208,7 @@ class _SidebarMenuState extends State<SidebarMenu> {
 
   void _logOut() {
     final state = Provider.of<AuthState>(context);
+    Navigator.pop(context);
     state.logoutCallback();
   }
 

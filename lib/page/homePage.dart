@@ -9,9 +9,9 @@ import 'package:flutter_twitter_clone/state/notificationState.dart';
 import 'package:flutter_twitter_clone/state/searchState.dart';
 import 'package:flutter_twitter_clone/widgets/bottomMenuBar/bottomMenuBar.dart';
 import 'package:provider/provider.dart';
-import 'SearchPage.dart';
 import 'common/sidebar.dart';
 import 'notification/notificationPage.dart';
+import 'search/SearchPage.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
