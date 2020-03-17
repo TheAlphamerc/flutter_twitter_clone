@@ -16,7 +16,13 @@ class Tweet extends StatelessWidget {
   final FeedModel model;
   final Widget trailing;
   final TweetType type;
-  Tweet({Key key, this.model, this.trailing, this.type = TweetType.Tweet})
+  final bool isDisplayOnProfile;
+  Tweet(
+      {Key key,
+      this.model,
+      this.trailing,
+      this.type = TweetType.Tweet,
+      this.isDisplayOnProfile = false})
       : super(key: key);
 
   Widget _tweetImage(BuildContext context, String _image, String key) {
@@ -133,6 +139,10 @@ class Tweet extends StatelessWidget {
           height: 40,
           child: GestureDetector(
             onTap: () {
+              // If tweet is displaying on someone's profile then no need to navigate to profile again.
+              if (isDisplayOnProfile) {
+                return;
+              }
               Navigator.of(context).pushNamed('/ProfilePage/' + model?.userId);
             },
             child: customImage(context, model.user.profilePic),
@@ -259,7 +269,10 @@ class Tweet extends StatelessWidget {
               size: 20,
             ),
           ),
-          Divider(height: .5,thickness: .5,)
+          Divider(
+            height: .5,
+            thickness: .5,
+          )
         ],
       ),
     );

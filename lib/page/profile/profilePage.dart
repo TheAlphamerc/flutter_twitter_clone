@@ -241,6 +241,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 color: TwitterColor.white,
                                 child: Tweet(
                                   model: x,
+                                  isDisplayOnProfile: true,
                                   trailing: TweetBottomSheet().tweetOptionIcon(
                                       context, x, TweetType.Tweet),
                                 ),
