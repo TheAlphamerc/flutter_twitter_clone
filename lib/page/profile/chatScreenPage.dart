@@ -14,182 +14,229 @@ class ChatScreenPage extends StatefulWidget {
 }
 
 class _ChatScreenPageState extends State<ChatScreenPage> {
-
   ScrollController _controller;
-  String   _name = '';
+  String _name = '';
   final messageController = new TextEditingController();
   String senderId;
   @override
   void initState() {
     _controller = ScrollController();
-    final chatState = Provider.of<ChatState>(context,listen: false);
-    final state = Provider.of<AuthState>(context,listen: false);
+    final chatState = Provider.of<ChatState>(context, listen: false);
+    final state = Provider.of<AuthState>(context, listen: false);
     chatState.setIsChatScreenOpen = true;
     senderId = state.userId;
-    chatState.databaseInit(state.profileUserModel.userId,state.userId);
+    chatState.databaseInit(state.profileUserModel.userId, state.userId);
     chatState.getchatDetailAsync();
     super.initState();
-    
   }
+
   @override
   void dispose() {
-   
     messageController.dispose();
     super.dispose();
   }
 
-  Widget _chatScreenBody(){
+  Widget _chatScreenBody() {
     final state = Provider.of<ChatState>(context);
-     if(state.messageList == null || state.messageList.length == 0){
-      return Center(child:Text('No message found',style: TextStyle(color: Colors.grey,fontWeight: FontWeight.bold),),);//EmptyListWidget('No chat available',subTitle: 'You can start new chat',image: 'im_emptyIcon_3.png');
+    if (state.messageList == null || state.messageList.length == 0) {
+      return Center(
+        child: Text(
+          'No message found',
+          style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
+        ),
+      ); //EmptyListWidget('No chat available',subTitle: 'You can start new chat',image: 'im_emptyIcon_3.png');
     }
     return ListView.builder(
-          controller: _controller,
-          shrinkWrap: true,
-          reverse: true,
-           physics: BouncingScrollPhysics(),
-          itemCount: state.messageList.length,
-          itemBuilder: (context,index)=> chatMessage(state.messageList[index]));
-    
+      controller: _controller,
+      shrinkWrap: true,
+      reverse: true,
+      physics: BouncingScrollPhysics(),
+      itemCount: state.messageList.length,
+      itemBuilder: (context, index) => chatMessage(state.messageList[index]),
+    );
   }
-  Widget chatMessage(ChatMessage message){
-    if(senderId == null){
+
+  Widget chatMessage(ChatMessage message) {
+    if (senderId == null) {
       return Container();
     }
-    if(message.senderId == senderId)
-    return _outGoingMessage(message);
+    if (message.senderId == senderId)
+      return _outGoingMessage(message);
     else
-    return  _incommingMessage(message);
-    
+      return _incommingMessage(message);
   }
-  Widget _outGoingMessage(ChatMessage chat){
-    return
-      Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-                    Wrap(
-                      children: <Widget>[
-                        Container(
-                          margin: EdgeInsets.only(right: 10,top: 20,left: (fullWidth(context) / 4)),
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(topLeft: Radius.circular(10),bottomRight: Radius.circular(10),bottomLeft: Radius.circular(10)),
-                            color: Colors.grey.shade200
-                          ),
-                          child:   Text(chat.message), 
-                        ),
-                      ],),
-                   Padding(
-                     padding: EdgeInsets.only(right: 10),
-                      child: Text(getChatTime(chat.createdAt),style:Theme.of(context).textTheme.caption.copyWith(fontSize: 12)),
-                   )
-          ],);
-  }
-  Widget _incommingMessage(ChatMessage chat){
-     return
-      Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-                    Wrap(
-                      children: <Widget>[
-                        Container(
-                          margin: EdgeInsets.only(left: 10,top: 20,right: (fullWidth(context) / 4)),
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(topRight: Radius.circular(10),bottomRight: Radius.circular(10),bottomLeft: Radius.circular(10)),
-                            color: Colors.grey.shade200
-                          ),
-                          child:   Text(chat.message), 
-                        ),
-                      ],),
-                   Padding(
-                     padding: EdgeInsets.only(left: 14),
-                     child: Text(getChatTime(chat.createdAt),style:Theme.of(context).textTheme.caption.copyWith(fontSize: 12)),
-                   )
-          ],);
-  }
-  Widget _bottomEntryField(){
-    final state = Provider.of<ChatState>(context,listen: false);
-    return Align(
-            alignment: Alignment.bottomLeft, 
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-              Divider(thickness: 0, height: 1,),
-              TextField(
-              onSubmitted: (val)async{
-                submitMessage();
-               },
-              controller: messageController,
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.symmetric(horizontal: 10,vertical: 13),
-                alignLabelWithHint: true,
-                hintText: 'Start with a message...',
-                suffixIcon: IconButton(
-                  icon: Icon(Icons.send),
-                  onPressed: submitMessage),
-                // fillColor: Colors.black12, filled: true
-              ),
-            ),
 
-            ],)
-          );
-  }
-   Future<bool> _onWillPop()async {
-      final chatState = Provider.of<ChatState>(context);
-      chatState.setIsChatScreenOpen = false;
-      chatState.dispose();
-      return true;
-   }
-   void submitMessage(){
-     var state = Provider.of<ChatState>(context,listen:false);
-     var authstate = Provider.of<AuthState>(context,listen:false);
-     ChatMessage message;
-      message = ChatMessage(
-        message: messageController.text,
-        createdAt: DateTime.now().toIso8601String(),
-        senderId:  authstate.userModel.userId,
-        receiverId: authstate.profileUserModel.userId,
-        seen: false,
-        timeStamp:DateTime.now().millisecondsSinceEpoch.toString(),
-        senderName: authstate.userModel.displayName);
-      if(messageController.text == null || messageController.text.isEmpty){
-        return ;
-      }
-      User myUser = User(displayName: authstate.userModel.displayName, userId: authstate.userModel.userId, profilePic: authstate.userModel.profilePic);
-      state.onMessageSubmitted(message, myUser: myUser,secondUser: authstate.profileUserModel);
-      messageController.text = '';
-      _controller.animateTo(
-          0.0,
-          curve: Curves.easeOut,
-          duration: const Duration(milliseconds: 300),
-      );
-   }
-  @override
-  Widget build(BuildContext context) {
-    var state = Provider.of<AuthState>(context,listen:false);
-    return WillPopScope(
-      onWillPop: _onWillPop,
-    child :
-    Scaffold(
-      appBar: AppBar(title: Text(state.profileUserModel.displayName,style: TextStyle(color: Colors.black87),),
-        iconTheme: IconThemeData(color: Colors.blue),
-        backgroundColor: Colors.white,
-      ),
-      body: Stack(
-        children: <Widget>[
-          Align(
-            alignment: _name == 'Sonu' ? Alignment.topLeft : Alignment.topRight, 
-            child: Padding(
-              padding: EdgeInsets.only(bottom: 50),
-              child: _chatScreenBody(),
-            )
+  Widget _outGoingMessage(ChatMessage chat) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: <Widget>[
+        Wrap(
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.only(
+                right: 10,
+                top: 20,
+                left: (fullWidth(context) / 4),
+              ),
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  bottomRight: Radius.circular(10),
+                  bottomLeft: Radius.circular(10),
+                ),
+                color: Colors.grey.shade200,
+              ),
+              child: Text(chat.message),
+            ),
+          ],
+        ),
+        Padding(
+          padding: EdgeInsets.only(right: 10),
+          child: Text(
+            getChatTime(chat.createdAt),
+            style: Theme.of(context).textTheme.caption.copyWith(fontSize: 12),
           ),
-          _bottomEntryField()
+        )
+      ],
+    );
+  }
+
+  Widget _incommingMessage(ChatMessage chat) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        Wrap(
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.only(
+                left: 10,
+                top: 20,
+                right: (fullWidth(context) / 4),
+              ),
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(10),
+                  bottomRight: Radius.circular(10),
+                  bottomLeft: Radius.circular(10),
+                ),
+                color: Colors.grey.shade200,
+              ),
+              child: Text(chat.message),
+            ),
+          ],
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: 14),
+          child: Text(
+            getChatTime(chat.createdAt),
+            style: Theme.of(context).textTheme.caption.copyWith(fontSize: 12),
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget _bottomEntryField() {
+    return Align(
+      alignment: Alignment.bottomLeft,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          Divider(
+            thickness: 0,
+            height: 1,
+          ),
+          TextField(
+            onSubmitted: (val) async {
+              submitMessage();
+            },
+            controller: messageController,
+            decoration: InputDecoration(
+              contentPadding:
+                  EdgeInsets.symmetric(horizontal: 10, vertical: 13),
+              alignLabelWithHint: true,
+              hintText: 'Start with a message...',
+              suffixIcon:
+                  IconButton(icon: Icon(Icons.send), onPressed: submitMessage),
+              // fillColor: Colors.black12, filled: true
+            ),
+          ),
         ],
       ),
-    ));
+    );
+  }
+
+  Future<bool> _onWillPop() async {
+    final chatState = Provider.of<ChatState>(context);
+    chatState.setIsChatScreenOpen = false;
+    chatState.dispose();
+    return true;
+  }
+
+  void submitMessage() {
+    var state = Provider.of<ChatState>(context, listen: false);
+    var authstate = Provider.of<AuthState>(context, listen: false);
+    ChatMessage message;
+    message = ChatMessage(
+        message: messageController.text,
+        createdAt: DateTime.now().toIso8601String(),
+        senderId: authstate.userModel.userId,
+        receiverId: authstate.profileUserModel.userId,
+        seen: false,
+        timeStamp: DateTime.now().millisecondsSinceEpoch.toString(),
+        senderName: authstate.userModel.displayName);
+    if (messageController.text == null || messageController.text.isEmpty) {
+      return;
+    }
+    User myUser = User(
+      displayName: authstate.userModel.displayName,
+      userId: authstate.userModel.userId,
+      profilePic: authstate.userModel.profilePic,
+    );
+    state.onMessageSubmitted(
+      message,
+      myUser: myUser,
+      secondUser: authstate.profileUserModel,
+    );
+    messageController.text = '';
+    _controller.animateTo(
+      0.0,
+      curve: Curves.easeOut,
+      duration: const Duration(milliseconds: 300),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var state = Provider.of<AuthState>(context, listen: false);
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            state.profileUserModel.displayName,
+            style: TextStyle(color: Colors.black87),
+          ),
+          iconTheme: IconThemeData(color: Colors.blue),
+          backgroundColor: Colors.white,
+        ),
+        body: Stack(
+          children: <Widget>[
+            Align(
+                alignment:
+                    _name == 'Sonu' ? Alignment.topLeft : Alignment.topRight,
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 50),
+                  child: _chatScreenBody(),
+                )),
+            _bottomEntryField()
+          ],
+        ),
+      ),
+    );
   }
 }
