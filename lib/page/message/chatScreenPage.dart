@@ -20,7 +20,7 @@ class ChatScreenPage extends StatefulWidget {
 class _ChatScreenPageState extends State<ChatScreenPage> {
   final messageController = new TextEditingController();
   String senderId;
-
+  String userImage;
   ScrollController _controller;
 
   @override
@@ -49,7 +49,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
           'No message found',
           style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
         ),
-      ); //EmptyListWidget('No chat available',subTitle: 'You can start new chat',image: 'im_emptyIcon_3.png');
+      );
     }
     return ListView.builder(
       controller: _controller,
@@ -66,74 +66,65 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
       return Container();
     }
     if (message.senderId == senderId)
-      return _outGoingMessage(message);
+      return _message(message, true);
     else
-      return _incommingMessage(message);
+      return _message(message, false);
   }
 
-  Widget _outGoingMessage(ChatMessage chat) {
+  Widget _message(ChatMessage chat, bool myMessage) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment:
+          myMessage ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      mainAxisAlignment:
+          myMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: <Widget>[
-        Wrap(
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
-            Container(
-              margin: EdgeInsets.only(
-                right: 10,
-                top: 20,
-                left: (fullWidth(context) / 4),
-              ),
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    bottomRight: Radius.circular(10),
-                    bottomLeft: Radius.circular(10),
+            SizedBox(width: 15,),
+            myMessage
+                ? SizedBox()
+                : CircleAvatar(
+                    backgroundImage: customAdvanceNetworkImage(userImage),
                   ),
-                  color: Colors.grey.shade200),
-              child: Text(chat.message),
+            Expanded(
+              child: Container(
+                alignment:
+                    myMessage ? Alignment.centerRight : Alignment.centerLeft,
+                margin: EdgeInsets.only(
+                  right: myMessage ? 10 : (fullWidth(context) / 4),
+                  top: 20,
+                  left: myMessage ? (fullWidth(context) / 4) : 10,
+                ),
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                      bottomRight:
+                          myMessage ? Radius.circular(0) : Radius.circular(20),
+                      bottomLeft:
+                          myMessage ? Radius.circular(20) : Radius.circular(0),
+                    ),
+                    color: myMessage
+                        ? TwitterColor.dodgetBlue
+                        : TwitterColor.mystic,
+                  ),
+                  child: UrlText(
+                    text: chat.message,
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: myMessage ? TwitterColor.white : Colors.black),
+                  ),
+                ),
+              ),
             ),
+            //  myMessage ? CircleAvatar() : SizedBox()
           ],
         ),
         Padding(
-          padding: EdgeInsets.only(right: 10),
-          child: Text(
-            getChatTime(chat.createdAt),
-            style: Theme.of(context).textTheme.caption.copyWith(fontSize: 12),
-          ),
-        )
-      ],
-    );
-  }
-
-  Widget _incommingMessage(ChatMessage chat) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[
-        Wrap(
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.only(
-                left: 10,
-                top: 20,
-                right: (fullWidth(context) / 4),
-              ),
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(10),
-                    bottomRight: Radius.circular(10),
-                    bottomLeft: Radius.circular(10),
-                  ),
-                  color: Colors.grey.shade200),
-              child: Text(chat.message),
-            ),
-          ],
-        ),
-        Padding(
-          padding: EdgeInsets.only(left: 14),
+          padding: EdgeInsets.only(right: 10, left: 10),
           child: Text(
             getChatTime(chat.createdAt),
             style: Theme.of(context).textTheme.caption.copyWith(fontSize: 12),
@@ -206,8 +197,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
       userName: state.chatUser.userName,
       profilePic: state.chatUser.profilePic,
     );
-    state.onMessageSubmitted(message,
-        myUser: myUser, secondUser: secondUser);
+    state.onMessageSubmitted(message, myUser: myUser, secondUser: secondUser);
     Future.delayed(Duration(milliseconds: 50)).then((_) {
       messageController.clear();
     });
@@ -230,6 +220,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
   @override
   Widget build(BuildContext context) {
     var state = Provider.of<ChatState>(context, listen: false);
+    userImage = state.chatUser.profilePic;
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
