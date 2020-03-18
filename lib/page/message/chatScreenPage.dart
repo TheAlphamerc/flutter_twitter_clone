@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/model/chatModel.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
@@ -22,6 +23,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
   String senderId;
   String userImage;
   ScrollController _controller;
+  GlobalKey<ScaffoldState> _scaffoldKey;
 
   @override
   void dispose() {
@@ -31,6 +33,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
 
   @override
   void initState() {
+    _scaffoldKey = GlobalKey<ScaffoldState>();
     _controller = ScrollController();
     final chatState = Provider.of<ChatState>(context, listen: false);
     final state = Provider.of<AuthState>(context, listen: false);
@@ -81,7 +84,9 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
         Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
-            SizedBox(width: 15,),
+            SizedBox(
+              width: 15,
+            ),
             myMessage
                 ? SizedBox()
                 : CircleAvatar(
@@ -96,31 +101,52 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                   top: 20,
                   left: myMessage ? (fullWidth(context) / 4) : 10,
                 ),
-                child: Container(
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20),
-                      bottomRight:
-                          myMessage ? Radius.circular(0) : Radius.circular(20),
-                      bottomLeft:
-                          myMessage ? Radius.circular(20) : Radius.circular(0),
+                child: Stack(
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: getBorder(myMessage),
+                        color: myMessage
+                            ? TwitterColor.dodgetBlue
+                            : TwitterColor.mystic,
+                      ),
+                      child: UrlText(
+                        text: chat.message,
+                        style: TextStyle(
+                            fontSize: 16,
+                            color:
+                                myMessage ? TwitterColor.white : Colors.black),
+                      ),
                     ),
-                    color: myMessage
-                        ? TwitterColor.dodgetBlue
-                        : TwitterColor.mystic,
-                  ),
-                  child: UrlText(
-                    text: chat.message,
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: myMessage ? TwitterColor.white : Colors.black),
-                  ),
+                    Positioned(
+                      top: 0,
+                      bottom: 0,
+                      right: 0,
+                      left: 0,
+                      child: InkWell(
+                        borderRadius: getBorder(myMessage),
+                        onLongPress: () {
+                          var text = ClipboardData(text: chat.message);
+                          Clipboard.setData(text);
+                          _scaffoldKey.currentState.hideCurrentSnackBar();
+                          _scaffoldKey.currentState.showSnackBar(
+                          SnackBar(
+                            backgroundColor: TwitterColor.white,
+                            content: Text(
+                              'Message copied',
+                             style: TextStyle(color:Colors.black),
+                            ),
+                          ),
+                        );
+                        },
+                        child: SizedBox(),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
-            //  myMessage ? CircleAvatar() : SizedBox()
           ],
         ),
         Padding(
@@ -131,6 +157,15 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
           ),
         )
       ],
+    );
+  }
+
+  BorderRadius getBorder(bool myMessage) {
+    return BorderRadius.only(
+      topLeft: Radius.circular(20),
+      topRight: Radius.circular(20),
+      bottomRight: myMessage ? Radius.circular(0) : Radius.circular(20),
+      bottomLeft: myMessage ? Radius.circular(20) : Radius.circular(0),
     );
   }
 
@@ -224,6 +259,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
