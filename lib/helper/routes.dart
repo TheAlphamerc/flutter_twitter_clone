@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/main.dart';
+import 'package:flutter_twitter_clone/page/message/conversationInformation/conversationInformation.dart';
 import 'package:flutter_twitter_clone/page/message/newMessagePage.dart';
 import 'package:flutter_twitter_clone/page/search/SearchPage.dart';
 import 'package:flutter_twitter_clone/page/settings/accountSettings/about/aboutTwitter.dart';
@@ -115,6 +116,9 @@ class Routes{
      }
      else if(pathElements[1].contains('AboutPage')){
        return SlideLeftRoute<bool>(builder:(BuildContext context)=> AboutPage());
+     }
+      else if(pathElements[1].contains('ConversationInformation')){
+       return SlideLeftRoute<bool>(builder:(BuildContext context)=> ConversationInformation());
      }
      else{
        return onUnknownRoute(RouteSettings(name: '/Feature'));

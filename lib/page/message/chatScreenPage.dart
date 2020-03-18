@@ -282,7 +282,9 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
           actions: <Widget>[
             IconButton(
                 icon: Icon(Icons.info, color: AppColor.primary),
-                onPressed: () {})
+                onPressed: () {
+                  Navigator.pushNamed(context, '/ConversationInformation');
+                })
           ],
         ),
         body: Stack(
