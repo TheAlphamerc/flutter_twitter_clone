@@ -206,11 +206,12 @@ class _ProfilePageState extends State<ProfilePage> {
       backgroundColor: list != null && list.isNotEmpty
           ? TwitterColor.mystic
           : TwitterColor.white,
-      floatingActionButton: _floatingActionButton(),
+      floatingActionButton: isMyProfile ? _floatingActionButton() : null,
       body: authstate.profileUserModel == null
           ? loader()
           : 
           CustomScrollView(
+            physics: ClampingScrollPhysics(),
               slivers: <Widget>[
                 getAppbar(),
                 SliverToBoxAdapter(
