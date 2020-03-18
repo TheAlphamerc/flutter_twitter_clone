@@ -213,6 +213,7 @@ class _SidebarMenuState extends State<SidebarMenu> {
   }
 
   void _navigateTo(String path) {
+    Navigator.pop(context);
     Navigator.of(context).pushNamed('/$path');
   }
 

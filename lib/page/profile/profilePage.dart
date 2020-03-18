@@ -142,12 +142,18 @@ class _ProfilePageState extends State<ProfilePage> {
                           onTap: () {
                             if (isMyProfile) {
                               Navigator.pushNamed(context, '/EditProfile');
+                            } else {
+                              authstate.followUser(
+                                  removeFollower: isFollower());
                             }
                           },
                           child: Container(
                             padding: EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 5),
                             decoration: BoxDecoration(
+                              color: isFollower()
+                                  ? TwitterColor.dodgetBlue
+                                  : TwitterColor.white,
                               border: Border.all(
                                   color: isMyProfile
                                       ? Colors.black87.withAlpha(180)
@@ -156,11 +162,15 @@ class _ProfilePageState extends State<ProfilePage> {
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text(
-                              isMyProfile ? 'Edit Profile' : 'Follow',
+                              isMyProfile
+                                  ? 'Edit Profile'
+                                  : isFollower() ? 'Following' : 'Follow',
                               style: TextStyle(
                                   color: isMyProfile
                                       ? Colors.black87.withAlpha(180)
-                                      : Colors.blue,
+                                      : isFollower()
+                                          ? TwitterColor.white
+                                          : Colors.blue,
                                   fontSize: 17,
                                   fontWeight: FontWeight.bold),
                             ),
@@ -193,6 +203,17 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+  isFollower() {
+    var authstate = Provider.of<AuthState>(context);
+    if (authstate.profileUserModel.followersList != null &&
+        authstate.profileUserModel.followersList.isNotEmpty) {
+      return (authstate.profileUserModel.followersList
+          .any((x) => x == authstate.userModel.userId));
+    } else {
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var state = Provider.of<FeedState>(context);
@@ -209,9 +230,8 @@ class _ProfilePageState extends State<ProfilePage> {
       floatingActionButton: isMyProfile ? _floatingActionButton() : null,
       body: authstate.profileUserModel == null
           ? loader()
-          : 
-          CustomScrollView(
-            physics: ClampingScrollPhysics(),
+          : CustomScrollView(
+              physics: ClampingScrollPhysics(),
               slivers: <Widget>[
                 getAppbar(),
                 SliverToBoxAdapter(
@@ -355,7 +375,7 @@ class UserNameRowWidget extends StatelessWidget {
               SizedBox(width: 10),
               customText(
                 getJoiningDate(user.createdAt),
-                style: TextStyle(color:AppColor.darkGrey),
+                style: TextStyle(color: AppColor.darkGrey),
               ),
             ],
           ),
@@ -368,30 +388,43 @@ class UserNameRowWidget extends StatelessWidget {
                 width: 10,
                 height: 30,
               ),
-              customText(
-                '${user.getFollower()} ',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+              InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, '/FollowerListPage');
+                },
+                child: customText(
+                  '${user.getFollower()} ',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                ),
               ),
-              customText(
-                'Followers',
-                style: TextStyle(color: AppColor.darkGrey, fontSize: 17),
+              InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, '/FollowerListPage');
+                },
+                child: customText(
+                  'Followers',
+                  style: TextStyle(color: AppColor.darkGrey, fontSize: 17),
+                ),
               ),
               SizedBox(width: 40),
               customText(
                 '${user.getFollowing()} ',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
               ),
-              customText(
-                'Following',
-                style: TextStyle(color: AppColor.darkGrey, fontSize: 17),
+              InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, '/FollowingListPage');
+                },
+                child: customText(
+                  'Following',
+                  style: TextStyle(color: AppColor.darkGrey, fontSize: 17),
+                ),
               ),
             ],
           ),
         ),
         SizedBox(height: 5),
-        Divider(
-          height: 0,
-        )
+        Divider(height: 0)
       ],
     );
   }

@@ -20,7 +20,7 @@ class AuthState extends AppState {
   String userId;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  dabase.Query _authQuery;
+  dabase.Query _profileQuery;
   final FirebaseDatabase _database = FirebaseDatabase.instance;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -54,9 +54,9 @@ class AuthState extends AppState {
 
   databaseInit() {
     try {
-      if (_authQuery == null) {
-        _authQuery = _database.reference().child("profile");
-        _authQuery.onChildChanged.listen(_onProfileChanged);
+      if (_profileQuery == null) {
+        _profileQuery = _database.reference().child("profile");
+        _profileQuery.onChildChanged.listen(_onProfileChanged);
       }
     } catch (error) {
       cprint(error, errorIn: 'databaseInit');
@@ -161,7 +161,7 @@ class AuthState extends AppState {
       // Time at which user is created
       user.createdAt = DateTime.now().toUtc().toString();
     }
-    FirebaseDatabase.instance
+    _database
         .reference()
         .child('profile')
         .child(user.userId)
@@ -260,30 +260,108 @@ class AuthState extends AppState {
 
   /// Fetch user profile
   getProfileUser({String userProfileId}) {
-   try{
+    try {
       _profileUserModel = null;
-    userProfileId = userProfileId == null ? userId : userProfileId;
-    FirebaseDatabase.instance
-        .reference()
-        .child("profile")
-        .child(userProfileId)
-        .once()
-        .then((DataSnapshot snapshot) {
-      if (snapshot.value != null) {
-        var map = snapshot.value;
-        if (map != null) {
-          _profileUserModel = User.fromJson(map);
-          if (userProfileId == userId) {
-            _userModel = _profileUserModel;
+      userProfileId = userProfileId == null ? userId : userProfileId;
+      _database
+          .reference()
+          .child("profile")
+          .child(userProfileId)
+          .once()
+          .then((DataSnapshot snapshot) {
+        if (snapshot.value != null) {
+          var map = snapshot.value;
+          if (map != null) {
+            _profileUserModel = User.fromJson(map);
+            if (userProfileId == userId) {
+              _userModel = _profileUserModel;
+            }
+            getFollowingUser();
+            notifyListeners();
           }
-          notifyListeners();
         }
+      });
+    } catch (error) {
+      cprint(error, errorIn: 'getProfileUser');
+    }
+  }
+
+  List<String> followingList = [];
+
+  /// Get following user
+  getFollowingUser() {
+    try {
+      followingList = null;
+      _database
+          .reference()
+          .child("followList")
+          .child(profileUserModel.userId)
+          .once()
+          .then((DataSnapshot snapshot) {
+        if (snapshot.value != null) {
+          followingList = [];
+          var map = snapshot.value;
+          if (map != null) {
+            map['following'].forEach((key, value) {
+              followingList.add(key);
+            });
+            if (profileUserModel.userId == userId) {
+              _userModel.following = followingList.length;
+            } else {
+              profileUserModel.following = followingList.length;
+            }
+            notifyListeners();
+          }
+        }
+      });
+    } catch (error) {
+      cprint(error, errorIn: 'getProfileUser');
+    }
+  }
+
+  /// Follow / Unfollow user
+  followUser({bool removeFollower = false}) {
+    try {
+      if (removeFollower) {
+        profileUserModel.followersList.remove(userModel.userId);
+
+        profileUserModel.followers = profileUserModel.followersList.length;
+
+        _database
+            .reference()
+            .child("followList")
+            .child(userModel.userId)
+            .child("following")
+            .child(profileUserModel.userId)
+            .remove();
+        cprint('user removed from follwer list');
+      } else {
+        if (profileUserModel.followersList == null) {
+          profileUserModel.followersList = [userModel.userId];
+          // upda
+        } else {
+          profileUserModel.followersList.add(userModel.userId);
+        }
+        profileUserModel.followers = profileUserModel.followersList.length;
+
+        _database
+            .reference()
+            .child("followList")
+            .child(userModel.userId)
+            .child("following")
+            .child(profileUserModel.userId)
+            .set({"userId": profileUserModel.userId});
+        cprint('user added to follwer list');
       }
-    });
-   }
-   catch(error){
-     cprint(error, errorIn: 'getProfileUser');
-   }
+      _database
+          .reference()
+          .child('profile')
+          .child(profileUserModel.userId)
+          .set(profileUserModel.toJson());
+      notifyListeners();
+    } catch (error) {
+      cprint(error, errorIn: 'getProfileUser');
+    }
   }
 
   void _onProfileChanged(Event event) {

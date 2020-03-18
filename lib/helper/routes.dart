@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/main.dart';
 import 'package:flutter_twitter_clone/page/message/conversationInformation/conversationInformation.dart';
 import 'package:flutter_twitter_clone/page/message/newMessagePage.dart';
+import 'package:flutter_twitter_clone/page/profile/follow/followerListPage.dart';
+import 'package:flutter_twitter_clone/page/profile/follow/followingListPage.dart';
 import 'package:flutter_twitter_clone/page/search/SearchPage.dart';
 import 'package:flutter_twitter_clone/page/settings/accountSettings/about/aboutTwitter.dart';
 import 'package:flutter_twitter_clone/page/settings/accountSettings/accessibility/accessibility.dart';
@@ -119,6 +121,12 @@ class Routes{
      }
       else if(pathElements[1].contains('ConversationInformation')){
        return SlideLeftRoute<bool>(builder:(BuildContext context)=> ConversationInformation());
+     }
+     else if(pathElements[1].contains('FollowingListPage')){
+       return SlideLeftRoute<bool>(builder:(BuildContext context)=> FollowingListPage());
+     }
+     else if(pathElements[1].contains('FollowerListPage')){
+       return SlideLeftRoute<bool>(builder:(BuildContext context)=> FollowerListPage());
      }
      else{
        return onUnknownRoute(RouteSettings(name: '/Feature'));
