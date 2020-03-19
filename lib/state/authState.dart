@@ -26,6 +26,7 @@ class AuthState extends AppState {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   User _profileUserModel;
   User _userModel;
+  List<String> followingList = [];
 
   User get userModel => _userModel;
 
@@ -276,6 +277,7 @@ class AuthState extends AppState {
             if (userProfileId == userId) {
               _userModel = _profileUserModel;
             }
+            // Fecth following list to calculate following count
             getFollowingUser();
             notifyListeners();
           }
@@ -285,8 +287,6 @@ class AuthState extends AppState {
       cprint(error, errorIn: 'getProfileUser');
     }
   }
-
-  List<String> followingList = [];
 
   /// Get following user
   getFollowingUser() {
@@ -320,13 +320,24 @@ class AuthState extends AppState {
   }
 
   /// Follow / Unfollow user
+  ///
+  /// If `removeFollower` is true then remove user from follower list
+  ///
+  /// If `removeFollower` is false then add user to follower list
   followUser({bool removeFollower = false}) {
+    /// `userModel` is user who is looged-in app.
+    /// `profileUserModel` is user whoose profile is open in app.
     try {
       if (removeFollower) {
+        /// If logged-in user `alredy follow `profile user then
+        /// 1.Remove logged-in user from profile user's `follower` list
+        /// 2.Remove profile user from logged-in user's `following` list
         profileUserModel.followersList.remove(userModel.userId);
 
+        // update user follower count
         profileUserModel.followers = profileUserModel.followersList.length;
 
+        /// Remove profile user from logged-in user following list
         _database
             .reference()
             .child("followList")
@@ -334,16 +345,18 @@ class AuthState extends AppState {
             .child("following")
             .child(profileUserModel.userId)
             .remove();
-        cprint('user removed from follwer list');
+        cprint('user removed from following list');
       } else {
+        /// if logged in user is `not following` profile user then
+        /// 1.Add logged in user to profile user's `follower` list
+        /// 2. Add profile user to logged in user's `following` list
         if (profileUserModel.followersList == null) {
           profileUserModel.followersList = [userModel.userId];
-          // upda
         } else {
           profileUserModel.followersList.add(userModel.userId);
         }
         profileUserModel.followers = profileUserModel.followersList.length;
-
+        // Adding profile user to logged-in user's following list
         _database
             .reference()
             .child("followList")
@@ -351,8 +364,9 @@ class AuthState extends AppState {
             .child("following")
             .child(profileUserModel.userId)
             .set({"userId": profileUserModel.userId});
-        cprint('user added to follwer list');
+        cprint('user added to following list');
       }
+      // uppdate profile-user's by adding/removing follower
       _database
           .reference()
           .child('profile')
@@ -360,14 +374,14 @@ class AuthState extends AppState {
           .set(profileUserModel.toJson());
       notifyListeners();
     } catch (error) {
-      cprint(error, errorIn: 'getProfileUser');
+      cprint(error, errorIn: 'followUser');
     }
   }
 
   void _onProfileChanged(Event event) {
     if (event.snapshot != null) {
       _userModel = User.fromJson(event.snapshot.value);
-      cprint('USer Updated');
+      cprint('User Updated');
       notifyListeners();
     }
   }

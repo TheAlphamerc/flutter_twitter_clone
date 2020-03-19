@@ -297,6 +297,27 @@ class UserNameRowWidget extends StatelessWidget {
     }
   }
 
+  Widget _tappbleText(
+      BuildContext context, String count, String text, String navigateTo) {
+    return InkWell(
+      onTap: () {
+        Navigator.pushNamed(context, '/$navigateTo');
+      },
+      child: Row(
+        children: <Widget>[
+          customText(
+            '$count ',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+          ),
+          customText(
+            '$text',
+            style: TextStyle(color: AppColor.darkGrey, fontSize: 17),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -388,38 +409,11 @@ class UserNameRowWidget extends StatelessWidget {
                 width: 10,
                 height: 30,
               ),
-              InkWell(
-                onTap: () {
-                  Navigator.pushNamed(context, '/FollowerListPage');
-                },
-                child: customText(
-                  '${user.getFollower()} ',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
-                ),
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.pushNamed(context, '/FollowerListPage');
-                },
-                child: customText(
-                  'Followers',
-                  style: TextStyle(color: AppColor.darkGrey, fontSize: 17),
-                ),
-              ),
+              _tappbleText(context, '${user.getFollower()}', ' Followers',
+                  'FollowerListPage'),
               SizedBox(width: 40),
-              customText(
-                '${user.getFollowing()} ',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.pushNamed(context, '/FollowingListPage');
-                },
-                child: customText(
-                  'Following',
-                  style: TextStyle(color: AppColor.darkGrey, fontSize: 17),
-                ),
-              ),
+              _tappbleText(context, '${user.getFollowing()}', ' Following',
+                  'FollowingListPage'),
             ],
           ),
         ),
