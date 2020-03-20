@@ -41,7 +41,7 @@ class Routes{
 
   static void sendNavigationEventToFirebase(String path) {
     if(path != null && path.isNotEmpty){
-      analytics.setCurrentScreen(screenName: path);
+      // analytics.setCurrentScreen(screenName: path);
     }
   }
 
