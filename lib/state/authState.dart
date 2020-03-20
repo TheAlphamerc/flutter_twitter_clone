@@ -281,6 +281,7 @@ class AuthState extends AppState {
   /// Fetch user profile
   getProfileUser({String userProfileId}) {
     try {
+      loading = true;
       _profileUserModel = null;
       userProfileId = userProfileId == null ? userId : userProfileId;
       _database
@@ -298,12 +299,13 @@ class AuthState extends AppState {
             }
             // Fecth following list to calculate following count
             getFollowingUser();
-            notifyListeners();
             logEvent('get_profile');
           }
         }
+      loading = false;
       });
     } catch (error) {
+      loading = false;
       cprint(error, errorIn: 'getProfileUser');
     }
   }

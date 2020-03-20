@@ -26,7 +26,7 @@ class FollowerListPage extends StatelessWidget {
           return UserListWidget(
             fetchingListbool: state.isbusy ?? false,
             list: state.profileUserModel?.followersList,
-            emptyScreenText: '${state.profileUserModel.userName} doesn\'t have any followers',
+            emptyScreenText: '${state?.profileUserModel?.userName ?? state.userModel.userName} doesn\'t have any followers',
             emptyScreenSubTileText: 'When someone follow them, they\'ll be listed here.',
           );
         },

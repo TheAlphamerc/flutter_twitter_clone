@@ -41,7 +41,7 @@ class _FollowingListPageState extends State<FollowingListPage> {
             isFollowing: true,
             fetchingListbool: state.isbusy ?? false,
             list: state.profileFollowingList,
-            emptyScreenText: '${state.profileUserModel.userName} isn\'t follow anyone',
+            emptyScreenText: '${state?.profileUserModel?.userName ?? state.userModel.userName} isn\'t follow anyone',
             emptyScreenSubTileText : 'When they do they\'ll be listed here.'
           );
         },
