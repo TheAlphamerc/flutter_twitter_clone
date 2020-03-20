@@ -7,8 +7,9 @@ import 'package:firebase_database/firebase_database.dart' as dabase;
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/model/notificationModel.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
+import 'package:flutter_twitter_clone/state/appState.dart';
 
-class NotificationState extends ChangeNotifier {
+class NotificationState extends AppState {
   dabase.Query query;
   List<User> userList = [];
 
@@ -37,6 +38,7 @@ class NotificationState extends ChangeNotifier {
   /// get [Notification list] from firebase realtime database
   void getDataFromDatabase(String userId) {
     try {
+       loading = true;
       _notificationList = [];
       final databaseReference = FirebaseDatabase.instance.reference();
       databaseReference
@@ -53,9 +55,10 @@ class NotificationState extends ChangeNotifier {
             });
           }
         }
-        notifyListeners();
+       loading = false;
       });
     } catch (error) {
+      loading = false;
       cprint(error, errorIn: 'getDataFromDatabase');
     }
   }

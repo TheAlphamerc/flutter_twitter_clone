@@ -302,7 +302,7 @@ class AuthState extends AppState {
             logEvent('get_profile');
           }
         }
-      loading = false;
+      // loading = false;
       });
     } catch (error) {
       loading = false;
