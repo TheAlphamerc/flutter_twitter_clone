@@ -34,6 +34,7 @@ class _SearchPageState extends State<SearchPage> {
   Widget _userTile(User user) {
     return ListTile(
       onTap: () {
+        analytics.logViewSearchResults(searchTerm: user.userName);
         Navigator.of(context).pushNamed('/ProfilePage/' + user?.userId);
       },
       leading: customImage(context, user.profilePic, height: 40),
@@ -64,7 +65,7 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-  void onSearch() {
+  void onSettingIconPressed() {
      Navigator.pushNamed(context, '/TrendsPage');
   }
 
@@ -77,7 +78,7 @@ class _SearchPageState extends State<SearchPage> {
         scaffoldKey: widget.scaffoldKey,
         textController: textController,
         icon: AppIcon.settings,
-        onActionPressed: onSearch,
+        onActionPressed: onSettingIconPressed,
         onSearchChanged: (text) {
           state.filterByUsername(text);
         },

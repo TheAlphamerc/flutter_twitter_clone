@@ -30,6 +30,7 @@ dependencies:
   flutter_native_splash: ^0.1.9
   firebase_auth:
   firebase_database:
+  firebase_analytics:
 
   cloud_firestore:
   firebase_storage: 

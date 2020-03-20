@@ -20,7 +20,7 @@ class FollowerListPage extends StatelessWidget {
         ),
       ),
       body: UserListWidget(
-        list: authstate.profileUserModel.followersList,
+        list: authstate.profileUserModel?.followersList,
         emptyScreenText: 'No one follow user yet',
       ),
     );

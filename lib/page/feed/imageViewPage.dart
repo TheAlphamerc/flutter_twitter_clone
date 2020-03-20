@@ -16,135 +16,184 @@ class ImageViewPge extends StatefulWidget {
 }
 
 class _ImageViewPgeState extends State<ImageViewPge> {
-  TextEditingController _textEditingController;
-  FocusNode _focusNode;
   bool isToolAvailable = true;
+
+  FocusNode _focusNode;
+  TextEditingController _textEditingController;
+
   @override
   void initState() {
     _focusNode = FocusNode();
-     _textEditingController = TextEditingController();
+    _textEditingController = TextEditingController();
     super.initState();
   }
 
   Widget _body() {
-    var state = Provider.of<FeedState>(context,);
+    var state = Provider.of<FeedState>(
+      context,
+    );
     return Stack(
       children: <Widget>[
         SingleChildScrollView(
           child: Container(
             color: Colors.brown.shade700,
-            constraints: BoxConstraints(maxHeight: fullHeight(context)),
+            constraints: BoxConstraints(
+              maxHeight: fullHeight(context),
+            ),
             child: InkWell(
-              onTap: (){
+              onTap: () {
                 setState(() {
-                   isToolAvailable = !isToolAvailable;
+                  isToolAvailable = !isToolAvailable;
                 });
               },
-               child:_imageFeed(state.tweetDetailModel.last.imagePath)
-            )
+              child: _imageFeed(state.tweetDetailModel.last.imagePath),
+            ),
           ),
         ),
-        !isToolAvailable ? Container() :
-        Align(
-            alignment: Alignment.topLeft,
-            child: SafeArea(
-              child: Container(
-                  width: 50,
-                  height: 50,
-                  alignment: Alignment.topLeft,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.brown.shade700.withAlpha(200)
-                  ),
-                  child: Wrap(children: <Widget>[BackButton(
-                    color: Colors.white,
-                  ),],)
-              ),
-            )),
-     !isToolAvailable ? Container() :
-      Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-                child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                TweetIconsRow(model:state.tweetDetailModel.last,iconColor: Theme.of(context).colorScheme.onPrimary,iconEnableColor:  Theme.of(context).colorScheme.onPrimary,),
-                Container(
-                  color: Colors.brown.shade700.withAlpha(200),
-                  padding: EdgeInsets.only(right: 10,left:10,bottom:10),
-                  child: TextField(
-                    controller: _textEditingController,
-                    maxLines: null,
-                    style: TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      fillColor: Colors.blue,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                        borderSide: BorderSide(
-                          color: Colors.white,
+        !isToolAvailable
+            ? Container()
+            : Align(
+                alignment: Alignment.topLeft,
+                child: SafeArea(
+                  child: Container(
+                      width: 50,
+                      height: 50,
+                      alignment: Alignment.topLeft,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.brown.shade700.withAlpha(200),
+                      ),
+                      child: Wrap(
+                        children: <Widget>[
+                          BackButton(
+                            color: Colors.white,
+                          ),
+                        ],
+                      )),
+                )),
+        !isToolAvailable
+            ? Container()
+            : Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      TweetIconsRow(
+                        model: state.tweetDetailModel.last,
+                        iconColor: Theme.of(context).colorScheme.onPrimary,
+                        iconEnableColor:
+                            Theme.of(context).colorScheme.onPrimary,
+                      ),
+                      Container(
+                        color: Colors.brown.shade700.withAlpha(200),
+                        padding:
+                            EdgeInsets.only(right: 10, left: 10, bottom: 10),
+                        child: TextField(
+                          controller: _textEditingController,
+                          maxLines: null,
+                          style: TextStyle(color: Colors.white),
+                          decoration: InputDecoration(
+                            fillColor: Colors.blue,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(30.0),
+                              ),
+                              borderSide: BorderSide(
+                                color: Colors.white,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(30.0),
+                              ),
+                              borderSide: BorderSide(
+                                color: Colors.white,
+                              ),
+                            ),
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                _submitButton();
+                              },
+                              icon: Icon(Icons.send, color: Colors.white),
+                            ),
+                            focusColor: Colors.black,
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 10,
+                            ),
+                            hintText: 'Comment here..',
+                            hintStyle: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
                       ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                        borderSide: BorderSide(
-                          color: Colors.white,
-                        ),
-                      ),
-                      suffixIcon: IconButton(
-                        onPressed: () {_submitButton();},
-                        icon: Icon(Icons.send, color: Colors.white),
-                      ),
-                      focusColor: Colors.black,
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                      hintText: 'Comment here..',
-                      hintStyle: TextStyle(color: Colors.white),
-                    ),
+                    ],
                   ),
                 ),
-              ],
-            ))),
+              ),
       ],
     );
   }
+
   Widget _imageFeed(String _image) {
     return _image == null
         ? Container()
         : Container(
             alignment: Alignment.center,
             child: Container(
-                child: customNetworkImage(_image, fit: BoxFit.fitWidth)));
+              child: customNetworkImage(
+                _image,
+                fit: BoxFit.fitWidth,
+              ),
+            ),
+          );
   }
 
   void addLikeToTweet() {
-    var state = Provider.of<FeedState>(context,);
-    var authState = Provider.of<AuthState>(context,);
+    var state = Provider.of<FeedState>(context);
+    var authState = Provider.of<AuthState>(context);
     state.addLikeToTweet(state.tweetDetailModel.last, authState.userId);
   }
-  void _submitButton(){
-     var state = Provider.of<FeedState>(context,);
-     var authState = Provider.of<AuthState>(context,);
-     var user = authState.userModel;
-     var profilePic = user.profilePic ;
-     if(profilePic== null){
-       profilePic = dummyProfilePic;
-     }
-     var commentedUser = User(displayName: user.displayName ?? user.email.split('@')[0],profilePic: profilePic,userId: user.userId,);
-     var postId = state.tweetDetailModel.last.key;
-     var tags = getHashTags(_textEditingController.text);
-     FeedModel reply = FeedModel(
-       description:  _textEditingController.text,
-       user:commentedUser,createdAt: DateTime.now().toString(),
-       tags:tags,userId: commentedUser.userId,
-       parentkey : postId,
-     );
-     state.addcommentToPost(postId,reply);
-     FocusScope.of(context).requestFocus(_focusNode);
-      setState(() {
-        _textEditingController.text = '';
-      });
+
+  void _submitButton() {
+    var state = Provider.of<FeedState>(context);
+    var authState = Provider.of<AuthState>(context);
+    var user = authState.userModel;
+    var profilePic = user.profilePic;
+    if (profilePic == null) {
+      profilePic = dummyProfilePic;
+    }
+    var name = authState.userModel.displayName ??
+        authState.userModel.email.split('@')[0];
+    var pic = authState.userModel.profilePic ?? dummyProfilePic;
+    var tags = getHashTags(_textEditingController.text);
     
-   }
+    User commentedUser = User(
+        displayName: name,
+        userName: authState.userModel.userName,
+        isVerified: authState.userModel.isVerified,
+        profilePic: pic,
+        userId: authState.userId);
+   
+    var postId = state.tweetDetailModel.last.key;
+   
+    FeedModel reply = FeedModel(
+      description: _textEditingController.text,
+      user: commentedUser,
+      createdAt: DateTime.now().toString(),
+      tags: tags,
+      userId: commentedUser.userId,
+      parentkey: postId,
+    );
+    state.addcommentToPost(postId, reply);
+    FocusScope.of(context).requestFocus(_focusNode);
+    setState(() {
+      _textEditingController.text = '';
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(body: _body());

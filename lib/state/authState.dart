@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -16,17 +17,18 @@ import 'package:firebase_database/firebase_database.dart' as dabase;
 class AuthState extends AppState {
   AuthStatus authStatus = AuthStatus.NOT_DETERMINED;
   bool isSignInWithGoogle = false;
+  List<String> profileFollowingList = [];
   FirebaseUser user;
+  List<String> userfollowingList = [];
   String userId;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  dabase.Query _profileQuery;
   final FirebaseDatabase _database = FirebaseDatabase.instance;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+  dabase.Query _profileQuery;
   User _profileUserModel;
   User _userModel;
-  List<String> followingList = [];
 
   User get userModel => _userModel;
 
@@ -38,9 +40,13 @@ class AuthState extends AppState {
     userId = '';
     _userModel = null;
     _profileUserModel = null;
+    userfollowingList = null;
+    profileFollowingList = null;
     if (isSignInWithGoogle) {
       _googleSignIn.signOut();
+      logEvent('google_logout');
     } else {
+      logEvent('email_logout');
       _auth.signOut();
     }
     notifyListeners();
@@ -75,6 +81,7 @@ class AuthState extends AppState {
       return user.uid;
     } catch (error) {
       cprint(error, errorIn: 'signIn');
+      analytics.logLogin(loginMethod: 'email_login');
       customSnackBar(scaffoldKey, error.message);
       // logoutCallback();
       return null;
@@ -84,6 +91,7 @@ class AuthState extends AppState {
   /// Create user from `google login`
   Future<FirebaseUser> handleGoogleSignIn() async {
     try {
+      analytics.logLogin(loginMethod: 'google_login');
       final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
 
       final GoogleSignInAuthentication googleAuth =
@@ -134,7 +142,7 @@ class AuthState extends AppState {
       );
       user = result.user;
       authStatus = AuthStatus.LOGGED_IN;
-
+      analytics.logSignUp(signUpMethod: 'register');
       UserUpdateInfo updateInfo = UserUpdateInfo();
       updateInfo.displayName = userModel.displayName;
       updateInfo.photoUrl = userModel.profilePic;
@@ -158,6 +166,7 @@ class AuthState extends AppState {
     if (newUser) {
       // Create username by the combination of name and id
       user.userName = getUserName(id: user.userId, name: user.displayName);
+      analytics.logEvent(name: 'create_newUser');
 
       // Time at which user is created
       user.createdAt = DateTime.now().toUtc().toString();
@@ -177,6 +186,7 @@ class AuthState extends AppState {
   /// Fetch current user profile
   Future<FirebaseUser> getCurrentUser() async {
     try {
+      logEvent('get_currentUSer');
       user = await _firebaseAuth.currentUser();
       if (user != null) {
         authStatus = AuthStatus.LOGGED_IN;
@@ -217,8 +227,9 @@ class AuthState extends AppState {
       await _firebaseAuth.sendPasswordResetEmail(email: email).then((value) {
         customSnackBar(scaffoldKey,
             'A reset password link is sent yo your mail.You can reset your password from there');
+        logEvent('forgot+password');
       }).catchError((error) {
-        print(error.message);
+        cprint(error.message);
         return false;
       });
     } catch (error) {
@@ -254,6 +265,7 @@ class AuthState extends AppState {
           });
         });
       }
+      logEvent('update_user');
     } catch (error) {
       cprint(error, errorIn: 'updateUserProfile');
     }
@@ -280,6 +292,7 @@ class AuthState extends AppState {
             // Fecth following list to calculate following count
             getFollowingUser();
             notifyListeners();
+            logEvent('get_profile');
           }
         }
       });
@@ -291,29 +304,33 @@ class AuthState extends AppState {
   /// Get following user
   getFollowingUser() {
     try {
-      followingList = null;
-      _database
-          .reference()
-          .child("followList")
-          .child(profileUserModel.userId)
-          .once()
-          .then((DataSnapshot snapshot) {
-        if (snapshot.value != null) {
-          followingList = [];
-          var map = snapshot.value;
-          if (map != null) {
-            map['following'].forEach((key, value) {
-              followingList.add(key);
-            });
-            if (profileUserModel.userId == userId) {
-              _userModel.following = followingList.length;
-            } else {
-              profileUserModel.following = followingList.length;
+      if (profileUserModel != null && profileUserModel.userId.isNotEmpty) {
+        profileFollowingList = null;
+        _database
+            .reference()
+            .child("followList")
+            .child(profileUserModel.userId)
+            .once()
+            .then((DataSnapshot snapshot) {
+          if (snapshot.value != null) {
+            profileFollowingList = [];
+            var map = snapshot.value;
+            if (map != null) {
+              map['following'].forEach((key, value) {
+                profileFollowingList.add(key);
+              });
+              if (profileUserModel.userId == userId) {
+                _userModel.following = profileFollowingList.length;
+                userfollowingList = profileFollowingList;
+              } else {
+                profileUserModel.following = profileFollowingList.length;
+              }
+
+              notifyListeners();
             }
-            notifyListeners();
           }
-        }
-      });
+        });
+      }
     } catch (error) {
       cprint(error, errorIn: 'getProfileUser');
     }
@@ -345,7 +362,9 @@ class AuthState extends AppState {
             .child("following")
             .child(profileUserModel.userId)
             .remove();
-        cprint('user removed from following list');
+
+        userfollowingList.remove(profileUserModel.userId);
+        cprint('user removed from following list', event: 'remove_follow');
       } else {
         /// if logged in user is `not following` profile user then
         /// 1.Add logged in user to profile user's `follower` list
@@ -364,7 +383,13 @@ class AuthState extends AppState {
             .child("following")
             .child(profileUserModel.userId)
             .set({"userId": profileUserModel.userId});
-        cprint('user added to following list');
+
+        if (userfollowingList == null) {
+          userfollowingList = [];
+        }
+        userfollowingList.add(profileUserModel.userId);
+
+        cprint('user added to following list', event: 'add_follow');
       }
       // uppdate profile-user's by adding/removing follower
       _database
@@ -372,6 +397,9 @@ class AuthState extends AppState {
           .child('profile')
           .child(profileUserModel.userId)
           .set(profileUserModel.toJson());
+
+      // update logged-in user'e following count
+      userModel.following = userfollowingList.length;
       notifyListeners();
     } catch (error) {
       cprint(error, errorIn: 'followUser');

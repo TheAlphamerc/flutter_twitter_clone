@@ -84,6 +84,7 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
       userName: authState.userModel.userName,
       isVerified: authState.userModel.isVerified,
       profilePic: pic,
+      userId: authState.userId
     );
     FeedModel _model = FeedModel(
       description: _textEditingController.text,

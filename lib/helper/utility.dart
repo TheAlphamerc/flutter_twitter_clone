@@ -1,8 +1,9 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:intl/intl.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
+final analytics = FirebaseAnalytics();
 String getAgendaTime(String startDatetime, String endDatetime) {
    var start = new DateFormat.jm().format(DateTime.parse(startDatetime)).toString();
    var end = new DateFormat.jm().format(DateTime.parse(endDatetime)).toString();
@@ -150,18 +151,23 @@ launchURL(String url) async {
 
 
 
-void cprint(dynamic data,{String errorIn}){
+void cprint(dynamic data,{String errorIn,String event}){
   if(errorIn != null){
     print('****************************** error ******************************');
     print('[Error] $errorIn $data');
     print('****************************** error ******************************');
   }
-  else{
+  else if(data != null){
     print(data);
+  }
+  if(event != null){
+   logEvent(event);
   }
   
 }
-
+void logEvent(String event, {Map<String,dynamic> parameter}){
+ analytics.logEvent(name: event,parameters:parameter);
+}
 void share(String message,{String subject}) {
    Share.share(message,subject:subject);
 }
@@ -183,9 +189,9 @@ List<String> getHashTags(String text) {
 String getUserName({String name,String id}){
   String userName = '';
   name = name.split(' ')[0];
-  id = id.substring(0,4);
+  id = id.substring(0,4).toLowerCase();
   userName = '@$name$id';
-  return userName.toLowerCase();
+  return userName;
 }
 
  

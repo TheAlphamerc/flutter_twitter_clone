@@ -40,7 +40,6 @@ class User {
     if (map == null) {
       return;
     }
-    print( map['followerList']);
     if(followersList == null){
       followersList = [];
     }

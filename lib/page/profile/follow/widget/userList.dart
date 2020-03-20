@@ -12,7 +12,9 @@ import 'package:provider/provider.dart';
 class UserListWidget extends StatelessWidget {
   final List<String> list;
   final String emptyScreenText;
-  const UserListWidget({Key key, this.list, this.emptyScreenText})
+  final bool isFollowing;
+  const UserListWidget(
+      {Key key, this.list, this.emptyScreenText, this.isFollowing = false})
       : super(key: key);
   Widget _userTile(BuildContext context, User user) {
     return Column(
@@ -47,19 +49,21 @@ class UserListWidget extends StatelessWidget {
             ],
           ),
           subtitle: Text(user.userName),
-          trailing: OutlineButton(
-            onPressed: () {},
-            child: TitleText(
-              'Follow',
-              color: TwitterColor.dodgetBlue_50,
-              fontSize: 18,
+          trailing:
+              Container(
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            decoration: BoxDecoration(
+              color: isFollowing ? TwitterColor.dodgetBlue : TwitterColor.white,
+              border: Border.all(color: TwitterColor.dodgetBlue, width: 1),
+              borderRadius: BorderRadius.circular(25),
             ),
-            color: TwitterColor.dodgetBlue_50,
-            borderSide: BorderSide(
-              color: TwitterColor.dodgetBlue_50,
+            child: Text(
+              isFollowing ? 'Following' : 'Follow',
+              style: TextStyle(
+                  color: isFollowing ? TwitterColor.white : Colors.blue,
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold),
             ),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(30))),
           ),
         ),
         Padding(

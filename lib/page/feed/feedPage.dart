@@ -63,17 +63,25 @@ class _FeedPageState extends State<FeedPage> {
 
   Widget _body() {
     var state = Provider.of<FeedState>(context);
+    var authstate = Provider.of<AuthState>(context);
+    List<FeedModel> list;
+    if (!state.isBusy && state.feedlist != null && state.feedlist.isNotEmpty) {
+      list = state.feedlist.where((x) {
+        if (x.user.userId == authstate.userId ||
+            (authstate.userfollowingList != null &&
+                authstate.userfollowingList.contains(x.user.userId))) {
+          return true;
+        } else {
+          return false;
+        }
+      }).toList();
+      if(list.isEmpty){
+        list = null;
+      }
+    }
+
     return CustomScrollView(
-      // physics: BouncingScrollPhysics(),
       slivers: <Widget>[
-        //  ListView.builder(
-        //   physics: BouncingScrollPhysics(),
-        //   itemCount: state.feedlist.length,
-        //   itemBuilder: (context, index) => Tweet(
-        //     model: state.feedlist[index],
-        //     trailing: TweetBottomSheet().tweetOptionIcon(context,state.feedlist[index],TweetType.Tweet),
-        //     ),
-        // ),
         SliverAppBar(
           floating: true,
           elevation: 0,
@@ -89,9 +97,9 @@ class _FeedPageState extends State<FeedPage> {
             preferredSize: Size.fromHeight(0.0),
           ),
         ),
-        state.isBusy && state.feedlist == null
+        state.isBusy && list == null
             ? SliverToBoxAdapter(child: loader())
-            : !state.isBusy && state.feedlist == null
+            : !state.isBusy && list == null
                 ? SliverToBoxAdapter(
                     child: EmptyList(
                     'No Tweet added yet',
@@ -100,16 +108,18 @@ class _FeedPageState extends State<FeedPage> {
                   ))
                 : SliverList(
                     delegate: SliverChildListDelegate(
-                      state.feedlist.map((model) {
-                        return Container(
-                          color: Colors.white,
-                          child: Tweet(
-                            model: model,
-                            trailing: TweetBottomSheet().tweetOptionIcon(
-                                context, model, TweetType.Tweet),
-                          ),
-                        );
-                      },).toList(),
+                      list.map(
+                        (model) {
+                          return Container(
+                            color: Colors.white,
+                            child: Tweet(
+                              model: model,
+                              trailing: TweetBottomSheet().tweetOptionIcon(
+                                  context, model, TweetType.Tweet),
+                            ),
+                          );
+                        },
+                      ).toList(),
                     ),
                   )
       ],
@@ -121,10 +131,6 @@ class _FeedPageState extends State<FeedPage> {
     return Scaffold(
       floatingActionButton: _floatingActionButton(),
       backgroundColor: TwitterColor.mystic,
-      // appBar: CustomAppBar(
-      //   scaffoldKey: widget.scaffoldKey,
-      //   title: customTitleText('Home'),
-      // ),
       body: SafeArea(
         child: Container(
           height: fullHeight(context),

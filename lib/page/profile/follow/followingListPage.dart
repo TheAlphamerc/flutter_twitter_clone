@@ -32,7 +32,8 @@ class _FollowingListPageState extends State<FollowingListPage> {
         ),
       ),
       body: UserListWidget(
-        list: authstate.followingList,
+        isFollowing: true,
+        list: authstate.profileFollowingList,
         emptyScreenText: 'User is not following anyone.',
       ),
     );

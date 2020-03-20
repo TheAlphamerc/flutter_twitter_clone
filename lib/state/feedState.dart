@@ -7,10 +7,11 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
+import 'package:flutter_twitter_clone/state/appState.dart';
 import 'package:path/path.dart' as Path;
-import 'authState.dart';
+// import 'authState.dart';
 
-class FeedState extends AuthState {
+class FeedState extends AppState {
   final databaseReference = Firestore.instance;
   bool isBusy = false;
   Map<String, List<FeedModel>> tweetReplyMap = {};
@@ -20,8 +21,28 @@ class FeedState extends AuthState {
   List<FeedModel> _feedlist;
   dabase.Query _feedQuery;
   List<FeedModel> _tweetDetailModel;
+  List<String> _userfollowingList;
+  List<String> get followingList => _userfollowingList;
 
   List<FeedModel> get tweetDetailModel => _tweetDetailModel;
+
+  /// contain tweet list for home page
+  List<FeedModel> get feedlist {
+    if (_feedlist == null) {
+      return null;
+    } else {
+      return List.from(_feedlist.reversed);
+    }
+  }
+
+  /// contain reply tweets list for parent tweet
+  List<FeedModel> get commentlist {
+    if (_commentlist == null) {
+      return null;
+    } else {
+      return List.from(_commentlist);
+    }
+  }
 
   /// set tweet for detail tweet page
   set setFeedModel(FeedModel model) {
@@ -57,24 +78,6 @@ class FeedState extends AuthState {
     cprint('Empty tweets from stack');
   }
 
-  /// contain tweet list for home page
-  List<FeedModel> get feedlist {
-    if (_feedlist == null) {
-      return null;
-    } else {
-      return List.from(_feedlist.reversed);
-    }
-  }
-
-  /// contain reply tweets list for parent tweet
-  List<FeedModel> get commentlist {
-    if (_commentlist == null) {
-      return null;
-    } else {
-      return List.from(_commentlist);
-    }
-  }
-
   /// [Intitilise firebase Database]
   Future<bool> databaseInit() {
     try {
@@ -96,6 +99,8 @@ class FeedState extends AuthState {
   void getDataFromDatabase() {
     try {
       isBusy = true;
+      _feedlist = null;
+      notifyListeners();
       final databaseReference = FirebaseDatabase.instance.reference();
       databaseReference.child('tweet').once().then((DataSnapshot snapshot) {
         _feedlist = List<FeedModel>();
@@ -401,8 +406,8 @@ class FeedState extends AuthState {
     if ((_feedlist.length == 0 || _feedlist.any((x) => x.key != tweet.key)) &&
         tweet.isValidTweet) {
       _feedlist.add(tweet);
+      cprint('Tweet Added');
     }
-    cprint('Tweet Added');
     isBusy = false;
     notifyListeners();
   }
@@ -416,8 +421,8 @@ class FeedState extends AuthState {
       } else {
         tweetReplyMap[tweet.parentkey] = [tweet];
       }
+      cprint('Comment Added');
     }
-    cprint('Comment Added');
     isBusy = false;
     notifyListeners();
   }
