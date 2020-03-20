@@ -14,68 +14,89 @@ class UserListWidget extends StatelessWidget {
   final List<String> list;
   final fetchingListbool;
   final String emptyScreenText;
+  final String emptyScreenSubTileText;
   final bool isFollowing;
   const UserListWidget(
       {Key key,
       this.list,
       this.emptyScreenText,
       this.isFollowing = false,
-      this.fetchingListbool})
+      this.fetchingListbool,
+      this.emptyScreenSubTileText})
       : super(key: key);
   Widget _userTile(BuildContext context, User user) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Stack(
       children: <Widget>[
-        ListTile(
-          // onTap: () {
-          //   Navigator.of(context).pushNamed('/ProfilePage/' + user?.userId);
-          // },
-          leading: customImage(context, user.profilePic, height: 60),
-          title: Row(
+        Container(
+          padding: EdgeInsets.symmetric(vertical: 10),
+          color: TwitterColor.white,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              UrlText(
-                text: user.displayName,
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w800,
+              ListTile(
+                onTap: () {
+                  // Navigator.of(context).pushNamed('/ProfilePage/' + user?.userId);
+                },
+                leading: customImage(context, user.profilePic, height: 60),
+                title: Row(
+                  children: <Widget>[
+                    UrlText(
+                      text: user.displayName,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    SizedBox(width: 3),
+                    user.isVerified
+                        ? customIcon(
+                            context,
+                            icon: AppIcon.blueTick,
+                            istwitterIcon: true,
+                            iconColor: AppColor.primary,
+                            size: 13,
+                            paddingIcon: 3,
+                          )
+                        : SizedBox(width: 0),
+                  ],
+                ),
+                subtitle: Text(user.userName),
+                trailing: Container(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: isFollowing ? 15 : 20, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: isFollowing
+                        ? TwitterColor.dodgetBlue
+                        : TwitterColor.white,
+                    border:
+                        Border.all(color: TwitterColor.dodgetBlue, width: 1),
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  child: Text(
+                    isFollowing ? 'Following' : 'Follow',
+                    style: TextStyle(
+                        color: isFollowing ? TwitterColor.white : Colors.blue,
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
-              SizedBox(width: 3),
-              user.isVerified
-                  ? customIcon(
-                      context,
-                      icon: AppIcon.blueTick,
-                      istwitterIcon: true,
-                      iconColor: AppColor.primary,
-                      size: 13,
-                      paddingIcon: 3,
-                    )
-                  : SizedBox(width: 0),
+              Padding(
+                padding: EdgeInsets.only(left: 90),
+                child: Text(
+                  getBio(user.bio),
+                ),
+              )
             ],
           ),
-          subtitle: Text(user.userName),
-          trailing: Container(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            decoration: BoxDecoration(
-              color: isFollowing ? TwitterColor.dodgetBlue : TwitterColor.white,
-              border: Border.all(color: TwitterColor.dodgetBlue, width: 1),
-              borderRadius: BorderRadius.circular(25),
-            ),
-            child: Text(
-              isFollowing ? 'Following' : 'Follow',
-              style: TextStyle(
-                  color: isFollowing ? TwitterColor.white : Colors.blue,
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold),
-            ),
-          ),
         ),
-        Padding(
-          padding: EdgeInsets.only(left: 90),
-          child: Text(
-            getBio(user.bio),
-          ),
+        Positioned(
+          left: 0,
+          right: 0,
+          top: 0,
+          bottom: 0,
+          child: FlatButton(onPressed: () {}, child: Container()),
         )
       ],
     );
@@ -109,7 +130,7 @@ class UserListWidget extends StatelessWidget {
                     return _userTile(context, snapshot.data);
                   } else if (index == 0) {
                     cprint('Fetching user $index');
-                    return Center(
+                    return Container(
                         child: SizedBox(
                       height: 3,
                       child: LinearProgressIndicator(),
@@ -121,7 +142,9 @@ class UserListWidget extends StatelessWidget {
               );
             },
             separatorBuilder: (context, index) {
-              return Divider();
+              return Divider(
+                height: 0,
+              );
             },
             itemCount: list.length,
           )
@@ -135,7 +158,7 @@ class UserListWidget extends StatelessWidget {
                 padding: EdgeInsets.only(top: 0, left: 30, right: 30),
                 child: NotifyText(
                   title: emptyScreenText,
-                  subTitle: '',
+                  subTitle: emptyScreenSubTileText,
                 ),
               );
   }

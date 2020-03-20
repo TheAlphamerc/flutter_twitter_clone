@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
@@ -26,12 +27,13 @@ class _FollowingListPageState extends State<FollowingListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: TwitterColor.white,
+      backgroundColor: TwitterColor.mystic,
       appBar: CustomAppBar(
         isBackButton: true,
         title: customTitleText(
           'Following',
         ),
+        icon: AppIcon.follow,
       ),
       body: Consumer<AuthState>(
         builder: (context, state, child) {
@@ -39,7 +41,8 @@ class _FollowingListPageState extends State<FollowingListPage> {
             isFollowing: true,
             fetchingListbool: state.isbusy ?? false,
             list: state.profileFollowingList,
-            emptyScreenText: 'No one follow user yet',
+            emptyScreenText: '${state.profileUserModel.userName} isn\'t follow anyone',
+            emptyScreenSubTileText : 'When they do they\'ll be listed here.'
           );
         },
       ),

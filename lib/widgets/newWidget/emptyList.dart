@@ -38,7 +38,7 @@ class NotifyText extends StatelessWidget {
             subTitle,
             fontSize: 16,
             fontWeight: FontWeight.w500,
-            color: TwitterColor.paleSky50,
+            color: AppColor.darkGrey,
             textAlign: TextAlign.center,
           ),
         ],
