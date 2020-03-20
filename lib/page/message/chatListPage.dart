@@ -11,6 +11,7 @@ import 'package:flutter_twitter_clone/state/chats/chatState.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/emptyList.dart';
+import 'package:flutter_twitter_clone/widgets/newWidget/rippleButton.dart';
 import 'package:provider/provider.dart';
 
 class ChatListPage extends StatefulWidget {
@@ -68,10 +69,11 @@ class _ChatListPageState extends State<ChatListPage> {
           chatState.setChatUser = model;
           Navigator.pushNamed(context, '/ChatScreenPage');
         },
-        leading: GestureDetector(
-          onTap: () {
+        leading: RippleButton(
+          onPressed: () {
             Navigator.of(context).pushNamed('/ProfilePage/${model.userId}');
           },
+          borderRadius: BorderRadius.circular(28),
           child: Container(
             height: 56,
             width: 56,

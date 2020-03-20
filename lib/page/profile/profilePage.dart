@@ -15,6 +15,7 @@ import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/emptyList.dart';
+import 'package:flutter_twitter_clone/widgets/newWidget/rippleButton.dart';
 import 'package:flutter_twitter_clone/widgets/tweet.dart';
 import 'package:provider/provider.dart';
 
@@ -102,11 +103,13 @@ class _ProfilePageState extends State<ProfilePage> {
                             ? Container(
                                 height: 40,
                               )
-                            : InkWell(
+                            : RippleButton(
+                                splashColor:
+                                    TwitterColor.dodgetBlue_50.withAlpha(100),
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(20),
                                 ),
-                                onTap: () {
+                                onPressed: () {
                                   if (!isMyProfile) {
                                     final chatState = Provider.of<ChatState>(
                                         context,
@@ -118,8 +121,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                   }
                                 },
                                 child: Container(
-                                  // margin: EdgeInsets.only(right: 20),
-                                  padding: EdgeInsets.all(8),
+                                  height: 35,
+                                  width: 35,
+                                  padding: EdgeInsets.only(
+                                      bottom: 5, top: 0, right: 0, left: 0),
                                   decoration: BoxDecoration(
                                       border: Border.all(
                                           color: isMyProfile
@@ -128,18 +133,21 @@ class _ProfilePageState extends State<ProfilePage> {
                                           width: 1),
                                       shape: BoxShape.circle),
                                   child: Icon(
-                                    Icons.mail_outline,
+                                    IconData(AppIcon.messageEmpty,
+                                        fontFamily: 'TwitterIcon'),
                                     color: Colors.blue,
-                                    size: 15,
+                                    size: 20,
                                   ),
+
+                                  // customIcon(context, icon:AppIcon.messageEmpty, iconColor: TwitterColor.dodgetBlue, paddingIcon: 8)
                                 ),
                               ),
-                        SizedBox(width: 20),
-                        InkWell(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(20),
-                          ),
-                          onTap: () {
+                        SizedBox(width: 10),
+                        RippleButton(
+                          splashColor:
+                              TwitterColor.dodgetBlue_50.withAlpha(100),
+                          borderRadius: BorderRadius.all(Radius.circular(60)),
+                          onPressed: () {
                             if (isMyProfile) {
                               Navigator.pushNamed(context, '/EditProfile');
                             } else {
@@ -251,8 +259,12 @@ class _ProfilePageState extends State<ProfilePage> {
                               padding:
                                   EdgeInsets.only(top: 50, left: 30, right: 30),
                               child: NotifyText(
-                                title: 'No tweet posted by you yet',
-                                subTitle: 'Tap tweet button to add new',
+                                title: isMyProfile
+                                    ? 'You haven\'t post any Tweet yet'
+                                    : '${authstate.profileUserModel.userName} hasn\'t Tweeted yet',
+                                subTitle: isMyProfile
+                                    ? 'Tap tweet button to add new'
+                                    : 'Once he\'ll do, they will be shown up here',
                               ),
                             )
                           ]
