@@ -8,9 +8,9 @@ import 'package:provider/provider.dart';
 
 class FollowerListPage extends StatelessWidget {
   FollowerListPage({Key key}) : super(key: key);
- @override
+  @override
   Widget build(BuildContext context) {
-    var authstate = Provider.of<AuthState>(context);
+    // var authstate = Provider.of<AuthState>(context);
     return Scaffold(
       backgroundColor: TwitterColor.white,
       appBar: CustomAppBar(
@@ -19,9 +19,14 @@ class FollowerListPage extends StatelessWidget {
           'Follower',
         ),
       ),
-      body: UserListWidget(
-        list: authstate.profileUserModel?.followersList,
-        emptyScreenText: 'No one follow user yet',
+      body: Consumer<AuthState>(
+        builder: (context, state, child) {
+          return UserListWidget(
+            fetchingListbool: state.isbusy ?? false,
+            list: state.profileUserModel?.followersList,
+            emptyScreenText: 'No one follow user yet',
+          );
+        },
       ),
     );
   }

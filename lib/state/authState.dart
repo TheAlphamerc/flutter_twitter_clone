@@ -311,6 +311,7 @@ class AuthState extends AppState {
   /// Get following user
   getFollowingUser() {
     try {
+      loading = true;
       if (profileUserModel != null && profileUserModel.userId.isNotEmpty) {
         profileFollowingList = null;
         _database
@@ -333,12 +334,19 @@ class AuthState extends AppState {
                 profileUserModel.following = profileFollowingList.length;
               }
 
-              notifyListeners();
+            }
+          } else {
+            if (profileUserModel.userId == userId) {
+              // If logged-in user didn't follow anyone
+              // Show tweets only self tweets on home page.
+              userfollowingList = null;
             }
           }
+         loading = false;
         });
       }
     } catch (error) {
+      loading = false;
       cprint(error, errorIn: 'getProfileUser');
     }
   }

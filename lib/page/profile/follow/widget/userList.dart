@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
+import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/state/notificationState.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
@@ -11,10 +12,15 @@ import 'package:provider/provider.dart';
 
 class UserListWidget extends StatelessWidget {
   final List<String> list;
+  final fetchingListbool;
   final String emptyScreenText;
   final bool isFollowing;
   const UserListWidget(
-      {Key key, this.list, this.emptyScreenText, this.isFollowing = false})
+      {Key key,
+      this.list,
+      this.emptyScreenText,
+      this.isFollowing = false,
+      this.fetchingListbool})
       : super(key: key);
   Widget _userTile(BuildContext context, User user) {
     return Column(
@@ -49,8 +55,7 @@ class UserListWidget extends StatelessWidget {
             ],
           ),
           subtitle: Text(user.userName),
-          trailing:
-              Container(
+          trailing: Container(
             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             decoration: BoxDecoration(
               color: isFollowing ? TwitterColor.dodgetBlue : TwitterColor.white,
@@ -102,10 +107,15 @@ class UserListWidget extends StatelessWidget {
                 builder: (context, AsyncSnapshot<User> snapshot) {
                   if (snapshot.hasData) {
                     return _userTile(context, snapshot.data);
-                  } else {
+                  } else if (index == 0) {
+                    cprint('Fetching user $index');
                     return Center(
+                        child: SizedBox(
+                      height: 3,
                       child: LinearProgressIndicator(),
-                    );
+                    ));
+                  } else {
+                    return SizedBox.shrink();
                   }
                 },
               );
@@ -115,13 +125,18 @@ class UserListWidget extends StatelessWidget {
             },
             itemCount: list.length,
           )
-        : Container(
-            width: fullWidth(context),
-            padding: EdgeInsets.only(top: 0, left: 30, right: 30),
-            child: NotifyText(
-              title: emptyScreenText,
-              subTitle: '',
-            ),
-          );
+        : fetchingListbool
+            ? SizedBox(
+                height: 3,
+                child: LinearProgressIndicator(),
+              )
+            : Container(
+                width: fullWidth(context),
+                padding: EdgeInsets.only(top: 0, left: 30, right: 30),
+                child: NotifyText(
+                  title: emptyScreenText,
+                  subTitle: '',
+                ),
+              );
   }
 }

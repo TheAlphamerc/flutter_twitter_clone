@@ -17,12 +17,14 @@ class _FollowingListPageState extends State<FollowingListPage> {
   @override
   void initState() {
     var authstate = Provider.of<AuthState>(context, listen: false);
-    authstate.getFollowingUser();
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      authstate.getFollowingUser();
+    });
   }
+
   @override
   Widget build(BuildContext context) {
-    var authstate = Provider.of<AuthState>(context);
     return Scaffold(
       backgroundColor: TwitterColor.white,
       appBar: CustomAppBar(
@@ -31,10 +33,15 @@ class _FollowingListPageState extends State<FollowingListPage> {
           'Following',
         ),
       ),
-      body: UserListWidget(
-        isFollowing: true,
-        list: authstate.profileFollowingList,
-        emptyScreenText: 'User is not following anyone.',
+      body: Consumer<AuthState>(
+        builder: (context, state, child) {
+          return UserListWidget(
+            isFollowing: true,
+            fetchingListbool: state.isbusy ?? false,
+            list: state.profileFollowingList,
+            emptyScreenText: 'No one follow user yet',
+          );
+        },
       ),
     );
   }
