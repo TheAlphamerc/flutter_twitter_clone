@@ -57,8 +57,7 @@ class _SidebarMenuState extends State<SidebarMenu> {
             ),
             ListTile(
               onTap: () {
-                Navigator.pop(context);
-                Navigator.of(context).pushNamed('/ProfilePage');
+                _navigateTo("ProfilePage");
               },
               title: Row(
                 children: <Widget>[
@@ -121,8 +120,7 @@ class _SidebarMenuState extends State<SidebarMenu> {
         var authstate = Provider.of<AuthState>(context);
         authstate.profileFollowingList = [];
         authstate.getProfileUser();
-        Navigator.pop(context);
-        Navigator.pushNamed(context, '/$navigateTo');
+        _navigateTo(navigateTo);
       },
       child: Row(
         children: <Widget>[
@@ -240,7 +238,6 @@ class _SidebarMenuState extends State<SidebarMenu> {
                   Divider(),
                   _menuListRowButton('Settings and privacy', isEnable: true,
                       onPressed: () {
-                    Navigator.pop(context);
                     _navigateTo('SettingsAndPrivacyPage');
                   }),
                   _menuListRowButton('Help Center'),

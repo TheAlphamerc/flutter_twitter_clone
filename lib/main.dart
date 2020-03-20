@@ -20,9 +20,6 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
- final FirebaseAnalytics analytics = FirebaseAnalytics();
-
-
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -45,9 +42,6 @@ class MyApp extends StatelessWidget {
         routes: Routes.route(),
         onGenerateRoute: (settings) => Routes.onGenerateRoute(settings),
         onUnknownRoute: (settings) => Routes.onUnknownRoute(settings),
-        navigatorObservers: [
-          FirebaseAnalyticsObserver(analytics: analytics),
-        ],
       ),
     );
   }
