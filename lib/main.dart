@@ -20,7 +20,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  FirebaseAnalytics analytics = FirebaseAnalytics();
+ final FirebaseAnalytics analytics = FirebaseAnalytics();
 
 
   @override

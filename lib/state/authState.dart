@@ -116,20 +116,27 @@ class AuthState extends AppState {
 
   /// Create user profile from google login
   createUserFromGoogleSignIn(FirebaseUser user) {
-    User model = User(
-      bio: 'Edit profile to update bio',
-      dob: DateTime(1950, DateTime.now().month, DateTime.now().day + 3)
-          .toString(),
-      location: 'Somewhere in universe',
-      profilePic: user.photoUrl,
-      displayName: user.displayName,
-      email: user.email,
-      key: user.uid,
-      userId: user.uid,
-      contact: user.phoneNumber,
-      isVerified: true,
-    );
-    createUser(model, newUser: true);
+    var diff = DateTime.now().difference(user.metadata.creationTime);
+    // Check if user is new or old
+    // If user is new then add new user to firebase realtime database
+    if (diff < Duration(seconds: 5)) {
+      User model = User(
+        bio: 'Edit profile to update bio',
+        dob: DateTime(1950, DateTime.now().month, DateTime.now().day + 3)
+            .toString(),
+        location: 'Somewhere in universe',
+        profilePic: user.photoUrl,
+        displayName: user.displayName,
+        email: user.email,
+        key: user.uid,
+        userId: user.uid,
+        contact: user.phoneNumber,
+        isVerified: user.isEmailVerified,
+      );
+      createUser(model, newUser: true);
+    } else {
+      cprint('Last login at: ${user.metadata.lastSignInTime}');
+    }
   }
 
   /// Create new user's profile in db
