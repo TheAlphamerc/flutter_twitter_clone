@@ -79,7 +79,7 @@ class User {
       'bio': bio,
       'location': location,
       'createdAt': createdAt,
-      'followers': followers,
+      'followers': followersList != null ? followersList.length : null,
       'following': following,
       'userName': userName,
       'webSite': webSite,
@@ -103,7 +103,9 @@ class User {
       int followers,
       int following,
       String webSite,
-      bool isVerified}) {
+      bool isVerified,
+      List<String> followingList
+      }) {
     return User(
         email: email ?? this.email,
         bio: bio ?? this.bio,
@@ -111,7 +113,7 @@ class User {
         createdAt: createdAt ?? this.createdAt,
         displayName: displayName ?? this.displayName,
         dob: dob ?? this.dob,
-        followers: followers ?? this.following,
+        followers: followersList != null ? followersList.length : null,
         following: following ?? this.following,
         isVerified: isVerified ?? this.isVerified,
         key: key ?? this.key,
@@ -119,7 +121,9 @@ class User {
         profilePic: profilePic ?? this.profilePic,
         userId: userId ?? this.userId,
         userName: userName ?? this.userName,
-        webSite: webSite ?? this.webSite);
+        webSite: webSite ?? this.webSite,
+        followersList: followersList ?? this.followersList
+        );
   }
 
   String getFollower() {
