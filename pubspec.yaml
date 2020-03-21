@@ -24,7 +24,6 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
   empty_widget:
-  fancy_bottom_navigation:
   flutter_advanced_networkimage: ^0.6.0-alpha.1
   provider:
   flutter_native_splash: ^0.1.9
