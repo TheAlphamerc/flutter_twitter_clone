@@ -1,16 +1,90 @@
-# flutter_twitter_clone
+## flutter_twitter_clone ![Twitter URL](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Ftwitter.com%2Fthealphamerc) [![GitHub stars](https://img.shields.io/github/stars/Thealphamerc/flutter_twitter_clone?style=social)](https://github.com/login?return_to=%2FTheAlphamerc%flutter_wallet_app) ![GitHub forks](https://img.shields.io/github/forks/TheAlphamerc/flutter_twitter_clone?style=social) 
+![Dart CI](https://github.com/TheAlphamerc/flutter_twitter_clone/workflows/Dart%20CI/badge.svg) ![GitHub pull requests](https://img.shields.io/github/issues-pr/TheAlphamerc/flutter_twitter_clone) ![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/Thealphamerc/flutter_twitter_clone) ![GitHub last commit](https://img.shields.io/github/last-commit/Thealphamerc/flutter_wallet_app)  ![GitHub issues](https://img.shields.io/github/issues-raw/Thealphamerc/flutter_twitter_clone) [![Open Source Love](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)](https://github.com/Thealphamerc/flutter_twitter_clone) 
 
-A new Flutter project.
+A working Twitter clone written in Flutter using Firebase auth,realtime database and storage.
 
-## Getting Started
+## Dependencies
+* [intl](https://pub.dev/packages/intl)
+* [uuid](https://pub.dev/packages/uuid)
+* [http](https://pub.dev/packages/http)
+* [async](https://pub.dev/packages/async)
+* [share](https://pub.dev/packages/share)
+* [provider](https://pub.dev/packages/provider)
+* [url_launcher](https://pub.dev/packages/url_launcher)
+* [google_fonts](https://pub.dev/packages/google_fonts)
+* [image_picker](https://pub.dev/packages/image_picker)
+* [firebase_auth](https://pub.dev/packages/firebase_auth)
+* [google_sign_in](https://pub.dev/packages/google_sign_in)
+* [cloud_firestore](https://pub.dev/packages/firebase_analytics)
+* [firebase_storage](https://pub.dev/packages/firebase_storage)
+* [firebase_analytics](https://pub.dev/packages/firebase_analytics)
+* [firebase_database](https://pub.dev/packages/firebase_database)
+* [firebase_messaging](https://pub.dev/packages/firebase_messaging)
+* [shared_preferences](https://pub.dev/packages/shared_preferences)
+* [flutter_native_splash](https://pub.dev/packages/flutter_native_splash)
+* [flutter_advanced_networkimage](https://pub.dev/packages/flutter_advanced_networkimage)
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+## Getting started
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+#### 1. [Setup Flutter](https://flutter.dev/docs/get-started/install)
+
+#### 2. Clone the repo
+
+```sh
+$ git https://github.com/TheAlphamerc/flutter_twitter_clone.git
+$ cd flutter_twitter_clone/
+```
+
+#### 3. Setup the firebase app
+
+1. You'll need to create a Firebase instance. Follow the instructions at https://console.firebase.google.com.
+2. Once your Firebase instance is created, you'll need to enable Google authentication.
+
+* Go to the Firebase Console for your new instance.
+* Click "Authentication" in the left-hand menu
+* Click the "sign-in method" tab
+* Click "Google" and enable it
+* Click "Email/Password" and enable it
+
+3. Enable the Firebase Database
+* Go to the Firebase Console
+* Click "Database" in the left-hand menu
+* Click the Realtime "Create Database" button
+* Select "Start in test mode" and "Enable"
+
+4. (skip if not running on Android)
+
+* Create an app within your Firebase instance for Android, with package name com.thealphamerc.flutter_twitter_clone
+* Run the following command to get your SHA-1 key:
+
+```
+keytool -exportcert -list -v \
+-alias androiddebugkey -keystore ~/.android/debug.keystore
+```
+
+* In the Firebase console, in the settings of your Android app, add your SHA-1 key by clicking "Add Fingerprint".
+* Follow instructions to download google-services.json
+* place `google-services.json` into `/android/app/`.
+
+5. (skip if not running on iOS)
+
+* Create an app within your Firebase instance for iOS, with your app package name
+* Follow instructions to download GoogleService-Info.plist
+* Open XCode, right click the Runner folder, select the "Add Files to 'Runner'" menu, and select the GoogleService-Info.plist file to add it to /ios/Runner in XCode
+* Open /ios/Runner/Info.plist in a text editor. Locate the CFBundleURLSchemes key. The second item in the array value of this key is specific to the Firebase instance. Replace it with the value for REVERSED_CLIENT_ID from GoogleService-Info.plist
+
+     
+## Pull Requests
+
+I welcome and encourage all pull requests. It usually will take me within 24-48 hours to respond to any issue or request.
+
+## Created & Maintained By
+
+[Sonu Sharma](https://github.com/TheAlphamerc) ([Twitter](https://www.twitter.com/TheAlphamerc)) ([Youtube](https://www.youtube.com/user/sonusharma045sonu/))
+([Insta](https://www.instagram.com/_sonu_sharma__))  ![Twitter Follow](https://img.shields.io/twitter/follow/thealphamerc?style=social)
+
+> If you found this project helpful or you learned something from the source code and want to thank me, consider buying me a cup of :coffee:
+>
+> * [PayPal](https://www.paypal.me/TheAlphamerc/)
