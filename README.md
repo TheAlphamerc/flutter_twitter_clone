@@ -3,6 +3,10 @@
 
 A working Twitter clone written in Flutter using Firebase auth,realtime database and storage.
 
+## Features
+* App features is mentioned at project section [ Click here](https://github.com/TheAlphamerc/flutter_twitter_clone/projects/1)
+* Messaging chat section status can be seen at [here](https://github.com/TheAlphamerc/flutter_twitter_clone/projects/2)
+
 ## Dependencies
 * [intl](https://pub.dev/packages/intl)
 * [uuid](https://pub.dev/packages/uuid)
