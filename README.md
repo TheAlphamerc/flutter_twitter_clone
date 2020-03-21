@@ -8,6 +8,9 @@ A working Twitter clone written in Flutter using Firebase auth,realtime database
 * Messaging chat section status can be seen at [here](https://github.com/TheAlphamerc/flutter_twitter_clone/projects/2)
 
 ## Dependencies
+<details>
+     <summary> Click to expand </summary>
+     
 * [intl](https://pub.dev/packages/intl)
 * [uuid](https://pub.dev/packages/uuid)
 * [http](https://pub.dev/packages/http)
@@ -27,7 +30,8 @@ A working Twitter clone written in Flutter using Firebase auth,realtime database
 * [shared_preferences](https://pub.dev/packages/shared_preferences)
 * [flutter_native_splash](https://pub.dev/packages/flutter_native_splash)
 * [flutter_advanced_networkimage](https://pub.dev/packages/flutter_advanced_networkimage)
-
+     
+</details>
 
 ## Screenshots
 
@@ -81,7 +85,9 @@ About Setting Page      |  Licenses Page    |   Settings     |  Settings
 
 
 ## Getting started
-
+<details>
+     <summary> Click to expand </summary>
+     
 #### 1. [Setup Flutter](https://flutter.dev/docs/get-started/install)
 
 #### 2. Clone the repo
@@ -129,6 +135,127 @@ keytool -exportcert -list -v \
 * Open XCode, right click the Runner folder, select the "Add Files to 'Runner'" menu, and select the GoogleService-Info.plist file to add it to /ios/Runner in XCode
 * Open /ios/Runner/Info.plist in a text editor. Locate the CFBundleURLSchemes key. The second item in the array value of this key is specific to the Firebase instance. Replace it with the value for REVERSED_CLIENT_ID from GoogleService-Info.plist
 
+</details>
+
+
+## Directory Structure
+<details>
+     <summary> Click to expand </summary>
+  
+  ```
+  |
+  |-- lib
+  |   |-- helper
+  |   |   |-- constant.dart
+  |   |   |-- customRoute.dart
+  |   |   |-- enum.dart
+  |   |   |-- routes.dart
+  |   |   |-- theme.dart
+  |   |   |-- utility.dart
+  |   |   '-- validator.dart
+  |   |-- main.dart
+  |   |-- model
+  |   |   |-- chatModel.dart
+  |   |   |-- commentModel.dart
+  |   |   |-- feedModel.dart
+  |   |   |-- notificationModel.dart
+  |   |   '-- user.dart
+  |   |-- page
+  |   |   |-- Auth
+  |   |   |   |-- forgetPasswordPage.dart
+  |   |   |   |-- selectAuthMethod.dart
+  |   |   |   |-- signin.dart
+  |   |   |   '-- signup.dart
+  |   |   |-- common
+  |   |   |   '-- sidebar.dart
+  |   |   |-- feed
+  |   |   |   |-- createFeed.dart
+  |   |   |   |-- feedPage.dart
+  |   |   |   |-- feedPostDetail.dart
+  |   |   |   |-- feedPostreply.dart
+  |   |   |   |-- imageViewPage.dart
+  |   |   |   '-- widgets
+  |   |   |       |-- bottomIconWidget.dart
+  |   |   |       |-- tweetBottomSheet.dart
+  |   |   |       |-- tweetIconsRow.dart
+  |   |   |       '-- tweetImage.dart
+  |   |   |-- homePage.dart
+  |   |   |-- message
+  |   |   |   |-- chatListPage.dart
+  |   |   |   |-- chatScreenPage.dart
+  |   |   |   |-- conversationInformation
+  |   |   |   |   '-- conversationInformation.dart
+  |   |   |   '-- newMessagePage.dart
+  |   |   |-- notification
+  |   |   |   '-- notificationPage.dart
+  |   |   |-- profile
+  |   |   |   |-- EditProfilePage.dart
+  |   |   |   |-- follow
+  |   |   |   |   |-- followerListPage.dart
+  |   |   |   |   |-- followingListPage.dart
+  |   |   |   |   '-- widget
+  |   |   |   |       '-- userList.dart
+  |   |   |   '-- profilePage.dart
+  |   |   |-- search
+  |   |   |   '-- SearchPage.dart
+  |   |   '-- settings
+  |   |       |-- accountSettings
+  |   |       |   |-- about
+  |   |       |   |   '-- aboutTwitter.dart
+  |   |       |   |-- accessibility
+  |   |       |   |   '-- accessibility.dart
+  |   |       |   |-- accountSettingsPage.dart
+  |   |       |   |-- contentPrefrences
+  |   |       |   |   |-- contentPreference.dart
+  |   |       |   |   '-- trends
+  |   |       |   |       '-- trendsPage.dart
+  |   |       |   |-- dataUsage
+  |   |       |   |   '-- dataUsagePage.dart
+  |   |       |   |-- displaySettings
+  |   |       |   |   '-- displayAndSoundPage.dart
+  |   |       |   |-- notifications
+  |   |       |   |   '-- notificationPage.dart
+  |   |       |   |-- privacyAndSafety
+  |   |       |   |   |-- directMessage
+  |   |       |   |   |   '-- directMessage.dart
+  |   |       |   |   '-- privacyAndSafetyPage.dart
+  |   |       |   '-- proxy
+  |   |       |       '-- proxyPage.dart
+  |   |       |-- settingsAndPrivacyPage.dart
+  |   |       '-- widgets
+  |   |           |-- headerWidget.dart
+  |   |           |-- settingsAppbar.dart
+  |   |           '-- settingsRowWidget.dart
+  |   |-- state
+  |   |   |-- appState.dart
+  |   |   |-- authState.dart
+  |   |   |-- chats
+  |   |   |   '-- chatState.dart
+  |   |   |-- feedState.dart
+  |   |   |-- notificationState.dart
+  |   |   '-- searchState.dart
+  |   '-- widgets
+  |       |-- bottomMenuBar
+  |       |   |-- HalfPainter.dart
+  |       |   |-- bottomMenuBar.dart
+  |       |   '-- tabItem.dart
+  |       |-- bouncingWidget.dart
+  |       |-- customAppBar.dart
+  |       |-- customWidgets.dart
+  |       |-- newWidget
+  |       |   |-- customClipper.dart
+  |       |   |-- customProgressbar.dart
+  |       |   |-- customUrlText.dart
+  |       |   |-- emptyList.dart
+  |       |   |-- rippleButton.dart
+  |       |   '-- title_text.dart
+  |       '-- tweet.dart
+  |-- pubspec.yaml
+  |
+```
+
+</details>
+     
      
 ## Pull Requests
 
