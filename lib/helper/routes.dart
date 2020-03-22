@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_twitter_clone/main.dart';
+import 'package:flutter_twitter_clone/page/Auth/selectAuthMethod.dart';
 import 'package:flutter_twitter_clone/page/Auth/verifyEmail.dart';
+import 'package:flutter_twitter_clone/page/common/splash.dart';
 import 'package:flutter_twitter_clone/page/message/conversationInformation/conversationInformation.dart';
 import 'package:flutter_twitter_clone/page/message/newMessagePage.dart';
 import 'package:flutter_twitter_clone/page/profile/follow/followerListPage.dart';
@@ -34,7 +35,7 @@ import '../widgets/customWidgets.dart';
 class Routes{
   static dynamic route(){
       return {
-          '/': (BuildContext context) =>   MyHomePage(),
+          '/': (BuildContext context) =>   SplashPage(),
       };
   }
 
@@ -54,6 +55,9 @@ class Routes{
          builder:(BuildContext context)=> SignIn(),
          settings: RouteSettings(name:'SignIn')
          );
+     }
+     else if(pathElements[1].contains('WelcomePage')){
+       return CustomRoute<bool>(builder:(BuildContext context)=> WelcomePage(),settings: RouteSettings(name:'WelcomePage'));
      }
      else if(pathElements[1].contains('SignUp')){
        return CustomRoute<bool>(builder:(BuildContext context)=> Signup(),settings: RouteSettings(name:'Signup'));

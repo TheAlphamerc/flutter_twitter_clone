@@ -36,7 +36,7 @@ class AuthState extends AppState {
 
   /// Logout from device
   void logoutCallback() {
-    authStatus = AuthStatus.NOT_DETERMINED;
+    authStatus = AuthStatus.NOT_LOGGED_IN;
     userId = '';
     _userModel = null;
     _profileUserModel = null;
@@ -209,14 +209,14 @@ class AuthState extends AppState {
         userId = user.uid;
         getProfileUser();
       } else {
-        authStatus = AuthStatus.NOT_DETERMINED;
+        authStatus = AuthStatus.NOT_LOGGED_IN;
         loading = false;
       }
       return user;
     } catch (error) {
       loading = false;
       cprint(error, errorIn: 'getCurrentUser');
-      authStatus = AuthStatus.NOT_DETERMINED;
+      authStatus = AuthStatus.NOT_LOGGED_IN;
       return null;
     }
   }

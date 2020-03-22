@@ -1,10 +1,7 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/state/searchState.dart';
 import 'helper/routes.dart';
-import 'page/Auth/selectAuthMethod.dart';
 import 'state/appState.dart';
 import 'package:provider/provider.dart';
 import 'state/authState.dart';
@@ -44,17 +41,5 @@ class MyApp extends StatelessWidget {
         onUnknownRoute: (settings) => Routes.onUnknownRoute(settings),
       ),
     );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(body: WelcomePage());
   }
 }
