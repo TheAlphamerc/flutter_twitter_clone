@@ -11,6 +11,7 @@ import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
+import 'package:flutter_twitter_clone/widgets/newWidget/customLoader.dart';
 import 'package:provider/provider.dart';
 
 import 'widgets/bottomIconWidget.dart';
@@ -26,15 +27,22 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
   bool reachToOver = false;
   bool reachToWarning = false;
   Color wordCountColor;
-
+  CustomLoader loader;
   File _image;
   TextEditingController _textEditingController;
 
   @override
   void initState() {
     wordCountColor = Colors.blue;
+    loader = CustomLoader();
     _textEditingController = TextEditingController();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _textEditingController.dispose();
+    super.dispose();
   }
 
   Widget _descriptionEntry() {
@@ -74,18 +82,18 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
     if (state.isBusy) {
       return;
     }
-    state.isBusy = true;
+    // state.isBusy = true;
+    loader.showLoader(context);
     var name = authState.userModel.displayName ??
         authState.userModel.email.split('@')[0];
     var pic = authState.userModel.profilePic ?? dummyProfilePic;
     var tags = getHashTags(_textEditingController.text);
     User user = User(
-      displayName: name,
-      userName: authState.userModel.userName,
-      isVerified: authState.userModel.isVerified,
-      profilePic: pic,
-      userId: authState.userId
-    );
+        displayName: name,
+        userName: authState.userModel.userName,
+        isVerified: authState.userModel.isVerified,
+        profilePic: pic,
+        userId: authState.userId);
     FeedModel _model = FeedModel(
       description: _textEditingController.text,
       userId: authState.userModel.userId,
@@ -105,7 +113,8 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
     } else {
       state.createTweet(_model);
     }
-    state.isBusy = false;
+    // state.isBusy = false;
+    loader.hideLoader();
     Navigator.pop(context);
   }
 
@@ -172,17 +181,6 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
                 },
               ),
             ),
-            Align(
-              alignment: Alignment.center,
-              child: Provider.of<FeedState>(context).isBusy
-                  ? Container(
-                      height: fullHeight(context),
-                      width: fullWidth(context),
-                      color: Theme.of(context).disabledColor.withAlpha(50),
-                      child: loader(),
-                    )
-                  : SizedBox(),
-            )
           ],
         ),
       ),

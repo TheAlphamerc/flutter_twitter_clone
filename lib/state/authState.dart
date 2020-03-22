@@ -74,12 +74,14 @@ class AuthState extends AppState {
   Future<String> signIn(String email, String password,
       {GlobalKey<ScaffoldState> scaffoldKey}) async {
     try {
+      loading = true;
       var result = await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
       user = result.user;
       userId = user.uid;
       return user.uid;
     } catch (error) {
+      loading = false;
       cprint(error, errorIn: 'signIn');
       analytics.logLogin(loginMethod: 'email_login');
       customSnackBar(scaffoldKey, error.message);
@@ -93,7 +95,9 @@ class AuthState extends AppState {
     try {
       analytics.logLogin(loginMethod: 'google_login');
       final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-
+      if(googleUser == null){
+        throw Exception('Google login cancelled by user');
+      }
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
 
@@ -109,6 +113,8 @@ class AuthState extends AppState {
       notifyListeners();
       return user;
     } catch (error) {
+      user = null;
+      authStatus = AuthStatus.NOT_LOGGED_IN;
       cprint(error, errorIn: 'handleGoogleSignIn');
       return null;
     }
@@ -193,6 +199,7 @@ class AuthState extends AppState {
   /// Fetch current user profile
   Future<FirebaseUser> getCurrentUser() async {
     try {
+      loading = true;
       logEvent('get_currentUSer');
       user = await _firebaseAuth.currentUser();
       if (user != null) {
@@ -201,10 +208,11 @@ class AuthState extends AppState {
         getProfileUser();
       } else {
         authStatus = AuthStatus.NOT_DETERMINED;
+        loading = false;
       }
-      notifyListeners();
       return user;
     } catch (error) {
+      loading = false;
       cprint(error, errorIn: 'getCurrentUser');
       authStatus = AuthStatus.NOT_DETERMINED;
       return null;

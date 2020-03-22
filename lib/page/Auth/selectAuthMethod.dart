@@ -47,9 +47,12 @@ class WelcomePage extends StatefulWidget {
 class _WelcomePageState extends State<WelcomePage> {
   @override
   void initState() {
-    var state = Provider.of<AuthState>(context, listen: false);
-    state.authStatus = AuthStatus.NOT_DETERMINED;
-    state.getCurrentUser();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      var state = Provider.of<AuthState>(context, listen: false);
+      state.authStatus = AuthStatus.NOT_DETERMINED;
+      state.getCurrentUser();
+    });
+
     super.initState();
   }
 

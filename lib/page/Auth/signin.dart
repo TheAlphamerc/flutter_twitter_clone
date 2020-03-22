@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
+import 'package:flutter_twitter_clone/widgets/newWidget/customLoader.dart';
 import 'package:provider/provider.dart';
 
 class SignIn extends StatefulWidget {
@@ -15,6 +17,7 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   TextEditingController _emailController;
   TextEditingController _passwordController;
+  CustomLoader loader;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   void initState() {
@@ -22,6 +25,7 @@ class _SignInState extends State<SignIn> {
     _passwordController = TextEditingController();
     // _emailController.text = 'sonu.sharma@kritivity.com';
     // _passwordController.text = '1234567';
+    loader = CustomLoader();
     super.initState();
   }
 
@@ -104,20 +108,7 @@ class _SignInState extends State<SignIn> {
       child: FlatButton(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         color: Colors.blueAccent,
-        onPressed: () {
-          var state = Provider.of<AuthState>(context, listen: false);
-          state
-              .signIn(_emailController.text, _passwordController.text,
-                  scaffoldKey: _scaffoldKey)
-              .then((status) {
-            if (state.user != null) {
-              Navigator.pop(context);
-              widget.loginCallback();
-            } else {
-              cprint('Unable to login', errorIn: '_emailLoginButton');
-            }
-          });
-        },
+        onPressed: _emailLogin,
         padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
         child: Text('Email Login', style: TextStyle(color: Colors.white)),
       ),
@@ -127,27 +118,61 @@ class _SignInState extends State<SignIn> {
   Widget _googleLoginButton(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 35),
-      // width: MediaQuery.of(context).size.width,
       child: FlatButton(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         color: Colors.blueAccent,
-        onPressed: () {
-          var state = Provider.of<AuthState>(context, listen: false);
-          state.handleGoogleSignIn().then((status) {
-            // print(status)
-            if (state.user != null) {
-              Navigator.pop(context);
-              widget.loginCallback();
-            } else {
-              cprint('Unable to login', errorIn: '_googleLoginButton');
-            }
-          });
-          // widget.loginCallback();
-        },
+        onPressed: _googleLogin,
         padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
         child: Text('Google Login', style: TextStyle(color: Colors.white)),
       ),
     );
+  }
+
+  void _emailLogin() {
+    var state = Provider.of<AuthState>(context);
+    if (state.isbusy) {
+      return;
+    }
+    loader.showLoader(context);
+    var isValid = validateCredentials(
+        _scaffoldKey, _emailController.text, _passwordController.text);
+    if (isValid) {
+      state
+          .signIn(_emailController.text, _passwordController.text,
+              scaffoldKey: _scaffoldKey)
+          .then((status) {
+        if (state.user != null) {
+          loader.hideLoader();
+          Navigator.pop(context);
+          widget.loginCallback();
+        } else {
+          cprint('Unable to login', errorIn: '_emailLoginButton');
+          loader.hideLoader();
+        }
+      });
+    }
+    else{
+      loader.hideLoader();
+    }
+  }
+
+  void _googleLogin() {
+    var state = Provider.of<AuthState>(context);
+    if (state.isbusy) {
+      return;
+    }
+   loader.showLoader(context);
+    state.handleGoogleSignIn().then((status) {
+      // print(status)
+      if (state.user != null) {
+        loader.hideLoader();
+        Navigator.pop(context);
+        widget.loginCallback();
+      } else {
+        loader.hideLoader();
+        cprint('Unable to login', errorIn: '_googleLoginButton');
+      }
+    });
   }
 
   @override
