@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/main.dart';
+import 'package:flutter_twitter_clone/page/Auth/verifyEmail.dart';
 import 'package:flutter_twitter_clone/page/message/conversationInformation/conversationInformation.dart';
 import 'package:flutter_twitter_clone/page/message/newMessagePage.dart';
 import 'package:flutter_twitter_clone/page/profile/follow/followerListPage.dart';
@@ -139,6 +138,9 @@ class Routes{
      }
      else if(pathElements[1].contains('FollowerListPage')){
        return SlideLeftRoute<bool>(builder:(BuildContext context)=> FollowerListPage(),settings: RouteSettings(name:'FollowerListPage'));
+     }
+     else if(pathElements[1].contains('VerifyEmailPage')){
+       return SlideLeftRoute<bool>(builder:(BuildContext context)=> VerifyEmailPage(),settings: RouteSettings(name:'VerifyEmailPage'));
      }
      else{
        return onUnknownRoute(RouteSettings(name: '/Feature'));

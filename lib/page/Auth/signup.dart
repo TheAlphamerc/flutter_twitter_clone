@@ -5,6 +5,7 @@ import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
+import 'package:flutter_twitter_clone/widgets/newWidget/customLoader.dart';
 import 'package:provider/provider.dart';
 
 class Signup extends StatefulWidget {
@@ -21,13 +22,13 @@ class _SignupState extends State<Signup> {
   // TextEditingController _mobileController;
   TextEditingController _passwordController;
   TextEditingController _confirmController;
-  TextEditingController _userNameController;
+  CustomLoader loader;
   final _formKey = new GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   void initState() {
+    loader = CustomLoader();
     _nameController = TextEditingController();
-    _userNameController = TextEditingController();
     _emailController = TextEditingController();
     // _mobileController = TextEditingController();
     _passwordController = TextEditingController();
@@ -41,13 +42,6 @@ class _SignupState extends State<Signup> {
     super.initState();
   }
 
-  // Widget _labelButton(String title,{Function onPressed}){
-  //   return FlatButton(
-  //     onPressed: (){ if(onPressed != null){onPressed();}},
-  //     splashColor: Colors.grey.shade200,
-  //     child: Text(title,style: TextStyle(color: Colors.black54),),
-  //   );
-  // }
   Widget _body(BuildContext context) {
     return Container(
       height: fullHeight(context) - 88,
@@ -59,7 +53,6 @@ class _SignupState extends State<Signup> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             _entryFeild('Name', controller: _nameController),
-            // _entryFeild('Unique user name',controller: _userNameController),
             _entryFeild('Enter email', controller: _emailController),
             // _entryFeild('Mobile no',controller: _mobileController),
             _entryFeild('Enter password',
@@ -67,12 +60,6 @@ class _SignupState extends State<Signup> {
             _entryFeild('Confirm password',
                 controller: _confirmController, isPassword: true),
             _submitButton(context),
-            // _labelButton('Sign in',
-            //   onPressed: (){
-            //     var state = Provider.of<AuthState>(context,listen: false);
-            //     state.logoutCallback();
-            //   }
-            //  )
           ],
         ),
       ),
@@ -137,6 +124,7 @@ class _SignupState extends State<Signup> {
           _scaffoldKey, 'Password and confirm password did not match');
       return;
     }
+    loader.showLoader(context);
     var state = Provider.of<AuthState>(context, listen: false);
     Random random = new Random();
     int randomNumber = random.nextInt(8);
@@ -162,6 +150,7 @@ class _SignupState extends State<Signup> {
       print(status);
     }).whenComplete(
       () {
+        loader.hideLoader();
         if (state.authStatus == AuthStatus.LOGGED_IN) {
           Navigator.pop(context);
           widget.loginCallback();

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
@@ -56,12 +58,25 @@ class CustomLoader {
         alignment: Alignment.center,
         child: Container(
           padding: EdgeInsets.all(50),
-           decoration: BoxDecoration(
-             color: Colors.white,
-             borderRadius: BorderRadius.all(Radius.circular(10))
-           ),
-          child:CircularProgressIndicator(),
-        )
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(10))),
+          child: Stack(
+            alignment: Alignment.center,
+            children: <Widget>[
+              Platform.isIOS
+                  ? CupertinoActivityIndicator(radius: 35,)
+                  : CircularProgressIndicator(
+                      strokeWidth: 2,
+                    ),
+              Image.asset(
+                'assets/images/icon-480.png',
+                height: 30,
+                width: 30,
+              )
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -95,7 +95,7 @@ class AuthState extends AppState {
     try {
       analytics.logLogin(loginMethod: 'google_login');
       final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-      if(googleUser == null){
+      if (googleUser == null) {
         throw Exception('Google login cancelled by user');
       }
       final GoogleSignInAuthentication googleAuth =
@@ -125,7 +125,7 @@ class AuthState extends AppState {
     var diff = DateTime.now().difference(user.metadata.creationTime);
     // Check if user is new or old
     // If user is new then add new user to firebase realtime database
-    if (diff < Duration(seconds: 5)) {
+    if (diff < Duration(seconds: 15)) {
       User model = User(
         bio: 'Edit profile to update bio',
         dob: DateTime(1950, DateTime.now().month, DateTime.now().day + 3)
@@ -149,6 +149,7 @@ class AuthState extends AppState {
   Future<String> signUp(User userModel,
       {GlobalKey<ScaffoldState> scaffoldKey, String password}) async {
     try {
+      loading = true;
       var result = await _firebaseAuth.createUserWithEmailAndPassword(
         email: userModel.email,
         password: password,
@@ -166,6 +167,7 @@ class AuthState extends AppState {
       createUser(_userModel, newUser: true);
       return user.uid;
     } catch (error) {
+      loading = false;
       cprint(error, errorIn: 'signUp');
       customSnackBar(scaffoldKey, error.message);
       return null;
@@ -193,7 +195,7 @@ class AuthState extends AppState {
     if (_profileUserModel != null) {
       _profileUserModel = _userModel;
     }
-    notifyListeners();
+    loading = false;
   }
 
   /// Fetch current user profile
@@ -219,14 +221,28 @@ class AuthState extends AppState {
     }
   }
 
-  /// Sign out user
-  Future<void> signOut() async {
-    return _firebaseAuth.signOut();
+  /// Reload user to get refresh user data
+  Future<FirebaseUser> reloadUser() async {
+    await user.reload();
+    user = await _firebaseAuth.currentUser();
+    if (user.isEmailVerified) {
+      userModel.isVerified = true;
+      // If user verifed his email
+      // Update user in firebase realtime database
+      createUser(userModel);
+      cprint('User email verification complete');
+      logEvent('email_verification_complete',
+          parameter: {userModel.userName: user.email});
+    }
+    return user;
   }
 
+  /// Send email verification link to email2
   Future<void> sendEmailVerification() async {
     FirebaseUser user = await _firebaseAuth.currentUser();
-    // user.sendEmailVerification();
+    user.sendEmailVerification();
+    logEvent('email_verifcation_sent',
+        parameter: {userModel.userName: user.email});
   }
 
   /// Check if user's email is verified
@@ -304,13 +320,14 @@ class AuthState extends AppState {
             _profileUserModel = User.fromJson(map);
             if (userProfileId == userId) {
               _userModel = _profileUserModel;
+              _userModel.isVerified = user.isEmailVerified;
             }
             // Fecth following list to calculate following count
             getFollowingUser();
             logEvent('get_profile');
           }
         }
-      // loading = false;
+        // loading = false;
       });
     } catch (error) {
       loading = false;
@@ -343,7 +360,6 @@ class AuthState extends AppState {
               } else {
                 profileUserModel.following = profileFollowingList.length;
               }
-
             }
           } else {
             if (profileUserModel.userId == userId) {
@@ -352,7 +368,11 @@ class AuthState extends AppState {
               userfollowingList = null;
             }
           }
-         loading = false;
+          loading = false;
+          if (!user.isEmailVerified) {
+            // Check if user verified his email address
+            reloadUser();
+          }
         });
       }
     } catch (error) {
