@@ -1,11 +1,13 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
+import 'package:flutter_twitter_clone/widgets/newWidget/customLoader.dart';
 import 'package:intl/intl.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 final analytics = FirebaseAnalytics();
+ final  screenloader = CustomLoader();
 String getAgendaTime(String startDatetime, String endDatetime) {
   var start =
       new DateFormat.jm().format(DateTime.parse(startDatetime)).toString();

@@ -11,6 +11,7 @@ import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
+import 'package:flutter_twitter_clone/widgets/newWidget/customLoader.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
 import 'package:provider/provider.dart';
 
@@ -118,10 +119,7 @@ class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
     var authState = Provider.of<AuthState>(
       context,
     );
-    if (state.isBusy) {
-      print('API is busy');
-      return;
-    }
+    screenloader.showLoader(context);
     var user = authState.userModel;
     var profilePic = user.profilePic ?? dummyProfilePic;
     var tags = getHashTags(_textEditingController.text);
@@ -149,6 +147,7 @@ class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
     } else {
       state.addcommentToPost(postId, reply);
     }
+    screenloader.hideLoader();
     Navigator.pop(context);
   }
 
@@ -337,17 +336,6 @@ class _FeedPostReplyPageView
                 onImageIconSelcted: viewState._onImageIconSelcted,
               ),
             ),
-            Align(
-              alignment: Alignment.center,
-              child: state.isBusy
-                  ? Container(
-                      height: fullHeight(context),
-                      width: fullWidth(context),
-                      color: Theme.of(context).disabledColor.withAlpha(50),
-                      child: loader(),
-                    )
-                  : SizedBox(),
-            )
           ],
         ),
       ),

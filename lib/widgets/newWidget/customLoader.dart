@@ -48,10 +48,29 @@ class CustomLoader {
     }
   }
 
-  buildLoader(BuildContext context, {isTransparent: false}) {
+  buildLoader(BuildContext context, {Color backgroundColor}) {
+    if(backgroundColor == null){
+     backgroundColor = const Color(0xffa8a8a8).withOpacity(.5);
+    }
     var height = 150.0;
+    return CustomScreenLoader(
+      height: height,
+      width: height,
+      backgroundColor: backgroundColor,
+    );
+  }
+}
+
+class CustomScreenLoader extends StatelessWidget {
+  final Color backgroundColor;
+  final double height;
+  final double width;
+  const CustomScreenLoader({Key key, this.backgroundColor =const Color(0xfff8f8f8), this.height = 30, this.width = 30}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
-      color: isTransparent ? Colors.transparent : Colors.grey.withOpacity(0.4),
+      color: backgroundColor,
       child: Container(
         height: height,
         width: height,

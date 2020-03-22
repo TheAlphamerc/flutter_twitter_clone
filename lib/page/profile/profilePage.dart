@@ -13,6 +13,7 @@ import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/chats/chatState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
+import 'package:flutter_twitter_clone/widgets/newWidget/customLoader.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/emptyList.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/rippleButton.dart';
@@ -273,8 +274,12 @@ class _ProfilePageState extends State<ProfilePage> {
               authstate.profileUserModel == null
                   ? [
                       Container(
-                        height: fullHeight(context) / 2,
-                        child: loader(),
+                        height: fullHeight(context) - 180,
+                        child: CustomScreenLoader(
+                          height: double.infinity,
+                          width: fullWidth(context),
+                          backgroundColor: Colors.white,
+                        )
                       )
                     ]
                   : list == null || list.length < 1

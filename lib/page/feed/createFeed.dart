@@ -27,14 +27,12 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
   bool reachToOver = false;
   bool reachToWarning = false;
   Color wordCountColor;
-  CustomLoader loader;
   File _image;
   TextEditingController _textEditingController;
 
   @override
   void initState() {
     wordCountColor = Colors.blue;
-    loader = CustomLoader();
     _textEditingController = TextEditingController();
     super.initState();
   }
@@ -83,7 +81,7 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
       return;
     }
     // state.isBusy = true;
-    loader.showLoader(context);
+    screenloader.showLoader(context);
     var name = authState.userModel.displayName ??
         authState.userModel.email.split('@')[0];
     var pic = authState.userModel.profilePic ?? dummyProfilePic;
@@ -114,7 +112,7 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
       state.createTweet(_model);
     }
     // state.isBusy = false;
-    loader.hideLoader();
+    screenloader.hideLoader();
     Navigator.pop(context);
   }
 

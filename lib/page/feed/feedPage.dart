@@ -8,6 +8,7 @@ import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
+import 'package:flutter_twitter_clone/widgets/newWidget/customLoader.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/emptyList.dart';
 import 'package:flutter_twitter_clone/widgets/tweet.dart';
 import 'package:provider/provider.dart';
@@ -75,7 +76,7 @@ class _FeedPageState extends State<FeedPage> {
           return false;
         }
       }).toList();
-      if(list.isEmpty){
+      if (list.isEmpty) {
         list = null;
       }
     }
@@ -98,7 +99,16 @@ class _FeedPageState extends State<FeedPage> {
           ),
         ),
         state.isBusy && list == null
-            ? SliverToBoxAdapter(child: loader())
+            ? SliverToBoxAdapter(
+                child:  Container(
+                        height: fullHeight(context) - 135,
+                        child: CustomScreenLoader(
+                          height: double.infinity,
+                          width: fullWidth(context),
+                          backgroundColor: Colors.white,
+                        )
+                      )
+              )
             : !state.isBusy && list == null
                 ? SliverToBoxAdapter(
                     child: EmptyList(
