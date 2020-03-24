@@ -108,7 +108,7 @@ class _BottomIconWidgetState extends State<BottomIconWidget> {
     );
   }
   void setImage(ImageSource source) {
-    ImagePicker.pickImage(source: source, imageQuality: 50).then((File file) {
+    ImagePicker.pickImage(source: source, imageQuality: 20).then((File file) {
       setState(() {
         // _image = file;
         widget.onImageIconSelcted(file);
