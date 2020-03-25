@@ -31,7 +31,6 @@ class FeedPostReplyPage extends StatefulWidget {
 class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
   bool isScrollingDown = false;
   FeedModel model;
-  String postId;
   ScrollController scrollcontroller;
 
   File _image;
@@ -96,12 +95,8 @@ class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
         _textEditingController.text.length > 280) {
       return;
     }
-    var state = Provider.of<FeedState>(
-      context,
-    );
-    var authState = Provider.of<AuthState>(
-      context,
-    );
+    var state = Provider.of<FeedState>(context);
+    var authState = Provider.of<AuthState>(context);
     screenloader.showLoader(context);
     var user = authState.userModel;
     var profilePic = user.profilePic ?? dummyProfilePic;
@@ -118,7 +113,7 @@ class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
         user: commentedUser,
         createdAt: DateTime.now().toString(),
         tags: tags,
-        parentkey: postId,
+        parentkey: state.tweetToReplyModel.key,
         childRetwetkey: widget.isRetweet ? model.key : null,
         userId: commentedUser.userId);
     if (_image != null) {
@@ -131,7 +126,7 @@ class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
             state.addcommentToPost(reply);
           }
         }
-      }); 
+      });
     } else {
       if (widget.isRetweet) {
         state.createTweet(reply);

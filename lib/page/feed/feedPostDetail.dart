@@ -31,6 +31,8 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
   Widget _floatingActionButton() {
     return FloatingActionButton(
       onPressed: () {
+         var state = Provider.of<FeedState>(context,);
+              state.setTweetToReply = state.tweetDetailModel?.last;
         Navigator.of(context).pushNamed('/FeedPostReplyPage/' + postId);
       },
       child: Icon(Icons.add),
