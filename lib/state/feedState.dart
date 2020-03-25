@@ -17,9 +17,10 @@ class FeedState extends AppState {
   Map<String, List<FeedModel>> tweetReplyMap = {};
   FeedModel _tweetToReplyModel;
   FeedModel get tweetToReplyModel => _tweetToReplyModel;
-  set setTweetToReply(FeedModel model){
+  set setTweetToReply(FeedModel model) {
     _tweetToReplyModel = model;
   }
+
   List<FeedModel> _commentlist;
   final FirebaseDatabase _database = FirebaseDatabase.instance;
   List<FeedModel> _feedlist;
@@ -200,6 +201,27 @@ class FeedState extends AppState {
     }
   }
 
+  /// Fetch `Retweet` model from firebase realtime database.
+  /// Retweet is itself a `Tweet`
+  Future<FeedModel> fetchTweet(String postID) async {
+    FeedModel _tweetDetail;
+    final databaseReference = FirebaseDatabase.instance.reference();
+    var model =
+        await databaseReference.child('tweet').child(postID).once().then(
+      (DataSnapshot snapshot) {
+        if (snapshot.value != null) {
+          var map = snapshot.value;
+          _tweetDetail = FeedModel.fromJson(map);
+          _tweetDetail.key = snapshot.key;
+        }
+      },
+    );
+    if (model != null) {
+      _tweetDetail = model;
+    }
+    return _tweetDetail;
+  }
+
   /// create [New Tweet]
   createTweet(FeedModel model) {
     ///  Create tweet in [Firebase database]
@@ -343,7 +365,8 @@ class FeedState extends AppState {
       isBusy = true;
       notifyListeners();
       if (_tweetToReplyModel != null) {
-        FeedModel tweet = _feedlist.firstWhere((x) => x.key == _tweetToReplyModel.key);
+        FeedModel tweet =
+            _feedlist.firstWhere((x) => x.key == _tweetToReplyModel.key);
         var json = replyTweet.toJson();
         _database.reference().child('tweet').push().set(json).then((value) {
           tweet.replyTweetKeyList.add(_feedlist.last.key);

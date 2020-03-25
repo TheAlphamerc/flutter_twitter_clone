@@ -280,7 +280,7 @@ class _FeedPostRetweetPageView
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: customImage(context, authState.user?.photoUrl, height: 40),
             ),
             Expanded(

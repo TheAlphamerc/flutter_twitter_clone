@@ -7,6 +7,7 @@ import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/page/feed/widgets/tweetIconsRow.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
+import 'package:flutter_twitter_clone/widgets/newWidget/rippleButton.dart';
 import 'package:provider/provider.dart';
 
 import 'customWidgets.dart';
@@ -30,7 +31,7 @@ class Tweet extends StatelessWidget {
         ? Container()
         : Container(
             alignment: Alignment.centerRight,
-            padding: EdgeInsets.only(right: 10),
+            padding: EdgeInsets.only(right: 16),
             child: InkWell(
               borderRadius: BorderRadius.all(
                 Radius.circular(20),
@@ -38,13 +39,15 @@ class Tweet extends StatelessWidget {
               onTap: () {
                 var state = Provider.of<FeedState>(context, listen: false);
                 state.getpostDetailFromDatabase(key);
+                state.setTweetToReply = model;
                 Navigator.pushNamed(context, '/ImageViewPge');
               },
               child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(20)),
                 child: Container(
                   width: fullWidth(context) *
-                      (type == TweetType.Detail ? .95 : .8),
+                          (type == TweetType.Detail ? .95 : .8) -
+                      8,
                   decoration: BoxDecoration(
                     color: Theme.of(context).backgroundColor,
                   ),
@@ -252,12 +255,20 @@ class Tweet extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Container(
-            padding: EdgeInsets.symmetric(vertical: 5),
+            padding: EdgeInsets.symmetric(vertical: 12),
             child: type == TweetType.Tweet || type == TweetType.Reply
                 ? _tweet(context)
                 : _detailTweet(context),
           ),
           _tweetImage(context, model.imagePath, model.key),
+          model.childRetwetkey == null
+              ? SizedBox.shrink()
+              : RetweetWidget(
+                  childRetwetkey: model.childRetwetkey,
+                  type: type,
+                  isImageAvailable:
+                      model.imagePath != null && model.imagePath.isNotEmpty,
+                ),
           Padding(
             padding: EdgeInsets.only(left: type == TweetType.Detail ? 10 : 60),
             child: TweetIconsRow(
@@ -275,6 +286,115 @@ class Tweet extends StatelessWidget {
           )
         ],
       ),
+    );
+  }
+}
+
+class RetweetWidget extends StatelessWidget {
+  const RetweetWidget(
+      {Key key, this.childRetwetkey, this.type, this.isImageAvailable = false})
+      : super(key: key);
+  final String childRetwetkey;
+  final TweetType type;
+  final bool isImageAvailable;
+  Widget _tweet(BuildContext context, FeedModel model) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Container(
+          width: fullWidth(context) - 12,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              Container(
+                width: 25,
+                height: 25,
+                child: customImage(context, model.user.profilePic),
+              ),
+              SizedBox(width: 10),
+              UrlText(
+                text: model.user.displayName,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              SizedBox(width: 3),
+              model.user.isVerified
+                  ? customIcon(
+                      context,
+                      icon: AppIcon.blueTick,
+                      istwitterIcon: true,
+                      iconColor: AppColor.primary,
+                      size: 13,
+                      paddingIcon: 3,
+                    )
+                  : SizedBox(width: 0),
+              SizedBox(
+                width: model.user.isVerified ? 5 : 0,
+              ),
+              Flexible(
+                child: customText(
+                  '${model.user.userName}',
+                  style: userNameStyle,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              SizedBox(width: 4),
+              customText('· ${getChatTime(model.createdAt)}',
+                  style: userNameStyle),
+            ],
+          ),
+        ),
+        UrlText(
+          text: model.description,
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+          ),
+          urlStyle: TextStyle(color: Colors.blue, fontWeight: FontWeight.w400),
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var feedstate = Provider.of<FeedState>(context, listen: false);
+    return FutureBuilder(
+      future: feedstate.fetchTweet(childRetwetkey),
+      builder: (context, AsyncSnapshot<FeedModel> snapshot) {
+        if (snapshot.hasData) {
+          return Container(
+            margin: EdgeInsets.only(
+                left: type == TweetType.Tweet ? 70 : 12,
+                right: 16,
+                top: isImageAvailable ? 8 : 0),
+            alignment: Alignment.topCenter,
+            decoration: BoxDecoration(
+              border: Border.all(color: AppColor.extraLightGrey, width: .5),
+              borderRadius: BorderRadius.all(Radius.circular(15)),
+            ),
+            child: RippleButton(
+              borderRadius: BorderRadius.all(Radius.circular(15)),
+              onPressed: () {
+                feedstate.getpostDetailFromDatabase(null, model: snapshot.data);
+                Navigator.of(context)
+                    .pushNamed('/FeedPostDetail/' + snapshot.data.key);
+              },
+              child: Padding(
+                padding: EdgeInsets.all(8),
+                child: _tweet(context, snapshot.data),
+              ),
+            ),
+          );
+        } else {
+          return SizedBox.shrink();
+        }
+      },
     );
   }
 }
