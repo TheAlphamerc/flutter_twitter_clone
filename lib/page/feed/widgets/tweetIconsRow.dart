@@ -4,6 +4,7 @@ import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
+import 'package:flutter_twitter_clone/page/feed/widgets/tweetBottomSheet.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
@@ -33,12 +34,18 @@ class TweetIconsRow extends StatelessWidget {
             icon:AppIcon.reply,iconColor: iconColor,
             size : size ?? 20,
             onPressed: (){
-             Navigator.of(context).pushNamed('/FeedPostReplyPage/'+model.key);
+              var state = Provider.of<FeedState>(context,);
+              state.setTweetToReply = model;
+              Navigator.of(context).pushNamed('/FeedPostReplyPage');
             },),
           _iconWidget(
             context,
             text:isTweetDetail ? '' : model.commentCount.toString(),
-            icon:AppIcon.retweet,iconColor: iconColor,size : size ?? 20),
+            icon:AppIcon.retweet,iconColor: iconColor,size : size ?? 20,
+            onPressed: (){
+              TweetBottomSheet().openRetweetbottomSheet(context, type, model);
+            }
+            ),
           _iconWidget(
             context,
             text:isTweetDetail ? '' : model.likeCount.toString(),

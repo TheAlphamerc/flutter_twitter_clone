@@ -57,5 +57,6 @@ class AppIcon{
   static final int thumbpinFill = 0xf003;
   static final int calender = 0xf203;
   static final int locationPin = 0xf031;
+  static final int edit = 0xf112;
 
 }

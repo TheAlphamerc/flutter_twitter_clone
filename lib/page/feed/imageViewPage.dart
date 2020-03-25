@@ -187,7 +187,7 @@ class _ImageViewPgeState extends State<ImageViewPge> {
       userId: commentedUser.userId,
       parentkey: postId,
     );
-    state.addcommentToPost(postId, reply);
+    state.addcommentToPost(reply);
     FocusScope.of(context).requestFocus(_focusNode);
     setState(() {
       _textEditingController.text = '';

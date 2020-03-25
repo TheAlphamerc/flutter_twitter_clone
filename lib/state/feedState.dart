@@ -15,7 +15,11 @@ class FeedState extends AppState {
   final databaseReference = Firestore.instance;
   bool isBusy = false;
   Map<String, List<FeedModel>> tweetReplyMap = {};
-
+  FeedModel _tweetToReplyModel;
+  FeedModel get tweetToReplyModel => _tweetToReplyModel;
+  set setTweetToReply(FeedModel model){
+    _tweetToReplyModel = model;
+  }
   List<FeedModel> _commentlist;
   final FirebaseDatabase _database = FirebaseDatabase.instance;
   List<FeedModel> _feedlist;
@@ -334,13 +338,12 @@ class FeedState extends AppState {
   }
 
   /// add [new comment tweet] to any tweet
-  addcommentToPost(String postId, FeedModel replyTweet) {
+  addcommentToPost(FeedModel replyTweet) {
     try {
       isBusy = true;
       notifyListeners();
-      if (postId != null) {
-        FeedModel tweet = _feedlist.firstWhere((x) => x.key == postId);
-
+      if (_tweetToReplyModel != null) {
+        FeedModel tweet = _feedlist.firstWhere((x) => x.key == _tweetToReplyModel.key);
         var json = replyTweet.toJson();
         _database.reference().child('tweet').push().set(json).then((value) {
           tweet.replyTweetKeyList.add(_feedlist.last.key);

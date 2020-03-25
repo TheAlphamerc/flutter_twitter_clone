@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
+import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
@@ -13,16 +14,17 @@ import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customLoader.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
+import 'package:flutter_twitter_clone/widgets/tweet.dart';
 import 'package:provider/provider.dart';
 
 import 'widgets/bottomIconWidget.dart';
 import 'widgets/tweetImage.dart';
 
 class FeedPostReplyPage extends StatefulWidget {
-  FeedPostReplyPage({Key key, this.postId}) : super(key: key);
+  FeedPostReplyPage({Key key, this.isRetweet}) : super(key: key);
 
-  final String postId;
-
+  // final String postId;
+  final bool isRetweet;
   _FeedPostReplyPageState createState() => _FeedPostReplyPageState();
 }
 
@@ -44,28 +46,9 @@ class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
 
   @override
   void initState() {
-    postId = widget.postId;
+    // postId = widget.postId;
     var feedState = Provider.of<FeedState>(context, listen: false);
-
-    /// if tweet is detail tweet
-    if (feedState.tweetDetailModel.any((x) => x.key == postId)) {
-      // cprint('Search tweet from tweet detail page stack tweet');
-      model = feedState.tweetDetailModel.last;
-    }
-
-    /// if tweet is reply tweet
-    else if (feedState.tweetReplyMap.values
-        .any((x) => x.any((y) => y.key == postId))) {
-      // cprint('Search tweet from twee detail page  roply tweet');
-      feedState.tweetReplyMap.forEach((key, value) {
-        if (value.any((x) => x.key == postId)) {
-          model = value.firstWhere((x) => x.key == postId);
-        }
-      });
-    } else {
-      // cprint('Search tweet from home page tweet');
-      model = feedState.feedlist.firstWhere((x) => x.key == postId);
-    }
+    model = feedState.tweetToReplyModel;
     scrollcontroller = ScrollController();
     _textEditingController = TextEditingController();
     scrollcontroller..addListener(_scrollListener);
@@ -85,8 +68,8 @@ class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
         ScrollDirection.forward) {
       setState(() {
         isScrollingDown = false;
-        scrollcontroller.animateTo(scrollcontroller.position.minScrollExtent,
-            duration: Duration(milliseconds: 300), curve: Curves.ease);
+        // scrollcontroller.animateTo(scrollcontroller.position.minScrollExtent,
+        //     duration: Duration(milliseconds: 300), curve: Curves.ease);
       });
     }
   }
@@ -136,16 +119,25 @@ class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
         createdAt: DateTime.now().toString(),
         tags: tags,
         parentkey: postId,
+        childRetwetkey: widget.isRetweet ? model.key : null,
         userId: commentedUser.userId);
     if (_image != null) {
       await state.uploadFile(_image).then((imagePath) {
         if (imagePath != null) {
           reply.imagePath = imagePath;
-          state.addcommentToPost(postId, reply);
+          if (widget.isRetweet) {
+            state.createTweet(reply);
+          } else {
+            state.addcommentToPost(reply);
+          }
         }
-      });
+      }); 
     } else {
-      state.addcommentToPost(postId, reply);
+      if (widget.isRetweet) {
+        state.createTweet(reply);
+      } else {
+        state.addcommentToPost(reply);
+      }
     }
     screenloader.hideLoader();
     Navigator.pop(context);
@@ -153,7 +145,173 @@ class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
 
   @override
   Widget build(BuildContext context) {
-    return _FeedPostReplyPageView(this);
+    var state = Provider.of<FeedState>(
+      context,
+    );
+
+    return Scaffold(
+      appBar: CustomAppBar(
+        title: customTitleText(''),
+        onActionPressed: _submitButton,
+        isCrossButton: true,
+        submitButtonText: widget.isRetweet ? 'Retweet' : 'Reply',
+        isSubmitDisable: _textEditingController.text == null ||
+            _textEditingController.text.isEmpty ||
+            _textEditingController.text.length > 280 ||
+            state.isBusy,
+        isbootomLine: isScrollingDown,
+      ),
+      backgroundColor: Theme.of(context).backgroundColor,
+      body: Container(
+        child: Stack(
+          children: <Widget>[
+            SingleChildScrollView(
+              controller: scrollcontroller,
+              child: widget.isRetweet
+                  ? _FeedPostRetweetPageView(this)
+                  : _FeedPostReplyPageView(this),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: BottomIconWidget(
+                textEditingController: _textEditingController,
+                onImageIconSelcted: _onImageIconSelcted,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _FeedPostRetweetPageView
+    extends WidgetView<FeedPostReplyPage, _FeedPostReplyPageState> {
+  _FeedPostRetweetPageView(this.viewState) : super(viewState);
+
+  final _FeedPostReplyPageState viewState;
+  Widget _tweet(BuildContext context, FeedModel model) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        // SizedBox(width: 10),
+
+        SizedBox(width: 20),
+        Container(
+          width: fullWidth(context) - 12,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  Container(
+                    width: 25,
+                    height: 25,
+                    child: customImage(context, model.user.profilePic),
+                  ),
+                  SizedBox(width: 10),
+                  UrlText(
+                    text: model.user.displayName,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  SizedBox(width: 3),
+                  model.user.isVerified
+                      ? customIcon(
+                          context,
+                          icon: AppIcon.blueTick,
+                          istwitterIcon: true,
+                          iconColor: AppColor.primary,
+                          size: 13,
+                          paddingIcon: 3,
+                        )
+                      : SizedBox(width: 0),
+                  SizedBox(
+                    width: model.user.isVerified ? 5 : 0,
+                  ),
+                  Flexible(
+                    child: customText(
+                      '${model.user.userName}',
+                      style: userNameStyle,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  SizedBox(width: 4),
+                  customText('· ${getChatTime(model.createdAt)}',
+                      style: userNameStyle),
+                  Expanded(child: SizedBox()),
+                ],
+              ),
+            ],
+          ),
+        ),
+        UrlText(
+          text: model.description,
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+          ),
+          urlStyle: TextStyle(color: Colors.blue, fontWeight: FontWeight.w400),
+        ),
+      ],
+    );
+  }
+
+  Widget _descriptionEntry() {
+    return TextField(
+      controller: viewState._textEditingController,
+      onChanged: viewState._ontweetDescriptionChanged,
+      maxLines: null,
+      textAlignVertical: TextAlignVertical.top,
+      decoration: InputDecoration(
+          border: InputBorder.none,
+          hintText: 'Add a comment',
+          hintStyle: TextStyle(fontSize: 18, color: AppColor.darkGrey)),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var authState = Provider.of<AuthState>(context);
+    return Column(
+      children: <Widget>[
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              child: customImage(context, authState.user?.photoUrl, height: 40),
+            ),
+            Expanded(
+              child: _descriptionEntry(),
+            )
+          ],
+        ),
+        Padding(
+          padding: EdgeInsets.only(right: 16, left: 80, bottom: 8),
+          child: TweetImage(
+            image: viewState._image,
+            onCrossIconPressed: viewState._onCrossIconPressed,
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(left: 75, right: 16, bottom: 16),
+          padding: EdgeInsets.all(8),
+          alignment: Alignment.topCenter,
+          decoration: BoxDecoration(
+              border: Border.all(color: AppColor.extraLightGrey, width: .5),
+              borderRadius: BorderRadius.all(Radius.circular(15))),
+          child: _tweet(context, viewState.model),
+        ),
+        SizedBox(height: 50)
+      ],
+    );
   }
 }
 
@@ -201,11 +359,14 @@ class _FeedPostReplyPageView
                     child: UrlText(
                       text: viewState.model.description ?? '',
                       style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w400),
+                        color: Colors.black,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
+                      ),
                       urlStyle: TextStyle(
-                          color: Colors.blue, fontWeight: FontWeight.w400),
+                        color: Colors.blue,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -243,23 +404,21 @@ class _FeedPostReplyPageView
                   width: 3,
                 ),
                 viewState.model.user.isVerified
-                    ? customIcon(context,
+                    ? customIcon(
+                        context,
                         icon: AppIcon.blueTick,
                         istwitterIcon: true,
                         iconColor: AppColor.primary,
                         size: 13,
-                        paddingIcon: 3)
-                    : SizedBox(
-                        width: 0,
-                      ),
+                        paddingIcon: 3,
+                      )
+                    : SizedBox(width: 0),
                 SizedBox(
                   width: viewState.model.user.isVerified ? 5 : 0,
                 ),
                 customText('${viewState.model.user.userName}',
                     style: userNameStyle),
-                SizedBox(
-                  width: 10,
-                ),
+                SizedBox(width: 10),
                 customText('- ${getChatTime(viewState.model.createdAt)}',
                     style: userNameStyle),
               ],
@@ -272,72 +431,40 @@ class _FeedPostReplyPageView
 
   @override
   Widget build(BuildContext context) {
-    var state = Provider.of<FeedState>(
-      context,
-    );
-    var authState = Provider.of<AuthState>(
-      context,
-    );
-    return Scaffold(
-      appBar: CustomAppBar(
-        title: customTitleText(
-          '',
-        ),
-        onActionPressed: viewState._submitButton,
-        isCrossButton: true,
-        submitButtonText: 'Reply',
-        isSubmitDisable: viewState._textEditingController.text == null ||
-            viewState._textEditingController.text.isEmpty ||
-            viewState._textEditingController.text.length > 280 ||
-            state.isBusy,
-        isbootomLine: viewState.isScrollingDown,
-      ),
-      backgroundColor: Theme.of(context).backgroundColor,
-      body: Container(
-        child: Stack(
-          children: <Widget>[
-            SingleChildScrollView(
-              controller: viewState.scrollcontroller,
-              child: Container(
-                height: fullHeight(context),
-                padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                child: Column(
+    var authState = Provider.of<AuthState>(context);
+    return Container(
+      child: Stack(
+        children: <Widget>[
+          Container(
+            height: fullHeight(context),
+            padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                _tweerCard(context),
+                Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    _tweerCard(context),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        customImage(context, authState.user?.photoUrl,
-                            height: 40),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Expanded(
-                          child: _descriptionEntry(),
-                        )
-                      ],
-                    ),
-                    TweetImage(
-                      image: viewState._image,
-                      onCrossIconPressed: viewState._onCrossIconPressed,
+                    customImage(context, authState.user?.photoUrl, height: 40),
+                    SizedBox(
+                      width: 20,
                     ),
                     Expanded(
-                      child: Container(),
+                      child: _descriptionEntry(),
                     )
                   ],
                 ),
-              ),
+                TweetImage(
+                  image: viewState._image,
+                  onCrossIconPressed: viewState._onCrossIconPressed,
+                ),
+                Expanded(
+                  child: Container(),
+                )
+              ],
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: BottomIconWidget(
-                textEditingController: viewState._textEditingController,
-                onImageIconSelcted: viewState._onImageIconSelcted,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -69,8 +69,12 @@ class Routes{
         return CustomRoute<bool>(builder:(BuildContext context)=> CreateFeedPage(),settings: RouteSettings(name:'CreateFeedPage'));
      }
      else if(pathElements[1].contains('FeedPostReplyPage')){
-       var postId = pathElements[2];
-        return CustomRoute<bool>(builder:(BuildContext context)=> FeedPostReplyPage(postId: postId,),settings: RouteSettings(name:'FeedPostReplyPage'));
+      //  var postId = pathElements[2];
+       bool isRetweet = false;
+       if(pathElements.length == 3 && pathElements[2].contains('retweet')){
+         isRetweet = true;
+       }
+        return CustomRoute<bool>(builder:(BuildContext context)=> FeedPostReplyPage(isRetweet:isRetweet),settings: RouteSettings(name:'FeedPostReplyPage'));
      }
      else if(pathElements[1].contains('FeedPostDetail')){
        var postId = pathElements[2];

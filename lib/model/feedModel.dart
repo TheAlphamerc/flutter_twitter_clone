@@ -4,6 +4,7 @@ import 'package:flutter_twitter_clone/model/user.dart';
 class FeedModel {
   String key;
   String parentkey;
+  String childRetwetkey;
   String description;
   String userId;
   int likeCount;
@@ -27,6 +28,7 @@ class FeedModel {
     this.user,
     this.replyTweetKeyList,
     this.parentkey,
+    this.childRetwetkey
     });
   toJson() {
     Map<dynamic,dynamic> map;
@@ -47,7 +49,8 @@ class FeedModel {
       "tags":tags,
       "replyTweetKeyList":replyTweetKeyList,
       "user":user == null ? null : user.toJson(),
-      "parentkey": parentkey
+      "parentkey": parentkey,
+      "childRetwetkey":childRetwetkey
     };
   }
   dynamic getLikeList(List<String> list){
@@ -73,6 +76,7 @@ class FeedModel {
   //  username = map['username'];
    user = User.fromJson(map['user']);
    parentkey = map['parentkey'];
+   childRetwetkey = map['childRetwetkey'];
    if(map['tags'] != null){
       tags = List<String>();
       map['tags'].forEach((value){
