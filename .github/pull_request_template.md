@@ -2,7 +2,6 @@
 NOTE: Please ensure you:
 * provide a detailed pull request description and a succinct title (consider template below for guidance),
 * follow the [Contributor Guidelines](https://github.com/TheAlphamerc/flutter_twitter_clone/blob/master/CONTRIBUTING.md),
-* use a draft PR if you don't want the committers to review your code,
 * and make sure that all contributions are properly licensed pursuant to the LICENSE file in the root of the repository.
 -->
 
