@@ -40,7 +40,7 @@ class TweetIconsRow extends StatelessWidget {
             },),
           _iconWidget(
             context,
-            text:isTweetDetail ? '' : model.commentCount.toString(),
+            text:isTweetDetail ? '' : model.retweetCount.toString(),
             icon:AppIcon.retweet,iconColor: iconColor,size : size ?? 20,
             onPressed: (){
               TweetBottomSheet().openRetweetbottomSheet(context, type, model);
@@ -93,10 +93,7 @@ class TweetIconsRow extends StatelessWidget {
         children: <Widget>[
           SizedBox(width: 5,),
           customText(getPostTime2(model.createdAt),
-              style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: TwitterColor.woodsmoke_50)),
+              style: textStyle14),
           SizedBox(
             width: 10,
           ),
@@ -122,12 +119,12 @@ class TweetIconsRow extends StatelessWidget {
             SizedBox(
               width: 10,
             ),
-            customText(model.commentCount.toString(),
+            customText(model.retweetCount.toString(),
                 style: TextStyle(fontWeight: FontWeight.bold)),
             SizedBox(
-              width: 10,
+              width: 5,
             ),
-            customText('comments', style: TextStyle(color: Colors.black54)),
+            customText('Retweets', style:subtitleStyle),
             SizedBox(
               width: 20,
             ),
@@ -138,9 +135,9 @@ class TweetIconsRow extends StatelessWidget {
                   key: ValueKey(model.likeCount)),
             ),
             SizedBox(
-              width: 10,
+              width: 5,
             ),
-            customText('Likes', style: TextStyle(color: Colors.black54))
+            customText('Likes', style: subtitleStyle)
           ],
         ),
         SizedBox(

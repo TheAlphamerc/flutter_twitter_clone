@@ -121,7 +121,7 @@ class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
         if (imagePath != null) {
           reply.imagePath = imagePath;
           if (widget.isRetweet) {
-            state.createTweet(reply);
+            state.createReTweet(reply);
           } else {
             state.addcommentToPost(reply);
           }
@@ -129,7 +129,7 @@ class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
       });
     } else {
       if (widget.isRetweet) {
-        state.createTweet(reply);
+        state.createReTweet(reply);
       } else {
         state.addcommentToPost(reply);
       }

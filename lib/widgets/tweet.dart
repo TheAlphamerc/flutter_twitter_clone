@@ -71,6 +71,7 @@ class Tweet extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               ListTile(
+                contentPadding: EdgeInsets.symmetric(horizontal: 16),
                 leading: GestureDetector(
                   onTap: () {
                     Navigator.of(context)
@@ -255,7 +256,7 @@ class Tweet extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Container(
-            padding: EdgeInsets.symmetric(vertical: 12),
+            padding: EdgeInsets.only(top: type == TweetType.Detail ? 0 : 12),
             child: type == TweetType.Tweet || type == TweetType.Reply
                 ? _tweet(context)
                 : _detailTweet(context),
@@ -391,7 +392,24 @@ class RetweetWidget extends StatelessWidget {
               ),
             ),
           );
-        } else {
+        } if(snapshot.connectionState == ConnectionState.done && !snapshot.hasData){
+          return Container(
+            height: 40,
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            margin: EdgeInsets.only(
+                left: type == TweetType.Tweet ? 70 : 12,
+                right: 16,
+                top: isImageAvailable ? 8 : 0),
+            alignment: Alignment.centerLeft,
+            decoration: BoxDecoration(
+              color: AppColor.extraLightGrey,
+              border: Border.all(color: AppColor.extraLightGrey, width: .5),
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),
+            child: Text('This Tweet is unavailable', style: userNameStyle,),
+          );
+        }
+        else {
           return SizedBox.shrink();
         }
       },

@@ -236,6 +236,18 @@ class FeedState extends AppState {
     notifyListeners();
   }
 
+  ///  It will create tweet in [Firebase database] just like other normal tweet.
+  ///  update retweet count for retweet model
+  createReTweet(FeedModel model) {
+    try {
+      createTweet(model);
+      _tweetToReplyModel.retweetCount += 1;
+      updateTweet(_tweetToReplyModel);
+    } catch (error) {
+      cprint(error, errorIn: 'createReTweet');
+    }
+  }
+
   /// [Delete tweet]
   deleteTweet(String tweetId, TweetType type, {String parentkey}) {
     ///  Delete tweet in [Firebase database]
@@ -454,7 +466,7 @@ class FeedState extends AppState {
   }
 
   /// Trigger when Tweet `Deleted`
-  _onTweetRemoved(Event event) {
+  _onTweetRemoved(Event event) async {
     FeedModel tweet = FeedModel.fromJson(event.snapshot.value);
     tweet.key = event.snapshot.key;
     var tweetId = tweet.key;
@@ -515,6 +527,17 @@ class FeedState extends AppState {
       /// Delete tweet image from firebase storage if exist.
       if (deletedTweet.imagePath != null && deletedTweet.imagePath.length > 0) {
         deleteFile(deletedTweet.imagePath, 'tweetImage');
+      }
+
+      /// If a retweet is deleted then retweetCount should be decrease by 1.
+      if (deletedTweet.childRetwetkey != null) {
+        await fetchTweet(deletedTweet.childRetwetkey).then((retweetModel) {
+          if (retweetModel == null) {
+            return;
+          }
+          retweetModel.retweetCount -= 1;
+          updateTweet(retweetModel);
+        });
       }
       notifyListeners();
     } catch (error) {

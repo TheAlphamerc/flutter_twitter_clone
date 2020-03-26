@@ -10,6 +10,7 @@ class FeedModel {
   int likeCount;
   List<LikeList> likeList;
   int commentCount;
+  int retweetCount;
   String createdAt;
   String imagePath;
   List<String> tags;
@@ -21,6 +22,7 @@ class FeedModel {
     this.userId,
     this.likeCount,
     this.commentCount,
+    this.retweetCount,
     this.createdAt,
     this.imagePath,
     this.likeList,
@@ -43,6 +45,7 @@ class FeedModel {
       "description": description,
      "likeCount":likeCount,
       "commentCount":commentCount ?? 0,
+      "retweetCount": retweetCount ?? 0,
       "createdAt":createdAt,
       "imagePath":imagePath,
       "likeList":map,
@@ -70,6 +73,7 @@ class FeedModel {
   //  profilePic = map['profilePic'];
    likeCount = map['likeCount'];
    commentCount = map['commentCount'];
+   retweetCount = map["retweetCount"] ?? 0;
    imagePath = map['imagePath'];
    createdAt = map['createdAt'];
    imagePath = map['imagePath'];
