@@ -143,115 +143,117 @@ keytool -exportcert -list -v \
      <summary> Click to expand </summary>
   
   ```
-  |
   |-- lib
-  |   |-- helper
-  |   |   |-- constant.dart
-  |   |   |-- customRoute.dart
-  |   |   |-- enum.dart
-  |   |   |-- routes.dart
-  |   |   |-- theme.dart
-  |   |   |-- utility.dart
-  |   |   '-- validator.dart
-  |   |-- main.dart
-  |   |-- model
-  |   |   |-- chatModel.dart
-  |   |   |-- commentModel.dart
-  |   |   |-- feedModel.dart
-  |   |   |-- notificationModel.dart
-  |   |   '-- user.dart
-  |   |-- page
-  |   |   |-- Auth
-  |   |   |   |-- forgetPasswordPage.dart
-  |   |   |   |-- selectAuthMethod.dart
-  |   |   |   |-- signin.dart
-  |   |   |   '-- signup.dart
-  |   |   |-- common
-  |   |   |   '-- sidebar.dart
-  |   |   |-- feed
-  |   |   |   |-- createFeed.dart
-  |   |   |   |-- feedPage.dart
-  |   |   |   |-- feedPostDetail.dart
-  |   |   |   |-- feedPostreply.dart
-  |   |   |   |-- imageViewPage.dart
-  |   |   |   '-- widgets
-  |   |   |       |-- bottomIconWidget.dart
-  |   |   |       |-- tweetBottomSheet.dart
-  |   |   |       |-- tweetIconsRow.dart
-  |   |   |       '-- tweetImage.dart
-  |   |   |-- homePage.dart
-  |   |   |-- message
-  |   |   |   |-- chatListPage.dart
-  |   |   |   |-- chatScreenPage.dart
-  |   |   |   |-- conversationInformation
-  |   |   |   |   '-- conversationInformation.dart
-  |   |   |   '-- newMessagePage.dart
-  |   |   |-- notification
-  |   |   |   '-- notificationPage.dart
-  |   |   |-- profile
-  |   |   |   |-- EditProfilePage.dart
-  |   |   |   |-- follow
-  |   |   |   |   |-- followerListPage.dart
-  |   |   |   |   |-- followingListPage.dart
-  |   |   |   |   '-- widget
-  |   |   |   |       '-- userList.dart
-  |   |   |   '-- profilePage.dart
-  |   |   |-- search
-  |   |   |   '-- SearchPage.dart
-  |   |   '-- settings
-  |   |       |-- accountSettings
-  |   |       |   |-- about
-  |   |       |   |   '-- aboutTwitter.dart
-  |   |       |   |-- accessibility
-  |   |       |   |   '-- accessibility.dart
-  |   |       |   |-- accountSettingsPage.dart
-  |   |       |   |-- contentPrefrences
-  |   |       |   |   |-- contentPreference.dart
-  |   |       |   |   '-- trends
-  |   |       |   |       '-- trendsPage.dart
-  |   |       |   |-- dataUsage
-  |   |       |   |   '-- dataUsagePage.dart
-  |   |       |   |-- displaySettings
-  |   |       |   |   '-- displayAndSoundPage.dart
-  |   |       |   |-- notifications
-  |   |       |   |   '-- notificationPage.dart
-  |   |       |   |-- privacyAndSafety
-  |   |       |   |   |-- directMessage
-  |   |       |   |   |   '-- directMessage.dart
-  |   |       |   |   '-- privacyAndSafetyPage.dart
-  |   |       |   '-- proxy
-  |   |       |       '-- proxyPage.dart
-  |   |       |-- settingsAndPrivacyPage.dart
-  |   |       '-- widgets
-  |   |           |-- headerWidget.dart
-  |   |           |-- settingsAppbar.dart
-  |   |           '-- settingsRowWidget.dart
-  |   |-- state
-  |   |   |-- appState.dart
-  |   |   |-- authState.dart
-  |   |   |-- chats
-  |   |   |   '-- chatState.dart
-  |   |   |-- feedState.dart
-  |   |   |-- notificationState.dart
-  |   |   '-- searchState.dart
-  |   '-- widgets
-  |       |-- bottomMenuBar
-  |       |   |-- HalfPainter.dart
-  |       |   |-- bottomMenuBar.dart
-  |       |   '-- tabItem.dart
-  |       |-- bouncingWidget.dart
-  |       |-- customAppBar.dart
-  |       |-- customWidgets.dart
-  |       |-- newWidget
-  |       |   |-- customClipper.dart
-  |       |   |-- customProgressbar.dart
-  |       |   |-- customUrlText.dart
-  |       |   |-- emptyList.dart
-  |       |   |-- rippleButton.dart
-  |       |   '-- title_text.dart
-  |       '-- tweet.dart
-  |-- pubspec.yaml
-  |
+|   |-- helper
+|   |   |-- constant.dart
+|   |   |-- customRoute.dart
+|   |   |-- enum.dart
+|   |   |-- routes.dart
+|   |   |-- theme.dart
+|   |   |-- utility.dart
+|   |   '-- validator.dart
+|   |-- main.dart
+|   |-- model
+|   |   |-- chatModel.dart
+|   |   |-- commentModel.dart
+|   |   |-- feedModel.dart
+|   |   |-- notificationModel.dart
+|   |   '-- user.dart
+|   |-- page
+|   |   |-- Auth
+|   |   |   |-- forgetPasswordPage.dart
+|   |   |   |-- selectAuthMethod.dart
+|   |   |   |-- signin.dart
+|   |   |   |-- signup.dart
+|   |   |   '-- verifyEmail.dart
+|   |   |-- common
+|   |   |   |-- sidebar.dart
+|   |   |   '-- splash.dart
+|   |   |-- feed
+|   |   |   |-- composeTweet
+|   |   |   |   |-- createFeed.dart
+|   |   |   |   '-- feedPostreply.dart
+|   |   |   |-- feedPage.dart
+|   |   |   |-- feedPostDetail.dart
+|   |   |   '-- imageViewPage.dart
+|   |   |-- homePage.dart
+|   |   |-- message
+|   |   |   |-- chatListPage.dart
+|   |   |   |-- chatScreenPage.dart
+|   |   |   |-- conversationInformation
+|   |   |   |   '-- conversationInformation.dart
+|   |   |   '-- newMessagePage.dart
+|   |   |-- notification
+|   |   |   '-- notificationPage.dart
+|   |   |-- profile
+|   |   |   |-- EditProfilePage.dart
+|   |   |   |-- follow
+|   |   |   |   |-- followerListPage.dart
+|   |   |   |   |-- followingListPage.dart
+|   |   |   |   '-- widget
+|   |   |   |       '-- userList.dart
+|   |   |   '-- profilePage.dart
+|   |   |-- search
+|   |   |   '-- SearchPage.dart
+|   |   '-- settings
+|   |       |-- accountSettings
+|   |       |   |-- about
+|   |       |   |   '-- aboutTwitter.dart
+|   |       |   |-- accessibility
+|   |       |   |   '-- accessibility.dart
+|   |       |   |-- accountSettingsPage.dart
+|   |       |   |-- contentPrefrences
+|   |       |   |   |-- contentPreference.dart
+|   |       |   |   '-- trends
+|   |       |   |       '-- trendsPage.dart
+|   |       |   |-- dataUsage
+|   |       |   |   '-- dataUsagePage.dart
+|   |       |   |-- displaySettings
+|   |       |   |   '-- displayAndSoundPage.dart
+|   |       |   |-- notifications
+|   |       |   |   '-- notificationPage.dart
+|   |       |   |-- privacyAndSafety
+|   |       |   |   |-- directMessage
+|   |       |   |   |   '-- directMessage.dart
+|   |       |   |   '-- privacyAndSafetyPage.dart
+|   |       |   '-- proxy
+|   |       |       '-- proxyPage.dart
+|   |       |-- settingsAndPrivacyPage.dart
+|   |       '-- widgets
+|   |           |-- headerWidget.dart
+|   |           |-- settingsAppbar.dart
+|   |           '-- settingsRowWidget.dart
+|   |-- state
+|   |   |-- appState.dart
+|   |   |-- authState.dart
+|   |   |-- chats
+|   |   |   '-- chatState.dart
+|   |   |-- feedState.dart
+|   |   |-- notificationState.dart
+|   |   '-- searchState.dart
+|   '-- widgets
+|       |-- bottomMenuBar
+|       |   |-- HalfPainter.dart
+|       |   |-- bottomMenuBar.dart
+|       |   '-- tabItem.dart
+|       |-- customAppBar.dart
+|       |-- customWidgets.dart
+|       |-- newWidget
+|       |   |-- customClipper.dart
+|       |   |-- customLoader.dart
+|       |   |-- customProgressbar.dart
+|       |   |-- customUrlText.dart
+|       |   |-- emptyList.dart
+|       |   |-- rippleButton.dart
+|       |   '-- title_text.dart
+|       '-- tweet
+|           |-- tweet.dart
+|           '-- widgets
+|               |-- bottomIconWidget.dart
+|               |-- tweetBottomSheet.dart
+|               |-- tweetIconsRow.dart
+|               '-- tweetImage.dart
+|-- pubspec.yaml
 ```
 
 </details>
