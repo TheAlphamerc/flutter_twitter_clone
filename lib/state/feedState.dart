@@ -472,8 +472,13 @@ class FeedState extends AppState {
   /// Trigger when comment tweet added
   /// Check if Tweet is a comment
   /// If Yes it will add tweet in comment list.
+  /// add [new tweet] comment to comment list
   _onCommentAdded(FeedModel tweet) {
-    /// add [new tweet] comment to comment list
+    
+    if(tweet.childRetwetkey != null){
+      /// if Tweet is a type of retweet then it can not be a comment.
+      return;
+    }
     if (tweetReplyMap != null && tweetReplyMap.length > 0) {
       if (tweetReplyMap[tweet.parentkey] != null) {
         tweetReplyMap[tweet.parentkey].add(tweet);

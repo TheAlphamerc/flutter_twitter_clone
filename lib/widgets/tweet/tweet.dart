@@ -236,9 +236,9 @@ class Tweet extends StatelessWidget {
           Clipboard.setData(text);
           Scaffold.of(context).showSnackBar(
             SnackBar(
-              backgroundColor: Theme.of(context).disabledColor,
+              backgroundColor: TwitterColor.black,
               content: Text(
-                'Tweet copied',
+                'Tweet copied to clipboard',
               ),
             ),
           );
@@ -374,7 +374,7 @@ class RetweetWidget extends StatelessWidget {
             margin: EdgeInsets.only(
                 left: type == TweetType.Tweet ? 70 : 12,
                 right: 16,
-                top: isImageAvailable ? 8 : 0),
+                top: isImageAvailable ? 8 : 5),
             alignment: Alignment.topCenter,
             decoration: BoxDecoration(
               border: Border.all(color: AppColor.extraLightGrey, width: .5),
@@ -393,21 +393,26 @@ class RetweetWidget extends StatelessWidget {
               ),
             ),
           );
-        } if(snapshot.connectionState == ConnectionState.done && !snapshot.hasData){
-          return Container(
+        } 
+        if((snapshot.connectionState == ConnectionState.done || snapshot.connectionState == ConnectionState.waiting) && !snapshot.hasData){
+          return AnimatedContainer(
+            duration: Duration(milliseconds: 500),
             height: 40,
             padding: EdgeInsets.symmetric(horizontal: 16),
             margin: EdgeInsets.only(
                 left: type == TweetType.Tweet ? 70 : 12,
                 right: 16,
-                top: isImageAvailable ? 8 : 0),
+                top: isImageAvailable ? 8 : 5),
             alignment: Alignment.centerLeft,
             decoration: BoxDecoration(
               color: AppColor.extraLightGrey,
               border: Border.all(color: AppColor.extraLightGrey, width: .5),
               borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
-            child: Text('This Tweet is unavailable', style: userNameStyle,),
+            child: snapshot.connectionState == ConnectionState.waiting ? LinearProgressIndicator(
+              valueColor: AlwaysStoppedAnimation(TwitterColor.dodgetBlue),
+            ) :
+            Text('This Tweet is unavailable', style: userNameStyle,),
           );
         }
         else {

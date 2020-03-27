@@ -282,7 +282,8 @@ class _FeedPostRetweetPageView
             ),
             Expanded(
               child: _descriptionEntry(),
-            )
+            ),
+            SizedBox(width: 16,)
           ],
         ),
         Padding(
