@@ -241,11 +241,25 @@ class AuthState extends AppState {
   }
 
   /// Send email verification link to email2
-  Future<void> sendEmailVerification() async {
+  Future<bool> sendEmailVerification(
+      GlobalKey<ScaffoldState> scaffoldKey) async {
     FirebaseUser user = await _firebaseAuth.currentUser();
-    user.sendEmailVerification();
-    logEvent('email_verifcation_sent',
-        parameter: {userModel.userName: user.email});
+    user.sendEmailVerification().then((_) {
+      logEvent('email_verifcation_sent',
+          parameter: {userModel.displayName: user.email});
+      customSnackBar(
+        scaffoldKey,
+        'An email verification link is send to your email.',
+      );
+    }).catchError((error) {
+      cprint(error.message, errorIn: 'sendEmailVerification');
+      logEvent('email_verifcation_block',
+          parameter: {userModel.displayName: user.email});
+      customSnackBar(
+        scaffoldKey,
+        error.message,
+      );
+    });
   }
 
   /// Check if user's email is verified

@@ -74,11 +74,8 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
 
   void _submit() {
     var state = Provider.of<AuthState>(context, listen: false);
-    state.sendEmailVerification();
-    customSnackBar(
-      _scaffoldKey,
-      'An email verification link is send to your email.',
-    );
+    state.sendEmailVerification(_scaffoldKey);
+    
   }
 
   @override
