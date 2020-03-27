@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
-import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
@@ -12,13 +11,11 @@ import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
-import 'package:flutter_twitter_clone/widgets/newWidget/customLoader.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
-import 'package:flutter_twitter_clone/widgets/tweet.dart';
+import 'package:flutter_twitter_clone/widgets/tweet/widgets/bottomIconWidget.dart';
+import 'package:flutter_twitter_clone/widgets/tweet/widgets/tweetImage.dart';
 import 'package:provider/provider.dart';
 
-import 'widgets/bottomIconWidget.dart';
-import 'widgets/tweetImage.dart';
 
 class FeedPostReplyPage extends StatefulWidget {
   FeedPostReplyPage({Key key, this.isRetweet}) : super(key: key);

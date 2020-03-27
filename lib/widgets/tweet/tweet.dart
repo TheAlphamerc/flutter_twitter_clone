@@ -5,13 +5,14 @@ import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
-import 'package:flutter_twitter_clone/page/feed/widgets/tweetIconsRow.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
+import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/rippleButton.dart';
+import 'package:flutter_twitter_clone/widgets/tweet/widgets/tweetIconsRow.dart';
 import 'package:provider/provider.dart';
 
-import 'customWidgets.dart';
-import 'newWidget/customUrlText.dart';
+import '../customWidgets.dart';
+
 
 class Tweet extends StatelessWidget {
   final FeedModel model;

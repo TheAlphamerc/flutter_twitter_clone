@@ -10,10 +10,10 @@ import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customLoader.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/emptyList.dart';
-import 'package:flutter_twitter_clone/widgets/tweet.dart';
+import 'package:flutter_twitter_clone/widgets/tweet/tweet.dart';
+import 'package:flutter_twitter_clone/widgets/tweet/widgets/tweetBottomSheet.dart';
 import 'package:provider/provider.dart';
 
-import 'widgets/tweetBottomSheet.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({Key key, this.scaffoldKey}) : super(key: key);

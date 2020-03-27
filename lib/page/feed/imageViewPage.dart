@@ -7,9 +7,8 @@ import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
+import 'package:flutter_twitter_clone/widgets/tweet/widgets/tweetIconsRow.dart';
 import 'package:provider/provider.dart';
-
-import 'widgets/tweetIconsRow.dart';
 
 class ImageViewPge extends StatefulWidget {
   _ImageViewPgeState createState() => _ImageViewPgeState();

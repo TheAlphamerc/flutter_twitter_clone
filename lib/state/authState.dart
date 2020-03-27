@@ -91,8 +91,11 @@ class AuthState extends AppState {
   }
 
   /// Create user from `google login`
+  /// If user is new then it create a new user
+  /// If user is old then it just `authenticate` user and return firebase user data
   Future<FirebaseUser> handleGoogleSignIn() async {
     try {
+      /// Record log in firebase analytics about Google login
       analytics.logLogin(loginMethod: 'google_login');
       final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
