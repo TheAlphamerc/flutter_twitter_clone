@@ -4,6 +4,7 @@ import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customLoader.dart';
+import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 import 'package:provider/provider.dart';
 
 class SignIn extends StatefulWidget {
@@ -41,19 +42,16 @@ class _SignInState extends State<SignIn> {
               _entryFeild('Enter email', controller: _emailController),
               _entryFeild('Enter password',
                   controller: _passwordController, isPassword: true),
-              // _submitButton(context),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  _emailLoginButton(context),
-                  _googleLoginButton(context)
-                ],
+              _emailLoginButton(context),
+              SizedBox(
+                height: 20,
               ),
               _labelButton('Forget password?', onPressed: () {
                 Navigator.of(context).pushNamed('/ForgetPasswordPage');
               }),
+              Divider(),
+              _googleLoginButton(context),
               SizedBox(height: 100),
-              // _labelButton('Create new account',onPressed: _createAccount),
             ],
           )),
     );
@@ -97,33 +95,55 @@ class _SignInState extends State<SignIn> {
       splashColor: Colors.grey.shade200,
       child: Text(
         title,
-        style: TextStyle(color: Colors.black54),
+        style: TextStyle(
+            color: TwitterColor.dodgetBlue, fontWeight: FontWeight.bold),
       ),
     );
   }
 
   Widget _emailLoginButton(BuildContext context) {
     return Container(
+      width: fullWidth(context),
       margin: EdgeInsets.symmetric(vertical: 35),
       child: FlatButton(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        color: Colors.blueAccent,
+        color: TwitterColor.dodgetBlue,
         onPressed: _emailLogin,
         padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-        child: Text('Email Login', style: TextStyle(color: Colors.white)),
+        child: TitleText('Email Login', color: Colors.white),
       ),
     );
   }
 
   Widget _googleLoginButton(BuildContext context) {
     return Container(
+      alignment: Alignment.center,
       margin: EdgeInsets.symmetric(vertical: 35),
-      child: FlatButton(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        color: Colors.blueAccent,
-        onPressed: _googleLogin,
-        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-        child: Text('Google Login', style: TextStyle(color: Colors.white)),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          MaterialButton(
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              color: Colors.white,
+              onPressed: _googleLogin,
+              padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+              child: Row(
+                children: <Widget>[
+                  Image.asset(
+                    'assets/images/google_logo.png',
+                    height: 20,
+                    width: 20,
+                  ),
+                  SizedBox(width: 10),
+                  TitleText(
+                    'Continue with Google',
+                    color: Colors.black54,
+                  ),
+                ],
+              )),
+        ],
       ),
     );
   }
@@ -150,8 +170,7 @@ class _SignInState extends State<SignIn> {
           loader.hideLoader();
         }
       });
-    }
-    else{
+    } else {
       loader.hideLoader();
     }
   }
@@ -161,7 +180,7 @@ class _SignInState extends State<SignIn> {
     if (state.isbusy) {
       return;
     }
-   loader.showLoader(context);
+    loader.showLoader(context);
     state.handleGoogleSignIn().then((status) {
       // print(status)
       if (state.user != null) {
