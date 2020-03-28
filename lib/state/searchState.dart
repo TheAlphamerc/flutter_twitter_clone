@@ -1,11 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
 import 'appState.dart';
 
 class SearchState extends AppState {
-  final databaseReference = Firestore.instance;
   bool isBusy = false;
 
   List<User> _userFilterlist;
@@ -19,12 +17,11 @@ class SearchState extends AppState {
     }
   }
 
-  /// get [User list] from firebase realtime database
+  /// get [User list] from firebase realtime kDatabase
   void getDataFromDatabase() {
     try {
       isBusy = true;
-      final databaseReference = FirebaseDatabase.instance.reference();
-      databaseReference.child('profile').once().then(
+      kDatabase.child('profile').once().then(
         (DataSnapshot snapshot) {
           _userlist = List<User>();
           _userFilterlist = List<User>();

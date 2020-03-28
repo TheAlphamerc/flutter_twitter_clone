@@ -31,14 +31,14 @@ dependencies:
   firebase_database:
   firebase_analytics:
 
-  cloud_firestore:
+  # cloud_firestore:
   firebase_storage: 
   image_picker: ^0.6.2
   uuid: ^2.0.0
   async:
   http: 
   shared_preferences: ^0.5.1+2
-  firebase_messaging:
+  # firebase_messaging:
   google_sign_in: 
   intl: ^0.15.8
   url_launcher:

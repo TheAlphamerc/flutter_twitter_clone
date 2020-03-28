@@ -1,4 +1,5 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customLoader.dart';
@@ -6,8 +7,9 @@ import 'package:intl/intl.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-final analytics = FirebaseAnalytics();
- final  screenloader = CustomLoader();
+final kAnalytics = FirebaseAnalytics();
+final DatabaseReference kDatabase = FirebaseDatabase.instance.reference();
+ final  kScreenloader = CustomLoader();
 String getAgendaTime(String startDatetime, String endDatetime) {
   var start =
       new DateFormat.jm().format(DateTime.parse(startDatetime)).toString();
@@ -168,7 +170,7 @@ void cprint(dynamic data, {String errorIn, String event}) {
 }
 
 void logEvent(String event, {Map<String, dynamic> parameter}) {
-  analytics.logEvent(name: event, parameters: parameter);
+  kAnalytics.logEvent(name: event, parameters: parameter);
 }
 
 void share(String message, {String subject}) {

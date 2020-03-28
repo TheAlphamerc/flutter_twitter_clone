@@ -23,7 +23,7 @@ class AuthState extends AppState {
   String userId;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseDatabase _database = FirebaseDatabase.instance;
+  
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   dabase.Query _profileQuery;
@@ -62,7 +62,7 @@ class AuthState extends AppState {
   databaseInit() {
     try {
       if (_profileQuery == null) {
-        _profileQuery = _database.reference().child("profile");
+        _profileQuery = kDatabase.child("profile");
         _profileQuery.onChildChanged.listen(_onProfileChanged);
       }
     } catch (error) {
@@ -83,7 +83,7 @@ class AuthState extends AppState {
     } catch (error) {
       loading = false;
       cprint(error, errorIn: 'signIn');
-      analytics.logLogin(loginMethod: 'email_login');
+      kAnalytics.logLogin(loginMethod: 'email_login');
       customSnackBar(scaffoldKey, error.message);
       // logoutCallback();
       return null;
@@ -95,8 +95,8 @@ class AuthState extends AppState {
   /// If user is old then it just `authenticate` user and return firebase user data
   Future<FirebaseUser> handleGoogleSignIn() async {
     try {
-      /// Record log in firebase analytics about Google login
-      analytics.logLogin(loginMethod: 'google_login');
+      /// Record log in firebase kAnalytics about Google login
+      kAnalytics.logLogin(loginMethod: 'google_login');
       final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
         throw Exception('Google login cancelled by user');
@@ -127,7 +127,7 @@ class AuthState extends AppState {
   createUserFromGoogleSignIn(FirebaseUser user) {
     var diff = DateTime.now().difference(user.metadata.creationTime);
     // Check if user is new or old
-    // If user is new then add new user to firebase realtime database
+    // If user is new then add new user to firebase realtime kDatabase
     if (diff < Duration(seconds: 15)) {
       User model = User(
         bio: 'Edit profile to update bio',
@@ -159,7 +159,7 @@ class AuthState extends AppState {
       );
       user = result.user;
       authStatus = AuthStatus.LOGGED_IN;
-      analytics.logSignUp(signUpMethod: 'register');
+      kAnalytics.logSignUp(signUpMethod: 'register');
       UserUpdateInfo updateInfo = UserUpdateInfo();
       updateInfo.displayName = userModel.displayName;
       updateInfo.photoUrl = userModel.profilePic;
@@ -184,16 +184,12 @@ class AuthState extends AppState {
     if (newUser) {
       // Create username by the combination of name and id
       user.userName = getUserName(id: user.userId, name: user.displayName);
-      analytics.logEvent(name: 'create_newUser');
+      kAnalytics.logEvent(name: 'create_newUser');
 
       // Time at which user is created
       user.createdAt = DateTime.now().toUtc().toString();
     }
-    _database
-        .reference()
-        .child('profile')
-        .child(user.userId)
-        .set(user.toJson());
+    kDatabase.child('profile').child(user.userId).set(user.toJson());
     _userModel = user;
     if (_profileUserModel != null) {
       _profileUserModel = _userModel;
@@ -231,7 +227,7 @@ class AuthState extends AppState {
     if (user.isEmailVerified) {
       userModel.isVerified = true;
       // If user verifed his email
-      // Update user in firebase realtime database
+      // Update user in firebase realtime kDatabase
       createUser(userModel);
       cprint('User email verification complete');
       logEvent('email_verification_complete',
@@ -241,7 +237,7 @@ class AuthState extends AppState {
   }
 
   /// Send email verification link to email2
-  Future<bool> sendEmailVerification(
+  Future<void> sendEmailVerification(
       GlobalKey<ScaffoldState> scaffoldKey) async {
     FirebaseUser user = await _firebaseAuth.currentUser();
     user.sendEmailVerification().then((_) {
@@ -319,14 +315,27 @@ class AuthState extends AppState {
     }
   }
 
+  /// `Fetch` user `detail` whoose userId is passed
+  Future<User> getuserDetail(String userId) async {
+    User user;
+    var snapshot = await kDatabase.child('profile').child(userId).once();
+    if (snapshot.value != null) {
+      var map = snapshot.value;
+      user = User.fromJson(map);
+      user.key = snapshot.key;
+      return user;
+    } else {
+      return null;
+    }
+  }
+
   /// Fetch user profile
   getProfileUser({String userProfileId}) {
     try {
       loading = true;
       _profileUserModel = null;
       userProfileId = userProfileId == null ? userId : userProfileId;
-      _database
-          .reference()
+      kDatabase
           .child("profile")
           .child(userProfileId)
           .once()
@@ -358,8 +367,7 @@ class AuthState extends AppState {
       loading = true;
       if (profileUserModel != null && profileUserModel.userId.isNotEmpty) {
         profileFollowingList = null;
-        _database
-            .reference()
+        kDatabase
             .child("followList")
             .child(profileUserModel.userId)
             .once()
@@ -417,8 +425,7 @@ class AuthState extends AppState {
         profileUserModel.followers = profileUserModel.followersList.length;
 
         /// Remove profile user from logged-in user following list
-        _database
-            .reference()
+        kDatabase
             .child("followList")
             .child(userModel.userId)
             .child("following")
@@ -438,8 +445,7 @@ class AuthState extends AppState {
         }
         profileUserModel.followers = profileUserModel.followersList.length;
         // Adding profile user to logged-in user's following list
-        _database
-            .reference()
+        kDatabase
             .child("followList")
             .child(userModel.userId)
             .child("following")
@@ -454,8 +460,7 @@ class AuthState extends AppState {
         cprint('user added to following list', event: 'add_follow');
       }
       // uppdate profile-user's by adding/removing follower
-      _database
-          .reference()
+      kDatabase
           .child('profile')
           .child(profileUserModel.userId)
           .set(profileUserModel.toJson());
@@ -468,6 +473,7 @@ class AuthState extends AppState {
     }
   }
 
+  /// Trigger when logged-in user's profile chanege
   void _onProfileChanged(Event event) {
     if (event.snapshot != null) {
       _userModel = User.fromJson(event.snapshot.value);

@@ -34,7 +34,7 @@ class _SearchPageState extends State<SearchPage> {
   Widget _userTile(User user) {
     return ListTile(
       onTap: () {
-        analytics.logViewSearchResults(searchTerm: user.userName);
+        kAnalytics.logViewSearchResults(searchTerm: user.userName);
         Navigator.of(context).pushNamed('/ProfilePage/' + user?.userId);
       },
       leading: customImage(context, user.profilePic, height: 40),

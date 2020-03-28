@@ -91,7 +91,7 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
     }
     var state = Provider.of<FeedState>(context, listen: false);
     var authState = Provider.of<AuthState>(context, listen: false);
-    screenloader.showLoader(context);
+    kScreenloader.showLoader(context);
     var user = authState.userModel;
     var profilePic = user.profilePic ?? dummyProfilePic;
     var tags = getHashTags(_textEditingController.text);
@@ -128,7 +128,7 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
         state.addcommentToPost(reply);
       }
     }
-    screenloader.hideLoader();
+    kScreenloader.hideLoader();
     Navigator.pop(context);
   }
 

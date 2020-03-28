@@ -76,7 +76,7 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
       return;
     }
     // state.isBusy = true;
-    screenloader.showLoader(context);
+    kScreenloader.showLoader(context);
     var name = authState.userModel.displayName ??
         authState.userModel.email.split('@')[0];
     var pic = authState.userModel.profilePic ?? dummyProfilePic;
@@ -107,7 +107,7 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
       state.createTweet(_model);
     }
     // state.isBusy = false;
-    screenloader.hideLoader();
+    kScreenloader.hideLoader();
     Navigator.pop(context);
   }
 

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/firebase_database.dart' as dabase;
 import 'package:firebase_storage/firebase_storage.dart';
@@ -12,7 +11,6 @@ import 'package:path/path.dart' as Path;
 // import 'authState.dart';
 
 class FeedState extends AppState {
-  final databaseReference = Firestore.instance;
   bool isBusy = false;
   Map<String, List<FeedModel>> tweetReplyMap = {};
   FeedModel _tweetToReplyModel;
@@ -22,7 +20,7 @@ class FeedState extends AppState {
   }
 
   List<FeedModel> _commentlist;
-  final FirebaseDatabase _database = FirebaseDatabase.instance;
+  
   List<FeedModel> _feedlist;
   dabase.Query _feedQuery;
   List<FeedModel> _tweetDetailModelList;
@@ -32,7 +30,7 @@ class FeedState extends AppState {
   List<FeedModel> get tweetDetailModel => _tweetDetailModelList;
 
   /// contain tweet list for home page
-  /// `feedlist` always [contain all tweets] fetched from firebase database
+  /// `feedlist` always [contain all tweets] fetched from firebase kDatabase
   List<FeedModel> get feedlist {
     if (_feedlist == null) {
       return null;
@@ -95,7 +93,7 @@ class FeedState extends AppState {
   Future<bool> databaseInit() {
     try {
       if (_feedQuery == null) {
-        _feedQuery = _database.reference().child("tweet");
+        _feedQuery = kDatabase.child("tweet");
         _feedQuery.onChildAdded.listen(_onTweetAdded);
         _feedQuery.onChildChanged.listen(_onTweetChanged);
         _feedQuery.onChildRemoved.listen(_onTweetRemoved);
@@ -108,7 +106,7 @@ class FeedState extends AppState {
     }
   }
 
-  /// get [Tweet list] from firebase realtime database
+  /// get [Tweet list] from firebase realtime kDatabase
   void getDataFromDatabase() {
     try {
       isBusy = true;
@@ -140,7 +138,7 @@ class FeedState extends AppState {
     }
   }
 
-  /// get [Tweet Detail] from firebase realtime database
+  /// get [Tweet Detail] from firebase realtime kDatabase
   void getpostDetailFromDatabase(String postID, {FeedModel model}) async {
     try {
       FeedModel _tweetDetail;
@@ -209,7 +207,7 @@ class FeedState extends AppState {
     }
   }
 
-  /// Fetch `Retweet` model from firebase realtime database.
+  /// Fetch `Retweet` model from firebase realtime kDatabase.
   /// Retweet itself  is a type of `Tweet`
   Future<FeedModel> fetchTweet(String postID) async {
     FeedModel _tweetDetail;
@@ -232,11 +230,11 @@ class FeedState extends AppState {
 
   /// create [New Tweet]
   createTweet(FeedModel model) {
-    ///  Create tweet in [Firebase database]
+    ///  Create tweet in [Firebase kDatabase]
     isBusy = true;
     notifyListeners();
     try {
-      _database.reference().child('tweet').push().set(model.toJson());
+      kDatabase.child('tweet').push().set(model.toJson());
     } catch (error) {
       cprint(error, errorIn: 'createTweet');
     }
@@ -244,7 +242,7 @@ class FeedState extends AppState {
     notifyListeners();
   }
 
-  ///  It will create tweet in [Firebase database] just like other normal tweet.
+  ///  It will create tweet in [Firebase kDatabase] just like other normal tweet.
   ///  update retweet count for retweet model
   createReTweet(FeedModel model) {
     try {
@@ -256,14 +254,13 @@ class FeedState extends AppState {
     }
   }
 
-  /// [Delete tweet] in Firebase database
+  /// [Delete tweet] in Firebase kDatabase
   /// Remove Tweet if present in home page Tweet list
   /// Remove Tweet if present in Tweet detail page or in comment
   deleteTweet(String tweetId, TweetType type, {String parentkey}) {
-   
     try {
       /// Delete tweet if it is in nested tweet detail page
-      _database.reference().child('tweet').child(tweetId).remove().then((_) {
+      kDatabase.child('tweet').child(tweetId).remove().then((_) {
         if (type == TweetType.Detail &&
             _tweetDetailModelList != null &&
             _tweetDetailModelList.length > 0) {
@@ -328,18 +325,13 @@ class FeedState extends AppState {
 
   /// [update] tweet
   updateTweet(FeedModel model) async {
-    await _database
-        .reference()
-        .child('tweet')
-        .child(model.key)
-        .set(model.toJson());
+    await kDatabase.child('tweet').child(model.key).set(model.toJson());
   }
 
   /// Add/Remove like on a Tweet
   /// [postId] is tweet id, [userId] is user's id who like/unlike Tweet
   addLikeToTweet(FeedModel tweet, String userId) {
     try {
-      
       if (tweet.likeList != null &&
           tweet.likeList.length > 0 &&
           tweet.likeList.any((x) => x.userId == userId)) {
@@ -349,8 +341,7 @@ class FeedState extends AppState {
         // If user unlike Tweet
         tweet.likeCount -= 1;
         updateTweet(tweet);
-        _database
-            .reference()
+        kDatabase
             .child('notification')
             .child(tweet.userId)
             .child(
@@ -361,15 +352,13 @@ class FeedState extends AppState {
             .remove();
       } else {
         // If user like Tweet
-        _database
-            .reference()
+        kDatabase
             .child('tweet')
             .child(tweet.key)
             .child('likeList')
             .child(userId)
             .set({'userId': userId});
-        _database
-            .reference()
+        kDatabase
             .child('notification')
             .child(tweet.userId)
             .child(
@@ -394,7 +383,7 @@ class FeedState extends AppState {
         FeedModel tweet =
             _feedlist.firstWhere((x) => x.key == _tweetToReplyModel.key);
         var json = replyTweet.toJson();
-        _database.reference().child('tweet').push().set(json).then((value) {
+        kDatabase.child('tweet').push().set(json).then((value) {
           tweet.replyTweetKeyList.add(_feedlist.last.key);
           updateTweet(tweet);
         });
@@ -454,6 +443,7 @@ class FeedState extends AppState {
   _onTweetAdded(Event event) {
     FeedModel tweet = FeedModel.fromJson(event.snapshot.value);
     tweet.key = event.snapshot.key;
+
     /// Check if Tweet is a comment
     _onCommentAdded(tweet);
     tweet.key = event.snapshot.key;
@@ -474,8 +464,7 @@ class FeedState extends AppState {
   /// If Yes it will add tweet in comment list.
   /// add [new tweet] comment to comment list
   _onCommentAdded(FeedModel tweet) {
-    
-    if(tweet.childRetwetkey != null){
+    if (tweet.childRetwetkey != null) {
       /// if Tweet is a type of retweet then it can not be a comment.
       return;
     }

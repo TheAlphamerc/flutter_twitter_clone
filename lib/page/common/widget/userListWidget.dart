@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
-import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
+import 'package:flutter_twitter_clone/state/authState.dart';
+import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/state/notificationState.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/emptyList.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/rippleButton.dart';
-import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 import 'package:provider/provider.dart';
 
 class UserListWidget extends StatelessWidget {
@@ -16,16 +16,16 @@ class UserListWidget extends StatelessWidget {
   final fetchingListbool;
   final String emptyScreenText;
   final String emptyScreenSubTileText;
-  final bool isFollowing;
-  const UserListWidget(
+  String myId;
+  UserListWidget(
       {Key key,
       this.list,
       this.emptyScreenText,
-      this.isFollowing = false,
       this.fetchingListbool,
       this.emptyScreenSubTileText})
       : super(key: key);
   Widget _userTile(BuildContext context, User user) {
+    bool isFollow = isFollowing(user);
     return Container(
       padding: EdgeInsets.symmetric(vertical: 10),
       color: TwitterColor.white,
@@ -70,19 +70,18 @@ class UserListWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(25),
                 child: Container(
                   padding: EdgeInsets.symmetric(
-                      horizontal: isFollowing ? 15 : 20, vertical: 3),
+                      horizontal: isFollow ? 15 : 20, vertical: 3),
                   decoration: BoxDecoration(
-                    color: isFollowing
-                        ? TwitterColor.dodgetBlue
-                        : TwitterColor.white,
+                    color:
+                        isFollow ? TwitterColor.dodgetBlue : TwitterColor.white,
                     border:
                         Border.all(color: TwitterColor.dodgetBlue, width: 1),
                     borderRadius: BorderRadius.circular(25),
                   ),
                   child: Text(
-                    isFollowing ? 'Following' : 'Follow',
+                    isFollow ? 'Following' : 'Follow',
                     style: TextStyle(
-                        color: isFollowing ? TwitterColor.white : Colors.blue,
+                        color: isFollow ? TwitterColor.white : Colors.blue,
                         fontSize: 17,
                         fontWeight: FontWeight.bold),
                   ),
@@ -110,17 +109,27 @@ class UserListWidget extends StatelessWidget {
         return bio;
       }
     }
-   return null;
+    return null;
+  }
+
+  bool isFollowing(User model) {
+    if (model.followersList != null &&
+        model.followersList.any((x) => x == myId)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    var notificationState = Provider.of<NotificationState>(context);
+    var state = Provider.of<AuthState>(context, listen: false);
+    myId = state.userModel.key;
     return list != null && list.isNotEmpty
         ? ListView.separated(
             itemBuilder: (context, index) {
               return FutureBuilder(
-                future: notificationState.getuserDetail(list[index]),
+                future: state.getuserDetail(list[index]),
                 builder: (context, AsyncSnapshot<User> snapshot) {
                   if (snapshot.hasData) {
                     return _userTile(context, snapshot.data);
