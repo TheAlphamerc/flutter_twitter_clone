@@ -36,7 +36,7 @@ class TweetIconsRow extends StatelessWidget {
             onPressed: (){
               var state = Provider.of<FeedState>(context,);
               state.setTweetToReply = model;
-              Navigator.of(context).pushNamed('/FeedPostReplyPage');
+              Navigator.of(context).pushNamed('/ComposeTweetPage');
             },),
           _iconWidget(
             context,
@@ -88,7 +88,7 @@ class TweetIconsRow extends StatelessWidget {
   }
   Widget _timeWidget(BuildContext context){
    return Column(children: <Widget>[
-     SizedBox(height: 5,),
+     SizedBox(height: 8,),
       Row(
         children: <Widget>[
           SizedBox(width: 5,),
@@ -97,7 +97,7 @@ class TweetIconsRow extends StatelessWidget {
           SizedBox(
             width: 10,
           ),
-          customText('Twitter for Android',
+          customText('Fwitter for Android',
               style: TextStyle(color: Theme.of(context).primaryColor))
         ],
     ),

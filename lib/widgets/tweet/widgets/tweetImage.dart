@@ -1,51 +1,59 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_twitter_clone/helper/enum.dart';
+import 'package:flutter_twitter_clone/model/feedModel.dart';
+import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
+import 'package:provider/provider.dart';
 
 class TweetImage extends StatelessWidget {
-  final File image;
-  final Function onCrossIconPressed;
-  const TweetImage({Key key, this.image, this.onCrossIconPressed})
+  const TweetImage(
+      {Key key, this.model, this.type, this.isRetweetImage = false})
       : super(key: key);
+
+  final FeedModel model;
+  final TweetType type;
+  final bool isRetweetImage;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: image == null
-          ? Container()
-          : Stack(
-              children: <Widget>[
-                Container(
-                  alignment: Alignment.topRight,
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 500),
+      alignment: Alignment.centerRight,
+      child: model.imagePath == null
+          ? SizedBox.shrink()
+          : Padding(
+              padding: EdgeInsets.only(
+                top: 8,
+              ),
+              child: InkWell(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(isRetweetImage ? 0 : 20),
+                ),
+                onTap: () {
+                  var state = Provider.of<FeedState>(context, listen: false);
+                  state.getpostDetailFromDatabase(model.key);
+                  state.setTweetToReply = model;
+                  Navigator.pushNamed(context, '/ImageViewPge');
+                },
+                child: ClipRRect(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(isRetweetImage ? 0 : 20),
+                  ),
                   child: Container(
-                    height: 220,
-                    width: fullWidth(context) * .8,
+                    width: fullWidth(context) *
+                            (type == TweetType.Detail ? .95 : .8) -
+                        8,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      image: DecorationImage(
-                          image: FileImage(image), fit: BoxFit.cover),
+                      color: Theme.of(context).backgroundColor,
+                    ),
+                    child: AspectRatio(
+                      aspectRatio: 4 / 3,
+                      child: customNetworkImage(model.imagePath,
+                          fit: BoxFit.cover),
                     ),
                   ),
                 ),
-                Align(
-                  alignment: Alignment.topRight,
-                  child: Container(
-                    padding: EdgeInsets.all(0),
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle, color: Colors.black54),
-                    child: IconButton(
-                      padding: EdgeInsets.all(0),
-                      iconSize: 20,
-                      onPressed: onCrossIconPressed,
-                      icon: Icon(
-                        Icons.close,
-                        color: Theme.of(context).colorScheme.onPrimary,
-                      ),
-                    ),
-                  ),
-                )
-              ],
+              ),
             ),
     );
   }

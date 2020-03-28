@@ -4,12 +4,12 @@ import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
+import 'package:flutter_twitter_clone/page/feed/composeTweet/widget/composeBottomIconWidget.dart';
+import 'package:flutter_twitter_clone/page/feed/composeTweet/widget/composeTweetImage.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
-import 'package:flutter_twitter_clone/widgets/tweet/widgets/bottomIconWidget.dart';
-import 'package:flutter_twitter_clone/widgets/tweet/widgets/tweetImage.dart';
 import 'package:provider/provider.dart';
 
 class CreateFeedPage extends StatefulWidget {
@@ -151,7 +151,7 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
                         )
                       ],
                     ),
-                    TweetImage(
+                    ComposeTweetImage(
                       image: _image,
                       onCrossIconPressed: () {
                         setState(() {
@@ -165,7 +165,7 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
             ),
             Align(
               alignment: Alignment.bottomCenter,
-              child: BottomIconWidget(
+              child: ComposeBottomIconWidget(
                 textEditingController: _textEditingController,
                 onImageIconSelcted: (file) {
                   setState(() {

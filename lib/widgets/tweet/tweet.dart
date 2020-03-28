@@ -12,7 +12,7 @@ import 'package:flutter_twitter_clone/widgets/tweet/widgets/tweetIconsRow.dart';
 import 'package:provider/provider.dart';
 
 import '../customWidgets.dart';
-
+import 'widgets/tweetImage.dart';
 
 class Tweet extends StatelessWidget {
   final FeedModel model;
@@ -26,41 +26,6 @@ class Tweet extends StatelessWidget {
       this.type = TweetType.Tweet,
       this.isDisplayOnProfile = false})
       : super(key: key);
-
-  Widget _tweetImage(BuildContext context, String _image, String key) {
-    return _image == null
-        ? Container()
-        : Container(
-            alignment: Alignment.centerRight,
-            padding: EdgeInsets.only(right: 16),
-            child: InkWell(
-              borderRadius: BorderRadius.all(
-                Radius.circular(20),
-              ),
-              onTap: () {
-                var state = Provider.of<FeedState>(context, listen: false);
-                state.getpostDetailFromDatabase(key);
-                state.setTweetToReply = model;
-                Navigator.pushNamed(context, '/ImageViewPge');
-              },
-              child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-                child: Container(
-                  width: fullWidth(context) *
-                          (type == TweetType.Detail ? .95 : .8) -
-                      8,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).backgroundColor,
-                  ),
-                  child: AspectRatio(
-                    aspectRatio: 4 / 3,
-                    child: customNetworkImage(_image, fit: BoxFit.cover),
-                  ),
-                ),
-              ),
-            ),
-          );
-  }
 
   Widget _detailTweet(BuildContext context) {
     return Column(
@@ -262,7 +227,10 @@ class Tweet extends StatelessWidget {
                 ? _tweet(context)
                 : _detailTweet(context),
           ),
-          _tweetImage(context, model.imagePath, model.key),
+          Padding(
+            padding: EdgeInsets.only(right: 16),
+            child: TweetImage(model: model, type: type,),
+          ),
           model.childRetwetkey == null
               ? SizedBox.shrink()
               : RetweetWidget(
@@ -304,6 +272,7 @@ class RetweetWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Container(
+          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
           width: fullWidth(context) - 12,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -350,15 +319,20 @@ class RetweetWidget extends StatelessWidget {
             ],
           ),
         ),
-        UrlText(
-          text: model.description,
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 14,
-            fontWeight: FontWeight.w400,
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8),
+          child: UrlText(
+            text: model.description,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+            ),
+            urlStyle:
+                TextStyle(color: Colors.blue, fontWeight: FontWeight.w400),
           ),
-          urlStyle: TextStyle(color: Colors.blue, fontWeight: FontWeight.w400),
         ),
+        TweetImage(model: model, type: type, isRetweetImage: true),
       ],
     );
   }
@@ -387,14 +361,16 @@ class RetweetWidget extends StatelessWidget {
                 Navigator.of(context)
                     .pushNamed('/FeedPostDetail/' + snapshot.data.key);
               },
-              child: Padding(
-                padding: EdgeInsets.all(8),
+              child: ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(15)),
                 child: _tweet(context, snapshot.data),
               ),
             ),
           );
-        } 
-        if((snapshot.connectionState == ConnectionState.done || snapshot.connectionState == ConnectionState.waiting) && !snapshot.hasData){
+        }
+        if ((snapshot.connectionState == ConnectionState.done ||
+                snapshot.connectionState == ConnectionState.waiting) &&
+            !snapshot.hasData) {
           return AnimatedContainer(
             duration: Duration(milliseconds: 500),
             height: 40,
@@ -409,13 +385,20 @@ class RetweetWidget extends StatelessWidget {
               border: Border.all(color: AppColor.extraLightGrey, width: .5),
               borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
-            child: snapshot.connectionState == ConnectionState.waiting ? LinearProgressIndicator(
-              valueColor: AlwaysStoppedAnimation(TwitterColor.dodgetBlue),
-            ) :
-            Text('This Tweet is unavailable', style: userNameStyle,),
+            child: snapshot.connectionState == ConnectionState.waiting
+                ? SizedBox(
+                  height: 2,
+                  child:  LinearProgressIndicator(
+                    backgroundColor: AppColor.extraLightGrey,
+                    valueColor: AlwaysStoppedAnimation(AppColor.darkGrey.withOpacity(.3),),
+                  ),
+                )
+                : Text(
+                    'This Tweet is unavailable',
+                    style: userNameStyle,
+                  ),
           );
-        }
-        else {
+        } else {
           return SizedBox.shrink();
         }
       },

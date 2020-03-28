@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
@@ -7,25 +6,24 @@ import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
+import 'package:flutter_twitter_clone/page/feed/composeTweet/widget/composeBottomIconWidget.dart';
+import 'package:flutter_twitter_clone/page/feed/composeTweet/widget/composeTweetImage.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
-import 'package:flutter_twitter_clone/widgets/tweet/widgets/bottomIconWidget.dart';
-import 'package:flutter_twitter_clone/widgets/tweet/widgets/tweetImage.dart';
 import 'package:provider/provider.dart';
 
+class ComposeTweetPage extends StatefulWidget {
+  ComposeTweetPage({Key key, this.isRetweet, this.isTweet = true}) : super(key: key);
 
-class FeedPostReplyPage extends StatefulWidget {
-  FeedPostReplyPage({Key key, this.isRetweet}) : super(key: key);
-
-  // final String postId;
   final bool isRetweet;
-  _FeedPostReplyPageState createState() => _FeedPostReplyPageState();
+  final bool isTweet;
+  _ComposeTweetReplyPageState createState() => _ComposeTweetReplyPageState();
 }
 
-class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
+class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
   bool isScrollingDown = false;
   FeedModel model;
   ScrollController scrollcontroller;
@@ -42,7 +40,6 @@ class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
 
   @override
   void initState() {
-    // postId = widget.postId;
     var feedState = Provider.of<FeedState>(context, listen: false);
     model = feedState.tweetToReplyModel;
     scrollcontroller = ScrollController();
@@ -92,8 +89,8 @@ class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
         _textEditingController.text.length > 280) {
       return;
     }
-    var state = Provider.of<FeedState>(context);
-    var authState = Provider.of<AuthState>(context);
+    var state = Provider.of<FeedState>(context, listen: false);
+    var authState = Provider.of<AuthState>(context, listen: false);
     screenloader.showLoader(context);
     var user = authState.userModel;
     var profilePic = user.profilePic ?? dummyProfilePic;
@@ -137,16 +134,14 @@ class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
 
   @override
   Widget build(BuildContext context) {
-    var state = Provider.of<FeedState>(
-      context,
-    );
+    var state = Provider.of<FeedState>(context);
 
     return Scaffold(
       appBar: CustomAppBar(
         title: customTitleText(''),
         onActionPressed: _submitButton,
         isCrossButton: true,
-        submitButtonText: widget.isRetweet ? 'Retweet' : 'Reply',
+        submitButtonText: widget.isTweet ? 'Tweet' : widget.isRetweet ? 'Retweet' : 'Reply',
         isSubmitDisable: _textEditingController.text == null ||
             _textEditingController.text.isEmpty ||
             _textEditingController.text.length > 280 ||
@@ -160,12 +155,12 @@ class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
             SingleChildScrollView(
               controller: scrollcontroller,
               child: widget.isRetweet
-                  ? _FeedPostRetweetPageView(this)
-                  : _FeedPostReplyPageView(this),
+                  ? _ComposeRetweet(this)
+                  : _ComposeTweet(this),
             ),
             Align(
               alignment: Alignment.bottomCenter,
-              child: BottomIconWidget(
+              child: ComposeBottomIconWidget(
                 textEditingController: _textEditingController,
                 onImageIconSelcted: _onImageIconSelcted,
               ),
@@ -177,11 +172,11 @@ class _FeedPostReplyPageState extends State<FeedPostReplyPage> {
   }
 }
 
-class _FeedPostRetweetPageView
-    extends WidgetView<FeedPostReplyPage, _FeedPostReplyPageState> {
-  _FeedPostRetweetPageView(this.viewState) : super(viewState);
+class _ComposeRetweet
+    extends WidgetView<ComposeTweetPage, _ComposeTweetReplyPageState> {
+  _ComposeRetweet(this.viewState) : super(viewState);
 
-  final _FeedPostReplyPageState viewState;
+  final _ComposeTweetReplyPageState viewState;
   Widget _tweet(BuildContext context, FeedModel model) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -283,12 +278,14 @@ class _FeedPostRetweetPageView
             Expanded(
               child: _descriptionEntry(),
             ),
-            SizedBox(width: 16,)
+            SizedBox(
+              width: 16,
+            )
           ],
         ),
         Padding(
           padding: EdgeInsets.only(right: 16, left: 80, bottom: 8),
-          child: TweetImage(
+          child: ComposeTweetImage(
             image: viewState._image,
             onCrossIconPressed: viewState._onCrossIconPressed,
           ),
@@ -308,11 +305,11 @@ class _FeedPostRetweetPageView
   }
 }
 
-class _FeedPostReplyPageView
-    extends WidgetView<FeedPostReplyPage, _FeedPostReplyPageState> {
-  _FeedPostReplyPageView(this.viewState) : super(viewState);
+class _ComposeTweet
+    extends WidgetView<ComposeTweetPage, _ComposeTweetReplyPageState> {
+  _ComposeTweet(this.viewState) : super(viewState);
 
-  final _FeedPostReplyPageState viewState;
+  final _ComposeTweetReplyPageState viewState;
 
   Widget _descriptionEntry() {
     return TextField(
@@ -321,7 +318,7 @@ class _FeedPostReplyPageView
       maxLines: null,
       decoration: InputDecoration(
           border: InputBorder.none,
-          hintText: 'Tweet your reply',
+          hintText: widget.isTweet ?  'What\'s happening?' : 'Tweet your reply',
           hintStyle: TextStyle(fontSize: 18)),
     );
   }
@@ -434,6 +431,7 @@ class _FeedPostReplyPageView
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                viewState.widget.isTweet ? SizedBox.shrink() :
                 _tweerCard(context),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -447,7 +445,7 @@ class _FeedPostReplyPageView
                     )
                   ],
                 ),
-                TweetImage(
+                ComposeTweetImage(
                   image: viewState._image,
                   onCrossIconPressed: viewState._onCrossIconPressed,
                 ),

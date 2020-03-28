@@ -30,9 +30,9 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
   Widget _floatingActionButton() {
     return FloatingActionButton(
       onPressed: () {
-         var state = Provider.of<FeedState>(context,);
-              state.setTweetToReply = state.tweetDetailModel?.last;
-        Navigator.of(context).pushNamed('/FeedPostReplyPage/' + postId);
+        var state = Provider.of<FeedState>(context, listen: false);
+        state.setTweetToReply = state.tweetDetailModel?.last;
+        Navigator.of(context).pushNamed('/ComposeTweetPage/' + postId);
       },
       child: Icon(Icons.add),
     );
@@ -57,12 +57,8 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
   }
 
   void addLikeToComment(String commentId) {
-    var state = Provider.of<FeedState>(
-      context,
-    );
-    var authState = Provider.of<AuthState>(
-      context,
-    );
+    var state = Provider.of<FeedState>(context, listen: false);
+    var authState = Provider.of<AuthState>(context, listen: false);
     state.addLikeToTweet(state.tweetDetailModel.last, authState.userId);
   }
 
@@ -71,9 +67,7 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
   }
 
   void deleteTweet(TweetType type, String tweetId, {String parentkey}) {
-    var state = Provider.of<FeedState>(
-      context,
-    );
+    var state = Provider.of<FeedState>(context, listen: false);
     state.deleteTweet(tweetId, type, parentkey: parentkey);
     Navigator.of(context).pop();
     if (type == TweetType.Detail) Navigator.of(context).pop();
@@ -81,14 +75,11 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
 
   @override
   Widget build(BuildContext context) {
-    var state = Provider.of<FeedState>(
-      context,
-    );
+    var state = Provider.of<FeedState>(context);
     return WillPopScope(
       onWillPop: () async {
-        Provider.of<FeedState>(
-          context,
-        ).removeLastTweetDetail(postId);
+        Provider.of<FeedState>(context, listen: false)
+            .removeLastTweetDetail(postId);
         return Future.value(true);
       },
       child: Scaffold(

@@ -331,9 +331,9 @@ class TweetBottomSheet {
             // Prepare current Tweet model to reply 
             state.setTweetToReply = model;
             Navigator.pop(context);
-            /// `/FeedPostReplyPage/retweet` route is used to identify that tweet is going to be retweet.
-            /// To simple reply on any `Tweet` use `FeedPostReplyPage` route.
-            Navigator.of(context).pushNamed('/FeedPostReplyPage/retweet');
+            /// `/ComposeTweetPage/retweet` route is used to identify that tweet is going to be retweet.
+            /// To simple reply on any `Tweet` use `ComposeTweetPage` route.
+            Navigator.of(context).pushNamed('/ComposeTweetPage/retweet');
           },
         )
       ],

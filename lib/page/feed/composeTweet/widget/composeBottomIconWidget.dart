@@ -6,17 +6,17 @@ import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:image_picker/image_picker.dart';
 
-class BottomIconWidget extends StatefulWidget {
+class ComposeBottomIconWidget extends StatefulWidget {
   
   final TextEditingController textEditingController;
   final Function(File) onImageIconSelcted;
-  BottomIconWidget({Key key, this.textEditingController, this.onImageIconSelcted}) : super(key: key);
+  ComposeBottomIconWidget({Key key, this.textEditingController, this.onImageIconSelcted}) : super(key: key);
   
   @override
-  _BottomIconWidgetState createState() => _BottomIconWidgetState();
+  _ComposeBottomIconWidgetState createState() => _ComposeBottomIconWidgetState();
 }
 
-class _BottomIconWidgetState extends State<BottomIconWidget> {
+class _ComposeBottomIconWidgetState extends State<ComposeBottomIconWidget> {
 
  bool reachToWarning = false;
  bool reachToOver = false;

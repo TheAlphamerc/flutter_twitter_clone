@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/page/Auth/selectAuthMethod.dart';
 import 'package:flutter_twitter_clone/page/Auth/verifyEmail.dart';
 import 'package:flutter_twitter_clone/page/common/splash.dart';
+import 'package:flutter_twitter_clone/page/feed/composeTweet/composeTweet.dart';
 import 'package:flutter_twitter_clone/page/feed/composeTweet/createFeed.dart';
-import 'package:flutter_twitter_clone/page/feed/composeTweet/feedPostreply.dart';
 import 'package:flutter_twitter_clone/page/message/conversationInformation/conversationInformation.dart';
 import 'package:flutter_twitter_clone/page/message/newMessagePage.dart';
 import 'package:flutter_twitter_clone/page/profile/follow/followerListPage.dart';
@@ -68,13 +68,17 @@ class Routes{
      else if(pathElements[1].contains('CreateFeedPage')){
         return CustomRoute<bool>(builder:(BuildContext context)=> CreateFeedPage(),settings: RouteSettings(name:'CreateFeedPage'));
      }
-     else if(pathElements[1].contains('FeedPostReplyPage')){
+     else if(pathElements[1].contains('ComposeTweetPage')){
       //  var postId = pathElements[2];
        bool isRetweet = false;
+       bool isTweet = false;
        if(pathElements.length == 3 && pathElements[2].contains('retweet')){
          isRetweet = true;
        }
-        return CustomRoute<bool>(builder:(BuildContext context)=> FeedPostReplyPage(isRetweet:isRetweet),settings: RouteSettings(name:'FeedPostReplyPage'));
+       else if(pathElements.length == 3 && pathElements[2].contains('tweet')){
+         isTweet = true;
+       }
+        return CustomRoute<bool>(builder:(BuildContext context)=> ComposeTweetPage(isRetweet:isRetweet, isTweet: isTweet),settings: RouteSettings(name:'ComposeTweetPage'));
      }
      else if(pathElements[1].contains('FeedPostDetail')){
        var postId = pathElements[2];

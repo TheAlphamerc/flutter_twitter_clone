@@ -35,7 +35,7 @@ class _FeedPageState extends State<FeedPage> {
   Widget _floatingActionButton() {
     return FloatingActionButton(
       onPressed: () {
-        Navigator.of(context).pushNamed('/CreateFeedPage');
+        Navigator.of(context).pushNamed('/CreateFeedPage/tweet');
       },
       child: customIcon(
         context,
