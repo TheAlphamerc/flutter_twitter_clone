@@ -61,15 +61,23 @@ class Routes{
           isTweet = true;
         }
         return CustomRoute<bool>(builder:(BuildContext context)=> ComposeTweetPage(isRetweet:isRetweet, isTweet: isTweet));
-      case "FeedPostDetail":var postId = pathElements[2];
-        return SlideLeftRoute<bool>(builder:(BuildContext context)=> FeedPostDetail(postId: postId,),settings: RouteSettings(name:'FeedPostDetail'));
+      case "FeedPostDetail":
+        var postId = pathElements[2];
+          return SlideLeftRoute<bool>(builder:(BuildContext context)=> FeedPostDetail(postId: postId,),settings: RouteSettings(name:'FeedPostDetail'));
+        case "ProfilePage":
+         String profileId;
+         if(pathElements.length > 2){
+             profileId = pathElements[2];
+         }
+        return CustomRoute<bool>(builder:(BuildContext context)=> ProfilePage(
+          profileId: profileId,
+        )); 
       case "WelcomePage":return CustomRoute<bool>(builder:(BuildContext context)=> WelcomePage()); 
       case "SignIn":return CustomRoute<bool>(builder:(BuildContext context)=> SignIn()); 
       case "SignUp":return CustomRoute<bool>(builder:(BuildContext context)=> Signup()); 
       case "ForgetPasswordPage":return CustomRoute<bool>(builder:(BuildContext context)=> ForgetPasswordPage()); 
       case "CreateFeedPage":return CustomRoute<bool>(builder:(BuildContext context)=> CreateFeedPage(),); 
       case "SearchPage":return CustomRoute<bool>(builder:(BuildContext context)=> SearchPage()); 
-      case "ProfilePage":return CustomRoute<bool>(builder:(BuildContext context)=> ProfilePage()); 
       case "ImageViewPge":return CustomRoute<bool>(builder:(BuildContext context)=> ImageViewPge());
       case "EditProfile":return CustomRoute<bool>(builder:(BuildContext context)=> EditProfilePage()); 
       case "ChatScreenPage":return CustomRoute<bool>(builder:(BuildContext context)=> ChatScreenPage()); 
