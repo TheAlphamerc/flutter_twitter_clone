@@ -50,112 +50,48 @@ class Routes{
      if (pathElements[0] != '' || pathElements.length == 1) {
        return null;
      }
-     if(pathElements[1].contains('SignIn')){
-       return CustomRoute<bool>(
-         builder:(BuildContext context)=> SignIn(),
-         settings: RouteSettings(name:'SignIn')
-         );
-     }
-     else if(pathElements[1].contains('WelcomePage')){
-       return CustomRoute<bool>(builder:(BuildContext context)=> WelcomePage(),settings: RouteSettings(name:'WelcomePage'));
-     }
-     else if(pathElements[1].contains('SignUp')){
-       return CustomRoute<bool>(builder:(BuildContext context)=> Signup(),settings: RouteSettings(name:'Signup'));
-     }
-     else if(pathElements[1].contains('SearchPage')){
-        return CustomRoute<bool>(builder:(BuildContext context)=> SearchPage(),settings: RouteSettings(name:'SearchPage'));
-     }
-     else if(pathElements[1].contains('CreateFeedPage')){
-        return CustomRoute<bool>(builder:(BuildContext context)=> CreateFeedPage(),settings: RouteSettings(name:'CreateFeedPage'));
-     }
-     else if(pathElements[1].contains('ComposeTweetPage')){
-      //  var postId = pathElements[2];
-       bool isRetweet = false;
-       bool isTweet = false;
-       if(pathElements.length == 3 && pathElements[2].contains('retweet')){
-         isRetweet = true;
-       }
-       else if(pathElements.length == 3 && pathElements[2].contains('tweet')){
-         isTweet = true;
-       }
-        return CustomRoute<bool>(builder:(BuildContext context)=> ComposeTweetPage(isRetweet:isRetweet, isTweet: isTweet),settings: RouteSettings(name:'ComposeTweetPage'));
-     }
-     else if(pathElements[1].contains('FeedPostDetail')){
-       var postId = pathElements[2];
+     switch (pathElements[1]) {
+      case "ComposeTweetPage": 
+        bool isRetweet = false;
+        bool isTweet = false;
+        if(pathElements.length == 3 && pathElements[2].contains('retweet')){
+          isRetweet = true;
+        }
+        else if(pathElements.length == 3 && pathElements[2].contains('tweet')){
+          isTweet = true;
+        }
+        return CustomRoute<bool>(builder:(BuildContext context)=> ComposeTweetPage(isRetweet:isRetweet, isTweet: isTweet));
+      case "FeedPostDetail":var postId = pathElements[2];
         return SlideLeftRoute<bool>(builder:(BuildContext context)=> FeedPostDetail(postId: postId,),settings: RouteSettings(name:'FeedPostDetail'));
-     }
-    else if(pathElements[1].contains('ForgetPasswordPage')){
-        return CustomRoute<bool>(builder:(BuildContext context)=> ForgetPasswordPage(),settings: RouteSettings(name:'ForgetPasswordPage'));
-     }
-     else if(pathElements[1].contains('ImageViewPge')){
-        return CustomRoute<bool>(builder:(BuildContext context)=> ImageViewPge(),settings: RouteSettings(name:'ImageViewPge'));
-     }
-     else if(pathElements[1].contains('ProfilePage')){
-        String profileId;
-       if(pathElements.length > 2){
-           profileId = pathElements[2];
-       }
-        return CustomRoute<bool>(builder:(BuildContext context)=> ProfilePage(profileId: profileId,),settings: RouteSettings(name:'ProfilePage'));
-     }
-     else if(pathElements[1].contains('EditProfile')){
-        return CustomRoute<bool>(builder:(BuildContext context)=> EditProfilePage(),settings: RouteSettings(name:'EditProfile'));
-     }
-     else if(pathElements[1].contains('ChatScreenPage')){
-        return CustomRoute<bool>(builder:(BuildContext context)=> ChatScreenPage(),settings: RouteSettings(name:'ChatScreenPage'));
-     }
-     else if(pathElements[1].contains('NewMessagePage')){
-        return CustomRoute<bool>(builder:(BuildContext context)=> NewMessagePage(),settings: RouteSettings(name:'NewMessagePage'));
-     }
-     else if(pathElements[1].contains('SettingsAndPrivacyPage')){
-        return SlideLeftRoute<bool>(builder:(BuildContext context)=> SettingsAndPrivacyPage(),settings: RouteSettings(name:'SettingsAndPrivacyPage'));
-     }
-     else if(pathElements[1].contains('AccountSettingsPage')){
-        return SlideLeftRoute<bool>(builder:(BuildContext context)=> AccountSettingsPage(),settings: RouteSettings(name:'AccountSettingsPage'));
-     }
-     else if(pathElements[1].contains('PrivacyAndSaftyPage')){
-        return SlideLeftRoute<bool>(builder:(BuildContext context)=> PrivacyAndSaftyPage(),settings: RouteSettings(name:'PrivacyAndSaftyPage'));
-     }
-     else if(pathElements[1].contains('NotificationPage')){
-        return SlideLeftRoute<bool>(builder:(BuildContext context)=> NotificationPage(),settings: RouteSettings(name:'NotificationPage'));
-     }
-     else if(pathElements[1].contains('ContentPrefrencePage')){
-        return SlideLeftRoute<bool>(builder:(BuildContext context)=> ContentPrefrencePage(),settings: RouteSettings(name:'ContentPrefrencePage'));
-     }
-     else if(pathElements[1].contains('DisplayAndSoundPage')){
-        return SlideLeftRoute<bool>(builder:(BuildContext context)=> DisplayAndSoundPage(),settings: RouteSettings(name:'DisplayAndSoundPage'));
-     }
-     else if(pathElements[1].contains('DirectMessagesPage')){
-        return SlideLeftRoute<bool>(builder:(BuildContext context)=> DirectMessagesPage(),settings: RouteSettings(name:'DirectMessagesPage'));
-     }
-     else if(pathElements[1].contains('TrendsPage')){
-        return SlideLeftRoute<bool>(builder:(BuildContext context)=> TrendsPage(),settings: RouteSettings(name:'TrendsPage'));
-     }
-     else if(pathElements[1].contains('DataUsagePage')){
-       return SlideLeftRoute<bool>(builder:(BuildContext context)=> DataUsagePage(),settings: RouteSettings(name:'DataUsagePage'));
-     }
-     else if(pathElements[1].contains('AccessibilityPage')){
-       return SlideLeftRoute<bool>(builder:(BuildContext context)=> AccessibilityPage(),settings: RouteSettings(name:'AccessibilityPage'));
-     }
-     else if(pathElements[1].contains('ProxyPage')){
-       return SlideLeftRoute<bool>(builder:(BuildContext context)=> ProxyPage(),settings: RouteSettings(name:'ProxyPage'));
-     }
-     else if(pathElements[1].contains('AboutPage')){
-       return SlideLeftRoute<bool>(builder:(BuildContext context)=> AboutPage(),settings: RouteSettings(name:'AboutPage'));
-     }
-      else if(pathElements[1].contains('ConversationInformation')){
-       return SlideLeftRoute<bool>(builder:(BuildContext context)=> ConversationInformation(),settings: RouteSettings(name:'ConversationInformation'));
-     }
-     else if(pathElements[1].contains('FollowingListPage')){
-       return SlideLeftRoute<bool>(builder:(BuildContext context)=> FollowingListPage(),settings: RouteSettings(name:'FollowingListPage'));
-     }
-     else if(pathElements[1].contains('FollowerListPage')){
-       return SlideLeftRoute<bool>(builder:(BuildContext context)=> FollowerListPage(),settings: RouteSettings(name:'FollowerListPage'));
-     }
-     else if(pathElements[1].contains('VerifyEmailPage')){
-       return SlideLeftRoute<bool>(builder:(BuildContext context)=> VerifyEmailPage(),settings: RouteSettings(name:'VerifyEmailPage'));
-     }
-     else{
-       return onUnknownRoute(RouteSettings(name: '/Feature'));
+      case "WelcomePage":return CustomRoute<bool>(builder:(BuildContext context)=> WelcomePage()); 
+      case "SignIn":return CustomRoute<bool>(builder:(BuildContext context)=> SignIn()); 
+      case "SignUp":return CustomRoute<bool>(builder:(BuildContext context)=> Signup()); 
+      case "ForgetPasswordPage":return CustomRoute<bool>(builder:(BuildContext context)=> ForgetPasswordPage()); 
+      case "CreateFeedPage":return CustomRoute<bool>(builder:(BuildContext context)=> CreateFeedPage(),); 
+      case "SearchPage":return CustomRoute<bool>(builder:(BuildContext context)=> SearchPage()); 
+      case "ProfilePage":return CustomRoute<bool>(builder:(BuildContext context)=> ProfilePage()); 
+      case "ImageViewPge":return CustomRoute<bool>(builder:(BuildContext context)=> ImageViewPge());
+      case "EditProfile":return CustomRoute<bool>(builder:(BuildContext context)=> EditProfilePage()); 
+      case "ChatScreenPage":return CustomRoute<bool>(builder:(BuildContext context)=> ChatScreenPage()); 
+      case "NewMessagePage":return CustomRoute<bool>(builder:(BuildContext context)=> NewMessagePage(),); 
+      case "SettingsAndPrivacyPage":return CustomRoute<bool>(builder:(BuildContext context)=> SettingsAndPrivacyPage(),); 
+      case "AccountSettingsPage":return CustomRoute<bool>(builder:(BuildContext context)=> AccountSettingsPage(),); 
+      case "AccountSettingsPage":return CustomRoute<bool>(builder:(BuildContext context)=> AccountSettingsPage(),); 
+      case "PrivacyAndSaftyPage":return CustomRoute<bool>(builder:(BuildContext context)=> PrivacyAndSaftyPage(),); 
+      case "NotificationPage":return CustomRoute<bool>(builder:(BuildContext context)=> NotificationPage(),); 
+      case "ContentPrefrencePage":return CustomRoute<bool>(builder:(BuildContext context)=> ContentPrefrencePage(),); 
+      case "DisplayAndSoundPage":return CustomRoute<bool>(builder:(BuildContext context)=> DisplayAndSoundPage(),); 
+      case "DirectMessagesPage":return CustomRoute<bool>(builder:(BuildContext context)=> DirectMessagesPage(),); 
+      case "TrendsPage":return CustomRoute<bool>(builder:(BuildContext context)=> TrendsPage(),); 
+      case "DataUsagePage":return CustomRoute<bool>(builder:(BuildContext context)=> DataUsagePage(),); 
+      case "AccessibilityPage":return CustomRoute<bool>(builder:(BuildContext context)=> AccessibilityPage(),); 
+      case "ProxyPage":return CustomRoute<bool>(builder:(BuildContext context)=> ProxyPage(),); 
+      case "AboutPage":return CustomRoute<bool>(builder:(BuildContext context)=> AboutPage(),); 
+      case "ConversationInformation":return CustomRoute<bool>(builder:(BuildContext context)=> ConversationInformation(),); 
+      case "FollowingListPage":return CustomRoute<bool>(builder:(BuildContext context)=> FollowingListPage(),); 
+      case "FollowerListPage":return CustomRoute<bool>(builder:(BuildContext context)=> FollowerListPage(),); 
+      case "VerifyEmailPage":return CustomRoute<bool>(builder:(BuildContext context)=> VerifyEmailPage(),); 
+      default:return onUnknownRoute(RouteSettings(name: '/Feature'));
      }
   }
 
