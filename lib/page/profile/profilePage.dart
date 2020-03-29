@@ -49,7 +49,7 @@ class _ProfilePageState extends State<ProfilePage> {
       iconTheme: IconThemeData(color: Colors.white),
       backgroundColor: Colors.transparent,
       actions: <Widget>[
-        authstate.profileUserModel == null
+        authstate.isbusy
             ? SizedBox.shrink()
             : PopupMenuButton<Choice>(
                 onSelected: (d) {},
@@ -64,7 +64,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
       ],
       flexibleSpace: FlexibleSpaceBar(
-        background: authstate.profileUserModel == null
+        background: authstate.isbusy
             ? SizedBox.shrink()
             : Stack(
                 children: <Widget>[
@@ -235,6 +235,17 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
+  /// This meathod called when user pressed back button
+  /// When profile page is about to close
+  /// Maintain minimum user's profile in profile page list
+  Future<bool> _onWillPop() async {
+    final state = Provider.of<AuthState>(context, listen: false);
+
+    /// It will remove last user's profile from profileUserModelList
+    state.removeLastUser();
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     var state = Provider.of<FeedState>(context);
@@ -244,72 +255,74 @@ class _ProfilePageState extends State<ProfilePage> {
     if (state.feedlist != null && state.feedlist.length > 0) {
       list = state.feedlist.where((x) => x.userId == id).toList();
     }
-    return Scaffold(
-      backgroundColor: list != null && list.isNotEmpty
-          ? TwitterColor.mystic
-          : TwitterColor.white,
-      floatingActionButton: isMyProfile ? _floatingActionButton() : null,
-      body: CustomScrollView(
-        physics: ClampingScrollPhysics(),
-        slivers: <Widget>[
-          getAppbar(),
-          authstate.profileUserModel == null
-              ? _emptyBox()
-              : SliverToBoxAdapter(
-                  child: Container(
-                    color: Colors.white,
-                    child: authstate.profileUserModel == null
-                        ? SizedBox.shrink()
-                        : UserNameRowWidget(
-                            user: authstate.profileUserModel,
-                            isMyProfile: isMyProfile,
-                          ),
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        backgroundColor: list != null && list.isNotEmpty
+            ? TwitterColor.mystic
+            : TwitterColor.white,
+        floatingActionButton: isMyProfile ? _floatingActionButton() : null,
+        body: CustomScrollView(
+          physics: ClampingScrollPhysics(),
+          slivers: <Widget>[
+            getAppbar(),
+            authstate.isbusy
+                ? _emptyBox()
+                : SliverToBoxAdapter(
+                    child: Container(
+                      color: Colors.white,
+                      child: authstate.isbusy
+                          ? SizedBox.shrink()
+                          : UserNameRowWidget(
+                              user: authstate.profileUserModel,
+                              isMyProfile: isMyProfile,
+                            ),
+                    ),
                   ),
-                ),
-          SliverList(
-            delegate: SliverChildListDelegate(
-              authstate.profileUserModel == null
-                  ? [
-                      Container(
-                        height: fullHeight(context) - 180,
-                        child: CustomScreenLoader(
-                          height: double.infinity,
-                          width: fullWidth(context),
-                          backgroundColor: Colors.white,
-                        )
-                      )
-                    ]
-                  : list == null || list.length < 1
-                      ? [
-                          Container(
-                            padding:
-                                EdgeInsets.only(top: 50, left: 30, right: 30),
-                            child: NotifyText(
-                              title: isMyProfile
-                                  ? 'You haven\'t post any Tweet yet'
-                                  : '${authstate.profileUserModel.userName} hasn\'t Tweeted yet',
-                              subTitle: isMyProfile
-                                  ? 'Tap tweet button to add new'
-                                  : 'Once he\'ll do, they will be shown up here',
-                            ),
-                          )
-                        ]
-                      : list
-                          .map(
-                            (x) => Container(
-                              color: TwitterColor.white,
-                              child: Tweet(
-                                model: x,
-                                isDisplayOnProfile: true,
-                                trailing: TweetBottomSheet().tweetOptionIcon(
-                                    context, x, TweetType.Tweet),
+            SliverList(
+              delegate: SliverChildListDelegate(
+                authstate.isbusy
+                    ? [
+                        Container(
+                            height: fullHeight(context) - 180,
+                            child: CustomScreenLoader(
+                              height: double.infinity,
+                              width: fullWidth(context),
+                              backgroundColor: Colors.white,
+                            ))
+                      ]
+                    : list == null || list.length < 1
+                        ? [
+                            Container(
+                              padding:
+                                  EdgeInsets.only(top: 50, left: 30, right: 30),
+                              child: NotifyText(
+                                title: isMyProfile
+                                    ? 'You haven\'t post any Tweet yet'
+                                    : '${authstate.profileUserModel.userName} hasn\'t Tweeted yet',
+                                subTitle: isMyProfile
+                                    ? 'Tap tweet button to add new'
+                                    : 'Once he\'ll do, they will be shown up here',
                               ),
-                            ),
-                          )
-                          .toList(),
-            ),
-          )
-        ],
+                            )
+                          ]
+                        : list
+                            .map(
+                              (x) => Container(
+                                color: TwitterColor.white,
+                                child: Tweet(
+                                  model: x,
+                                  isDisplayOnProfile: true,
+                                  trailing: TweetBottomSheet().tweetOptionIcon(
+                                      context, x, TweetType.Tweet),
+                                ),
+                              ),
+                            )
+                            .toList(),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

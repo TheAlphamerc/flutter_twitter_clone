@@ -69,8 +69,8 @@ class _FeedPageState extends State<FeedPage> {
     if (!state.isBusy && state.feedlist != null && state.feedlist.isNotEmpty) {
       list = state.feedlist.where((x) {
         if (x.user.userId == authstate.userId ||
-            (authstate.userfollowingList != null &&
-                authstate.userfollowingList.contains(x.user.userId))) {
+            (authstate.userModel?.followingList != null &&
+                authstate.userModel.followingList.contains(x.user.userId))) {
           return true;
         } else {
           return false;

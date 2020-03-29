@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -17,38 +16,40 @@ import 'package:firebase_database/firebase_database.dart' as dabase;
 class AuthState extends AppState {
   AuthStatus authStatus = AuthStatus.NOT_DETERMINED;
   bool isSignInWithGoogle = false;
-  List<String> profileFollowingList = [];
   FirebaseUser user;
-  List<String> userfollowingList = [];
   String userId;
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   dabase.Query _profileQuery;
-  User _profileUserModel;
+  List<User> _profileUserModelList;
   User _userModel;
 
   User get userModel => _userModel;
 
-  User get profileUserModel => _profileUserModel;
+  User get profileUserModel {
+    if (_profileUserModelList != null && _profileUserModelList.length > 0) {
+      return _profileUserModelList.last;
+    } else {
+      return null;
+    }
+  }
+
+  void removeLastUser() {
+    _profileUserModelList.removeLast();
+  }
 
   /// Logout from device
   void logoutCallback() {
     authStatus = AuthStatus.NOT_LOGGED_IN;
     userId = '';
     _userModel = null;
-    _profileUserModel = null;
-    userfollowingList = null;
-    profileFollowingList = null;
+    _profileUserModelList = null;
     if (isSignInWithGoogle) {
       _googleSignIn.signOut();
       logEvent('google_logout');
-    } else {
-      logEvent('email_logout');
-      _auth.signOut();
     }
+    _firebaseAuth.signOut();
     notifyListeners();
   }
 
@@ -108,7 +109,7 @@ class AuthState extends AppState {
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
-      user = (await _auth.signInWithCredential(credential)).user;
+      user = (await _firebaseAuth.signInWithCredential(credential)).user;
       authStatus = AuthStatus.LOGGED_IN;
       userId = user.uid;
       isSignInWithGoogle = true;
@@ -191,8 +192,8 @@ class AuthState extends AppState {
     }
     kDatabase.child('profile').child(user.userId).set(user.toJson());
     _userModel = user;
-    if (_profileUserModel != null) {
-      _profileUserModel = _userModel;
+    if (_profileUserModelList != null) {
+      _profileUserModelList.last = _userModel;
     }
     loading = false;
   }
@@ -209,7 +210,6 @@ class AuthState extends AppState {
         getProfileUser();
       } else {
         authStatus = AuthStatus.NOT_LOGGED_IN;
-        loading = false;
       }
       return user;
     } catch (error) {
@@ -221,7 +221,7 @@ class AuthState extends AppState {
   }
 
   /// Reload user to get refresh user data
-  Future<FirebaseUser> reloadUser() async {
+  reloadUser() async {
     await user.reload();
     user = await _firebaseAuth.currentUser();
     if (user.isEmailVerified) {
@@ -233,7 +233,6 @@ class AuthState extends AppState {
       logEvent('email_verification_complete',
           parameter: {userModel.userName: user.email});
     }
-    return user;
   }
 
   /// Send email verification link to email2
@@ -333,7 +332,9 @@ class AuthState extends AppState {
   getProfileUser({String userProfileId}) {
     try {
       loading = true;
-      _profileUserModel = null;
+      if (_profileUserModelList == null) {
+        _profileUserModelList = [];
+      }
       userProfileId = userProfileId == null ? userId : userProfileId;
       kDatabase
           .child("profile")
@@ -343,63 +344,20 @@ class AuthState extends AppState {
         if (snapshot.value != null) {
           var map = snapshot.value;
           if (map != null) {
-            _profileUserModel = User.fromJson(map);
+            _profileUserModelList.add(User.fromJson(map));
             if (userProfileId == userId) {
-              _userModel = _profileUserModel;
+              _userModel = _profileUserModelList.last;
               _userModel.isVerified = user.isEmailVerified;
+              if (!user.isEmailVerified) {
+                // Check if user verified his email address
+                reloadUser();
+              }
             }
-            // Fecth following list to calculate following count
-            getFollowingUser();
             logEvent('get_profile');
           }
         }
-        // loading = false;
+        loading = false;
       });
-    } catch (error) {
-      loading = false;
-      cprint(error, errorIn: 'getProfileUser');
-    }
-  }
-
-  /// Get following user
-  getFollowingUser() {
-    try {
-      loading = true;
-      if (profileUserModel != null && profileUserModel.userId.isNotEmpty) {
-        profileFollowingList = null;
-        kDatabase
-            .child("followList")
-            .child(profileUserModel.userId)
-            .once()
-            .then((DataSnapshot snapshot) {
-          if (snapshot.value != null) {
-            profileFollowingList = [];
-            var map = snapshot.value;
-            if (map != null) {
-              map['following'].forEach((key, value) {
-                profileFollowingList.add(key);
-              });
-              if (profileUserModel.userId == userId) {
-                _userModel.following = profileFollowingList.length;
-                userfollowingList = profileFollowingList;
-              } else {
-                profileUserModel.following = profileFollowingList.length;
-              }
-            }
-          } else {
-            if (profileUserModel.userId == userId) {
-              // If logged-in user didn't follow anyone
-              // Show tweets only self tweets on home page.
-              userfollowingList = null;
-            }
-          }
-          loading = false;
-          if (!user.isEmailVerified) {
-            // Check if user verified his email address
-            reloadUser();
-          }
-        });
-      }
     } catch (error) {
       loading = false;
       cprint(error, errorIn: 'getProfileUser');
@@ -421,52 +379,37 @@ class AuthState extends AppState {
         /// 2.Remove profile user from logged-in user's `following` list
         profileUserModel.followersList.remove(userModel.userId);
 
-        // update user follower count
-        profileUserModel.followers = profileUserModel.followersList.length;
-
-        /// Remove profile user from logged-in user following list
-        kDatabase
-            .child("followList")
-            .child(userModel.userId)
-            .child("following")
-            .child(profileUserModel.userId)
-            .remove();
-
-        userfollowingList.remove(profileUserModel.userId);
+        /// Remove profile user from logged-in user's following list
+        userModel.followingList.remove(profileUserModel.userId);
         cprint('user removed from following list', event: 'remove_follow');
       } else {
         /// if logged in user is `not following` profile user then
         /// 1.Add logged in user to profile user's `follower` list
         /// 2. Add profile user to logged in user's `following` list
         if (profileUserModel.followersList == null) {
-          profileUserModel.followersList = [userModel.userId];
-        } else {
-          profileUserModel.followersList.add(userModel.userId);
+          profileUserModel.followersList = [];
         }
-        profileUserModel.followers = profileUserModel.followersList.length;
+        profileUserModel.followersList.add(userModel.userId);
         // Adding profile user to logged-in user's following list
-        kDatabase
-            .child("followList")
-            .child(userModel.userId)
-            .child("following")
-            .child(profileUserModel.userId)
-            .set({"userId": profileUserModel.userId});
-
-        if (userfollowingList == null) {
-          userfollowingList = [];
+        if (userModel.followingList == null) {
+          userModel.followingList = [];
         }
-        userfollowingList.add(profileUserModel.userId);
-
-        cprint('user added to following list', event: 'add_follow');
+        userModel.followingList.add(profileUserModel.userId);
       }
-      // uppdate profile-user's by adding/removing follower
+      // update profile user's user follower count
+      profileUserModel.followers = profileUserModel.followersList.length;
+      // update logged-in user's following count
+      userModel.following = userModel.followingList.length;
+
       kDatabase
           .child('profile')
           .child(profileUserModel.userId)
           .set(profileUserModel.toJson());
-
-      // update logged-in user'e following count
-      userModel.following = userfollowingList.length;
+      kDatabase
+          .child('profile')
+          .child(userModel.userId)
+          .set(userModel.toJson());
+      cprint('user added to following list', event: 'add_follow');
       notifyListeners();
     } catch (error) {
       cprint(error, errorIn: 'followUser');

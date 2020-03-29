@@ -4,29 +4,13 @@ import 'package:flutter_twitter_clone/page/common/usersListPage.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:provider/provider.dart';
 
-class FollowingListPage extends StatefulWidget {
-  FollowingListPage({Key key}) : super(key: key);
-
-  @override
-  _FollowingListPageState createState() => _FollowingListPageState();
-}
-
-class _FollowingListPageState extends State<FollowingListPage> {
-  @override
-  void initState() {
-    var authstate = Provider.of<AuthState>(context, listen: false);
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      authstate.getFollowingUser();
-    });
-  }
-
+class FollowingListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var state = Provider.of<AuthState>(context);
     return UsersListPage(
-        pageTitle: 'Followers',
-        userList: state.profileFollowingList,
+        pageTitle: 'Following',
+        userList: state.profileUserModel.followingList,
         appBarIcon: AppIcon.follow,
         emptyScreenText:
             '${state?.profileUserModel?.userName ?? state.userModel.userName} isn\'t follow anyone',

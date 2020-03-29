@@ -1,5 +1,6 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customLoader.dart';
@@ -170,7 +171,12 @@ void cprint(dynamic data, {String errorIn, String event}) {
 }
 
 void logEvent(String event, {Map<String, dynamic> parameter}) {
-  kAnalytics.logEvent(name: event, parameters: parameter);
+   kReleaseMode ? kAnalytics.logEvent(name: event, parameters: parameter) : print("[EVENT]: $event");
+}
+
+void debugLog(String log, {dynamic param = ""}){
+  final String time = DateFormat("mm:ss:mmm").format(DateTime.now());
+  print("[$time][Log]: $log, $param");
 }
 
 void share(String message, {String subject}) {

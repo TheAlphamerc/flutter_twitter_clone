@@ -34,9 +34,13 @@ class UserListWidget extends StatelessWidget {
         children: <Widget>[
           ListTile(
               onTap: () {
-                // Navigator.of(context).pushNamed('/ProfilePage/' + user?.userId);
+                Navigator.of(context).pushNamed('/ProfilePage/' + user?.userId);
               },
               leading: RippleButton(
+                onPressed: () {
+                  Navigator.of(context)
+                      .pushNamed('/ProfilePage/' + user?.userId);
+                },
                 borderRadius: BorderRadius.all(Radius.circular(60)),
                 child: customImage(context, user.profilePic, height: 60),
               ),

@@ -118,7 +118,7 @@ class _SidebarMenuState extends State<SidebarMenu> {
     return InkWell(
       onTap: () {
         var authstate = Provider.of<AuthState>(context);
-        authstate.profileFollowingList = [];
+        // authstate.profileFollowingList = [];
         authstate.getProfileUser();
         _navigateTo(navigateTo);
       },

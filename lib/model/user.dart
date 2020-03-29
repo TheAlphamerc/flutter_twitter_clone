@@ -65,6 +65,13 @@ class User {
      });
    }
    followers = followersList != null ? followersList.length : null;
+   if(map['followingList'] != null){
+      followingList = List<String>();
+      map['followingList'].forEach((value){
+         followingList.add(value);
+     });
+   }
+   following = followingList != null ? followingList.length : null;
   }
   toJson() {
     return {
@@ -80,11 +87,12 @@ class User {
       'location': location,
       'createdAt': createdAt,
       'followers': followersList != null ? followersList.length : null,
-      'following': following,
+      'following': followersList!= null ? followersList.length : null,
       'userName': userName,
       'webSite': webSite,
       'isVerified': isVerified ?? false,
-      'followerList' : followersList
+      'followerList' : followersList,
+      'followingList':followingList
     };
   }
 
@@ -104,7 +112,7 @@ class User {
       int following,
       String webSite,
       bool isVerified,
-      List<String> followingList
+      List<String> followingList,
       }) {
     return User(
         email: email ?? this.email,
@@ -122,7 +130,7 @@ class User {
         userId: userId ?? this.userId,
         userName: userName ?? this.userName,
         webSite: webSite ?? this.webSite,
-        followersList: followersList ?? this.followersList
+        followersList: followersList ?? this.followersList,
         );
   }
 
