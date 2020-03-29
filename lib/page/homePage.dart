@@ -30,6 +30,7 @@ class _HomePageState extends State<HomePage> {
       initSearch();
       initNotificaiton();
       initChat();
+      initProfile();
     });
 
     super.initState();
@@ -40,7 +41,10 @@ class _HomePageState extends State<HomePage> {
     state.databaseInit();
     state.getDataFromDatabase();
   }
-
+  void initProfile() {
+    var state = Provider.of<AuthState>(context, listen: false);
+    state.databaseInit();
+  }
   void initSearch() {
     var searchState = Provider.of<SearchState>(context, listen: false);
     searchState.getDataFromDatabase();
