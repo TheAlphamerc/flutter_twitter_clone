@@ -33,7 +33,6 @@ class UsersListPage extends StatelessWidget {
       body: Consumer<AuthState>(
         builder: (context, state, child) {
           return UserListWidget(
-            fetchingListbool: state.isbusy ?? false,
             list: userList,
             emptyScreenText: emptyScreenText,
             emptyScreenSubTileText: emptyScreenSubTileText,

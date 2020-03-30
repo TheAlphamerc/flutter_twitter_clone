@@ -63,7 +63,7 @@ class AuthState extends AppState {
   databaseInit() {
     try {
       if (_profileQuery == null) {
-        _profileQuery = kDatabase.child("profile").child(userModel.userId);
+        _profileQuery = kDatabase.child("profile").child(userId);
         _profileQuery.onValue.listen(_onProfileChanged);
       }
     } catch (error) {

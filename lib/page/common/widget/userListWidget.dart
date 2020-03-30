@@ -13,19 +13,98 @@ import 'package:provider/provider.dart';
 
 class UserListWidget extends StatelessWidget {
   final List<String> list;
-  final fetchingListbool;
   final String emptyScreenText;
   final String emptyScreenSubTileText;
-  String myId;
   UserListWidget(
       {Key key,
       this.list,
       this.emptyScreenText,
-      this.fetchingListbool,
       this.emptyScreenSubTileText})
       : super(key: key);
-  Widget _userTile(BuildContext context, User user) {
-    bool isFollow = isFollowing(user);
+
+  @override
+  Widget build(BuildContext context) {
+    var state = Provider.of<AuthState>(context, listen: false);
+    String myId = state.userModel.key;
+    return list != null && list.isNotEmpty
+        ? ListView.separated(
+            itemBuilder: (context, index) {
+              return FutureBuilder(
+                future: state.getuserDetail(list[index]),
+                builder: (context, AsyncSnapshot<User> snapshot) {
+                  if (snapshot.hasData) {
+                    return UserTile(
+                      user: snapshot.data,
+                      myId: myId,
+                    );
+                  } else if (index == 0) {
+                    return Container(
+                        child: SizedBox(
+                      height: 3,
+                      child: LinearProgressIndicator(),
+                    ));
+                  } else {
+                    return SizedBox.shrink();
+                  }
+                },
+              );
+            },
+            separatorBuilder: (context, index) {
+              return Divider(
+                height: 0,
+              );
+            },
+            itemCount: list.length,
+          )
+        : state.isbusy
+            ? SizedBox(
+                height: 3,
+                child: LinearProgressIndicator(),
+              )
+            : Container(
+                width: fullWidth(context),
+                padding: EdgeInsets.only(top: 0, left: 30, right: 30),
+                child: NotifyText(
+                  title: emptyScreenText,
+                  subTitle: emptyScreenSubTileText,
+                ),
+              );
+  }
+}
+
+class UserTile extends StatelessWidget {
+  const UserTile({Key key, this.user, this.myId}) : super(key: key);
+  final User user;
+  final String myId;
+
+  /// Return empty string for default bio
+  /// Max length of bio is 100
+  String getBio(String bio) {
+    if (bio != null && bio.isNotEmpty && bio != "Edit profile to update bio") {
+      if (bio.length > 100) {
+        bio = bio.substring(0, 100) + '...';
+        return bio;
+      } else {
+        return bio;
+      }
+    }
+    return null;
+  }
+
+  /// Check if user followerlist contain your or not
+  /// If your id exist in follower list it mean you are following him
+  bool isFollowing() {
+    if (user.followersList != null &&
+        user.followersList.any((x) => x == myId)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    bool isFollow = isFollowing();
     return Container(
       padding: EdgeInsets.symmetric(vertical: 10),
       color: TwitterColor.white,
@@ -102,72 +181,5 @@ class UserListWidget extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  String getBio(String bio) {
-    if (bio != null && bio.isNotEmpty && bio != "Edit profile to update bio") {
-      if (bio.length > 100) {
-        bio = bio.substring(0, 100) + '...';
-        return bio;
-      } else {
-        return bio;
-      }
-    }
-    return null;
-  }
-
-  bool isFollowing(User model) {
-    if (model.followersList != null &&
-        model.followersList.any((x) => x == myId)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    var state = Provider.of<AuthState>(context, listen: false);
-    myId = state.userModel.key;
-    return list != null && list.isNotEmpty
-        ? ListView.separated(
-            itemBuilder: (context, index) {
-              return FutureBuilder(
-                future: state.getuserDetail(list[index]),
-                builder: (context, AsyncSnapshot<User> snapshot) {
-                  if (snapshot.hasData) {
-                    return _userTile(context, snapshot.data);
-                  } else if (index == 0) {
-                    return Container(
-                        child: SizedBox(
-                      height: 3,
-                      child: LinearProgressIndicator(),
-                    ));
-                  } else {
-                    return SizedBox.shrink();
-                  }
-                },
-              );
-            },
-            separatorBuilder: (context, index) {
-              return Divider(
-                height: 0,
-              );
-            },
-            itemCount: list.length,
-          )
-        : fetchingListbool
-            ? SizedBox(
-                height: 3,
-                child: LinearProgressIndicator(),
-              )
-            : Container(
-                width: fullWidth(context),
-                padding: EdgeInsets.only(top: 0, left: 30, right: 30),
-                child: NotifyText(
-                  title: emptyScreenText,
-                  subTitle: emptyScreenSubTileText,
-                ),
-              );
   }
 }
