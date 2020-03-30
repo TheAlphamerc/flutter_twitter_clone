@@ -3,6 +3,11 @@
 
 A working Twitter clone written in Flutter using Firebase auth,realtime database and storage.
 
+## Download App
+<a href="https://play.google.com/store/apps/details?id=com.thealphamerc.flutter_twitter_clone"><img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" width="200"></img></a>
+
+
+
 ## Features
 * App features is mentioned at project section [ Click here](https://github.com/TheAlphamerc/flutter_twitter_clone/projects/1)
 * Messaging chat section status can be seen at [here](https://github.com/TheAlphamerc/flutter_twitter_clone/projects/2)
@@ -143,7 +148,7 @@ keytool -exportcert -list -v \
      <summary> Click to expand </summary>
   
   ```
-  |-- lib
+|-- lib
 |   |-- helper
 |   |   |-- constant.dart
 |   |   |-- customRoute.dart
@@ -168,11 +173,17 @@ keytool -exportcert -list -v \
 |   |   |   '-- verifyEmail.dart
 |   |   |-- common
 |   |   |   |-- sidebar.dart
-|   |   |   '-- splash.dart
+|   |   |   |-- splash.dart
+|   |   |   |-- usersListPage.dart
+|   |   |   '-- widget
+|   |   |       '-- userListWidget.dart
 |   |   |-- feed
 |   |   |   |-- composeTweet
+|   |   |   |   |-- composeTweet.dart
 |   |   |   |   |-- createFeed.dart
-|   |   |   |   '-- feedPostreply.dart
+|   |   |   |   '-- widget
+|   |   |   |       |-- composeBottomIconWidget.dart
+|   |   |   |       '-- composeTweetImage.dart
 |   |   |   |-- feedPage.dart
 |   |   |   |-- feedPostDetail.dart
 |   |   |   '-- imageViewPage.dart
@@ -189,9 +200,7 @@ keytool -exportcert -list -v \
 |   |   |   |-- EditProfilePage.dart
 |   |   |   |-- follow
 |   |   |   |   |-- followerListPage.dart
-|   |   |   |   |-- followingListPage.dart
-|   |   |   |   '-- widget
-|   |   |   |       '-- userList.dart
+|   |   |   |   '-- followingListPage.dart
 |   |   |   '-- profilePage.dart
 |   |   |-- search
 |   |   |   '-- SearchPage.dart
@@ -249,7 +258,6 @@ keytool -exportcert -list -v \
 |       '-- tweet
 |           |-- tweet.dart
 |           '-- widgets
-|               |-- bottomIconWidget.dart
 |               |-- tweetBottomSheet.dart
 |               |-- tweetIconsRow.dart
 |               '-- tweetImage.dart
