@@ -1,4 +1,4 @@
-## flutter_twitter_clone ![Twitter URL](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Ftwitter.com%2Fthealphamerc) [![GitHub stars](https://img.shields.io/github/stars/Thealphamerc/flutter_twitter_clone?style=social)](https://github.com/login?return_to=%2FTheAlphamerc%flutter_wallet_app) ![GitHub forks](https://img.shields.io/github/forks/TheAlphamerc/flutter_twitter_clone?style=social) 
+## Fwitter - Flutter Based Twitter Clone ![Twitter URL](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Ftwitter.com%2Fthealphamerc) [![GitHub stars](https://img.shields.io/github/stars/Thealphamerc/flutter_twitter_clone?style=social)](https://github.com/login?return_to=%2FTheAlphamerc%flutter_wallet_app) ![GitHub forks](https://img.shields.io/github/forks/TheAlphamerc/flutter_twitter_clone?style=social) 
 ![Dart CI](https://github.com/TheAlphamerc/flutter_twitter_clone/workflows/Dart%20CI/badge.svg) ![GitHub pull requests](https://img.shields.io/github/issues-pr/TheAlphamerc/flutter_twitter_clone) ![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/Thealphamerc/flutter_twitter_clone) ![GitHub last commit](https://img.shields.io/github/last-commit/Thealphamerc/flutter_wallet_app)  ![GitHub issues](https://img.shields.io/github/issues-raw/Thealphamerc/flutter_twitter_clone) [![Open Source Love](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)](https://github.com/Thealphamerc/flutter_twitter_clone) 
 
 A working Twitter clone written in Flutter using Firebase auth,realtime database and storage.
@@ -27,11 +27,9 @@ A working Twitter clone written in Flutter using Firebase auth,realtime database
 * [image_picker](https://pub.dev/packages/image_picker)
 * [firebase_auth](https://pub.dev/packages/firebase_auth)
 * [google_sign_in](https://pub.dev/packages/google_sign_in)
-* [cloud_firestore](https://pub.dev/packages/firebase_analytics)
 * [firebase_storage](https://pub.dev/packages/firebase_storage)
 * [firebase_analytics](https://pub.dev/packages/firebase_analytics)
 * [firebase_database](https://pub.dev/packages/firebase_database)
-* [firebase_messaging](https://pub.dev/packages/firebase_messaging)
 * [shared_preferences](https://pub.dev/packages/shared_preferences)
 * [flutter_native_splash](https://pub.dev/packages/flutter_native_splash)
 * [flutter_advanced_networkimage](https://pub.dev/packages/flutter_advanced_networkimage)
@@ -40,15 +38,15 @@ A working Twitter clone written in Flutter using Firebase auth,realtime database
 
 ## Screenshots
 
-Welcome Page               |  Login Page               | Signup Page               |  Home Page Sidebar
+Welcome Page               |  Login Page               | Signup Page               |  Forgot Password Page
 :-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
-![](https://github.com/TheAlphamerc/flutter_twitter_clone/blob/master/screenshots/Auth/screenshot_1.jpg?raw=true)|![](https://github.com/TheAlphamerc/flutter_twitter_clone/blob/master/screenshots/Auth/screenshot_2.jpg?raw=true)|![](https://github.com/TheAlphamerc/flutter_twitter_clone/blob/master/screenshots/Auth/screenshot_3.jpg?raw=true)|![](https://github.com/TheAlphamerc/flutter_twitter_clone/blob/master/screenshots/Home/screenshot_5.jpg?raw=true)|
+![](https://github.com/TheAlphamerc/flutter_twitter_clone/blob/master/screenshots/Auth/screenshot_1.jpg?raw=true)|![](https://github.com/TheAlphamerc/flutter_twitter_clone/blob/master/screenshots/Auth/screenshot_2.jpg?raw=true)|![](https://github.com/TheAlphamerc/flutter_twitter_clone/blob/master/screenshots/Auth/screenshot_3.jpg?raw=true)|![](https://github.com/TheAlphamerc/flutter_twitter_clone/blob/master/screenshots/Auth/screenshot_4.jpg?raw=true)|
 
-Home Page                  |  Compose Tweet Page      |   Home Page               |  Home Page
+Home Page Sidebaar                  |  Compose Tweet Page      |   Home Page               |  Home Page
 :-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
-![](https://github.com/TheAlphamerc/flutter_twitter_clone/blob/master/screenshots/Home/screenshot_1.jpg?raw=true)|![](https://github.com/TheAlphamerc/flutter_twitter_clone/blob/master/screenshots/Home/screenshot_2.jpg?raw=true)|![](https://github.com/TheAlphamerc/flutter_twitter_clone/blob/master/screenshots/Home/screenshot_7.jpg?raw=true)|![](https://github.com/TheAlphamerc/flutter_twitter_clone/blob/master/screenshots/Home/screenshot_6.jpg?raw=true)|
+![](https://github.com/TheAlphamerc/flutter_twitter_clone/blob/master/screenshots/Home/screenshot_5.jpg?raw=true)|![](https://github.com/TheAlphamerc/flutter_twitter_clone/blob/master/screenshots/Home/screenshot_2.jpg?raw=true)|![](https://github.com/TheAlphamerc/flutter_twitter_clone/blob/master/screenshots/Home/screenshot_7.jpg?raw=true)|![](https://github.com/TheAlphamerc/flutter_twitter_clone/blob/master/screenshots/Home/screenshot_6.jpg?raw=true)|
 
-Compose Tweet Page                  | Reply To Tweet       |   Reply To Tweet               |  Reply to Tweet
+Compose Tweet Page                  | Reply To Tweet       |   Compose Retweet with comment        |  Reply to Tweet
 :-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
 ![](https://github.com/TheAlphamerc/flutter_twitter_clone/blob/master/screenshots/CreateTweet/screenshot_1.jpg?raw=true)|![](https://github.com/TheAlphamerc/flutter_twitter_clone/blob/master/screenshots/CreateTweet/screenshot_2.jpg?raw=true)|![](https://github.com/TheAlphamerc/flutter_twitter_clone/blob/master/screenshots/CreateTweet/screenshot_3.jpg?raw=true)|![](https://github.com/TheAlphamerc/flutter_twitter_clone/blob/master/screenshots/CreateTweet/screenshot_4.jpg?raw=true)|
 
@@ -81,7 +79,7 @@ Content Prefrences Page      |  Display Setting Page    |  Data Settings Page   
 :-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
 ![](https://github.com/TheAlphamerc/flutter_twitter_clone/blob/master/screenshots/Settings/screenshot_5.jpg?raw=true)|![](https://github.com/TheAlphamerc/flutter_twitter_clone/blob/master/screenshots/Settings/screenshot_6.jpg?raw=true)|![](https://github.com/TheAlphamerc/flutter_twitter_clone/blob/master/screenshots/Settings/screenshot_7.jpg?raw=true)|![](https://github.com/TheAlphamerc/flutter_twitter_clone/blob/master/screenshots/Settings/screenshot_8.jpg?raw=true)|
 
-  Tweet Liked by Page         |  About Setting Page    |  Licenses Settings     |  Settings
+  Users who likes Tweet        |  About Setting Page    |  Licenses Settings     |  Settings
 :-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
 ![](https://github.com/TheAlphamerc/flutter_twitter_clone/blob/master/screenshots/TweetDetail/screenshot_7.jpg?raw=true)|![](https://github.com/TheAlphamerc/flutter_twitter_clone/blob/master/screenshots/Settings/screenshot_9.jpg?raw=true)|![](https://github.com/TheAlphamerc/flutter_twitter_clone/blob/master/screenshots/Settings/screenshot_10.jpg?raw=true)|![](https://github.com/TheAlphamerc/flutter_twitter_clone/blob/master/screenshots/Settings/screenshot_81.jpg?raw=true)|
 
