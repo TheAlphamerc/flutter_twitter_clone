@@ -211,6 +211,7 @@ class AuthState extends AppState {
       } else {
         authStatus = AuthStatus.NOT_LOGGED_IN;
       }
+      loading = false;
       return user;
     } catch (error) {
       loading = false;

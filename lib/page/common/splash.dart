@@ -29,7 +29,7 @@ class _SplashPageState extends State<SplashPage> {
   void timer() async {
     Future.delayed(Duration(seconds: 1)).then((_) {
       var state = Provider.of<AuthState>(context, listen: false);
-      state.authStatus = AuthStatus.NOT_DETERMINED;
+      // state.authStatus = AuthStatus.NOT_DETERMINED;
       state.getCurrentUser();
     });
   }
