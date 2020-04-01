@@ -34,6 +34,7 @@ class SearchState extends AppState {
                 _userlist.add(model);
                 _userFilterlist.add(model);
               });
+              _userFilterlist.sort((x,y) => y.followers.compareTo(x.followers));
             }
           } else {
             _userlist = null;
@@ -49,7 +50,7 @@ class SearchState extends AppState {
   }
 
   void filterByUsername(String name) {
-    if (name.isEmpty) {
+    if (name.isEmpty && _userlist != null) {
       _userFilterlist = List.from(_userlist);
     }
     // return if userList is empty or null

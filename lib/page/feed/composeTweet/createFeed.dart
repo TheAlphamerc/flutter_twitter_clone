@@ -92,7 +92,7 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
       userId: authState.userModel.userId,
       tags: tags,
       user: user,
-      createdAt: DateTime.now().toString(),
+      createdAt: DateTime.now().toUtc().toString(),
     );
     if (_image != null) {
       await state.uploadFile(_image).then(

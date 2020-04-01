@@ -15,12 +15,12 @@ class UserListWidget extends StatelessWidget {
   final List<String> list;
   final String emptyScreenText;
   final String emptyScreenSubTileText;
-  UserListWidget(
-      {Key key,
-      this.list,
-      this.emptyScreenText,
-      this.emptyScreenSubTileText})
-      : super(key: key);
+  UserListWidget({
+    Key key,
+    this.list,
+    this.emptyScreenText,
+    this.emptyScreenSubTileText,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -125,12 +125,14 @@ class UserTile extends StatelessWidget {
               ),
               title: Row(
                 children: <Widget>[
-                  UrlText(
-                    text: user.displayName,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w800,
+                  Flexible(
+                    child: UrlText(
+                      text: user.displayName,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
                   ),
                   SizedBox(width: 3),

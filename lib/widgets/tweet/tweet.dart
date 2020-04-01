@@ -332,6 +332,7 @@ class RetweetWidget extends StatelessWidget {
                 TextStyle(color: Colors.blue, fontWeight: FontWeight.w400),
           ),
         ),
+        SizedBox(height:model.imagePath == null ? 8 : 0),
         TweetImage(model: model, type: type, isRetweetImage: true),
       ],
     );

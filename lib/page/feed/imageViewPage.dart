@@ -181,7 +181,7 @@ class _ImageViewPgeState extends State<ImageViewPge> {
     FeedModel reply = FeedModel(
       description: _textEditingController.text,
       user: commentedUser,
-      createdAt: DateTime.now().toString(),
+      createdAt: DateTime.now().toUtc().toString(),
       tags: tags,
       userId: commentedUser.userId,
       parentkey: postId,

@@ -212,11 +212,11 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
     ChatMessage message;
     message = ChatMessage(
         message: messageController.text,
-        createdAt: DateTime.now().toIso8601String(),
+        createdAt: DateTime.now().toUtc().toString(),
         senderId: authstate.userModel.userId,
         receiverId: state.chatUser.userId,
         seen: false,
-        timeStamp: DateTime.now().millisecondsSinceEpoch.toString(),
+        timeStamp: DateTime.now().toUtc().millisecondsSinceEpoch.toString(),
         senderName: authstate.user.displayName);
     if (messageController.text == null || messageController.text.isEmpty) {
       return;

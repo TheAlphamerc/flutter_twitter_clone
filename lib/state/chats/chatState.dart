@@ -25,7 +25,7 @@ class ChatState extends AppState {
       return null;
     } else {
       _messageList.sort((x, y) =>
-          DateTime.parse(x.createdAt).compareTo(DateTime.parse(y.createdAt)));
+          DateTime.parse(x.createdAt).toLocal().compareTo(DateTime.parse(y.createdAt).toLocal()));
       _messageList.reversed;
       _messageList = _messageList.reversed.toList();
       return List.from(_messageList);

@@ -11,48 +11,13 @@ import 'package:url_launcher/url_launcher.dart';
 final kAnalytics = FirebaseAnalytics();
 final DatabaseReference kDatabase = FirebaseDatabase.instance.reference();
  final  kScreenloader = CustomLoader();
-String getAgendaTime(String startDatetime, String endDatetime) {
-  var start =
-      new DateFormat.jm().format(DateTime.parse(startDatetime)).toString();
-  var end = new DateFormat.jm().format(DateTime.parse(endDatetime)).toString();
-  return start + " - " + end;
-}
 
-String getPostTime(String date) {
-  String msg = '';
-  DateTime durs;
-  var dt = DateTime.parse(date);
-  if (dt.year == DateTime.now().year &&
-      dt.month == DateTime.now().month &&
-      dt.day == DateTime.now().day) {
-    durs = DateTime.now().subtract(
-        Duration(hours: dt.hour, minutes: dt.minute, seconds: dt.second));
-
-    if (durs.hour > 0) {
-      return '${durs.hour} h ago';
-    }
-    if (durs.minute > 0) {
-      return '${durs.minute} min ago';
-    } else if (durs.second > 2) {
-      return '${durs.second} sec ago';
-    } else {
-      return 'just now';
-    }
-  } else {
-    durs = DateTime.now().subtract(Duration(
-        days: dt.day, hours: dt.hour, minutes: dt.minute, seconds: dt.second));
-
-    if (durs.day >= 1) {
-      return durs.day == 1 ? 'Yesterday' : DateFormat("dd MMM").format(dt);
-    }
-  }
-}
 
 String getPostTime2(String date) {
   if (date == null || date.isEmpty) {
     return '';
   }
-  var dt = DateTime.parse(date);
+  var dt = DateTime.parse(date).toLocal();
   var dat =
       DateFormat.jm().format(dt) + ' - ' + DateFormat("dd MMM yy").format(dt);
   return dat;
@@ -62,7 +27,7 @@ String getdob(String date) {
   if (date == null || date.isEmpty) {
     return '';
   }
-  var dt = DateTime.parse(date);
+  var dt = DateTime.parse(date).toLocal();
   var dat = DateFormat.yMMMd().format(dt);
   return dat;
 }
@@ -71,7 +36,7 @@ String getJoiningDate(String date) {
   if (date == null || date.isEmpty) {
     return '';
   }
-  var dt = DateTime.parse(date);
+  var dt = DateTime.parse(date).toLocal();
   var dat = DateFormat("MMMM yyyy").format(dt);
   return 'Joined $dat';
 }
@@ -81,13 +46,13 @@ String getChatTime(String date) {
     return '';
   }
   String msg = '';
-  var dt = DateTime.parse(date);
+  var dt = DateTime.parse(date).toLocal();
 
-  if (DateTime.now().isBefore(dt)) {
-    return DateFormat.jm().format(DateTime.parse(date)).toString();
+  if (DateTime.now().toLocal().isBefore(dt)) {
+    return DateFormat.jm().format(DateTime.parse(date).toLocal()).toString();
   }
 
-  var dur = DateTime.now().difference(dt);
+  var dur = DateTime.now().toLocal().difference(dt);
   if (dur.inDays > 0) {
     msg = '${dur.inDays} d';
     return dur.inDays == 1 ? 'yesterday' : DateFormat("dd MMM").format(dt);

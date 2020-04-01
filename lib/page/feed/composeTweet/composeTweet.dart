@@ -105,7 +105,7 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
     FeedModel reply = FeedModel(
         description: _textEditingController.text,
         user: commentedUser,
-        createdAt: DateTime.now().toString(),
+        createdAt: DateTime.now().toUtc().toString(),
         tags: tags,
         parentkey: state.tweetToReplyModel.key,
         childRetwetkey: widget.isRetweet ? model.key : null,

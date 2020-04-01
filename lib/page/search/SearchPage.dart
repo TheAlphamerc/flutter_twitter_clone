@@ -66,7 +66,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   void onSettingIconPressed() {
-     Navigator.pushNamed(context, '/TrendsPage');
+    Navigator.pushNamed(context, '/TrendsPage');
   }
 
   @override
@@ -74,23 +74,28 @@ class _SearchPageState extends State<SearchPage> {
     var state = Provider.of<SearchState>(context);
     var list = state.userlist;
     return Scaffold(
-      appBar: CustomAppBar(
-        scaffoldKey: widget.scaffoldKey,
-        textController: textController,
-        icon: AppIcon.settings,
-        onActionPressed: onSettingIconPressed,
-        onSearchChanged: (text) {
-          state.filterByUsername(text);
-        },
-      ),
-      body: ListView.separated(
-        physics: BouncingScrollPhysics(),
-        itemBuilder: (context, index) => _userTile(list[index]),
-        separatorBuilder: (_, index) => Divider(
-          height: 0,
+        appBar: CustomAppBar(
+          scaffoldKey: widget.scaffoldKey,
+          textController: textController,
+          icon: AppIcon.settings,
+          onActionPressed: onSettingIconPressed,
+          onSearchChanged: (text) {
+            state.filterByUsername(text);
+          },
         ),
-        itemCount: list.length,
-      ),
-    );
+        body: RefreshIndicator(
+          onRefresh: () async {
+            state.getDataFromDatabase();
+            return Future.value(true);
+          },
+          child: ListView.separated(
+            physics: BouncingScrollPhysics(),
+            itemBuilder: (context, index) => _userTile(list[index]),
+            separatorBuilder: (_, index) => Divider(
+              height: 0,
+            ),
+            itemCount: list.length,
+          ),
+        ));
   }
 }
