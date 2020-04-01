@@ -10,8 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 final kAnalytics = FirebaseAnalytics();
 final DatabaseReference kDatabase = FirebaseDatabase.instance.reference();
- final  kScreenloader = CustomLoader();
-
+final kScreenloader = CustomLoader();
 
 String getPostTime2(String date) {
   if (date == null || date.isEmpty) {
@@ -136,10 +135,12 @@ void cprint(dynamic data, {String errorIn, String event}) {
 }
 
 void logEvent(String event, {Map<String, dynamic> parameter}) {
-   kReleaseMode ? kAnalytics.logEvent(name: event, parameters: parameter) : print("[EVENT]: $event");
+  kReleaseMode
+      ? kAnalytics.logEvent(name: event, parameters: parameter)
+      : print("[EVENT]: $event");
 }
 
-void debugLog(String log, {dynamic param = ""}){
+void debugLog(String log, {dynamic param = ""}) {
   final String time = DateFormat("mm:ss:mmm").format(DateTime.now());
   print("[$time][Log]: $log, $param");
 }
@@ -183,15 +184,20 @@ bool validateCredentials(
     return false;
   }
 
+  var status = validateEmal(email);
+  if (!status) {
+    customSnackBar(_scaffoldKey, 'Please enter valid email id');
+    return false;
+  }
+  return true;
+}
+
+bool validateEmal(String email) {
   String p =
       r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
 
   RegExp regExp = new RegExp(p);
 
   var status = regExp.hasMatch(email);
-  if (!status) {
-    customSnackBar(_scaffoldKey, 'Please enter valid email id');
-    return false;
-  }
-  return true;
+  return status;
 }

@@ -53,6 +53,7 @@ dependencies:
    # location: ^2.3.3
   # geocoder: ^0.1.2
 dev_dependencies:
+  test:
   flutter_test: 
     sdk: flutter
   flutter_launcher_icons: "^0.7.3"
