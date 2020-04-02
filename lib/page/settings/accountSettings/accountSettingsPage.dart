@@ -35,6 +35,7 @@ class AccountSettingsPage extends StatelessWidget {
           SettingRowWidget(
             "Email address",
             subtitle: user?.email,
+            navigateTo: 'VerifyEmailPage',
           ),
           SettingRowWidget("Password"),
           SettingRowWidget("Security"),

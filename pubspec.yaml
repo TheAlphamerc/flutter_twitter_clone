@@ -1,4 +1,4 @@
-name: flutter_twitter_clone
+name: flutter_twitter_clone 
 description: A new Flutter project.
 
 # The following defines the version and build number for your application.
@@ -11,7 +11,7 @@ description: A new Flutter project.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+1
+version: 1.0.3+5
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -24,21 +24,21 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
   empty_widget:
-  fancy_bottom_navigation:
   flutter_advanced_networkimage: ^0.6.0-alpha.1
   provider:
   flutter_native_splash: ^0.1.9
   firebase_auth:
   firebase_database:
+  firebase_analytics:
 
-  cloud_firestore:
+  # cloud_firestore:
   firebase_storage: 
   image_picker: ^0.6.2
   uuid: ^2.0.0
   async:
   http: 
   shared_preferences: ^0.5.1+2
-  firebase_messaging:
+  # firebase_messaging:
   google_sign_in: 
   intl: ^0.15.8
   url_launcher:
@@ -53,6 +53,7 @@ dependencies:
    # location: ^2.3.3
   # geocoder: ^0.1.2
 dev_dependencies:
+  test:
   flutter_test: 
     sdk: flutter
   flutter_launcher_icons: "^0.7.3"
@@ -80,6 +81,7 @@ flutter:
    - assets/images/icon-400.png
    - assets/images/qr.png
    - assets/images/bulb.png
+   - assets/images/google_logo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

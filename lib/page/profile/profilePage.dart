@@ -1,18 +1,20 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
+import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
-import 'package:flutter_twitter_clone/page/feed/feedPage.dart';
-import 'package:flutter_twitter_clone/state/appState.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/chats/chatState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
+import 'package:flutter_twitter_clone/widgets/newWidget/customLoader.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
-import 'package:flutter_twitter_clone/widgets/tweet.dart';
+import 'package:flutter_twitter_clone/widgets/newWidget/emptyList.dart';
+import 'package:flutter_twitter_clone/widgets/newWidget/rippleButton.dart';
+import 'package:flutter_twitter_clone/widgets/tweet/tweet.dart';
+import 'package:flutter_twitter_clone/widgets/tweet/widgets/tweetBottomSheet.dart';
 import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -29,189 +31,299 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   void initState() {
-    var authstate = Provider.of<AuthState>(context, listen: false);
-    authstate.getProfileUser(userProfileId: widget.profileId);
-    isMyProfile =
-        widget.profileId == null || widget.profileId == authstate.userId;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      var authstate = Provider.of<AuthState>(context, listen: false);
+      authstate.getProfileUser(userProfileId: widget.profileId);
+      isMyProfile =
+          widget.profileId == null || widget.profileId == authstate.userId;
+    });
+
     super.initState();
   }
 
   SliverAppBar getAppbar() {
-    var authstate = Provider.of<AuthState>(
-      context,
-    );
+    var authstate = Provider.of<AuthState>(context);
     return SliverAppBar(
       expandedHeight: 180,
       elevation: 0,
       iconTheme: IconThemeData(color: Colors.white),
       backgroundColor: Colors.transparent,
       actions: <Widget>[
-        PopupMenuButton<Choice>(
-          onSelected: (d) {},
-          itemBuilder: (BuildContext context) {
-            return choices.map((Choice choice) {
-              return PopupMenuItem<Choice>(
-                value: choice,
-                child: Text(choice.title),
-              );
-            }).toList();
-          },
-        ),
+        authstate.isbusy
+            ? SizedBox.shrink()
+            : PopupMenuButton<Choice>(
+                onSelected: (d) {},
+                itemBuilder: (BuildContext context) {
+                  return choices.map((Choice choice) {
+                    return PopupMenuItem<Choice>(
+                      value: choice,
+                      child: Text(choice.title),
+                    );
+                  }).toList();
+                },
+              ),
       ],
       flexibleSpace: FlexibleSpaceBar(
-        background: Stack(
-          children: <Widget>[
-            Container(height: 30, color: Colors.black),
-            Padding(
-              padding: EdgeInsets.only(top: 30),
-              child: customNetworkImage(
-                  'https://pbs.twimg.com/profile_banners/457684585/1510495215/1500x500',
-                  fit: BoxFit.fill),
-            ),
-            Container(
-              alignment: Alignment.bottomLeft,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        background: authstate.isbusy
+            ? SizedBox.shrink()
+            : Stack(
                 children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.white, width: 5),
-                        shape: BoxShape.circle),
-                    child: customImage(
-                      context,
-                      authstate.profileUserModel.profilePic,
-                      height: 80,
+                  SizedBox.expand(
+                    child: Container(
+                      padding: EdgeInsets.only(top: 50),
+                      height: 30,
+                      color: Colors.white,
                     ),
                   ),
+                  Container(height: 50, color: Colors.black),
+                  Padding(
+                    padding: EdgeInsets.only(top: 30),
+                    child: customNetworkImage(
+                        'https://pbs.twimg.com/profile_banners/457684585/1510495215/1500x500',
+                        fit: BoxFit.fill),
+                  ),
                   Container(
-                    margin: EdgeInsets.only(top: 60, right: 30),
+                    alignment: Alignment.bottomLeft,
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        isMyProfile
-                            ? Container(
-                                height: 40,
-                              )
-                            : InkWell(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(20),
-                                ),
-                                onTap: () {
-                                  if (!isMyProfile) {
-                                     final chatState = Provider.of<ChatState>(context, listen: false);
-                                     chatState.setChatUser = authstate.profileUserModel;
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.white, width: 5),
+                              shape: BoxShape.circle),
+                          child: customImage(
+                            context,
+                            authstate.profileUserModel.profilePic,
+                            height: 80,
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(top: 60, right: 30),
+                          child: Row(
+                            children: <Widget>[
+                              isMyProfile
+                                  ? Container(
+                                      height: 40,
+                                    )
+                                  : RippleButton(
+                                      splashColor: TwitterColor.dodgetBlue_50
+                                          .withAlpha(100),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(20),
+                                      ),
+                                      onPressed: () {
+                                        if (!isMyProfile) {
+                                          final chatState =
+                                              Provider.of<ChatState>(context,
+                                                  listen: false);
+                                          chatState.setChatUser =
+                                              authstate.profileUserModel;
+                                          Navigator.pushNamed(
+                                              context, '/ChatScreenPage');
+                                        }
+                                      },
+                                      child: Container(
+                                        height: 35,
+                                        width: 35,
+                                        padding: EdgeInsets.only(
+                                            bottom: 5,
+                                            top: 0,
+                                            right: 0,
+                                            left: 0),
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: isMyProfile
+                                                    ? Colors.black87
+                                                        .withAlpha(180)
+                                                    : Colors.blue,
+                                                width: 1),
+                                            shape: BoxShape.circle),
+                                        child: Icon(
+                                          IconData(AppIcon.messageEmpty,
+                                              fontFamily: 'TwitterIcon'),
+                                          color: Colors.blue,
+                                          size: 20,
+                                        ),
+
+                                        // customIcon(context, icon:AppIcon.messageEmpty, iconColor: TwitterColor.dodgetBlue, paddingIcon: 8)
+                                      ),
+                                    ),
+                              SizedBox(width: 10),
+                              RippleButton(
+                                splashColor:
+                                    TwitterColor.dodgetBlue_50.withAlpha(100),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(60)),
+                                onPressed: () {
+                                  if (isMyProfile) {
                                     Navigator.pushNamed(
-                                        context, '/ChatScreenPage');
+                                        context, '/EditProfile');
+                                  } else {
+                                    authstate.followUser(
+                                        removeFollower: isFollower());
                                   }
                                 },
                                 child: Container(
-                                  // margin: EdgeInsets.only(right: 20),
-                                  padding: EdgeInsets.all(8),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 5),
                                   decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color: isMyProfile
-                                              ? Colors.black87.withAlpha(180)
-                                              : Colors.blue,
-                                          width: 1),
-                                      shape: BoxShape.circle),
-                                  child: Icon(
-                                    Icons.mail_outline,
-                                    color: Colors.blue,
-                                    size: 15,
+                                    color: isFollower()
+                                        ? TwitterColor.dodgetBlue
+                                        : TwitterColor.white,
+                                    border: Border.all(
+                                        color: isMyProfile
+                                            ? Colors.black87.withAlpha(180)
+                                            : Colors.blue,
+                                        width: 1),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Text(
+                                    isMyProfile
+                                        ? 'Edit Profile'
+                                        : isFollower() ? 'Following' : 'Follow',
+                                    style: TextStyle(
+                                        color: isMyProfile
+                                            ? Colors.black87.withAlpha(180)
+                                            : isFollower()
+                                                ? TwitterColor.white
+                                                : Colors.blue,
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
                               ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        InkWell(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(20),
+                            ],
                           ),
-                          onTap: () {
-                            if (isMyProfile) {
-                              Navigator.pushNamed(context, '/EditProfile');
-                            }
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 5),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: isMyProfile
-                                      ? Colors.black87.withAlpha(180)
-                                      : Colors.blue,
-                                  width: 1),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Text(
-                              isMyProfile ? 'Edit Profile' : 'Follow',
-                              style: TextStyle(
-                                  color: isMyProfile
-                                      ? Colors.black87.withAlpha(180)
-                                      : Colors.blue,
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ),
+                        )
                       ],
                     ),
                   )
                 ],
               ),
-            )
-          ],
-        ),
       ),
     );
   }
 
+  Widget _floatingActionButton() {
+    return FloatingActionButton(
+      onPressed: () {
+        Navigator.of(context).pushNamed('/CreateFeedPage');
+      },
+      child: customIcon(
+        context,
+        icon: AppIcon.fabTweet,
+        istwitterIcon: true,
+        iconColor: Theme.of(context).colorScheme.onPrimary,
+        size: 25,
+      ),
+    );
+  }
+
+  Widget _emptyBox() {
+    return SliverToBoxAdapter(child: SizedBox.shrink());
+  }
+
+  isFollower() {
+    var authstate = Provider.of<AuthState>(context);
+    if (authstate.profileUserModel.followersList != null &&
+        authstate.profileUserModel.followersList.isNotEmpty) {
+      return (authstate.profileUserModel.followersList
+          .any((x) => x == authstate.userModel.userId));
+    } else {
+      return false;
+    }
+  }
+
+  /// This meathod called when user pressed back button
+  /// When profile page is about to close
+  /// Maintain minimum user's profile in profile page list
+  Future<bool> _onWillPop() async {
+    final state = Provider.of<AuthState>(context, listen: false);
+
+    /// It will remove last user's profile from profileUserModelList
+    state.removeLastUser();
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
-    var state = Provider.of<FeedState>(
-      context,
-    );
-    var authstate = Provider.of<AuthState>(
-      context,
-    );
+    var state = Provider.of<FeedState>(context);
+    var authstate = Provider.of<AuthState>(context);
     List<FeedModel> list;
     String id = widget.profileId ?? authstate.userId;
     if (state.feedlist != null && state.feedlist.length > 0) {
       list = state.feedlist.where((x) => x.userId == id).toList();
     }
-    return Scaffold(
-      body: authstate.profileUserModel == null
-          ? loader()
-          : CustomScrollView(
-              slivers: <Widget>[
-                getAppbar(),
-                UserNameRowWidget(
-                  user: authstate.profileUserModel,
-                  isMyProfile: isMyProfile,
-                ),
-                SliverList(
-                  delegate: SliverChildListDelegate(
-                    list == null || list.length < 1
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        backgroundColor: list != null && list.isNotEmpty
+            ? TwitterColor.mystic
+            : TwitterColor.white,
+        floatingActionButton: isMyProfile ? _floatingActionButton() : null,
+        body: CustomScrollView(
+          physics: ClampingScrollPhysics(),
+          slivers: <Widget>[
+            getAppbar(),
+            authstate.isbusy
+                ? _emptyBox()
+                : SliverToBoxAdapter(
+                    child: Container(
+                      color: Colors.white,
+                      child: authstate.isbusy
+                          ? SizedBox.shrink()
+                          : UserNameRowWidget(
+                              user: authstate.profileUserModel,
+                              isMyProfile: isMyProfile,
+                            ),
+                    ),
+                  ),
+            SliverList(
+              delegate: SliverChildListDelegate(
+                authstate.isbusy
+                    ? [
+                        Container(
+                            height: fullHeight(context) - 180,
+                            child: CustomScreenLoader(
+                              height: double.infinity,
+                              width: fullWidth(context),
+                              backgroundColor: Colors.white,
+                            ))
+                      ]
+                    : list == null || list.length < 1
                         ? [
                             Container(
-                              child: Center(
-                                child: Text(
-                                  'No tweet posted yet',
-                                  style: subtitleStyle,
-                                ),
+                              padding:
+                                  EdgeInsets.only(top: 50, left: 30, right: 30),
+                              child: NotifyText(
+                                title: isMyProfile
+                                    ? 'You haven\'t post any Tweet yet'
+                                    : '${authstate.profileUserModel.userName} hasn\'t Tweeted yet',
+                                subTitle: isMyProfile
+                                    ? 'Tap tweet button to add new'
+                                    : 'Once he\'ll do, they will be shown up here',
                               ),
                             )
                           ]
                         : list
                             .map(
-                              (x) => Tweet(model: x),
+                              (x) => Container(
+                                color: TwitterColor.white,
+                                child: Tweet(
+                                  model: x,
+                                  isDisplayOnProfile: true,
+                                  trailing: TweetBottomSheet().tweetOptionIcon(
+                                      context, x, TweetType.Tweet),
+                                ),
+                              ),
                             )
                             .toList(),
-                  ),
-                )
-              ],
-            ),
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }
@@ -223,8 +335,8 @@ class UserNameRowWidget extends StatelessWidget {
     @required this.isMyProfile,
   }) : super(key: key);
 
-  final User user;
   final bool isMyProfile;
+  final User user;
 
   String getBio(String bio) {
     if (isMyProfile) {
@@ -236,118 +348,129 @@ class UserNameRowWidget extends StatelessWidget {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return SliverList(
-      delegate: SliverChildListDelegate(
-        [
-          SizedBox(height: 10),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: 10,
-            ),
-            child: Row(
-              children: <Widget>[
-                UrlText(
-                  text: user.displayName,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-                SizedBox(
-                  width: 3,
-                ),
-                user.isVerified
-                    ? customIcon(context,
-                        icon: AppIcon.blueTick,
-                        istwitterIcon: true,
-                        iconColor: AppColor.primary,
-                        size: 13,
-                        paddingIcon: 3)
-                    : SizedBox(
-                        width: 0,
-                      ),
-              ],
-            ),
+  Widget _tappbleText(
+      BuildContext context, String count, String text, String navigateTo) {
+    return InkWell(
+      onTap: () {
+        Navigator.pushNamed(context, '/$navigateTo');
+      },
+      child: Row(
+        children: <Widget>[
+          customText(
+            '$count ',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 9),
-            child: customText(
-              '${user.userName}',
-              style: subtitleStyle.copyWith(fontSize: 13),
-            ),
+          customText(
+            '$text',
+            style: TextStyle(color: AppColor.darkGrey, fontSize: 17),
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            child: customText(
-              getBio(user.bio),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            child: Row(
-              children: <Widget>[
-                Icon(Icons.location_city, size: 14, color: Colors.black54),
-                SizedBox(
-                  width: 10,
-                ),
-                customText(
-                  user.location,
-                  style: TextStyle(color: Colors.black54),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            child: Row(
-              children: <Widget>[
-                Icon(Icons.calendar_today, size: 14, color: Colors.black54),
-                SizedBox(
-                  width: 10,
-                ),
-                customText(
-                  getdob(user.dob),
-                  style: TextStyle(color: Colors.black54),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            alignment: Alignment.center,
-            child: Row(
-              children: <Widget>[
-                SizedBox(
-                  width: 10,
-                  height: 30,
-                ),
-                customText(
-                  '${user.followers} ',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
-                ),
-                customText(
-                  'Followers',
-                  style: TextStyle(color: Colors.black54, fontSize: 17),
-                ),
-                SizedBox(
-                  width: 40,
-                ),
-                customText(
-                  '${user.following} ',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
-                ),
-                customText(
-                  'Following',
-                  style: TextStyle(color: Colors.black54, fontSize: 17),
-                ),
-              ],
-            ),
-          ),
-          Divider()
         ],
       ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        SizedBox(height: 10),
+        Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: 10,
+          ),
+          child: Row(
+            children: <Widget>[
+              UrlText(
+                text: user.displayName,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              SizedBox(
+                width: 3,
+              ),
+              user.isVerified
+                  ? customIcon(context,
+                      icon: AppIcon.blueTick,
+                      istwitterIcon: true,
+                      iconColor: AppColor.primary,
+                      size: 13,
+                      paddingIcon: 3)
+                  : SizedBox(width: 0),
+            ],
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 9),
+          child: customText(
+            '${user.userName}',
+            style: subtitleStyle.copyWith(fontSize: 13),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          child: customText(
+            getBio(user.bio),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          child: Row(
+            children: <Widget>[
+              customIcon(context,
+                  icon: AppIcon.locationPin,
+                  size: 14,
+                  istwitterIcon: true,
+                  paddingIcon: 5,
+                  iconColor: AppColor.darkGrey),
+              SizedBox(width: 10),
+              customText(
+                user.location,
+                style: TextStyle(color: AppColor.darkGrey),
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          child: Row(
+            children: <Widget>[
+              customIcon(context,
+                  icon: AppIcon.calender,
+                  size: 14,
+                  istwitterIcon: true,
+                  paddingIcon: 5,
+                  iconColor: AppColor.darkGrey),
+              SizedBox(width: 10),
+              customText(
+                getJoiningDate(user.createdAt),
+                style: TextStyle(color: AppColor.darkGrey),
+              ),
+            ],
+          ),
+        ),
+        Container(
+          alignment: Alignment.center,
+          child: Row(
+            children: <Widget>[
+              SizedBox(
+                width: 10,
+                height: 30,
+              ),
+              _tappbleText(context, '${user.getFollower()}', ' Followers',
+                  'FollowerListPage'),
+              SizedBox(width: 40),
+              _tappbleText(context, '${user.getFollowing()}', ' Following',
+                  'FollowingListPage'),
+            ],
+          ),
+        ),
+        SizedBox(height: 5),
+        Divider(height: 0)
+      ],
     );
   }
 }

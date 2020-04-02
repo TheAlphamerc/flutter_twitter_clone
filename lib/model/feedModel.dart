@@ -4,12 +4,13 @@ import 'package:flutter_twitter_clone/model/user.dart';
 class FeedModel {
   String key;
   String parentkey;
+  String childRetwetkey;
   String description;
   String userId;
-  bool isVerifiedUser;
   int likeCount;
   List<LikeList> likeList;
   int commentCount;
+  int retweetCount;
   String createdAt;
   String imagePath;
   List<String> tags;
@@ -21,14 +22,15 @@ class FeedModel {
     this.userId,
     this.likeCount,
     this.commentCount,
+    this.retweetCount,
     this.createdAt,
     this.imagePath,
     this.likeList,
     this.tags,
-    this.isVerifiedUser,
     this.user,
     this.replyTweetKeyList,
     this.parentkey,
+    this.childRetwetkey
     });
   toJson() {
     Map<dynamic,dynamic> map;
@@ -43,14 +45,15 @@ class FeedModel {
       "description": description,
      "likeCount":likeCount,
       "commentCount":commentCount ?? 0,
+      "retweetCount": retweetCount ?? 0,
       "createdAt":createdAt,
       "imagePath":imagePath,
       "likeList":map,
       "tags":tags,
       "replyTweetKeyList":replyTweetKeyList,
-      "isVerifiedUser":isVerifiedUser ?? false,
       "user":user == null ? null : user.toJson(),
-      "parentkey": parentkey
+      "parentkey": parentkey,
+      "childRetwetkey":childRetwetkey
     };
   }
   dynamic getLikeList(List<String> list){
@@ -70,13 +73,14 @@ class FeedModel {
   //  profilePic = map['profilePic'];
    likeCount = map['likeCount'];
    commentCount = map['commentCount'];
+   retweetCount = map["retweetCount"] ?? 0;
    imagePath = map['imagePath'];
    createdAt = map['createdAt'];
    imagePath = map['imagePath'];
   //  username = map['username'];
-   isVerifiedUser = map['isVerifiedUser'] ?? false;
    user = User.fromJson(map['user']);
    parentkey = map['parentkey'];
+   childRetwetkey = map['childRetwetkey'];
    if(map['tags'] != null){
       tags = List<String>();
       map['tags'].forEach((value){

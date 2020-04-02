@@ -57,8 +57,7 @@ class _SidebarMenuState extends State<SidebarMenu> {
             ),
             ListTile(
               onTap: () {
-                Navigator.pop(context);
-                Navigator.of(context).pushNamed('/ProfilePage');
+                _navigateTo("ProfilePage");
               },
               title: Row(
                 children: <Widget>[
@@ -100,37 +99,11 @@ class _SidebarMenuState extends State<SidebarMenu> {
                   SizedBox(
                     width: 17,
                   ),
-                  customText(
-                    '${state.userModel.followers ?? 0}',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 17,
-                    ),
-                  ),
-                  customText(
-                    ' Followors',
-                    style: TextStyle(
-                      color: Colors.black54,
-                      fontSize: 17,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  customText(
-                    '${state.userModel.following ?? 0}' ?? '0',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 17,
-                    ),
-                  ),
-                  customText(
-                    ' Following',
-                    style: TextStyle(
-                      color: Colors.black54,
-                      fontSize: 17,
-                    ),
-                  ),
+                  _tappbleText(context, '${state.userModel.getFollower()}',
+                      ' Followers', 'FollowerListPage'),
+                  SizedBox(width: 10),
+                  _tappbleText(context, '${state.userModel.getFollowing()}',
+                      ' Following', 'FollowingListPage'),
                 ],
               ),
             ),
@@ -138,6 +111,30 @@ class _SidebarMenuState extends State<SidebarMenu> {
         ),
       );
     }
+  }
+
+  Widget _tappbleText(
+      BuildContext context, String count, String text, String navigateTo) {
+    return InkWell(
+      onTap: () {
+        var authstate = Provider.of<AuthState>(context);
+        // authstate.profileFollowingList = [];
+        authstate.getProfileUser();
+        _navigateTo(navigateTo);
+      },
+      child: Row(
+        children: <Widget>[
+          customText(
+            '$count ',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+          ),
+          customText(
+            '$text',
+            style: TextStyle(color: AppColor.darkGrey, fontSize: 17),
+          ),
+        ],
+      ),
+    );
   }
 
   ListTile _menuListRowButton(String title,
@@ -183,13 +180,11 @@ class _SidebarMenuState extends State<SidebarMenu> {
                 width: 10,
                 height: 45,
               ),
-              customIcon(
-                context,
-                icon: AppIcon.bulbOn,
-                istwitterIcon: true,
-                size: 25,
-                iconColor: TwitterColor.dodgetBlue
-              ),
+              customIcon(context,
+                  icon: AppIcon.bulbOn,
+                  istwitterIcon: true,
+                  size: 25,
+                  iconColor: TwitterColor.dodgetBlue),
               Spacer(),
               Image.asset(
                 "assets/images/qr.png",
@@ -208,10 +203,12 @@ class _SidebarMenuState extends State<SidebarMenu> {
 
   void _logOut() {
     final state = Provider.of<AuthState>(context);
+    Navigator.pop(context);
     state.logoutCallback();
   }
 
   void _navigateTo(String path) {
+    Navigator.pop(context);
     Navigator.of(context).pushNamed('/$path');
   }
 
@@ -239,10 +236,8 @@ class _SidebarMenuState extends State<SidebarMenu> {
                   _menuListRowButton('Moments', icon: AppIcon.moments),
                   _menuListRowButton('Twitter ads', icon: AppIcon.twitterAds),
                   Divider(),
-                  _menuListRowButton('Settings and privacy',
-                  isEnable: true,
-                   onPressed: () {
-                     Navigator.pop(context);
+                  _menuListRowButton('Settings and privacy', isEnable: true,
+                      onPressed: () {
                     _navigateTo('SettingsAndPrivacyPage');
                   }),
                   _menuListRowButton('Help Center'),

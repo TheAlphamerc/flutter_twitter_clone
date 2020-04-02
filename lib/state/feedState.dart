@@ -1,63 +1,36 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/firebase_database.dart' as dabase;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
+import 'package:flutter_twitter_clone/state/appState.dart';
 import 'package:path/path.dart' as Path;
-import 'authState.dart';
+// import 'authState.dart';
 
-class FeedState extends AuthState {
-  final databaseReference = Firestore.instance;
+class FeedState extends AppState {
   bool isBusy = false;
   Map<String, List<FeedModel>> tweetReplyMap = {};
+  FeedModel _tweetToReplyModel;
+  FeedModel get tweetToReplyModel => _tweetToReplyModel;
+  set setTweetToReply(FeedModel model) {
+    _tweetToReplyModel = model;
+  }
 
   List<FeedModel> _commentlist;
-  final FirebaseDatabase _database = FirebaseDatabase.instance;
+  
   List<FeedModel> _feedlist;
   dabase.Query _feedQuery;
-  List<FeedModel> _tweetDetailModel;
+  List<FeedModel> _tweetDetailModelList;
+  List<String> _userfollowingList;
+  List<String> get followingList => _userfollowingList;
 
-  List<FeedModel> get tweetDetailModel => _tweetDetailModel;
-
-  /// set tweet for detail tweet page
-  set setFeedModel(FeedModel model) {
-    if (_tweetDetailModel == null) {
-      _tweetDetailModel = [];
-    }
-
-    /// [Skip if any duplicate tweet already present]
-    if (_tweetDetailModel.length == 0 ||
-        _tweetDetailModel.length > 0 &&
-            !_tweetDetailModel.any((x) => x.key == model.key)) {
-      _tweetDetailModel.add(model);
-      notifyListeners();
-    }
-  }
-
-  /// remove last tweet available from tweet detail page stack
-  void removeLastTweetDetail(String tweetKey) {
-    if (_tweetDetailModel != null && _tweetDetailModel.length > 0) {
-      _tweetDetailModel.removeWhere((x) => x.key == tweetKey);
-      tweetReplyMap.removeWhere((key, value) => key == tweetKey);
-    }
-  }
-
-  /// [clear all tweets] if any tweet present in tweet detail page or comment tweet
-  void clearAllDetailAndReplyTweetStack() {
-    if (_tweetDetailModel != null) {
-      _tweetDetailModel.clear();
-    }
-    if (tweetReplyMap != null) {
-      tweetReplyMap.clear();
-    }
-    cprint('Empty tweets from stack');
-  }
+  List<FeedModel> get tweetDetailModel => _tweetDetailModelList;
 
   /// contain tweet list for home page
+  /// `feedlist` always [contain all tweets] fetched from firebase kDatabase
   List<FeedModel> get feedlist {
     if (_feedlist == null) {
       return null;
@@ -66,7 +39,8 @@ class FeedState extends AuthState {
     }
   }
 
-  /// contain reply tweets list for parent tweet
+  /// contain reply tweets list for parent tweet.
+  /// commentlist changes when another Tweet get opened.
   List<FeedModel> get commentlist {
     if (_commentlist == null) {
       return null;
@@ -75,11 +49,51 @@ class FeedState extends AuthState {
     }
   }
 
-  /// [Intitilise firebase Database]
+  /// set tweet for detail tweet page
+  /// Setter call when tweet is tapped to view detail
+  /// Add Tweet detail is added in _tweetDetailModelList
+  /// It makes `Fwitter` to view nested Tweets
+  set setFeedModel(FeedModel model) {
+    if (_tweetDetailModelList == null) {
+      _tweetDetailModelList = [];
+    }
+
+    /// [Skip if any duplicate tweet already present]
+    if (_tweetDetailModelList.length == 0 ||
+        _tweetDetailModelList.length > 0 &&
+            !_tweetDetailModelList.any((x) => x.key == model.key)) {
+      _tweetDetailModelList.add(model);
+      notifyListeners();
+    }
+  }
+
+  /// `remove` last Tweet from tweet detail page stack
+  /// Function called when navigating back from a Tweet detail
+  /// `_tweetDetailModelList` is map which contain lists of commment Tweet list
+  /// After removing Tweet from Tweet detail Page stack its commnets tweet is also removed from `_tweetDetailModelList`
+  void removeLastTweetDetail(String tweetKey) {
+    if (_tweetDetailModelList != null && _tweetDetailModelList.length > 0) {
+      _tweetDetailModelList.removeWhere((x) => x.key == tweetKey);
+      tweetReplyMap.removeWhere((key, value) => key == tweetKey);
+    }
+  }
+
+  /// [clear all tweets] if any tweet present in tweet detail page or comment tweet
+  void clearAllDetailAndReplyTweetStack() {
+    if (_tweetDetailModelList != null) {
+      _tweetDetailModelList.clear();
+    }
+    if (tweetReplyMap != null) {
+      tweetReplyMap.clear();
+    }
+    cprint('Empty tweets from stack');
+  }
+
+  /// [Subscribe Tweets] firebase Database
   Future<bool> databaseInit() {
     try {
       if (_feedQuery == null) {
-        _feedQuery = _database.reference().child("tweet");
+        _feedQuery = kDatabase.child("tweet");
         _feedQuery.onChildAdded.listen(_onTweetAdded);
         _feedQuery.onChildChanged.listen(_onTweetChanged);
         _feedQuery.onChildRemoved.listen(_onTweetRemoved);
@@ -87,15 +101,17 @@ class FeedState extends AuthState {
 
       return Future.value(true);
     } catch (error) {
-      cprint(error);
+      cprint(error, errorIn: 'databaseInit');
       return Future.value(false);
     }
   }
 
-  /// get [Tweet list] from firebase realtime database
+  /// get [Tweet list] from firebase realtime kDatabase
   void getDataFromDatabase() {
     try {
       isBusy = true;
+      _feedlist = null;
+      notifyListeners();
       final databaseReference = FirebaseDatabase.instance.reference();
       databaseReference.child('tweet').once().then((DataSnapshot snapshot) {
         _feedlist = List<FeedModel>();
@@ -118,11 +134,11 @@ class FeedState extends AuthState {
       });
     } catch (error) {
       isBusy = false;
-      cprint(error);
+      cprint(error, errorIn: 'getDataFromDatabase');
     }
   }
 
-  /// get [Tweet Detail] from firebase realtime database
+  /// get [Tweet Detail] from firebase realtime kDatabase
   void getpostDetailFromDatabase(String postID, {FeedModel model}) async {
     try {
       FeedModel _tweetDetail;
@@ -187,45 +203,79 @@ class FeedState extends AuthState {
         }
       }
     } catch (error) {
-      cprint(error);
+      cprint(error, errorIn: 'getpostDetailFromDatabase');
     }
+  }
+
+  /// Fetch `Retweet` model from firebase realtime kDatabase.
+  /// Retweet itself  is a type of `Tweet`
+  Future<FeedModel> fetchTweet(String postID) async {
+    FeedModel _tweetDetail;
+    final databaseReference = FirebaseDatabase.instance.reference();
+    var model =
+        await databaseReference.child('tweet').child(postID).once().then(
+      (DataSnapshot snapshot) {
+        if (snapshot.value != null) {
+          var map = snapshot.value;
+          _tweetDetail = FeedModel.fromJson(map);
+          _tweetDetail.key = snapshot.key;
+        }
+      },
+    );
+    if (model != null) {
+      _tweetDetail = model;
+    }
+    return _tweetDetail;
   }
 
   /// create [New Tweet]
   createTweet(FeedModel model) {
-    ///  Create tweet in [Firebase database]
+    ///  Create tweet in [Firebase kDatabase]
     isBusy = true;
     notifyListeners();
     try {
-      _database.reference().child('tweet').push().set(model.toJson());
+      kDatabase.child('tweet').push().set(model.toJson());
     } catch (error) {
-      cprint(error);
+      cprint(error, errorIn: 'createTweet');
     }
     isBusy = false;
     notifyListeners();
   }
 
-  /// [Delete tweet]
+  ///  It will create tweet in [Firebase kDatabase] just like other normal tweet.
+  ///  update retweet count for retweet model
+  createReTweet(FeedModel model) {
+    try {
+      createTweet(model);
+      _tweetToReplyModel.retweetCount += 1;
+      updateTweet(_tweetToReplyModel);
+    } catch (error) {
+      cprint(error, errorIn: 'createReTweet');
+    }
+  }
+
+  /// [Delete tweet] in Firebase kDatabase
+  /// Remove Tweet if present in home page Tweet list
+  /// Remove Tweet if present in Tweet detail page or in comment
   deleteTweet(String tweetId, TweetType type, {String parentkey}) {
-    ///  Delete tweet in [Firebase database]
     try {
       /// Delete tweet if it is in nested tweet detail page
-      _database.reference().child('tweet').child(tweetId).remove().then((_) {
+      kDatabase.child('tweet').child(tweetId).remove().then((_) {
         if (type == TweetType.Detail &&
-            _tweetDetailModel != null &&
-            _tweetDetailModel.length > 0) {
-          var deletedTweet =
-              _tweetDetailModel.firstWhere((x) => x.key == tweetId);
-          _tweetDetailModel.remove(_tweetDetailModel);
-          if (_tweetDetailModel.length == 0) {
-            _tweetDetailModel = null;
+            _tweetDetailModelList != null &&
+            _tweetDetailModelList.length > 0) {
+          // var deletedTweet =
+          //     _tweetDetailModelList.firstWhere((x) => x.key == tweetId);
+          _tweetDetailModelList.remove(_tweetDetailModelList);
+          if (_tweetDetailModelList.length == 0) {
+            _tweetDetailModelList = null;
           }
 
           cprint('Tweet deleted from nested tweet detail page tweet');
         }
       });
     } catch (error) {
-      cprint(error);
+      cprint(error, errorIn: 'deleteTweet');
     }
   }
 
@@ -246,7 +296,7 @@ class FeedState extends AuthState {
         }
       }
     } catch (error) {
-      cprint(error);
+      cprint(error, errorIn: 'uploadFile');
       return null;
     }
   }
@@ -269,33 +319,29 @@ class FeedState extends AuthState {
         cprint('[Sucess] Image deleted');
       });
     } catch (error) {
-      cprint(error);
+      cprint(error, errorIn: 'deleteFile');
     }
   }
 
   /// [update] tweet
   updateTweet(FeedModel model) async {
-    await _database
-        .reference()
-        .child('tweet')
-        .child(model.key)
-        .set(model.toJson());
+    await kDatabase.child('tweet').child(model.key).set(model.toJson());
   }
 
-  /// [postId] is tweet id, [userId] is user's id
+  /// Add/Remove like on a Tweet
+  /// [postId] is tweet id, [userId] is user's id who like/unlike Tweet
   addLikeToTweet(FeedModel tweet, String userId) {
     try {
-      //  FeedModel model = _feedlist.firstWhere((x) => x.key == postId);
       if (tweet.likeList != null &&
           tweet.likeList.length > 0 &&
           tweet.likeList.any((x) => x.userId == userId)) {
         tweet.likeList.removeWhere(
           (x) => x.userId == userId,
         );
+        // If user unlike Tweet
         tweet.likeCount -= 1;
         updateTweet(tweet);
-        _database
-            .reference()
+        kDatabase
             .child('notification')
             .child(tweet.userId)
             .child(
@@ -305,15 +351,14 @@ class FeedState extends AuthState {
             .child(userId)
             .remove();
       } else {
-        _database
-            .reference()
+        // If user like Tweet
+        kDatabase
             .child('tweet')
             .child(tweet.key)
             .child('likeList')
             .child(userId)
             .set({'userId': userId});
-        _database
-            .reference()
+        kDatabase
             .child('notification')
             .child(tweet.userId)
             .child(
@@ -324,32 +369,35 @@ class FeedState extends AuthState {
             .set({'userId': userId});
       }
     } catch (error) {
-      cprint("[addLikeToTweet] $error");
+      cprint(error, errorIn: 'addLikeToTweet');
     }
   }
 
-  /// add [new comment tweet] to any tweet
-  addcommentToPost(String postId, FeedModel replyTweet) {
+  /// Add [new comment tweet] to any tweet
+  /// Comment is a Tweet itself
+  addcommentToPost(FeedModel replyTweet) {
     try {
       isBusy = true;
       notifyListeners();
-      if (postId != null) {
-        FeedModel tweet = _feedlist.firstWhere((x) => x.key == postId);
-
+      if (_tweetToReplyModel != null) {
+        FeedModel tweet =
+            _feedlist.firstWhere((x) => x.key == _tweetToReplyModel.key);
         var json = replyTweet.toJson();
-        _database.reference().child('tweet').push().set(json).then((value) {
+        kDatabase.child('tweet').push().set(json).then((value) {
           tweet.replyTweetKeyList.add(_feedlist.last.key);
           updateTweet(tweet);
         });
       }
     } catch (error) {
-      cprint(error);
+      cprint(error, errorIn: 'addcommentToPost');
     }
     isBusy = false;
     notifyListeners();
   }
 
   /// Trigger when any tweet changes or update
+  /// When any tweet changes it update it in UI
+  /// No matter if Tweet is in home page or in detail page or in comment section.
   _onTweetChanged(Event event) {
     var model = FeedModel.fromJson(event.snapshot.value);
     model.key = event.snapshot.key;
@@ -360,12 +408,12 @@ class FeedState extends AuthState {
       _feedlist[_feedlist.indexOf(oldEntry)] = model;
     }
 
-    if (_tweetDetailModel != null && _tweetDetailModel.length > 0) {
-      if (_tweetDetailModel.any((x) => x.key == model.key)) {
-        var oldEntry = _tweetDetailModel.singleWhere((entry) {
+    if (_tweetDetailModelList != null && _tweetDetailModelList.length > 0) {
+      if (_tweetDetailModelList.any((x) => x.key == model.key)) {
+        var oldEntry = _tweetDetailModelList.singleWhere((entry) {
           return entry.key == event.snapshot.key;
         });
-        _tweetDetailModel[_tweetDetailModel.indexOf(oldEntry)] = model;
+        _tweetDetailModelList[_tweetDetailModelList.indexOf(oldEntry)] = model;
       }
       if (tweetReplyMap != null && tweetReplyMap.length > 0) {
         if (true) {
@@ -390,9 +438,13 @@ class FeedState extends AuthState {
   }
 
   /// Trigger when new tweet added
+  /// It will add new Tweet in home page list.
+  /// IF Tweet is comment it will be added in comment section too.
   _onTweetAdded(Event event) {
     FeedModel tweet = FeedModel.fromJson(event.snapshot.value);
     tweet.key = event.snapshot.key;
+
+    /// Check if Tweet is a comment
     _onCommentAdded(tweet);
     tweet.key = event.snapshot.key;
     if (_feedlist == null) {
@@ -401,35 +453,42 @@ class FeedState extends AuthState {
     if ((_feedlist.length == 0 || _feedlist.any((x) => x.key != tweet.key)) &&
         tweet.isValidTweet) {
       _feedlist.add(tweet);
+      cprint('Tweet Added');
     }
-    cprint('Tweet Added');
     isBusy = false;
     notifyListeners();
   }
 
   /// Trigger when comment tweet added
+  /// Check if Tweet is a comment
+  /// If Yes it will add tweet in comment list.
+  /// add [new tweet] comment to comment list
   _onCommentAdded(FeedModel tweet) {
-    /// add [new tweet] comment to comment list
+    if (tweet.childRetwetkey != null) {
+      /// if Tweet is a type of retweet then it can not be a comment.
+      return;
+    }
     if (tweetReplyMap != null && tweetReplyMap.length > 0) {
       if (tweetReplyMap[tweet.parentkey] != null) {
         tweetReplyMap[tweet.parentkey].add(tweet);
       } else {
         tweetReplyMap[tweet.parentkey] = [tweet];
       }
+      cprint('Comment Added');
     }
-    cprint('Comment Added');
     isBusy = false;
     notifyListeners();
   }
 
   /// Trigger when Tweet `Deleted`
-  _onTweetRemoved(Event event) {
+  /// It removed Tweet from home page list, Tweet detail page list and from comment section if present
+  _onTweetRemoved(Event event) async {
     FeedModel tweet = FeedModel.fromJson(event.snapshot.value);
     tweet.key = event.snapshot.key;
     var tweetId = tweet.key;
     var parentkey = tweet.parentkey;
 
-    ///  Delete tweet in [Firebase database]
+    ///  Delete tweet in [Home Page]
     try {
       FeedModel deletedTweet;
       if (_feedlist.any((x) => x.key == tweetId)) {
@@ -437,7 +496,9 @@ class FeedState extends AuthState {
         deletedTweet = _feedlist.firstWhere((x) => x.key == tweetId);
         _feedlist.remove(deletedTweet);
 
-        if (deletedTweet.parentkey != null) {
+        if (deletedTweet.parentkey != null &&
+            _feedlist.isNotEmpty &&
+            _feedlist.any((x) => x.key == deletedTweet.parentkey)) {
           // Decrease parent Tweet comment count and update
           var parentModel =
               _feedlist.firstWhere((x) => x.key == deletedTweet.parentkey);
@@ -448,10 +509,10 @@ class FeedState extends AuthState {
         if (_feedlist.length == 0) {
           _feedlist = null;
         }
-        cprint('Tweet deleted from home page tweet');
+        cprint('Tweet deleted from home page tweet list');
       }
 
-      /// Delete tweet if it is in nested tweet detail comment section page
+      /// [Delete tweet] if it is in nested tweet detail comment section page
       if (parentkey != null &&
           parentkey.isNotEmpty &&
           tweetReplyMap != null &&
@@ -464,21 +525,39 @@ class FeedState extends AuthState {
         if (tweetReplyMap[parentkey].length == 0) {
           tweetReplyMap[parentkey] = null;
         }
-        var parentModel =
-            _tweetDetailModel.firstWhere((x) => x.key == parentkey);
-        parentModel.replyTweetKeyList.remove(deletedTweet.key);
-        parentModel.commentCount = parentModel.replyTweetKeyList.length;
-        updateTweet(parentModel);
-        cprint('Tweet deleted from nested ttweet detail comment section page');
+
+        if (_tweetDetailModelList != null &&
+            _tweetDetailModelList.isNotEmpty &&
+            _tweetDetailModelList.any((x) => x.key == parentkey)) {
+          var parentModel =
+              _tweetDetailModelList.firstWhere((x) => x.key == parentkey);
+          parentModel.replyTweetKeyList.remove(deletedTweet.key);
+          parentModel.commentCount = parentModel.replyTweetKeyList.length;
+          cprint('Parent tweet comment count updated on child tweet removal');
+          updateTweet(parentModel);
+        }
+
+        cprint('Tweet deleted from nested tweet detail comment section');
       }
 
-      /// Delete tweet image from firebase if exist.
+      /// Delete tweet image from firebase storage if exist.
       if (deletedTweet.imagePath != null && deletedTweet.imagePath.length > 0) {
         deleteFile(deletedTweet.imagePath, 'tweetImage');
       }
+
+      /// If a retweet is deleted then retweetCount should be decrease by 1.
+      if (deletedTweet.childRetwetkey != null) {
+        await fetchTweet(deletedTweet.childRetwetkey).then((retweetModel) {
+          if (retweetModel == null) {
+            return;
+          }
+          retweetModel.retweetCount -= 1;
+          updateTweet(retweetModel);
+        });
+      }
       notifyListeners();
     } catch (error) {
-      cprint(error);
+      cprint(error, errorIn: '_onTweetRemoved');
     }
   }
 }

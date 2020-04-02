@@ -13,8 +13,9 @@ BoxDecoration softDecoration =  BoxDecoration(
               color: Color(0xfff1f3f6)
           );
 TextStyle get titleStyle { return  TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold,);}
-TextStyle get subtitleStyle { return  TextStyle(color: Colors.black54,fontSize: 14,fontWeight: FontWeight.bold);}
+TextStyle get subtitleStyle { return  TextStyle(color: AppColor.darkGrey,fontSize: 14,fontWeight: FontWeight.bold);}
 TextStyle get userNameStyle { return  TextStyle(color: AppColor.darkGrey,fontSize: 14,fontWeight: FontWeight.bold);}
+TextStyle get textStyle14 { return  TextStyle(color: AppColor.darkGrey,fontSize: 14,fontWeight: FontWeight.bold);}
 
 class TwitterColor {
   static final Color bondiBlue = Color.fromRGBO(0, 132, 180, 1.0);
@@ -57,7 +58,8 @@ class AppTheme{
     ),
     appBarTheme: AppBarTheme(
       brightness: Brightness.light,
-      color: Colors.white,
+      color: TwitterColor.white,
+      iconTheme: IconThemeData(color: TwitterColor.dodgetBlue,),
       elevation: 0,
       textTheme:  TextTheme(
         title: TextStyle(

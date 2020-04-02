@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:provider/provider.dart';
@@ -75,7 +76,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage>{
       width: MediaQuery.of(context).size.width,
       child: FlatButton(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        color: Colors.blueAccent,
+        color: TwitterColor.dodgetBlue,
         onPressed:_submit,
         padding: EdgeInsets.symmetric(horizontal: 30,vertical: 10),
         child: Text('Submit',style:TextStyle(color: Colors.white)),

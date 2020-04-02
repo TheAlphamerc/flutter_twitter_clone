@@ -7,20 +7,21 @@ import 'package:firebase_database/firebase_database.dart' as dabase;
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/model/notificationModel.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
+import 'package:flutter_twitter_clone/state/appState.dart';
 
-class NotificationState extends ChangeNotifier {
-  List<NotificationModel> _notificationList;
-  List<NotificationModel> get notificationList => _notificationList;
-  List<User> userList = [];
+class NotificationState extends AppState {
   dabase.Query query;
+  List<User> userList = [];
 
-  final FirebaseDatabase _database = FirebaseDatabase.instance;
+  List<NotificationModel> _notificationList;
 
-  /// [Intitilise firebase notification database]
+  List<NotificationModel> get notificationList => _notificationList;
+
+  /// [Intitilise firebase notification kDatabase]
   Future<bool> databaseInit(String userId) {
     try {
       if (query == null) {
-        query = _database.reference().child("notification").child(userId);
+        query = kDatabase.child("notification").child(userId);
         query.onChildAdded.listen(_onNotificationAdded);
         query.onChildChanged.listen(_onNotificationChanged);
         query.onChildRemoved.listen(_onNotificationRemoved);
@@ -28,17 +29,17 @@ class NotificationState extends ChangeNotifier {
 
       return Future.value(true);
     } catch (error) {
-      cprint(error);
+      cprint(error, errorIn: 'databaseInit');
       return Future.value(false);
     }
   }
 
-  /// get [Notification list] from firebase realtime database
+  /// get [Notification list] from firebase realtime kDatabase
   void getDataFromDatabase(String userId) {
     try {
+       loading = true;
       _notificationList = [];
-      final databaseReference = FirebaseDatabase.instance.reference();
-      databaseReference
+      kDatabase
           .child('notification')
           .child(userId)
           .once()
@@ -52,18 +53,18 @@ class NotificationState extends ChangeNotifier {
             });
           }
         }
-        notifyListeners();
+       loading = false;
       });
     } catch (error) {
-      cprint(error);
+      loading = false;
+      cprint(error, errorIn: 'getDataFromDatabase');
     }
   }
 
   /// get notification `Tweet`
   Future<FeedModel> getTweetDetail(String tweetId) async {
     FeedModel _tweetDetail;
-    final databaseReference = FirebaseDatabase.instance.reference();
-    var snapshot = await databaseReference.child('tweet').child(tweetId).once();
+    var snapshot = await kDatabase.child('tweet').child(tweetId).once();
     if (snapshot.value != null) {
       var map = snapshot.value;
       _tweetDetail = FeedModel.fromJson(map);
@@ -80,9 +81,8 @@ class NotificationState extends ChangeNotifier {
     if (userList.length > 0 && userList.any((x) => x.userId == userId)) {
       return Future.value(userList.firstWhere((x) => x.userId == userId));
     }
-    final databaseReference = FirebaseDatabase.instance.reference();
     var snapshot =
-        await databaseReference.child('profile').child(userId).once();
+        await kDatabase.child('profile').child(userId).once();
     if (snapshot.value != null) {
       var map = snapshot.value;
       user = User.fromJson(map);
@@ -98,7 +98,7 @@ class NotificationState extends ChangeNotifier {
   void _onNotificationAdded(Event event) {
     if (event.snapshot.value != null) {
       var model = NotificationModel.fromJson(event.snapshot.key);
-      if(_notificationList == null){
+      if (_notificationList == null) {
         _notificationList = List<NotificationModel>();
       }
       _notificationList.add(model);

@@ -1,8 +1,8 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/state/searchState.dart';
 import 'helper/routes.dart';
-import 'page/Auth/selectAuthMethod.dart';
 import 'state/appState.dart';
 import 'package:provider/provider.dart';
 import 'state/authState.dart';
@@ -18,6 +18,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -42,17 +43,5 @@ class MyApp extends StatelessWidget {
         onUnknownRoute: (settings) => Routes.onUnknownRoute(settings),
       ),
     );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(body: SelectAuthMethod());
   }
 }
