@@ -19,14 +19,11 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  TextEditingController textController;
-
   @override
   void initState() {
-    textController = TextEditingController();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final state = Provider.of<SearchState>(context);
-      state.filterByUsername("");
+      state.resetFilterList();
     });
     super.initState();
   }
@@ -72,30 +69,32 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     var state = Provider.of<SearchState>(context);
+
     var list = state.userlist;
     return Scaffold(
-        appBar: CustomAppBar(
-          scaffoldKey: widget.scaffoldKey,
-          textController: textController,
-          icon: AppIcon.settings,
-          onActionPressed: onSettingIconPressed,
-          onSearchChanged: (text) {
-            state.filterByUsername(text);
-          },
-        ),
-        body: RefreshIndicator(
-          onRefresh: () async {
-            state.getDataFromDatabase();
-            return Future.value(true);
-          },
-          child: ListView.separated(
-            physics: BouncingScrollPhysics(),
-            itemBuilder: (context, index) => _userTile(list[index]),
-            separatorBuilder: (_, index) => Divider(
-              height: 0,
-            ),
-            itemCount: list.length,
+      appBar: CustomAppBar(
+        scaffoldKey: widget.scaffoldKey,
+        icon: AppIcon.settings,
+        onActionPressed: onSettingIconPressed,
+        onSearchChanged: (text) {
+          state.filterByUsername(text);
+        },
+      ),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          state.getDataFromDatabase();
+          return Future.value(true);
+        },
+        child: ListView.separated(
+          addAutomaticKeepAlives: false,
+          physics: BouncingScrollPhysics(),
+          itemBuilder: (context, index) => _userTile(list[index]),
+          separatorBuilder: (_, index) => Divider(
+            height: 0,
           ),
-        ));
+          itemCount: list?.length ?? 0,
+        ),
+      ),
+    );
   }
 }

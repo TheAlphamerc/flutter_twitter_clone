@@ -8,3 +8,11 @@ enum TweetType{
   Detail,
   Reply
 }
+
+enum SortUser{
+  ByVerified,
+  ByAlphabetically,
+  ByNewest,
+  ByOldest,
+  ByMaxFollower
+}
