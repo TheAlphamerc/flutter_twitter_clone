@@ -1,3 +1,10 @@
+## [1.0.3] - UPCOMMING
+
+* User sort feature added on user search page.
+* Added pull to refresh on search page.
+* Newest Tweet will show first in Tweet list.
+* Newest comment tweet will show first in comment Tweet list.
+
 ## [1.0.2] - 31 Mar 2020
 
 * Google login failed bug fix

@@ -561,6 +561,13 @@ class FeedState extends AppState {
           updateTweet(retweetModel);
         });
       }
+      /// Delete notification related to deleted Tweet.
+      if(deletedTweet.likeCount > 0){
+        kDatabase
+            .child('notification')
+            .child(tweet.userId)
+            .child(tweet.key).remove();
+      }
       notifyListeners();
     } catch (error) {
       cprint(error, errorIn: '_onTweetRemoved');

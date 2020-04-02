@@ -61,7 +61,7 @@ class NotificationState extends AppState {
     }
   }
 
-  /// get notification `Tweet`
+  /// get `Tweet` present in notification
   Future<FeedModel> getTweetDetail(String tweetId) async {
     FeedModel _tweetDetail;
     var snapshot = await kDatabase.child('tweet').child(tweetId).once();
@@ -93,7 +93,13 @@ class NotificationState extends AppState {
       return null;
     }
   }
-
+  /// Remove notification if related Tweet is not found or deleted
+  void removeNotification(String userId, String tweetkey)async{
+     kDatabase
+            .child('notification')
+            .child(userId)
+            .child(tweetkey).remove();
+  }
   /// Trigger when somneone like your tweet
   void _onNotificationAdded(Event event) {
     if (event.snapshot.value != null) {

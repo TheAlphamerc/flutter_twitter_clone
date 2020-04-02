@@ -12,11 +12,13 @@ import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/emptyList.dart';
+import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 import 'package:provider/provider.dart';
 
 class NotificationPage extends StatefulWidget {
   NotificationPage({Key key, this.scaffoldKey}) : super(key: key);
 
+  /// scaffoldKey used to open sidebaar drawer
   final GlobalKey<ScaffoldState> scaffoldKey;
 
   _NotificationPageState createState() => _NotificationPageState();
@@ -33,7 +35,57 @@ class _NotificationPageState extends State<NotificationPage> {
     });
   }
 
-  Widget _body() {
+  void onSettingIconPressed() {
+    Navigator.pushNamed(context, '/NotificationPage');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: TwitterColor.mystic,
+      appBar: CustomAppBar(
+        scaffoldKey: widget.scaffoldKey,
+        title: customTitleText(
+          'Notifications',
+        ),
+        icon: AppIcon.settings,
+        onActionPressed: onSettingIconPressed,
+      ),
+      body: NotificationPageBody(),
+    );
+  }
+}
+
+class NotificationPageBody extends StatelessWidget {
+  const NotificationPageBody({Key key}) : super(key: key);
+
+  Widget _notificationRow(BuildContext context, NotificationModel model) {
+    var state = Provider.of<NotificationState>(context);
+    return FutureBuilder(
+      future: state.getTweetDetail(model.tweetKey),
+      builder: (BuildContext context, AsyncSnapshot<FeedModel> snapshot) {
+        if (snapshot.hasData) {
+          return NotificationTile(
+            model: snapshot.data,
+          );
+        } else if (snapshot.connectionState == ConnectionState.waiting ||
+            snapshot.connectionState == ConnectionState.active) {
+          return SizedBox(
+            height: 4,
+            child: LinearProgressIndicator(),
+          );
+        } else {
+          /// remove notification from firebase db if tweet in not available or deleted.
+          var authstate = Provider.of<AuthState>(context);
+          state.removeNotification(authstate.userId, model.tweetKey);
+          return SizedBox();
+        }
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     var state = Provider.of<NotificationState>(context);
     var list = state.notificationList;
     if (state?.isbusy ?? true && (list == null || list.isEmpty)) {
@@ -50,73 +102,41 @@ class _NotificationPageState extends State<NotificationPage> {
         ),
       );
     }
-    return ListView.separated(
+    return ListView.builder(
       physics: BouncingScrollPhysics(),
       addAutomaticKeepAlives: true,
-      itemBuilder: (context, index) => _notificationRow(list[index]),
-      separatorBuilder: (context, index) => Divider(
-        height: 0,
-      ),
+      itemBuilder: (context, index) => _notificationRow(context, list[index]),
       itemCount: list.length,
     );
   }
+}
 
-  void onSettingIconPressed() {
-    Navigator.pushNamed(context, '/NotificationPage');
-  }
-
-  Widget _notificationRow(NotificationModel model) {
-    var state = Provider.of<NotificationState>(context);
-    return FutureBuilder(
-      future: state.getTweetDetail(model.tweetKey),
-      builder: (BuildContext context, AsyncSnapshot<FeedModel> snapshot) {
-        if (snapshot.hasData) {
-          var des = snapshot.data.description.length > 150
-              ? snapshot.data.description.substring(0, 150) + '...'
-              : snapshot.data.description;
-          return Container(
-            padding: EdgeInsets.symmetric(vertical: 10),
-            color: TwitterColor.white,
-            child: ListTile(
-              onTap: () {
-                var state = Provider.of<FeedState>(context);
-                state.getpostDetailFromDatabase(null, model: snapshot.data);
-                Navigator.of(context)
-                    .pushNamed('/FeedPostDetail/' + model.tweetKey);
-              },
-              title: _userList(snapshot.data.likeList),
-              subtitle: Padding(
-                padding: EdgeInsets.only(left: 60),
-                child: UrlText(
-                  text: des,
-                  style: TextStyle(
-                    color: AppColor.darkGrey,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ),
-            ),
-          );
-        } else if (snapshot.connectionState == ConnectionState.waiting ||
-            snapshot.connectionState == ConnectionState.active) {
-          return SizedBox(
-            height: 4,
-            child: LinearProgressIndicator(),
-          );
-        } else {
-          return SizedBox();
-        }
-      },
-    );
-  }
-
-  Widget _userList(List<LikeList> list) {
+class NotificationTile extends StatelessWidget {
+  final FeedModel model;
+  const NotificationTile({Key key, this.model}) : super(key: key);
+  Widget _userList(BuildContext context, List<LikeList> list) {
+    // List<String> names = [];
     var length = list.length;
+    List<Widget> avaterList = [];
+    final int noOfUser = list.length;
+    var state = Provider.of<NotificationState>(context);
     if (list != null && list.length > 5) {
       list = list.take(5).toList();
     }
-    List<String> name = [];
-    var state = Provider.of<NotificationState>(context);
+    avaterList = list.map((x) {
+      return _userAvater(x.userId, state, (name) {
+        // names.add(name);
+      });
+    }).toList();
+    if (noOfUser > 5) {
+      avaterList.add(
+        Text(
+          " +${noOfUser - 5}",
+          style: subtitleStyle.copyWith(fontSize: 16),
+        ),
+      );
+    }
+
     var col = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -129,40 +149,17 @@ class _NotificationPageState extends State<NotificationPage> {
                 istwitterIcon: true,
                 size: 25),
             SizedBox(width: 10),
-            Row(
-              children: list.map((x) {
-                return FutureBuilder(
-                  future: state.getuserDetail(x.userId),
-                  //  initialData: InitialData,
-                  builder:
-                      (BuildContext context, AsyncSnapshot<User> snapshot) {
-                    if (snapshot.hasData) {
-                      name.add(snapshot.data.displayName);
-                      return Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 3),
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).pushNamed(
-                                '/ProfilePage/' + snapshot.data?.userId);
-                          },
-                          child: customImage(context, snapshot.data.profilePic,
-                              height: 30),
-                        ),
-                      );
-                    } else {
-                      return Container();
-                    }
-                  },
-                );
-              }).toList(),
-            ),
+            Row(children: avaterList),
           ],
         ),
+        // names.length > 0 ? Text(names[0]) : SizedBox(),
         Padding(
           padding: EdgeInsets.only(left: 60, bottom: 5, top: 5),
-          child: UrlText(
-            text: '$length people like your Tweet',
-            style: TextStyle(fontSize: 18, color: Colors.black87),
+          child: TitleText(
+            '$length people like your Tweet',
+            fontSize: 18,
+            color: Colors.black87,
+            fontWeight: FontWeight.w500,
           ),
         )
       ],
@@ -170,19 +167,62 @@ class _NotificationPageState extends State<NotificationPage> {
     return col;
   }
 
+  Widget _userAvater(
+      String userId, NotificationState state, ValueChanged<String> name) {
+    return FutureBuilder(
+      future: state.getuserDetail(userId),
+      //  initialData: InitialData,
+      builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+        if (snapshot.hasData) {
+          name(snapshot.data.displayName);
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: 3),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context)
+                    .pushNamed('/ProfilePage/' + snapshot.data?.userId);
+              },
+              child: customImage(context, snapshot.data.profilePic, height: 30),
+            ),
+          );
+        } else {
+          return Container();
+        }
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: TwitterColor.mystic,
-      appBar: CustomAppBar(
-        scaffoldKey: widget.scaffoldKey,
-        title: customTitleText(
-          'Notifications',
+    var description = model.description.length > 150
+        ? model.description.substring(0, 150) + '...'
+        : model.description;
+    return Column(
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.symmetric(vertical: 10),
+          color: TwitterColor.white,
+          child: ListTile(
+            onTap: () {
+              var state = Provider.of<FeedState>(context);
+              state.getpostDetailFromDatabase(null, model: model);
+              Navigator.of(context).pushNamed('/FeedPostDetail/' + model.key);
+            },
+            title: _userList(context, model.likeList),
+            subtitle: Padding(
+              padding: EdgeInsets.only(left: 60),
+              child: UrlText(
+                text: description,
+                style: TextStyle(
+                  color: AppColor.darkGrey,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ),
+          ),
         ),
-        icon: AppIcon.settings,
-        onActionPressed: onSettingIconPressed,
-      ),
-      body: _body(),
+        Divider(height: 0, thickness: .6)
+      ],
     );
   }
 }
