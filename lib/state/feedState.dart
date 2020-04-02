@@ -125,6 +125,9 @@ class FeedState extends AppState {
                 _feedlist.add(model);
               }
             });
+            /// Sort Tweet by time
+           /// It helps to display newest Tweet first.
+            _feedlist.sort((x,y) => DateTime.parse(x.createdAt).compareTo(DateTime.parse(y.createdAt)));
           }
         } else {
           _feedlist = null;
@@ -192,6 +195,9 @@ class FeedState extends AppState {
                 }
               } else {}
               if (x == _tweetDetail.replyTweetKeyList.last) {
+                /// Sort comment by time
+                /// It helps to display newest Tweet first.
+                 _commentlist.sort((x,y) => DateTime.parse(y.createdAt).compareTo(DateTime.parse(x.createdAt)));
                 tweetReplyMap.putIfAbsent(postID, () => _commentlist);
                 notifyListeners();
               }
