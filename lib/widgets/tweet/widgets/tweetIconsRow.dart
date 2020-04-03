@@ -235,7 +235,7 @@ class TweetIconsRow extends StatelessWidget {
       CustomRoute<bool>(
         builder: (BuildContext context) => UsersListPage(
           pageTitle: "Liked by",
-          userList: model.likeList.map((x) => x.userId).toList(),
+          userIdsList: model.likeList.map((x) => x.userId).toList(),
         ),
       ),
     );

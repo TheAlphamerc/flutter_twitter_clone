@@ -314,7 +314,8 @@ class AuthState extends AppState {
       cprint(error, errorIn: 'updateUserProfile');
     }
   }
-
+ 
+  
   /// `Fetch` user `detail` whoose userId is passed
   Future<User> getuserDetail(String userId) async {
     User user;

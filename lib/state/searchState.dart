@@ -125,4 +125,19 @@ class SearchState extends AppState {
         return "Unknown";
     }
   }
+  /// Return user list relative to provided `userIds` 
+  /// Method is used on 
+  List<User> userList = [];
+   List<User> getuserDetail(List<String> userIds){
+     final list = _userlist.where((x) {
+       if(userIds.contains(x.key)){
+         return true;
+       }
+       else{
+         return false;
+       }
+     
+     }).toList();
+    return list;
+  }
 }

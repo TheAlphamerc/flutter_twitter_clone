@@ -10,11 +10,13 @@ class FollowerListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var state = Provider.of<AuthState>(context);
     return UsersListPage(
-    pageTitle: 'Followers',
-    userList: state.profileUserModel?.followersList,
-    appBarIcon:AppIcon.follow,
-    emptyScreenText: '${state?.profileUserModel?.userName ?? state.userModel.userName} doesn\'t have any followers',
-    emptyScreenSubTileText: 'When someone follow them, they\'ll be listed here.',
+      pageTitle: 'Followers',
+      userIdsList: state.profileUserModel?.followersList,
+      appBarIcon: AppIcon.follow,
+      emptyScreenText:
+          '${state?.profileUserModel?.userName ?? state.userModel.userName} doesn\'t have any followers',
+      emptyScreenSubTileText:
+          'When someone follow them, they\'ll be listed here.',
     );
   }
 }
