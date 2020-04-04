@@ -6,7 +6,7 @@ import 'appState.dart';
 
 class SearchState extends AppState {
   bool isBusy = false;
-  SortUser sortBy = SortUser.ByNewest;
+  SortUser sortBy = SortUser.ByMaxFollower;
   List<User> _userFilterlist;
   List<User> _userlist;
 
