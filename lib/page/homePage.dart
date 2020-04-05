@@ -41,10 +41,12 @@ class _HomePageState extends State<HomePage> {
     state.databaseInit();
     state.getDataFromDatabase();
   }
+
   void initProfile() {
     var state = Provider.of<AuthState>(context, listen: false);
     state.databaseInit();
   }
+
   void initSearch() {
     var searchState = Provider.of<SearchState>(context, listen: false);
     searchState.getDataFromDatabase();
@@ -64,7 +66,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _body() {
     var state = Provider.of<AppState>(context);
-    return Container(child: _getPage(state.pageIndex));
+    return SafeArea(child: Container(child: _getPage(state.pageIndex)));
   }
 
   Widget _getPage(int index) {
