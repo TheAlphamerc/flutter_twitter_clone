@@ -36,13 +36,16 @@ class _SearchPageState extends State<SearchPage> {
       },
       leading: customImage(context, user.profilePic, height: 40),
       title: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          UrlText(
-            text: user.displayName,
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 16,
-              fontWeight: FontWeight.w800,
+          Flexible(
+            child: UrlText(
+              text: user.displayName,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 16,
+                fontWeight: FontWeight.w800,
+              ),
             ),
           ),
           SizedBox(width: 3),

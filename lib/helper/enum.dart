@@ -6,7 +6,8 @@ enum AuthStatus {
 enum TweetType{
   Tweet,
   Detail,
-  Reply
+  Reply,
+  ParentTweet
 }
 
 enum SortUser{
