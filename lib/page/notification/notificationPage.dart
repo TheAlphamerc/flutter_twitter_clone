@@ -103,7 +103,6 @@ class NotificationPageBody extends StatelessWidget {
       );
     }
     return ListView.builder(
-      physics: BouncingScrollPhysics(),
       addAutomaticKeepAlives: true,
       itemBuilder: (context, index) => _notificationRow(context, list[index]),
       itemCount: list.length,

@@ -54,7 +54,7 @@ String getChatTime(String date) {
   var dur = DateTime.now().toLocal().difference(dt);
   if (dur.inDays > 0) {
     msg = '${dur.inDays} d';
-    return dur.inDays == 1 ? 'yesterday' : DateFormat("dd MMM").format(dt);
+    return dur.inDays == 1 ? '1d' : DateFormat("dd MMM").format(dt);
   } else if (dur.inHours > 0) {
     msg = '${dur.inHours} h';
   } else if (dur.inMinutes > 0) {
