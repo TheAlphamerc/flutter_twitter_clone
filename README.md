@@ -27,7 +27,6 @@ A working Twitter clone written in Flutter using Firebase auth,realtime database
 * [image_picker](https://pub.dev/packages/image_picker)
 * [firebase_auth](https://pub.dev/packages/firebase_auth)
 * [google_sign_in](https://pub.dev/packages/google_sign_in)
-* [firebase_storage](https://pub.dev/packages/firebase_storage)
 * [firebase_analytics](https://pub.dev/packages/firebase_analytics)
 * [firebase_database](https://pub.dev/packages/firebase_database)
 * [shared_preferences](https://pub.dev/packages/shared_preferences)
@@ -145,7 +144,7 @@ keytool -exportcert -list -v \
 <details>
      <summary> Click to expand </summary>
   
-  ```
+```
 |-- lib
 |   |-- helper
 |   |   |-- constant.dart
@@ -181,7 +180,8 @@ keytool -exportcert -list -v \
 |   |   |   |   |-- createFeed.dart
 |   |   |   |   '-- widget
 |   |   |   |       |-- composeBottomIconWidget.dart
-|   |   |   |       '-- composeTweetImage.dart
+|   |   |   |       |-- composeTweetImage.dart
+|   |   |   |       '-- widgetView.dart
 |   |   |   |-- feedPage.dart
 |   |   |   |-- feedPostDetail.dart
 |   |   |   '-- imageViewPage.dart
@@ -256,9 +256,12 @@ keytool -exportcert -list -v \
 |       '-- tweet
 |           |-- tweet.dart
 |           '-- widgets
+|               |-- parentTweet.dart
+|               |-- retweetWidget.dart
 |               |-- tweetBottomSheet.dart
 |               |-- tweetIconsRow.dart
-|               '-- tweetImage.dart
+|               |-- tweetImage.dart
+|               '-- unavailableTweet.dart
 |-- pubspec.yaml
 ```
 
@@ -272,8 +275,8 @@ and send a [pull request](https://github.com/TheAlphamerc/flutter_twitter_clone/
 
 ## Created & Maintained By
 
-[Sonu Sharma](https://github.com/TheAlphamerc) ([Twitter](https://www.twitter.com/TheAlphamerc)) ([Youtube](https://www.youtube.com/user/sonusharma045sonu/))
-([Insta](https://www.instagram.com/_sonu_sharma__))  ![Twitter Follow](https://img.shields.io/twitter/follow/thealphamerc?style=social)
+[Sonu Sharma](https://github.com/TheAlphamerc) ([Twitter](https://www.twitter.com/TheAlphamerc)) ([Youtube](https://www.youtube.com/user/sonusharma045sonu/)) ([Insta](https://www.instagram.com/_sonu_sharma__)) ([Dev.to](https://dev.to/thealphamerc))
+  ![Twitter Follow](https://img.shields.io/twitter/follow/thealphamerc?style=social) 
 
 > If you found this project helpful or you learned something from the source code and want to thank me, consider buying me a cup of :coffee:
 >
