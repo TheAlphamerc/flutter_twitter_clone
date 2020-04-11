@@ -59,10 +59,9 @@ class FeedState extends AppState {
     }
 
     /// [Skip if any duplicate tweet already present]
-    if (_tweetDetailModelList.length == 0 ||
-        _tweetDetailModelList.length > 0 &&
-            !_tweetDetailModelList.any((x) => x.key == model.key)) {
+    if (_tweetDetailModelList.length >= 0) {
       _tweetDetailModelList.add(model);
+      cprint("Detail Tweet added. Total Tweet: ${_tweetDetailModelList.length}");
       notifyListeners();
     }
   }
@@ -73,8 +72,11 @@ class FeedState extends AppState {
   /// After removing Tweet from Tweet detail Page stack its commnets tweet is also removed from `_tweetDetailModelList`
   void removeLastTweetDetail(String tweetKey) {
     if (_tweetDetailModelList != null && _tweetDetailModelList.length > 0) {
-      _tweetDetailModelList.removeWhere((x) => x.key == tweetKey);
+      // var index = _tweetDetailModelList.in
+      FeedModel removeTweet  = _tweetDetailModelList.lastWhere((x)=>x.key == tweetKey);
+      _tweetDetailModelList.remove(removeTweet);
       tweetReplyMap.removeWhere((key, value) => key == tweetKey);
+      cprint("Last Tweet removed from stack. Remaining Tweet: ${_tweetDetailModelList.length}");
     }
   }
 
@@ -408,7 +410,7 @@ class FeedState extends AppState {
     var model = FeedModel.fromJson(event.snapshot.value);
     model.key = event.snapshot.key;
     if (_feedlist.any((x) => x.key == model.key)) {
-      var oldEntry = _feedlist.singleWhere((entry) {
+      var oldEntry = _feedlist.lastWhere((entry) {
         return entry.key == event.snapshot.key;
       });
       _feedlist[_feedlist.indexOf(oldEntry)] = model;
@@ -416,7 +418,7 @@ class FeedState extends AppState {
 
     if (_tweetDetailModelList != null && _tweetDetailModelList.length > 0) {
       if (_tweetDetailModelList.any((x) => x.key == model.key)) {
-        var oldEntry = _tweetDetailModelList.singleWhere((entry) {
+        var oldEntry = _tweetDetailModelList.lastWhere((entry) {
           return entry.key == event.snapshot.key;
         });
         _tweetDetailModelList[_tweetDetailModelList.indexOf(oldEntry)] = model;
@@ -551,13 +553,15 @@ class FeedState extends AppState {
         deleteFile(deletedTweet.imagePath, 'tweetImage');
       }
 
-      /// If a retweet is deleted then retweetCount should be decrease by 1.
+      /// If a retweet is deleted then retweetCount of original tweet should be decrease by 1.
       if (deletedTweet.childRetwetkey != null) {
         await fetchTweet(deletedTweet.childRetwetkey).then((retweetModel) {
           if (retweetModel == null) {
             return;
           }
-          retweetModel.retweetCount -= 1;
+          if(retweetModel.retweetCount > 0){
+            retweetModel.retweetCount -= 1;
+          }
           updateTweet(retweetModel);
         });
       }

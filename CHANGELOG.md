@@ -1,4 +1,12 @@
-## [1.0.4] - UPCOMMING
+## [1.0.5] - Upcomming
+
+* Now if user click on comment Tweet it's parent tweet will visible in detail.
+* Google login button added on signup page.
+* Null value alert issue on forgot password fixed
+* Time on tweet "yesterday" is replcaed by "1d"
+* Hash tags front weight and size issue fixed.
+
+## [1.0.4] - 04 Apr 2020
 
 * User sort feature added on user search page.
 * Added pull to refresh on search page.
