@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
+import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/page/settings/widgets/headerWidget.dart';
 import 'package:flutter_twitter_clone/page/settings/widgets/settingsRowWidget.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
@@ -16,7 +17,7 @@ class AboutPage extends StatelessWidget {
       appBar: CustomAppBar(
         isBackButton: true,
         title: customTitleText(
-          'About Twitter',
+          'About Fwitter',
         ),
       ),
       body: ListView(
@@ -30,6 +31,9 @@ class AboutPage extends StatelessWidget {
             "Help Centre",
             vPadding: 15,
             showDivider: false,
+            onPressed: (){
+              launchURL("https://github.com/TheAlphamerc/flutter_twitter_clone/issues");
+            },
           ),
           HeaderWidget('Legal'),
           SettingRowWidget(
@@ -50,7 +54,7 @@ class AboutPage extends StatelessWidget {
             onPressed: () async {
               showLicensePage(
                 context: context,
-                applicationName: 'Twitter clone',
+                applicationName: 'Fwitter',
                 applicationVersion: '1.0.0',
                 useRootNavigator: true,
               );

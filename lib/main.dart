@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<NotificationState>(create: (_) => NotificationState()),
       ],
       child: MaterialApp(
-        title: 'Twitter Clone',
+        title: 'Fwitter',
         theme: AppTheme.apptheme.copyWith(
           textTheme: GoogleFonts.muliTextTheme(
             Theme.of(context).textTheme,
