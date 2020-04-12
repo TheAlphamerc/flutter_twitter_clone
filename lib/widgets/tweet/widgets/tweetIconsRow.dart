@@ -51,9 +51,7 @@ class TweetIconsRow extends StatelessWidget {
               iconColor: iconColor,
               size: size ?? 20,
               onPressed: () {
-                var state = Provider.of<FeedState>(
-                  context,
-                );
+                var state = Provider.of<FeedState>(context, listen: false);
                 state.setTweetToReply = model;
                 Navigator.of(context).pushNamed('/ComposeTweetPage');
               },
@@ -221,12 +219,8 @@ class TweetIconsRow extends StatelessWidget {
   }
 
   void addLikeToTweet(BuildContext context) {
-    var state = Provider.of<FeedState>(
-      context,
-    );
-    var authState = Provider.of<AuthState>(
-      context,
-    );
+    var state = Provider.of<FeedState>(context, listen: false);
+    var authState = Provider.of<AuthState>(context, listen: false);
     state.addLikeToTweet(model, authState.userId);
   }
 
