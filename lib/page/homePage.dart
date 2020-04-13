@@ -56,6 +56,7 @@ class _HomePageState extends State<HomePage> {
     var state = Provider.of<NotificationState>(context, listen: false);
     var authstate = Provider.of<AuthState>(context, listen: false);
     state.databaseInit(authstate.userId);
+    state.initfirebaseService();
   }
 
   void initChat() {

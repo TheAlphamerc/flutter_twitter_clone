@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
@@ -18,7 +19,7 @@ class AuthState extends AppState {
   bool isSignInWithGoogle = false;
   FirebaseUser user;
   String userId;
-
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   dabase.Query _profileQuery;
@@ -189,6 +190,11 @@ class AuthState extends AppState {
 
       // Time at which user is created
       user.createdAt = DateTime.now().toUtc().toString();
+      
+       _firebaseMessaging.getToken().then((String token) {
+         assert(token != null);
+         user.fcmToken = token;
+       });
     }
     kDatabase.child('profile').child(user.userId).set(user.toJson());
     _userModel = user;

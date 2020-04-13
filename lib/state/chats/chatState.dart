@@ -1,5 +1,10 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:http/http.dart' as http;
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_twitter_clone/model/chatModel.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
@@ -138,6 +143,7 @@ class ChatState extends AppState {
           .child(_channelName)
           .push()
           .set(message.toJson());
+      sendAndRetrieveMessage(secondUser.fcmToken);
       logEvent('send_message');
     } catch (error) {
       cprint(error);
@@ -222,4 +228,39 @@ class ChatState extends AppState {
     _messageList = null;
     // _channelName = null;
   }
+
+final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
+
+void sendAndRetrieveMessage(String message) async {
+  await firebaseMessaging.requestNotificationPermissions(
+    const IosNotificationSettings(sound: true, badge: true, alert: true, provisional: false),
+  );
+  final String serverToken = '';
+  String token = await firebaseMessaging.getToken();
+  var body = jsonEncode(
+     <String, dynamic>{
+       'notification': <String, dynamic>{
+         'body': 'this is a body',
+         'title': 'this is a title'
+       },
+       'priority': 'high',
+       'data': <String, dynamic>{
+         'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+         'id': '1',
+         'status': 'done'
+       },
+       'to': token
+     });
+  print(token);
+
+  var response  =await http.post(
+    'https://fcm.googleapis.com/fcm/send',
+     headers: <String, String>{
+       'Content-Type': 'application/json',
+       'Authorization': 'key=$serverToken',
+     },
+     body:body
+  );
+ print(response.body.toString());
+}
 }

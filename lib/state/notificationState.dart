@@ -1,6 +1,8 @@
 import 'dart:async';
-
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:firebase_database/firebase_database.dart' as dabase;
@@ -10,8 +12,11 @@ import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/state/appState.dart';
 
 class NotificationState extends AppState {
+  String fcmToken;
   dabase.Query query;
   List<User> userList = [];
+
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   List<NotificationModel> _notificationList;
 
@@ -137,4 +142,35 @@ class NotificationState extends AppState {
       print("Notification Removed");
     }
   }
+
+  void initfirebaseService(){
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage: $message");
+        // _showItemDialog(message);
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print("onLaunch: $message");
+        // _navigateToItemDetail(message);
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print("onResume: $message");
+        // _navigateToItemDetail(message);
+      },
+    );
+    _firebaseMessaging.requestNotificationPermissions(
+        const IosNotificationSettings(
+            sound: true, badge: true, alert: true, provisional: true));
+    _firebaseMessaging.onIosSettingsRegistered
+        .listen((IosNotificationSettings settings) {
+      print("Settings registered: $settings");
+    });
+    _firebaseMessaging.getToken().then((String token) {
+      assert(token != null);
+      fcmToken = token;
+      print(token);
+    });
+  }
+
+
 }
