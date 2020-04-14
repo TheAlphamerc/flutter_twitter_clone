@@ -190,11 +190,12 @@ class AuthState extends AppState {
 
       // Time at which user is created
       user.createdAt = DateTime.now().toUtc().toString();
-      
-       _firebaseMessaging.getToken().then((String token) {
-         assert(token != null);
-         user.fcmToken = token;
-       });
+      /// Get firebase token 
+      /// Helps to send notification
+      _firebaseMessaging.getToken().then((String token) {
+        assert(token != null);
+        user.fcmToken = token;
+      });
     }
     kDatabase.child('profile').child(user.userId).set(user.toJson());
     _userModel = user;
@@ -320,8 +321,7 @@ class AuthState extends AppState {
       cprint(error, errorIn: 'updateUserProfile');
     }
   }
- 
-  
+
   /// `Fetch` user `detail` whoose userId is passed
   Future<User> getuserDetail(String userId) async {
     User user;
@@ -360,7 +360,17 @@ class AuthState extends AppState {
                 // Check if user verified his email address
                 reloadUser();
               }
+              if (_userModel.fcmToken == null) {
+                /// if firebase  token not available in frofile
+                /// Then get token from firebase and save it to profile
+                _firebaseMessaging.getToken().then((String token) {
+                  assert(token != null);
+                  _userModel.fcmToken = token;
+                  createUser(_userModel);
+                });
+              }
             }
+
             logEvent('get_profile');
           }
         }

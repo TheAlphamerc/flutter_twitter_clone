@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter_twitter_clone/helper/enum.dart';
+import 'package:flutter_twitter_clone/model/fcmNotificationModel.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -13,6 +15,9 @@ import 'package:flutter_twitter_clone/state/appState.dart';
 
 class NotificationState extends AppState {
   String fcmToken;
+  NotificationType notificationType = NotificationType.NOT_DETERMINED;
+  // FcmNotificationModel notification;
+  String notificationSenderId;
   dabase.Query query;
   List<User> userList = [];
 
@@ -147,15 +152,24 @@ class NotificationState extends AppState {
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
-        // _showItemDialog(message);
+        print(message['data']);
+        notifyListeners();
       },
       onLaunch: (Map<String, dynamic> message) async {
-        print("onLaunch: $message");
-        // _navigateToItemDetail(message);
+        cprint("Send to ",event: "UnBox");
+        var data = message['data'];
+        print(message['data']);
+        notificationSenderId = data["userId"];
+        notificationType = NotificationType.Message;
+        notifyListeners();
       },
       onResume: (Map<String, dynamic> message) async {
-        print("onResume: $message");
-        // _navigateToItemDetail(message);
+        cprint("Send to ",event: "UnBox");
+        var data = message['data'];
+        print(message['data']);
+        notificationSenderId = data["userId"];
+        notificationType = NotificationType.Message;
+        notifyListeners();
       },
     );
     _firebaseMessaging.requestNotificationPermissions(
@@ -171,6 +185,5 @@ class NotificationState extends AppState {
       print(token);
     });
   }
-
 
 }

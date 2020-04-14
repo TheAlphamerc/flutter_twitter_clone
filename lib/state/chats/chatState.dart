@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -13,7 +14,7 @@ import 'package:flutter_twitter_clone/state/appState.dart';
 class ChatState extends AppState {
   bool setIsChatScreenOpen;
   final FirebaseDatabase _database = FirebaseDatabase.instance;
-  
+
   List<ChatMessage> _messageList;
   List<User> _chatUserList;
   User _chatUser;
@@ -29,8 +30,9 @@ class ChatState extends AppState {
     if (_messageList == null) {
       return null;
     } else {
-      _messageList.sort((x, y) =>
-          DateTime.parse(x.createdAt).toLocal().compareTo(DateTime.parse(y.createdAt).toLocal()));
+      _messageList.sort((x, y) => DateTime.parse(x.createdAt)
+          .toLocal()
+          .compareTo(DateTime.parse(y.createdAt).toLocal()));
       _messageList.reversed;
       _messageList = _messageList.reversed.toList();
       return List.from(_messageList);
@@ -143,7 +145,7 @@ class ChatState extends AppState {
           .child(_channelName)
           .push()
           .set(message.toJson());
-      sendAndRetrieveMessage(secondUser.fcmToken);
+      sendAndRetrieveMessage(message);
       logEvent('send_message');
     } catch (error) {
       cprint(error);
@@ -229,38 +231,43 @@ class ChatState extends AppState {
     // _channelName = null;
   }
 
-final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
+  final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
 
-void sendAndRetrieveMessage(String message) async {
-  await firebaseMessaging.requestNotificationPermissions(
-    const IosNotificationSettings(sound: true, badge: true, alert: true, provisional: false),
-  );
-  final String serverToken = '';
-  String token = await firebaseMessaging.getToken();
-  var body = jsonEncode(
-     <String, dynamic>{
-       'notification': <String, dynamic>{
-         'body': 'this is a body',
-         'title': 'this is a title'
-       },
-       'priority': 'high',
-       'data': <String, dynamic>{
-         'click_action': 'FLUTTER_NOTIFICATION_CLICK',
-         'id': '1',
-         'status': 'done'
-       },
-       'to': token
-     });
-  print(token);
-
-  var response  =await http.post(
-    'https://fcm.googleapis.com/fcm/send',
-     headers: <String, String>{
-       'Content-Type': 'application/json',
-       'Authorization': 'key=$serverToken',
-     },
-     body:body
-  );
- print(response.body.toString());
-}
+  void sendAndRetrieveMessage(ChatMessage model) async {
+    /// on noti
+    await firebaseMessaging.requestNotificationPermissions(
+      const IosNotificationSettings(
+          sound: true, badge: true, alert: true, provisional: false),
+    );
+    if (chatUser.fcmToken == null) {
+      return;
+    }
+    final String serverToken = "ADD FIREBASE SERVER KEY HERE";
+        
+    var body = jsonEncode(<String, dynamic>{
+      'notification': <String, dynamic>{
+        'body': model.message,
+        'title': "Message from ${model.senderName}"
+      },
+      'priority': 'high',
+      'data': <String, dynamic>{
+        'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+        'id': '1',
+        'status': 'done',
+        "type": NotificationType.Message.toString(),
+        "senderId": model.senderId,
+        "title": "title",
+        "body": model.message,
+        "tweetId": ""
+      },
+      'to': chatUser.fcmToken
+    });
+    var response = await http.post('https://fcm.googleapis.com/fcm/send',
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'key=$serverToken',
+        },
+        body: body);
+    print(response.body.toString());
+  }
 }

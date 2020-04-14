@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_twitter_clone/helper/enum.dart';
+import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/page/feed/feedPage.dart';
 import 'package:flutter_twitter_clone/page/message/chatListPage.dart';
 import 'package:flutter_twitter_clone/state/appState.dart';
@@ -27,10 +29,10 @@ class _HomePageState extends State<HomePage> {
       var state = Provider.of<AppState>(context, listen: false);
       state.setpageIndex = 0;
       initTweets();
+      initProfile();
       initSearch();
       initNotificaiton();
       initChat();
-      initProfile();
     });
 
     super.initState();
@@ -67,6 +69,20 @@ class _HomePageState extends State<HomePage> {
 
   Widget _body() {
     var state = Provider.of<AppState>(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      var state = Provider.of<NotificationState>(context);
+      /// Check if user recieve chat notification from firebase
+      /// Redirect to chat screen
+      if (state.notificationType == NotificationType.Message) {
+        state.notificationType = NotificationType.NOT_DETERMINED;
+        state.getuserDetail(state.notificationSenderId).then((user) {
+          cprint("Opening user chat screen");
+          final chatState = Provider.of<ChatState>(context, listen: false);
+          chatState.setChatUser = user;
+          Navigator.pushNamed(context, '/ChatScreenPage');
+        });
+      }
+    });
     return SafeArea(child: Container(child: _getPage(state.pageIndex)));
   }
 

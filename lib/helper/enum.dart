@@ -17,3 +17,12 @@ enum SortUser{
   ByOldest,
   ByMaxFollower
 }
+
+enum NotificationType{
+  NOT_DETERMINED,
+  Message,
+  Tweet,
+  Reply,
+  Retweet,
+  Follow,
+}
