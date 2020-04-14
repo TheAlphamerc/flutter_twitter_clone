@@ -1,10 +1,10 @@
-## [1.0.5] - Upcomming
+## [1.0.5] - 15 Apr 2020
 
-* Notification on new message in system tray.
+* Notification on chat message in system tray.
 * Now if user click on comment Tweet it's parent tweet will visible in detail.
 * Google login button added on signup page.
 * Null value alert issue on forgot password fixed
-* Hash tags front weight and size issue fixed.
+* Hash tags font weight and size issue fixed.
 
 ## [1.0.4] - 04 Apr 2020
 
