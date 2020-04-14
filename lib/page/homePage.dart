@@ -69,12 +69,13 @@ class _HomePageState extends State<HomePage> {
 
   Widget _body() {
     var state = Provider.of<AppState>(context);
+    final authstate = Provider.of<AuthState>(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       var state = Provider.of<NotificationState>(context);
       /// Check if user recieve chat notification from firebase
       /// Redirect to chat screen
-      if (state.notificationType == NotificationType.Message) {
-        state.notificationType = NotificationType.NOT_DETERMINED;
+      if (state.notificationType == NotificationType.Message && state.notificationReciverId == authstate.userModel.userId) {
+        state.setrNotificationType = null;
         state.getuserDetail(state.notificationSenderId).then((user) {
           cprint("Opening user chat screen");
           final chatState = Provider.of<ChatState>(context, listen: false);

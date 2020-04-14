@@ -15,7 +15,12 @@ import 'package:flutter_twitter_clone/state/appState.dart';
 
 class NotificationState extends AppState {
   String fcmToken;
-  NotificationType notificationType = NotificationType.NOT_DETERMINED;
+  NotificationType _notificationType = NotificationType.NOT_DETERMINED;
+  String notificationReciverId;
+  NotificationType get notificationType => _notificationType;
+   set setrNotificationType(NotificationType type){
+     _notificationType = type;
+   }
   // FcmNotificationModel notification;
   String notificationSenderId;
   dabase.Query query;
@@ -151,24 +156,25 @@ class NotificationState extends AppState {
   void initfirebaseService(){
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
-        print("onMessage: $message");
+        // print("onMessage: $message");
         print(message['data']);
         notifyListeners();
       },
       onLaunch: (Map<String, dynamic> message) async {
-        cprint("Send to ",event: "UnBox");
+        cprint("Notification ",event: "onLaunch");
         var data = message['data'];
-        print(message['data']);
+        // print(message['data']);
         notificationSenderId = data["userId"];
-        notificationType = NotificationType.Message;
+        setrNotificationType = NotificationType.Message;
         notifyListeners();
       },
       onResume: (Map<String, dynamic> message) async {
-        cprint("Send to ",event: "UnBox");
+        cprint("Notification ",event: "onResume");
         var data = message['data'];
-        print(message['data']);
-        notificationSenderId = data["userId"];
-        notificationType = NotificationType.Message;
+        // print(message['data']);
+        notificationSenderId = data["senderId"];
+        notificationReciverId = data["receiverId"];
+        setrNotificationType = NotificationType.Message;
         notifyListeners();
       },
     );

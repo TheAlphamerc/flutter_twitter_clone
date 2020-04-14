@@ -256,6 +256,7 @@ class ChatState extends AppState {
         'status': 'done',
         "type": NotificationType.Message.toString(),
         "senderId": model.senderId,
+        "receiverId": model.receiverId,
         "title": "title",
         "body": model.message,
         "tweetId": ""
