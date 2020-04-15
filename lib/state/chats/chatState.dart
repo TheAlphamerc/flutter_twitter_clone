@@ -1,7 +1,5 @@
-import 'dart:async';
 import 'dart:convert';
-
-import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_database/firebase_database.dart';
@@ -18,6 +16,9 @@ class ChatState extends AppState {
   List<ChatMessage> _messageList;
   List<User> _chatUserList;
   User _chatUser;
+  String serverToken = "<FCM SERVER KEY>";
+
+  /// Get FCM server key from firebase project settings
   User get chatUser => _chatUser;
   set setChatUser(User model) {
     _chatUser = model;
@@ -47,7 +48,7 @@ class ChatState extends AppState {
     }
   }
 
-  void databaseInit(String userId, String myId) {
+  void databaseInit(String userId, String myId) async {
     _messageList = null;
     if (_channelName == null) {
       getChannelName(userId, myId);
@@ -62,6 +63,28 @@ class ChatState extends AppState {
       messageQuery = _database.reference().child("chats").child(_channelName);
       messageQuery.onChildAdded.listen(_onMessageAdded);
       messageQuery.onChildChanged.listen(_onMessageChanged);
+    }
+  }
+
+  /// FCM server key is stored in firebase remote config
+  /// you have to save server key in firebase remote config
+  /// To fetch this key go to project setting in firebase
+  /// Click on `cloud messaging` tab
+  /// Copy server key from `Project credentials`
+  /// Now goto `Remote Congig` section in fireabse
+  /// Add [FcmServerKey]  as paramerter key and below json in Default vslue
+  ///  ``` json
+  ///  {
+  ///    "key": "FCM server key here"
+  ///  } ```
+  /// For more detail visit:- https://pub.dev/packages/firebase_remote_config#-readme-tab-
+  void getFCMServerKey() async {
+    final RemoteConfig remoteConfig = await RemoteConfig.instance;
+    await remoteConfig.fetch(expiration: const Duration(hours: 5));
+    await remoteConfig.activateFetched();
+    var data = remoteConfig.getString('FcmServerKey');
+    if (data != null) {
+      serverToken = jsonDecode(data)["key"];
     }
   }
 
@@ -93,7 +116,7 @@ class ChatState extends AppState {
     }
   }
 
-  void getchatDetailAsync() {
+  void getchatDetailAsync() async {
     try {
       final databaseReference = FirebaseDatabase.instance.reference();
       databaseReference
@@ -242,8 +265,7 @@ class ChatState extends AppState {
     if (chatUser.fcmToken == null) {
       return;
     }
-    final String serverToken = "ADD FIREBASE SERVER KEY HERE";
-        
+
     var body = jsonEncode(<String, dynamic>{
       'notification': <String, dynamic>{
         'body': model.message,

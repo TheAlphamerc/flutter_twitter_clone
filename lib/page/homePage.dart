@@ -66,6 +66,7 @@ class _HomePageState extends State<HomePage> {
     final state = Provider.of<AuthState>(context, listen: false);
     chatState.databaseInit(state.userId, state.userId);
     state.updateFCMToken();
+    chatState.getFCMServerKey();
   }
 
   Widget _body() {
