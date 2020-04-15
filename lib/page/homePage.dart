@@ -65,10 +65,11 @@ class _HomePageState extends State<HomePage> {
     final chatState = Provider.of<ChatState>(context, listen: false);
     final state = Provider.of<AuthState>(context, listen: false);
     chatState.databaseInit(state.userId, state.userId);
+    state.updateFCMToken();
   }
 
   Widget _body() {
-    var state = Provider.of<AppState>(context);
+    
     final authstate = Provider.of<AuthState>(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       var state = Provider.of<NotificationState>(context);
@@ -84,7 +85,7 @@ class _HomePageState extends State<HomePage> {
         });
       }
     });
-    return SafeArea(child: Container(child: _getPage(state.pageIndex)));
+    return SafeArea(child: Container(child: _getPage(Provider.of<AppState>(context).pageIndex)));
   }
 
   Widget _getPage(int index) {

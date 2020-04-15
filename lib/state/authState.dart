@@ -45,6 +45,7 @@ class AuthState extends AppState {
     authStatus = AuthStatus.NOT_LOGGED_IN;
     userId = '';
     _userModel = null;
+    user = null;
     _profileUserModelList = null;
     if (isSignInWithGoogle) {
       _googleSignIn.signOut();
@@ -190,13 +191,8 @@ class AuthState extends AppState {
 
       // Time at which user is created
       user.createdAt = DateTime.now().toUtc().toString();
-      /// Get firebase token 
-      /// Helps to send notification
-      _firebaseMessaging.getToken().then((String token) {
-        assert(token != null);
-        user.fcmToken = token;
-      });
     }
+
     kDatabase.child('profile').child(user.userId).set(user.toJson());
     _userModel = user;
     if (_profileUserModelList != null) {
@@ -361,13 +357,7 @@ class AuthState extends AppState {
                 reloadUser();
               }
               if (_userModel.fcmToken == null) {
-                /// if firebase  token not available in frofile
-                /// Then get token from firebase and save it to profile
-                _firebaseMessaging.getToken().then((String token) {
-                  assert(token != null);
-                  _userModel.fcmToken = token;
-                  createUser(_userModel);
-                });
+                updateFCMToken();
               }
             }
 
@@ -380,6 +370,18 @@ class AuthState extends AppState {
       loading = false;
       cprint(error, errorIn: 'getProfileUser');
     }
+  }
+
+  /// if firebase token not available in frofile
+  /// Then get token from firebase and save it to profile
+  /// When someonw sends you a message FCM token is used
+  void updateFCMToken() {
+    getProfileUser(userProfileId: userId);
+    _firebaseMessaging.getToken().then((String token) {
+      assert(token != null);
+      _userModel.fcmToken = token;
+      createUser(_userModel);
+    });
   }
 
   /// Follow / Unfollow user
