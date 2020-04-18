@@ -6,6 +6,7 @@ import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
+import 'package:flutter_twitter_clone/page/profile/widgets/tabPainter.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/chats/chatState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
@@ -39,7 +40,7 @@ class _ProfilePageState extends State<ProfilePage>
       isMyProfile =
           widget.profileId == null || widget.profileId == authstate.userId;
     });
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
     super.initState();
   }
 
@@ -271,7 +272,6 @@ class _ProfilePageState extends State<ProfilePage>
     if (state.feedlist != null && state.feedlist.length > 0) {
       list = state.feedlist.where((x) => x.userId == id).toList();
     }
-    list = null;
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
@@ -301,8 +301,13 @@ class _ProfilePageState extends State<ProfilePage>
                     Container(
                       color: TwitterColor.white,
                       child: TabBar(
+                        indicator: TabIndicator(),
                         controller: _tabController,
-                        tabs: <Widget>[Text("Tweets"), Text("Tweets & reply")],
+                        tabs: <Widget>[
+                          Text("Tweets"),
+                          Text("Tweets & replies"),
+                          Text("Media")
+                        ],
                       ),
                     )
                   ],
@@ -314,10 +319,13 @@ class _ProfilePageState extends State<ProfilePage>
             controller: _tabController,
             children: [
               /// All independent tweers list
-              _tweetList(context, authstate, list, false),
+              _tweetList(context, authstate, list, false, false),
 
               /// All reply and comments tweet list
-              _tweetList(context, authstate, list, true)
+              _tweetList(context, authstate, list, true, false),
+
+              /// All reply and comments tweet list
+              _tweetList(context, authstate, list, false, true)
             ],
           ),
         ),
@@ -325,26 +333,28 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
-  Widget _tweetList(
-    BuildContext context,
-    AuthState authstate,
-    List<FeedModel> list1,
-    bool isreply,
-  ) {
+  Widget _tweetList(BuildContext context, AuthState authstate,
+      List<FeedModel> tweetsList, bool isreply, bool isMedia) {
     List<FeedModel> list;
 
     /// If user hasn't tweeted yet
-    if (list == null) {
+    if (tweetsList == null) {
       // cprint('No Tweet avalible');
-    } else if (isreply) {
+    } else if (isMedia) {
       /// Filter reply or comment tweet list
 
-      list =
-          list1.where((x) => x.parentkey == null || x.childRetwetkey != null);
+      list = tweetsList.where((x) => x.imagePath != null).toList();
+    } else if (!isreply) {
+      /// Filter reply or comment tweet list
+
+      list = tweetsList
+          .where((x) => x.parentkey == null || x.childRetwetkey != null)
+          .toList();
     } else {
       /// List independent tweet
-      list =
-          list1.where((x) => x.parentkey != null && x.childRetwetkey == null);
+      list = tweetsList
+          .where((x) => x.parentkey != null && x.childRetwetkey == null)
+          .toList();
     }
 
     /// if [authState.isbusy] is true then an loading indicator will be displayed on screen.
@@ -364,8 +374,8 @@ class _ProfilePageState extends State<ProfilePage>
                 padding: EdgeInsets.only(top: 50, left: 30, right: 30),
                 child: NotifyText(
                   title: isMyProfile
-                      ? 'You haven\'t post any Tweet yet'
-                      : '${authstate.profileUserModel.userName} hasn\'t Tweeted yet',
+                      ? 'You haven\'t ${isreply ? 'reply to any Tweet' : isMedia ? 'post any media Tweet yet' : 'post any Tweet yet'}'
+                      : '${authstate.profileUserModel.userName} hasn\'t ${isreply ? 'reply to any Tweet' : isMedia ? 'post any media Tweet yet' : 'post any Tweet yet'}',
                   subTitle: isMyProfile
                       ? 'Tap tweet button to add new'
                       : 'Once he\'ll do, they will be shown up here',
@@ -532,8 +542,6 @@ class UserNameRowWidget extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(height: 5),
-        // Divider(height: 0)
       ],
     );
   }
