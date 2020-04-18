@@ -376,6 +376,9 @@ class AuthState extends AppState {
   /// Then get token from firebase and save it to profile
   /// When someonw sends you a message FCM token is used
   void updateFCMToken() {
+    if(_userModel == null){
+      return;
+    }
     getProfileUser(userProfileId: userId);
     _firebaseMessaging.getToken().then((String token) {
       assert(token != null);

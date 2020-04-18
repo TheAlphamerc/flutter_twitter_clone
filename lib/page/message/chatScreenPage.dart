@@ -114,9 +114,16 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                       child: UrlText(
                         text: chat.message,
                         style: TextStyle(
-                            fontSize: 16,
-                            color:
-                                myMessage ? TwitterColor.white : Colors.black),
+                          fontSize: 16,
+                          color: myMessage ? TwitterColor.white : Colors.black,
+                        ),
+                        urlStyle: TextStyle(
+                          fontSize: 16,
+                          color: myMessage
+                              ? TwitterColor.white
+                              : TwitterColor.dodgetBlue,
+                          decoration: TextDecoration.underline,
+                        ),
                       ),
                     ),
                     Positioned(
