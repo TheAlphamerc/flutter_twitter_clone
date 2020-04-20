@@ -275,7 +275,7 @@ class _ProfilePageState extends State<ProfilePage>
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        floatingActionButton: _floatingActionButton(),
+        floatingActionButton:!isMyProfile ? null :  _floatingActionButton(),
         backgroundColor: TwitterColor.mystic,
         body: NestedScrollView(
           // controller: _scrollController,
