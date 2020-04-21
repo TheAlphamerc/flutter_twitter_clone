@@ -1,4 +1,3 @@
-import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
@@ -6,7 +5,6 @@ import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
-import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customLoader.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/emptyList.dart';
@@ -14,25 +12,15 @@ import 'package:flutter_twitter_clone/widgets/tweet/tweet.dart';
 import 'package:flutter_twitter_clone/widgets/tweet/widgets/tweetBottomSheet.dart';
 import 'package:provider/provider.dart';
 
-
-class FeedPage extends StatefulWidget {
-  const FeedPage({Key key, this.scaffoldKey}) : super(key: key);
+class FeedPage extends StatelessWidget {
+  const FeedPage({Key key, this.scaffoldKey, this.refreshIndicatorKey})
+      : super(key: key);
 
   final GlobalKey<ScaffoldState> scaffoldKey;
 
-  _FeedPageState createState() => _FeedPageState();
-}
+  final GlobalKey<RefreshIndicatorState> refreshIndicatorKey;
 
-class _FeedPageState extends State<FeedPage> {
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      new GlobalKey<RefreshIndicatorState>();
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  Widget _floatingActionButton() {
+  Widget _floatingActionButton(BuildContext context) {
     return FloatingActionButton(
       onPressed: () {
         Navigator.of(context).pushNamed('/CreateFeedPage/tweet');
@@ -47,6 +35,40 @@ class _FeedPageState extends State<FeedPage> {
     );
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      floatingActionButton: _floatingActionButton(context),
+      backgroundColor: TwitterColor.mystic,
+      body: SafeArea(
+        child: Container(
+          height: fullHeight(context),
+          width: fullWidth(context),
+          child: RefreshIndicator(
+            key: refreshIndicatorKey,
+            onRefresh: () async {
+              var state = Provider.of<FeedState>(context, listen: false);
+              state.getDataFromDatabase();
+              return Future.value(true);
+            },
+            child: _FeedPageBody(
+              refreshIndicatorKey: refreshIndicatorKey,
+              scaffoldKey: scaffoldKey,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _FeedPageBody extends StatelessWidget {
+  final GlobalKey<ScaffoldState> scaffoldKey;
+
+  final GlobalKey<RefreshIndicatorState> refreshIndicatorKey;
+
+  const _FeedPageBody({Key key, this.scaffoldKey, this.refreshIndicatorKey})
+      : super(key: key);
   Widget _getUserAvatar(BuildContext context) {
     var authState = Provider.of<AuthState>(context);
     return Padding(
@@ -54,7 +76,7 @@ class _FeedPageState extends State<FeedPage> {
       child: customInkWell(
         context: context,
         onPressed: () {
-          widget.scaffoldKey.currentState.openDrawer();
+          scaffoldKey.currentState.openDrawer();
         },
         child:
             customImage(context, authState.userModel?.profilePic, height: 30),
@@ -62,7 +84,8 @@ class _FeedPageState extends State<FeedPage> {
     );
   }
 
-  Widget _body() {
+  @override
+  Widget build(BuildContext context) {
     var state = Provider.of<FeedState>(context);
     var authstate = Provider.of<AuthState>(context);
     List<FeedModel> list;
@@ -100,14 +123,14 @@ class _FeedPageState extends State<FeedPage> {
         ),
         state.isBusy && list == null
             ? SliverToBoxAdapter(
-                child:  Container(
-                        height: fullHeight(context) - 135,
-                        child: CustomScreenLoader(
-                          height: double.infinity,
-                          width: fullWidth(context),
-                          backgroundColor: Colors.white,
-                        )
-                      )
+                child: Container(
+                  height: fullHeight(context) - 135,
+                  child: CustomScreenLoader(
+                    height: double.infinity,
+                    width: fullWidth(context),
+                    backgroundColor: Colors.white,
+                  ),
+                ),
               )
             : !state.isBusy && list == null
                 ? SliverToBoxAdapter(
@@ -133,29 +156,6 @@ class _FeedPageState extends State<FeedPage> {
                     ),
                   )
       ],
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: _floatingActionButton(),
-      backgroundColor: TwitterColor.mystic,
-      body: SafeArea(
-        child: Container(
-          height: fullHeight(context),
-          width: fullWidth(context),
-          child: RefreshIndicator(
-            key: _refreshIndicatorKey,
-            onRefresh: () async {
-              var state = Provider.of<FeedState>(context);
-              state.getDataFromDatabase();
-              return Future.value(true);
-            },
-            child: _body(),
-          ),
-        ),
-      ),
     );
   }
 }

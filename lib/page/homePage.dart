@@ -22,6 +22,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final refreshIndicatorKey =new GlobalKey<RefreshIndicatorState>();
   int pageIndex = 0;
   @override
   void initState() {
@@ -94,6 +95,7 @@ class _HomePageState extends State<HomePage> {
       case 0:
         return FeedPage(
           scaffoldKey: _scaffoldKey,
+          refreshIndicatorKey: refreshIndicatorKey,
         );
         break;
       case 1:

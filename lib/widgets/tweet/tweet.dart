@@ -232,7 +232,7 @@ class Tweet extends StatelessWidget {
   }
 
   void onTapTweet(BuildContext context) {
-    var feedstate = Provider.of<FeedState>(context);
+    var feedstate = Provider.of<FeedState>(context,listen: false);
     if (type == TweetType.Detail || type == TweetType.ParentTweet) {
       return;
     }

@@ -32,55 +32,54 @@ class TweetIconsRow extends StatelessWidget {
       : super(key: key);
 
   Widget _likeCommentsIcons(BuildContext context, FeedModel model) {
-    var state = Provider.of<AuthState>(
-      context,
-    );
+    var authState = Provider.of<AuthState>(context, listen: false);
     return Container(
-        color: Colors.transparent,
-        padding: EdgeInsets.only(bottom: 0, top: 0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            SizedBox(
-              width: 20,
-            ),
-            _iconWidget(
-              context,
-              text: isTweetDetail ? '' : model.commentCount.toString(),
-              icon: AppIcon.reply,
-              iconColor: iconColor,
-              size: size ?? 20,
-              onPressed: () {
-                var state = Provider.of<FeedState>(context, listen: false);
-                state.setTweetToReply = model;
-                Navigator.of(context).pushNamed('/ComposeTweetPage');
-              },
-            ),
-            _iconWidget(context,
-                text: isTweetDetail ? '' : model.retweetCount.toString(),
-                icon: AppIcon.retweet,
-                iconColor: iconColor,
-                size: size ?? 20, onPressed: () {
-              TweetBottomSheet().openRetweetbottomSheet(context, type, model);
-            }),
-            _iconWidget(context,
-                text: isTweetDetail ? '' : model.likeCount.toString(),
-                icon: model.likeList.any((x) => x.userId == state.userId)
-                    ? AppIcon.heartFill
-                    : AppIcon.heartEmpty, onPressed: () {
-              addLikeToTweet(context);
+      color: Colors.transparent,
+      padding: EdgeInsets.only(bottom: 0, top: 0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          SizedBox(
+            width: 20,
+          ),
+          _iconWidget(
+            context,
+            text: isTweetDetail ? '' : model.commentCount.toString(),
+            icon: AppIcon.reply,
+            iconColor: iconColor,
+            size: size ?? 20,
+            onPressed: () {
+              var state = Provider.of<FeedState>(context, listen: false);
+              state.setTweetToReply = model;
+              Navigator.of(context).pushNamed('/ComposeTweetPage');
             },
-                iconColor: model.likeList.any((x) => x.userId == state.userId)
-                    ? iconEnableColor
-                    : iconColor,
-                size: size ?? 20),
-            _iconWidget(context, text: '', icon: null, sysIcon: Icons.share,
-                onPressed: () {
-              share('${model.description}',
-                  subject: '${model.user.displayName}\'s post');
-            }, iconColor: iconColor, size: size ?? 20),
-          ],
-        ));
+          ),
+          _iconWidget(context,
+              text: isTweetDetail ? '' : model.retweetCount.toString(),
+              icon: AppIcon.retweet,
+              iconColor: iconColor,
+              size: size ?? 20, onPressed: () {
+            TweetBottomSheet().openRetweetbottomSheet(context, type, model);
+          }),
+          _iconWidget(context,
+              text: isTweetDetail ? '' : model.likeCount.toString(),
+              icon: model.likeList.any((x) => x.userId == authState.userId)
+                  ? AppIcon.heartFill
+                  : AppIcon.heartEmpty, onPressed: () {
+            addLikeToTweet(context);
+          },
+              iconColor: model.likeList.any((x) => x.userId == authState.userId)
+                  ? iconEnableColor
+                  : iconColor,
+              size: size ?? 20),
+          _iconWidget(context, text: '', icon: null, sysIcon: Icons.share,
+              onPressed: () {
+            share('${model.description}',
+                subject: '${model.user.displayName}\'s post');
+          }, iconColor: iconColor, size: size ?? 20),
+        ],
+      ),
+    );
   }
 
   Widget _iconWidget(BuildContext context,

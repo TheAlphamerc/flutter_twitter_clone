@@ -23,7 +23,7 @@ class UnavailableTweet extends StatelessWidget {
               : 16),
       alignment: Alignment.centerLeft,
       decoration: BoxDecoration(
-        color: AppColor.extraLightGrey,
+        color: AppColor.extraLightGrey.withOpacity(.3),
         border: Border.all(color: AppColor.extraLightGrey, width: .5),
         borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
