@@ -107,10 +107,16 @@ class _ProfilePageState extends State<ProfilePage>
                           decoration: BoxDecoration(
                               border: Border.all(color: Colors.white, width: 5),
                               shape: BoxShape.circle),
-                          child: customImage(
-                            context,
-                            authstate.profileUserModel.profilePic,
-                            height: 80,
+                          child: RippleButton(
+                            child: customImage(
+                              context,
+                              authstate.profileUserModel.profilePic,
+                              height: 80,
+                            ),
+                            borderRadius: BorderRadius.circular(50),
+                            onPressed: (){
+                              Navigator.pushNamed(context, "/ProfileImageView");
+                            },
                           ),
                         ),
                         Container(
@@ -275,7 +281,7 @@ class _ProfilePageState extends State<ProfilePage>
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        floatingActionButton:!isMyProfile ? null :  _floatingActionButton(),
+        floatingActionButton: !isMyProfile ? null : _floatingActionButton(),
         backgroundColor: TwitterColor.mystic,
         body: NestedScrollView(
           // controller: _scrollController,

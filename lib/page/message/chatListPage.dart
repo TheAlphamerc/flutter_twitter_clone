@@ -45,7 +45,7 @@ class _ChatListPageState extends State<ChatListPage> {
         child: EmptyList(
           'No message available ',
           subTitle:
-              'When someonw sends you message,User list\'ll show up here \n  To send message tap message.',
+              'When someone sends you message,User list\'ll show up here \n  To send message tap message button.',
         ),
       );
     } else {

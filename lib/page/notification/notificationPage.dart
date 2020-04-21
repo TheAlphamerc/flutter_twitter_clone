@@ -98,7 +98,7 @@ class NotificationPageBody extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 30),
         child: EmptyList(
           'No Notification available yet',
-          subTitle: 'When new notificaion found, they\'ll show up here.',
+          subTitle: 'When new notifiction found, they\'ll show up here.',
         ),
       );
     }

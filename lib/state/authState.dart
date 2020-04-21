@@ -5,6 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
@@ -118,6 +119,16 @@ class AuthState extends AppState {
       createUserFromGoogleSignIn(user);
       notifyListeners();
       return user;
+    } on PlatformException catch (error) {
+      user = null;
+      authStatus = AuthStatus.NOT_LOGGED_IN;
+      cprint(error, errorIn: 'handleGoogleSignIn');
+      return null;
+    } on Exception catch (error) {
+      user = null;
+      authStatus = AuthStatus.NOT_LOGGED_IN;
+      cprint(error, errorIn: 'handleGoogleSignIn');
+      return null;
     } catch (error) {
       user = null;
       authStatus = AuthStatus.NOT_LOGGED_IN;
@@ -376,7 +387,7 @@ class AuthState extends AppState {
   /// Then get token from firebase and save it to profile
   /// When someonw sends you a message FCM token is used
   void updateFCMToken() {
-    if(_userModel == null){
+    if (_userModel == null) {
       return;
     }
     getProfileUser(userProfileId: userId);
