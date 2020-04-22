@@ -114,7 +114,7 @@ class _ProfilePageState extends State<ProfilePage>
                               height: 80,
                             ),
                             borderRadius: BorderRadius.circular(50),
-                            onPressed: (){
+                            onPressed: () {
                               Navigator.pushNamed(context, "/ProfileImageView");
                             },
                           ),
@@ -180,12 +180,15 @@ class _ProfilePageState extends State<ProfilePage>
                                         context, '/EditProfile');
                                   } else {
                                     authstate.followUser(
-                                        removeFollower: isFollower());
+                                      removeFollower: isFollower(),
+                                    );
                                   }
                                 },
                                 child: Container(
                                   padding: EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 5),
+                                    horizontal: 10,
+                                    vertical: 5,
+                                  ),
                                   decoration: BoxDecoration(
                                     color: isFollower()
                                         ? TwitterColor.dodgetBlue
@@ -197,18 +200,22 @@ class _ProfilePageState extends State<ProfilePage>
                                         width: 1),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
+
+                                  /// If [isMyProfile] is true then Edit profile button will display
+                                  // Otherwise Follow/Following button will be display
                                   child: Text(
                                     isMyProfile
                                         ? 'Edit Profile'
                                         : isFollower() ? 'Following' : 'Follow',
                                     style: TextStyle(
-                                        color: isMyProfile
-                                            ? Colors.black87.withAlpha(180)
-                                            : isFollower()
-                                                ? TwitterColor.white
-                                                : Colors.blue,
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.bold),
+                                      color: isMyProfile
+                                          ? Colors.black87.withAlpha(180)
+                                          : isFollower()
+                                              ? TwitterColor.white
+                                              : Colors.blue,
+                                         fontSize: 17,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                               ),

@@ -66,7 +66,7 @@ class AuthState extends AppState {
   databaseInit() {
     try {
       if (_profileQuery == null) {
-        _profileQuery = kDatabase.child("profile").child(userId);
+        _profileQuery = kDatabase.child("profile").child(user.uid);
         _profileQuery.onValue.listen(_onProfileChanged);
       }
     } catch (error) {
@@ -344,13 +344,15 @@ class AuthState extends AppState {
   }
 
   /// Fetch user profile
+ /// If `userProfileId` is null then logged in user's profile will fetched
   getProfileUser({String userProfileId}) {
     try {
       loading = true;
       if (_profileUserModelList == null) {
         _profileUserModelList = [];
       }
-      userProfileId = userProfileId == null ? userId : userProfileId;
+      
+      userProfileId = userProfileId == null ? user.uid : userProfileId;
       kDatabase
           .child("profile")
           .child(userProfileId)
@@ -360,11 +362,11 @@ class AuthState extends AppState {
           var map = snapshot.value;
           if (map != null) {
             _profileUserModelList.add(User.fromJson(map));
-            if (userProfileId == userId) {
+            if (userProfileId == user.uid) {
               _userModel = _profileUserModelList.last;
               _userModel.isVerified = user.isEmailVerified;
               if (!user.isEmailVerified) {
-                // Check if user verified his email address
+                // Check if logged in user verified his email address or not
                 reloadUser();
               }
               if (_userModel.fcmToken == null) {
@@ -383,14 +385,14 @@ class AuthState extends AppState {
     }
   }
 
-  /// if firebase token not available in frofile
+  /// if firebase token not available in profile
   /// Then get token from firebase and save it to profile
-  /// When someonw sends you a message FCM token is used
+  /// When someone sends you a message FCM token is used
   void updateFCMToken() {
     if (_userModel == null) {
       return;
     }
-    getProfileUser(userProfileId: userId);
+    getProfileUser();
     _firebaseMessaging.getToken().then((String token) {
       assert(token != null);
       _userModel.fcmToken = token;
@@ -450,10 +452,14 @@ class AuthState extends AppState {
     }
   }
 
-  /// Trigger when logged-in user's profile chanege
+  /// Trigger when logged-in user's profile change or updated
+  /// Firebase event callback for profile update
   void _onProfileChanged(Event event) {
     if (event.snapshot != null) {
-      _userModel = User.fromJson(event.snapshot.value);
+      final updatedUser = User.fromJson(event.snapshot.value);
+      if(updatedUser.userId == user.uid){
+        _userModel = updatedUser;
+      }
       cprint('User Updated');
       notifyListeners();
     }
