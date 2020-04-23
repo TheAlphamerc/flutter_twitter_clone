@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
+import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:provider/provider.dart';
@@ -104,6 +105,12 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage>{
       customSnackBar(_scaffoldKey, 'Email field cannot be empty');
       return;
     }
+    var isValidEmail = validateEmal(_emailController.text, );
+    if(!isValidEmail){
+       customSnackBar(_scaffoldKey, 'Please enter valid email address');
+      return;
+    }
+
     _focusNode.unfocus();
     var state = Provider.of<AuthState>(context,listen: false);
     state.forgetPassword(_emailController.text,scaffoldKey:_scaffoldKey);

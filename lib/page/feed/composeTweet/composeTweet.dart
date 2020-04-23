@@ -8,6 +8,7 @@ import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/page/feed/composeTweet/widget/composeBottomIconWidget.dart';
 import 'package:flutter_twitter_clone/page/feed/composeTweet/widget/composeTweetImage.dart';
+import 'package:flutter_twitter_clone/page/feed/composeTweet/widget/widgetView.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
@@ -107,7 +108,7 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
         user: commentedUser,
         createdAt: DateTime.now().toUtc().toString(),
         tags: tags,
-        parentkey: state.tweetToReplyModel.key,
+        parentkey: widget.isRetweet ? null  : state.tweetToReplyModel.key,
         childRetwetkey: widget.isRetweet ? model.key : null,
         userId: commentedUser.userId);
     if (_image != null) {
@@ -461,13 +462,4 @@ class _ComposeTweet
   }
 }
 
-abstract class WidgetView<T1, T2> extends StatelessWidget {
-  const WidgetView(this.state, {Key key}) : super(key: key);
 
-  final T2 state;
-
-  T1 get widget => (state as State).widget as T1;
-
-  @override
-  Widget build(BuildContext context);
-}

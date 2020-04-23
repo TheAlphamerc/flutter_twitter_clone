@@ -46,7 +46,7 @@ class SettingsAndPrivacyPage extends StatelessWidget {
           SettingRowWidget("Accessibility", navigateTo: 'AccessibilityPage'),
           SettingRowWidget("Proxy", navigateTo: "ProxyPage"),
           SettingRowWidget(
-            "About Twitter",
+            "About Fwitter",
             navigateTo: "AboutPage",
           ),
           SettingRowWidget(

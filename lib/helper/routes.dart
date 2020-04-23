@@ -8,6 +8,7 @@ import 'package:flutter_twitter_clone/page/message/conversationInformation/conve
 import 'package:flutter_twitter_clone/page/message/newMessagePage.dart';
 import 'package:flutter_twitter_clone/page/profile/follow/followerListPage.dart';
 import 'package:flutter_twitter_clone/page/profile/follow/followingListPage.dart';
+import 'package:flutter_twitter_clone/page/profile/profileImageView.dart';
 import 'package:flutter_twitter_clone/page/search/SearchPage.dart';
 import 'package:flutter_twitter_clone/page/settings/accountSettings/about/aboutTwitter.dart';
 import 'package:flutter_twitter_clone/page/settings/accountSettings/accessibility/accessibility.dart';
@@ -80,6 +81,7 @@ class Routes{
       case "SearchPage":return CustomRoute<bool>(builder:(BuildContext context)=> SearchPage()); 
       case "ImageViewPge":return CustomRoute<bool>(builder:(BuildContext context)=> ImageViewPge());
       case "EditProfile":return CustomRoute<bool>(builder:(BuildContext context)=> EditProfilePage()); 
+      case "ProfileImageView":return SlideLeftRoute<bool>(builder:(BuildContext context)=> ProfileImageView()); 
       case "ChatScreenPage":return CustomRoute<bool>(builder:(BuildContext context)=> ChatScreenPage()); 
       case "NewMessagePage":return CustomRoute<bool>(builder:(BuildContext context)=> NewMessagePage(),); 
       case "SettingsAndPrivacyPage":return CustomRoute<bool>(builder:(BuildContext context)=> SettingsAndPrivacyPage(),); 

@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
+import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customLoader.dart';
+import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 import 'package:provider/provider.dart';
 
 class Signup extends StatefulWidget {
@@ -61,6 +63,9 @@ class _SignupState extends State<Signup> {
             _entryFeild('Confirm password',
                 controller: _confirmController, isPassword: true),
             _submitButton(context),
+
+            Divider(),
+            _googleLoginButton(context)
           ],
         ),
       ),
@@ -112,6 +117,40 @@ class _SignupState extends State<Signup> {
     );
   }
 
+  Widget _googleLoginButton(BuildContext context) {
+    return Container(
+      alignment: Alignment.center,
+      margin: EdgeInsets.symmetric(vertical: 35),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          MaterialButton(
+            elevation: 2,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            color: Colors.white,
+            onPressed: _googleLogin,
+            padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+            child: Row(
+              children: <Widget>[
+                Image.asset(
+                  'assets/images/google_logo.png',
+                  height: 20,
+                  width: 20,
+                ),
+                SizedBox(width: 10),
+                TitleText(
+                  'Continue with Google',
+                  color: Colors.black54,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _submitForm() {
     if (_emailController.text == null ||
         _emailController.text.isEmpty ||
@@ -158,6 +197,25 @@ class _SignupState extends State<Signup> {
         }
       },
     );
+  }
+
+  void _googleLogin() {
+    var state = Provider.of<AuthState>(context);
+    if (state.isbusy) {
+      return;
+    }
+    loader.showLoader(context);
+    state.handleGoogleSignIn().then((status) {
+      // print(status)
+      if (state.user != null) {
+        loader.hideLoader();
+        Navigator.pop(context);
+        widget.loginCallback();
+      } else {
+        loader.hideLoader();
+        cprint('Unable to login', errorIn: '_googleLoginButton');
+      }
+    });
   }
 
   @override

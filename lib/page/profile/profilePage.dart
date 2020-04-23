@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
+import 'package:flutter_twitter_clone/page/profile/widgets/tabPainter.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/chats/chatState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
@@ -25,7 +27,8 @@ class ProfilePage extends StatefulWidget {
   _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ProfilePageState extends State<ProfilePage>
+    with SingleTickerProviderStateMixin {
   bool isMyProfile = false;
   int pageIndex = 0;
 
@@ -37,13 +40,20 @@ class _ProfilePageState extends State<ProfilePage> {
       isMyProfile =
           widget.profileId == null || widget.profileId == authstate.userId;
     });
-
+    _tabController = TabController(length: 3, vsync: this);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   SliverAppBar getAppbar() {
     var authstate = Provider.of<AuthState>(context);
     return SliverAppBar(
+      forceElevated: false,
       expandedHeight: 180,
       elevation: 0,
       iconTheme: IconThemeData(color: Colors.white),
@@ -76,26 +86,37 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                   Container(height: 50, color: Colors.black),
+
+                  /// Banner image
                   Padding(
                     padding: EdgeInsets.only(top: 30),
                     child: customNetworkImage(
                         'https://pbs.twimg.com/profile_banners/457684585/1510495215/1500x500',
                         fit: BoxFit.fill),
                   ),
+
+                  /// User avatar, message icon, profile edit and follow/following button
                   Container(
                     alignment: Alignment.bottomLeft,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Container(
+                        AnimatedContainer(
+                          duration: Duration(milliseconds: 500),
                           padding: EdgeInsets.symmetric(horizontal: 10),
                           decoration: BoxDecoration(
                               border: Border.all(color: Colors.white, width: 5),
                               shape: BoxShape.circle),
-                          child: customImage(
-                            context,
-                            authstate.profileUserModel.profilePic,
-                            height: 80,
+                          child: RippleButton(
+                            child: customImage(
+                              context,
+                              authstate.profileUserModel.profilePic,
+                              height: 80,
+                            ),
+                            borderRadius: BorderRadius.circular(50),
+                            onPressed: () {
+                              Navigator.pushNamed(context, "/ProfileImageView");
+                            },
                           ),
                         ),
                         Container(
@@ -103,9 +124,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           child: Row(
                             children: <Widget>[
                               isMyProfile
-                                  ? Container(
-                                      height: 40,
-                                    )
+                                  ? Container(height: 40)
                                   : RippleButton(
                                       splashColor: TwitterColor.dodgetBlue_50
                                           .withAlpha(100),
@@ -161,12 +180,15 @@ class _ProfilePageState extends State<ProfilePage> {
                                         context, '/EditProfile');
                                   } else {
                                     authstate.followUser(
-                                        removeFollower: isFollower());
+                                      removeFollower: isFollower(),
+                                    );
                                   }
                                 },
                                 child: Container(
                                   padding: EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 5),
+                                    horizontal: 10,
+                                    vertical: 5,
+                                  ),
                                   decoration: BoxDecoration(
                                     color: isFollower()
                                         ? TwitterColor.dodgetBlue
@@ -178,18 +200,22 @@ class _ProfilePageState extends State<ProfilePage> {
                                         width: 1),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
+
+                                  /// If [isMyProfile] is true then Edit profile button will display
+                                  // Otherwise Follow/Following button will be display
                                   child: Text(
                                     isMyProfile
                                         ? 'Edit Profile'
                                         : isFollower() ? 'Following' : 'Follow',
                                     style: TextStyle(
-                                        color: isMyProfile
-                                            ? Colors.black87.withAlpha(180)
-                                            : isFollower()
-                                                ? TwitterColor.white
-                                                : Colors.blue,
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.bold),
+                                      color: isMyProfile
+                                          ? Colors.black87.withAlpha(180)
+                                          : isFollower()
+                                              ? TwitterColor.white
+                                              : Colors.blue,
+                                         fontSize: 17,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -246,85 +272,146 @@ class _ProfilePageState extends State<ProfilePage> {
     return true;
   }
 
+  TabController _tabController;
+
   @override
-  Widget build(BuildContext context) {
+  build(BuildContext context) {
     var state = Provider.of<FeedState>(context);
     var authstate = Provider.of<AuthState>(context);
     List<FeedModel> list;
     String id = widget.profileId ?? authstate.userId;
+
+    /// Filter user's tweet among all tweets available in home page tweets list
     if (state.feedlist != null && state.feedlist.length > 0) {
       list = state.feedlist.where((x) => x.userId == id).toList();
     }
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        backgroundColor: list != null && list.isNotEmpty
-            ? TwitterColor.mystic
-            : TwitterColor.white,
-        floatingActionButton: isMyProfile ? _floatingActionButton() : null,
-        body: CustomScrollView(
-          physics: ClampingScrollPhysics(),
-          slivers: <Widget>[
-            getAppbar(),
-            authstate.isbusy
-                ? _emptyBox()
-                : SliverToBoxAdapter(
-                    child: Container(
-                      color: Colors.white,
-                      child: authstate.isbusy
-                          ? SizedBox.shrink()
-                          : UserNameRowWidget(
-                              user: authstate.profileUserModel,
-                              isMyProfile: isMyProfile,
-                            ),
+        floatingActionButton: !isMyProfile ? null : _floatingActionButton(),
+        backgroundColor: TwitterColor.mystic,
+        body: NestedScrollView(
+          // controller: _scrollController,
+          headerSliverBuilder: (BuildContext context, bool boxIsScrolled) {
+            return <Widget>[
+              getAppbar(),
+              authstate.isbusy
+                  ? _emptyBox()
+                  : SliverToBoxAdapter(
+                      child: Container(
+                        color: Colors.white,
+                        child: authstate.isbusy
+                            ? SizedBox.shrink()
+                            : UserNameRowWidget(
+                                user: authstate.profileUserModel,
+                                isMyProfile: isMyProfile,
+                              ),
+                      ),
                     ),
-                  ),
-            SliverList(
-              delegate: SliverChildListDelegate(
-                authstate.isbusy
-                    ? [
-                        Container(
-                            height: fullHeight(context) - 180,
-                            child: CustomScreenLoader(
-                              height: double.infinity,
-                              width: fullWidth(context),
-                              backgroundColor: Colors.white,
-                            ))
-                      ]
-                    : list == null || list.length < 1
-                        ? [
-                            Container(
-                              padding:
-                                  EdgeInsets.only(top: 50, left: 30, right: 30),
-                              child: NotifyText(
-                                title: isMyProfile
-                                    ? 'You haven\'t post any Tweet yet'
-                                    : '${authstate.profileUserModel.userName} hasn\'t Tweeted yet',
-                                subTitle: isMyProfile
-                                    ? 'Tap tweet button to add new'
-                                    : 'Once he\'ll do, they will be shown up here',
-                              ),
-                            )
-                          ]
-                        : list
-                            .map(
-                              (x) => Container(
-                                color: TwitterColor.white,
-                                child: Tweet(
-                                  model: x,
-                                  isDisplayOnProfile: true,
-                                  trailing: TweetBottomSheet().tweetOptionIcon(
-                                      context, x, TweetType.Tweet),
-                                ),
-                              ),
-                            )
-                            .toList(),
-              ),
-            )
-          ],
+              SliverList(
+                delegate: SliverChildListDelegate(
+                  [
+                    Container(
+                      color: TwitterColor.white,
+                      child: TabBar(
+                        indicator: TabIndicator(),
+                        controller: _tabController,
+                        tabs: <Widget>[
+                          Text("Tweets"),
+                          Text("Tweets & replies"),
+                          Text("Media")
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ];
+          },
+          body: TabBarView(
+            controller: _tabController,
+            children: [
+              /// All independent tweers list
+              _tweetList(context, authstate, list, false, false),
+
+              /// All reply and comments tweet list
+              _tweetList(context, authstate, list, true, false),
+
+              /// All reply and comments tweet list
+              _tweetList(context, authstate, list, false, true)
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  Widget _tweetList(BuildContext context, AuthState authstate,
+      List<FeedModel> tweetsList, bool isreply, bool isMedia) {
+    List<FeedModel> list;
+
+    /// If user hasn't tweeted yet
+    if (tweetsList == null) {
+      // cprint('No Tweet avalible');
+    } else if (isMedia) {
+      /// Filter reply or comment tweet list
+
+      list = tweetsList.where((x) => x.imagePath != null).toList();
+    } else if (!isreply) {
+      /// Filter reply or comment tweet list
+
+      list = tweetsList
+          .where((x) => x.parentkey == null || x.childRetwetkey != null)
+          .toList();
+    } else {
+      /// List independent tweet
+      list = tweetsList
+          .where((x) => x.parentkey != null && x.childRetwetkey == null)
+          .toList();
+    }
+
+    /// if [authState.isbusy] is true then an loading indicator will be displayed on screen.
+    return authstate.isbusy
+        ? Container(
+            height: fullHeight(context) - 180,
+            child: CustomScreenLoader(
+              height: double.infinity,
+              width: fullWidth(context),
+              backgroundColor: Colors.white,
+            ),
+          )
+
+        /// if tweet list is empty on null then need to show user a message
+        : list == null || list.length < 1
+            ? Container(
+                padding: EdgeInsets.only(top: 50, left: 30, right: 30),
+                child: NotifyText(
+                  title: isMyProfile
+                      ? 'You haven\'t ${isreply ? 'reply to any Tweet' : isMedia ? 'post any media Tweet yet' : 'post any Tweet yet'}'
+                      : '${authstate.profileUserModel.userName} hasn\'t ${isreply ? 'reply to any Tweet' : isMedia ? 'post any media Tweet yet' : 'post any Tweet yet'}',
+                  subTitle: isMyProfile
+                      ? 'Tap tweet button to add new'
+                      : 'Once he\'ll do, they will be shown up here',
+                ),
+              )
+
+            /// If tweets available then tweet list will displayed
+            : ListView.builder(
+                padding: EdgeInsets.symmetric(vertical: 0),
+                itemCount: list.length,
+                itemBuilder: (context, index) => Container(
+                  color: TwitterColor.white,
+                  child: Tweet(
+                    model: list[index],
+                    isDisplayOnProfile: true,
+                    trailing: TweetBottomSheet().tweetOptionIcon(
+                      context,
+                      list[index],
+                      TweetType.Tweet,
+                    ),
+                  ),
+                ),
+              );
   }
 }
 
@@ -468,8 +555,6 @@ class UserNameRowWidget extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(height: 5),
-        Divider(height: 0)
       ],
     );
   }

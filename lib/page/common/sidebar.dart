@@ -63,14 +63,14 @@ class _SidebarMenuState extends State<SidebarMenu> {
                 children: <Widget>[
                   UrlText(
                     text: state.userModel.displayName ??
-                        state.userModel.email.split('.')[0],
+                        "",
                     style: onPrimaryTitleText.copyWith(
                         color: Colors.black, fontSize: 20),
                   ),
                   SizedBox(
                     width: 3,
                   ),
-                  state.userModel.isVerified
+                  state.userModel.isVerified ?? false
                       ? customIcon(context,
                           icon: AppIcon.blueTick,
                           istwitterIcon: true,

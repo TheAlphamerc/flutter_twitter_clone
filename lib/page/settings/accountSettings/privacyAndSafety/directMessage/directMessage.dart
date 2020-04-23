@@ -31,7 +31,7 @@ class DirectMessagesPage extends StatelessWidget {
             showDivider: false,
             visibleSwitch: true,
             vPadding: 20,
-            subtitle: 'You will be able to receive Direct Message requests from anyone on Twitter, even if you don\'t follow them.',
+            subtitle: 'You will be able to receive Direct Message requests from anyone on Fwitter, even if you don\'t follow them.',
           ),
           SettingRowWidget(
             "Show read receipts",

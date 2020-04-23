@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
@@ -18,7 +20,7 @@ class AuthState extends AppState {
   bool isSignInWithGoogle = false;
   FirebaseUser user;
   String userId;
-
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   dabase.Query _profileQuery;
@@ -44,6 +46,7 @@ class AuthState extends AppState {
     authStatus = AuthStatus.NOT_LOGGED_IN;
     userId = '';
     _userModel = null;
+    user = null;
     _profileUserModelList = null;
     if (isSignInWithGoogle) {
       _googleSignIn.signOut();
@@ -63,7 +66,7 @@ class AuthState extends AppState {
   databaseInit() {
     try {
       if (_profileQuery == null) {
-        _profileQuery = kDatabase.child("profile").child(userId);
+        _profileQuery = kDatabase.child("profile").child(user.uid);
         _profileQuery.onValue.listen(_onProfileChanged);
       }
     } catch (error) {
@@ -116,6 +119,16 @@ class AuthState extends AppState {
       createUserFromGoogleSignIn(user);
       notifyListeners();
       return user;
+    } on PlatformException catch (error) {
+      user = null;
+      authStatus = AuthStatus.NOT_LOGGED_IN;
+      cprint(error, errorIn: 'handleGoogleSignIn');
+      return null;
+    } on Exception catch (error) {
+      user = null;
+      authStatus = AuthStatus.NOT_LOGGED_IN;
+      cprint(error, errorIn: 'handleGoogleSignIn');
+      return null;
     } catch (error) {
       user = null;
       authStatus = AuthStatus.NOT_LOGGED_IN;
@@ -190,6 +203,7 @@ class AuthState extends AppState {
       // Time at which user is created
       user.createdAt = DateTime.now().toUtc().toString();
     }
+
     kDatabase.child('profile').child(user.userId).set(user.toJson());
     _userModel = user;
     if (_profileUserModelList != null) {
@@ -330,13 +344,15 @@ class AuthState extends AppState {
   }
 
   /// Fetch user profile
+ /// If `userProfileId` is null then logged in user's profile will fetched
   getProfileUser({String userProfileId}) {
     try {
       loading = true;
       if (_profileUserModelList == null) {
         _profileUserModelList = [];
       }
-      userProfileId = userProfileId == null ? userId : userProfileId;
+      
+      userProfileId = userProfileId == null ? user.uid : userProfileId;
       kDatabase
           .child("profile")
           .child(userProfileId)
@@ -346,14 +362,18 @@ class AuthState extends AppState {
           var map = snapshot.value;
           if (map != null) {
             _profileUserModelList.add(User.fromJson(map));
-            if (userProfileId == userId) {
+            if (userProfileId == user.uid) {
               _userModel = _profileUserModelList.last;
               _userModel.isVerified = user.isEmailVerified;
               if (!user.isEmailVerified) {
-                // Check if user verified his email address
+                // Check if logged in user verified his email address or not
                 reloadUser();
               }
+              if (_userModel.fcmToken == null) {
+                updateFCMToken();
+              }
             }
+
             logEvent('get_profile');
           }
         }
@@ -363,6 +383,21 @@ class AuthState extends AppState {
       loading = false;
       cprint(error, errorIn: 'getProfileUser');
     }
+  }
+
+  /// if firebase token not available in profile
+  /// Then get token from firebase and save it to profile
+  /// When someone sends you a message FCM token is used
+  void updateFCMToken() {
+    if (_userModel == null) {
+      return;
+    }
+    getProfileUser();
+    _firebaseMessaging.getToken().then((String token) {
+      assert(token != null);
+      _userModel.fcmToken = token;
+      createUser(_userModel);
+    });
   }
 
   /// Follow / Unfollow user
@@ -417,10 +452,14 @@ class AuthState extends AppState {
     }
   }
 
-  /// Trigger when logged-in user's profile chanege
+  /// Trigger when logged-in user's profile change or updated
+  /// Firebase event callback for profile update
   void _onProfileChanged(Event event) {
     if (event.snapshot != null) {
-      _userModel = User.fromJson(event.snapshot.value);
+      final updatedUser = User.fromJson(event.snapshot.value);
+      if(updatedUser.userId == user.uid){
+        _userModel = updatedUser;
+      }
       cprint('User Updated');
       notifyListeners();
     }

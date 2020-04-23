@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_twitter_clone/helper/enum.dart';
+import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/page/feed/feedPage.dart';
 import 'package:flutter_twitter_clone/page/message/chatListPage.dart';
 import 'package:flutter_twitter_clone/state/appState.dart';
@@ -20,6 +22,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final refreshIndicatorKey =new GlobalKey<RefreshIndicatorState>();
   int pageIndex = 0;
   @override
   void initState() {
@@ -27,10 +30,10 @@ class _HomePageState extends State<HomePage> {
       var state = Provider.of<AppState>(context, listen: false);
       state.setpageIndex = 0;
       initTweets();
+      initProfile();
       initSearch();
       initNotificaiton();
       initChat();
-      initProfile();
     });
 
     super.initState();
@@ -41,10 +44,12 @@ class _HomePageState extends State<HomePage> {
     state.databaseInit();
     state.getDataFromDatabase();
   }
+
   void initProfile() {
     var state = Provider.of<AuthState>(context, listen: false);
     state.databaseInit();
   }
+
   void initSearch() {
     var searchState = Provider.of<SearchState>(context, listen: false);
     searchState.getDataFromDatabase();
@@ -54,17 +59,35 @@ class _HomePageState extends State<HomePage> {
     var state = Provider.of<NotificationState>(context, listen: false);
     var authstate = Provider.of<AuthState>(context, listen: false);
     state.databaseInit(authstate.userId);
+    state.initfirebaseService();
   }
 
   void initChat() {
     final chatState = Provider.of<ChatState>(context, listen: false);
     final state = Provider.of<AuthState>(context, listen: false);
     chatState.databaseInit(state.userId, state.userId);
+    state.updateFCMToken();
+    chatState.getFCMServerKey();
   }
 
   Widget _body() {
-    var state = Provider.of<AppState>(context);
-    return Container(child: _getPage(state.pageIndex));
+    
+    final authstate = Provider.of<AuthState>(context, listen: false);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      var state = Provider.of<NotificationState>(context);
+      /// Check if user recieve chat notification from firebase
+      /// Redirect to chat screen
+      if (state.notificationType == NotificationType.Message && state.notificationReciverId == authstate.userModel.userId) {
+        state.setrNotificationType = null;
+        state.getuserDetail(state.notificationSenderId).then((user) {
+          cprint("Opening user chat screen");
+          final chatState = Provider.of<ChatState>(context, listen: false);
+          chatState.setChatUser = user;
+          Navigator.pushNamed(context, '/ChatScreenPage');
+        });
+      }
+    });
+    return SafeArea(child: Container(child: _getPage(Provider.of<AppState>(context).pageIndex)));
   }
 
   Widget _getPage(int index) {
@@ -72,6 +95,7 @@ class _HomePageState extends State<HomePage> {
       case 0:
         return FeedPage(
           scaffoldKey: _scaffoldKey,
+          refreshIndicatorKey: refreshIndicatorKey,
         );
         break;
       case 1:

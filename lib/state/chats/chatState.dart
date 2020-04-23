@@ -1,5 +1,9 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
+import 'dart:convert';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter_twitter_clone/helper/enum.dart';
+import 'package:http/http.dart' as http;
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_twitter_clone/model/chatModel.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
@@ -8,10 +12,13 @@ import 'package:flutter_twitter_clone/state/appState.dart';
 class ChatState extends AppState {
   bool setIsChatScreenOpen;
   final FirebaseDatabase _database = FirebaseDatabase.instance;
-  
+
   List<ChatMessage> _messageList;
   List<User> _chatUserList;
   User _chatUser;
+  String serverToken = "<FCM SERVER KEY>";
+
+  /// Get FCM server key from firebase project settings
   User get chatUser => _chatUser;
   set setChatUser(User model) {
     _chatUser = model;
@@ -24,8 +31,9 @@ class ChatState extends AppState {
     if (_messageList == null) {
       return null;
     } else {
-      _messageList.sort((x, y) =>
-          DateTime.parse(x.createdAt).toLocal().compareTo(DateTime.parse(y.createdAt).toLocal()));
+      _messageList.sort((x, y) => DateTime.parse(x.createdAt)
+          .toLocal()
+          .compareTo(DateTime.parse(y.createdAt).toLocal()));
       _messageList.reversed;
       _messageList = _messageList.reversed.toList();
       return List.from(_messageList);
@@ -40,7 +48,7 @@ class ChatState extends AppState {
     }
   }
 
-  void databaseInit(String userId, String myId) {
+  void databaseInit(String userId, String myId) async {
     _messageList = null;
     if (_channelName == null) {
       getChannelName(userId, myId);
@@ -55,6 +63,28 @@ class ChatState extends AppState {
       messageQuery = _database.reference().child("chats").child(_channelName);
       messageQuery.onChildAdded.listen(_onMessageAdded);
       messageQuery.onChildChanged.listen(_onMessageChanged);
+    }
+  }
+
+  /// FCM server key is stored in firebase remote config
+  /// you have to save server key in firebase remote config
+  /// To fetch this key go to project setting in firebase
+  /// Click on `cloud messaging` tab
+  /// Copy server key from `Project credentials`
+  /// Now goto `Remote Congig` section in fireabse
+  /// Add [FcmServerKey]  as paramerter key and below json in Default vslue
+  ///  ``` json
+  ///  {
+  ///    "key": "FCM server key here"
+  ///  } ```
+  /// For more detail visit:- https://pub.dev/packages/firebase_remote_config#-readme-tab-
+  void getFCMServerKey() async {
+    final RemoteConfig remoteConfig = await RemoteConfig.instance;
+    await remoteConfig.fetch(expiration: const Duration(hours: 5));
+    await remoteConfig.activateFetched();
+    var data = remoteConfig.getString('FcmServerKey');
+    if (data != null) {
+      serverToken = jsonDecode(data)["key"];
     }
   }
 
@@ -86,7 +116,7 @@ class ChatState extends AppState {
     }
   }
 
-  void getchatDetailAsync() {
+  void getchatDetailAsync() async {
     try {
       final databaseReference = FirebaseDatabase.instance.reference();
       databaseReference
@@ -138,6 +168,7 @@ class ChatState extends AppState {
           .child(_channelName)
           .push()
           .set(message.toJson());
+      sendAndRetrieveMessage(message);
       logEvent('send_message');
     } catch (error) {
       cprint(error);
@@ -221,5 +252,45 @@ class ChatState extends AppState {
     // messageQuery = null;
     _messageList = null;
     // _channelName = null;
+  }
+
+  final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
+
+  void sendAndRetrieveMessage(ChatMessage model) async {
+    /// on noti
+    await firebaseMessaging.requestNotificationPermissions(
+      const IosNotificationSettings(
+          sound: true, badge: true, alert: true, provisional: false),
+    );
+    if (chatUser.fcmToken == null) {
+      return;
+    }
+
+    var body = jsonEncode(<String, dynamic>{
+      'notification': <String, dynamic>{
+        'body': model.message,
+        'title': "Message from ${model.senderName}"
+      },
+      'priority': 'high',
+      'data': <String, dynamic>{
+        'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+        'id': '1',
+        'status': 'done',
+        "type": NotificationType.Message.toString(),
+        "senderId": model.senderId,
+        "receiverId": model.receiverId,
+        "title": "title",
+        "body": model.message,
+        "tweetId": ""
+      },
+      'to': chatUser.fcmToken
+    });
+    var response = await http.post('https://fcm.googleapis.com/fcm/send',
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'key=$serverToken',
+        },
+        body: body);
+    print(response.body.toString());
   }
 }

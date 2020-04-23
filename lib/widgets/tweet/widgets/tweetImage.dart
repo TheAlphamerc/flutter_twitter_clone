@@ -30,6 +30,9 @@ class TweetImage extends StatelessWidget {
                   Radius.circular(isRetweetImage ? 0 : 20),
                 ),
                 onTap: () {
+                  if(type == TweetType.ParentTweet){
+                    return;
+                  }
                   var state = Provider.of<FeedState>(context, listen: false);
                   state.getpostDetailFromDatabase(model.key);
                   state.setTweetToReply = model;

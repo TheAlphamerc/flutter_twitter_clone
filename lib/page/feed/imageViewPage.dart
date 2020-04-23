@@ -157,6 +157,12 @@ class _ImageViewPgeState extends State<ImageViewPge> {
   }
 
   void _submitButton() {
+    if(_textEditingController.text == null || _textEditingController.text.isEmpty){
+      return;
+    }
+    if(_textEditingController.text.length > 280){
+      return ;
+    }
     var state = Provider.of<FeedState>(context);
     var authState = Provider.of<AuthState>(context);
     var user = authState.userModel;

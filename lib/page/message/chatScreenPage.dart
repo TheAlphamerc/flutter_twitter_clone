@@ -114,9 +114,16 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                       child: UrlText(
                         text: chat.message,
                         style: TextStyle(
-                            fontSize: 16,
-                            color:
-                                myMessage ? TwitterColor.white : Colors.black),
+                          fontSize: 16,
+                          color: myMessage ? TwitterColor.white : Colors.black,
+                        ),
+                        urlStyle: TextStyle(
+                          fontSize: 16,
+                          color: myMessage
+                              ? TwitterColor.white
+                              : TwitterColor.dodgetBlue,
+                          decoration: TextDecoration.underline,
+                        ),
                       ),
                     ),
                     Positioned(
@@ -131,14 +138,14 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                           Clipboard.setData(text);
                           _scaffoldKey.currentState.hideCurrentSnackBar();
                           _scaffoldKey.currentState.showSnackBar(
-                          SnackBar(
-                            backgroundColor: TwitterColor.white,
-                            content: Text(
-                              'Message copied',
-                             style: TextStyle(color:Colors.black),
+                            SnackBar(
+                              backgroundColor: TwitterColor.white,
+                              content: Text(
+                                'Message copied',
+                                style: TextStyle(color: Colors.black),
+                              ),
                             ),
-                          ),
-                        );
+                          );
                         },
                         child: SizedBox(),
                       ),
@@ -287,17 +294,19 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                 })
           ],
         ),
-        body: Stack(
-          children: <Widget>[
-            Align(
-              alignment: Alignment.topRight,
-              child: Padding(
-                padding: EdgeInsets.only(bottom: 50),
-                child: _chatScreenBody(),
+        body: SafeArea(
+          child: Stack(
+            children: <Widget>[
+              Align(
+                alignment: Alignment.topRight,
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 50),
+                  child: _chatScreenBody(),
+                ),
               ),
-            ),
-            _bottomEntryField()
-          ],
+              _bottomEntryField()
+            ],
+          ),
         ),
       ),
     );

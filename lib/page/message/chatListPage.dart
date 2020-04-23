@@ -8,6 +8,8 @@ import 'package:flutter_twitter_clone/page/common/sidebar.dart';
 import 'package:flutter_twitter_clone/page/message/newMessagePage.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/chats/chatState.dart';
+import 'package:flutter_twitter_clone/state/notificationState.dart';
+import 'package:flutter_twitter_clone/state/searchState.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/emptyList.dart';
@@ -29,7 +31,7 @@ class _ChatListPageState extends State<ChatListPage> {
     chatState.setIsChatScreenOpen = true;
 
     // chatState.databaseInit(state.profileUserModel.userId,state.userId);
-    chatState.getUserchatList(state.userModel.userId);
+    chatState.getUserchatList(state.user.uid);
     super.initState();
   }
 
@@ -40,10 +42,11 @@ class _ChatListPageState extends State<ChatListPage> {
     if (state.chatUserList == null) {
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: 30),
-        child:EmptyList(
-        'No message available ',
-        subTitle: 'When someonw sends you message,User list\'ll show up here \n  To send message tap message.',
-       )
+        child: EmptyList(
+          'No message available ',
+          subTitle:
+              'When someone sends you message,User list\'ll show up here \n  To send message tap message button.',
+        ),
       );
     } else {
       return ListView.separated(
@@ -66,7 +69,13 @@ class _ChatListPageState extends State<ChatListPage> {
         contentPadding: EdgeInsets.symmetric(horizontal: 10),
         onTap: () {
           final chatState = Provider.of<ChatState>(context, listen: false);
+          final searchState = Provider.of<SearchState>(context, listen: false);
           chatState.setChatUser = model;
+          if (searchState.userlist.any((x) => x.userId == model.userId)) {
+            chatState.setChatUser = searchState.userlist
+                .where((x) => x.userId == model.userId)
+                .first;
+          }
           Navigator.pushNamed(context, '/ChatScreenPage');
         },
         leading: RippleButton(
@@ -100,14 +109,22 @@ class _ChatListPageState extends State<ChatListPage> {
       ),
     );
   }
-  FloatingActionButton _newMessageButton(){
+
+  FloatingActionButton _newMessageButton() {
     return FloatingActionButton(
-      onPressed: (){
+      onPressed: () {
         Navigator.of(context).pushNamed('/NewMessagePage');
       },
-      child: customIcon(context,icon:AppIcon.newMessage,istwitterIcon: true, iconColor:Theme.of(context).colorScheme.onPrimary, size:25)
+      child: customIcon(
+        context,
+        icon: AppIcon.newMessage,
+        istwitterIcon: true,
+        iconColor: Theme.of(context).colorScheme.onPrimary,
+        size: 25,
+      ),
     );
   }
+
   void onSettingIconPressed() {
     Navigator.pushNamed(context, '/DirectMessagesPage');
   }

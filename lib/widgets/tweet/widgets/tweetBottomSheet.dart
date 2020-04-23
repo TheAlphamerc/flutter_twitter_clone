@@ -32,9 +32,7 @@ class TweetBottomSheet {
 
   void _openbottomSheet(
       BuildContext context, TweetType type, FeedModel model) async {
-    var authState = Provider.of<AuthState>(
-      context,
-    );
+    var authState = Provider.of<AuthState>(context, listen: false);
     bool isMyTweet = authState.userId == model.userId;
     await showModalBottomSheet(
       backgroundColor: Colors.transparent,
@@ -265,9 +263,7 @@ class TweetBottomSheet {
 
   void _deleteTweet(BuildContext context, TweetType type, String tweetId,
       {String parentkey}) {
-    var state = Provider.of<FeedState>(
-      context,
-    );
+    var state = Provider.of<FeedState>(context, listen: false);
     state.deleteTweet(tweetId, type, parentkey: parentkey);
     // CLose bottom sheet
     Navigator.of(context).pop();
@@ -325,12 +321,11 @@ class TweetBottomSheet {
           text: 'Retweet with comment',
           isEnable: true,
           onPressed: () {
-            var state = Provider.of<FeedState>(
-              context,
-            );
-            // Prepare current Tweet model to reply 
+            var state = Provider.of<FeedState>(context, listen: false);
+            // Prepare current Tweet model to reply
             state.setTweetToReply = model;
             Navigator.pop(context);
+
             /// `/ComposeTweetPage/retweet` route is used to identify that tweet is going to be retweet.
             /// To simple reply on any `Tweet` use `ComposeTweetPage` route.
             Navigator.of(context).pushNamed('/ComposeTweetPage/retweet');

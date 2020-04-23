@@ -14,6 +14,7 @@ class User {
   bool isVerified;
   int followers;
   int following;
+  String fcmToken;
   List<String> followersList;
   List<String> followingList;
 
@@ -33,6 +34,7 @@ class User {
       this.following,
       this.webSite,
       this.isVerified,
+      this.fcmToken,
       this.followersList,
       });
 
@@ -57,6 +59,7 @@ class User {
     following = map['following'];
     userName = map['userName'];
     webSite = map['webSite'];
+    fcmToken = map['fcmToken'];
     isVerified = map['isVerified'] ?? false;
     if(map['followerList'] != null){
       followersList = List<String>();
@@ -91,6 +94,7 @@ class User {
       'userName': userName,
       'webSite': webSite,
       'isVerified': isVerified ?? false,
+      'fcmToken':fcmToken,
       'followerList' : followersList,
       'followingList':followingList
     };
@@ -112,6 +116,7 @@ class User {
       int following,
       String webSite,
       bool isVerified,
+      String fcmToken,
       List<String> followingList,
       }) {
     return User(
@@ -130,6 +135,7 @@ class User {
         userId: userId ?? this.userId,
         userName: userName ?? this.userName,
         webSite: webSite ?? this.webSite,
+        fcmToken:fcmToken ?? this.fcmToken,
         followersList: followersList ?? this.followersList,
         );
   }

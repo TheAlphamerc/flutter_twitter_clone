@@ -47,7 +47,7 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
     );
   }
 
-  Widget _postBody(FeedModel model) {
+  Widget _tweetDetail(FeedModel model) {
     return Tweet(
       model: model,
       type: TweetType.Detail,
@@ -106,7 +106,7 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
                   state.tweetDetailModel == null ||
                           state.tweetDetailModel.length == 0
                       ? Container()
-                      : _postBody(state.tweetDetailModel?.last),
+                      : _tweetDetail(state.tweetDetailModel?.last),
                   Container(
                     height: 6,
                     width: fullWidth(context),

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
@@ -7,6 +9,7 @@ import 'package:flutter_twitter_clone/widgets/newWidget/customLoader.dart';
 import 'package:intl/intl.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'dart:developer' as developer;
 
 final kAnalytics = FirebaseAnalytics();
 final DatabaseReference kDatabase = FirebaseDatabase.instance.reference();
@@ -54,7 +57,7 @@ String getChatTime(String date) {
   var dur = DateTime.now().toLocal().difference(dt);
   if (dur.inDays > 0) {
     msg = '${dur.inDays} d';
-    return dur.inDays == 1 ? 'yesterday' : DateFormat("dd MMM").format(dt);
+    return dur.inDays == 1 ? '1d' : DateFormat("dd MMM").format(dt);
   } else if (dur.inHours > 0) {
     msg = '${dur.inHours} h';
   } else if (dur.inMinutes > 0) {
@@ -123,14 +126,14 @@ void cprint(dynamic data, {String errorIn, String event}) {
   if (errorIn != null) {
     print(
         '****************************** error ******************************');
-    print('[Error] $errorIn $data');
+    developer.log('[Error]', time: DateTime.now(), error:data, name:errorIn);
     print(
         '****************************** error ******************************');
   } else if (data != null) {
-    print(data);
+     developer.log(data, time: DateTime.now(), );
   }
   if (event != null) {
-    logEvent(event);
+    // logEvent(event);
   }
 }
 
