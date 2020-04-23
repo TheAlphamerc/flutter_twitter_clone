@@ -30,7 +30,6 @@ class FeedState extends AppState {
 
   List<FeedModel> get tweetDetailModel => _tweetDetailModelList;
 
-  /// contain tweet list for home page
   /// `feedlist` always [contain all tweets] fetched from firebase kDatabase
   List<FeedModel> get feedlist {
     if (_feedlist == null) {
@@ -40,18 +39,24 @@ class FeedState extends AppState {
     }
   }
 
+  /// contain tweet list for home page
   List<FeedModel> getTweetList(User userModel) {
-    if(userModel == null){
+    if (userModel == null) {
       return null;
     }
 
     List<FeedModel> list;
-    
+
     if (!isBusy && feedlist != null && feedlist.isNotEmpty) {
       list = feedlist.where((x) {
-        if(x.parentkey != null && x.childRetwetkey == null && x.user.userId != userModel.userId){
+        /// If Tweet is a comment then no need to add it in tweet list
+        if (x.parentkey != null &&
+            x.childRetwetkey == null &&
+            x.user.userId != userModel.userId) {
           return false;
         }
+
+        /// Only include Tweets of logged-in user's and his following user's
         if (x.user.userId == userModel.userId ||
             (userModel?.followingList != null &&
                 userModel.followingList.contains(x.user.userId))) {
@@ -145,8 +150,7 @@ class FeedState extends AppState {
       isBusy = true;
       _feedlist = null;
       notifyListeners();
-      final databaseReference = FirebaseDatabase.instance.reference();
-      databaseReference.child('tweet').once().then((DataSnapshot snapshot) {
+      kDatabase.child('tweet').once().then((DataSnapshot snapshot) {
         _feedlist = List<FeedModel>();
         if (snapshot.value != null) {
           var map = snapshot.value;
@@ -177,10 +181,12 @@ class FeedState extends AppState {
   }
 
   /// get [Tweet Detail] from firebase realtime kDatabase
+  /// If model is null then fetch tweet from firebase
+  /// [getpostDetailFromDatabase] is used to set prepare Tweetr to display Tweet detail
+  /// After getting tweet detail fetch tweet coments from firebase 
   void getpostDetailFromDatabase(String postID, {FeedModel model}) async {
     try {
       FeedModel _tweetDetail;
-      final databaseReference = FirebaseDatabase.instance.reference();
       if (model != null) {
         // set tweet data from tweet list data.
         // No need to fetch tweet from firebase db if data already present in tweet list
@@ -189,7 +195,7 @@ class FeedState extends AppState {
         postID = model.key;
       } else {
         // Fetch tweet data from firebase
-        databaseReference
+        kDatabase
             .child('tweet')
             .child(postID)
             .once()
@@ -213,7 +219,7 @@ class FeedState extends AppState {
             if (x == null) {
               return;
             }
-            databaseReference
+            kDatabase
                 .child('tweet')
                 .child(x)
                 .once()
@@ -253,19 +259,31 @@ class FeedState extends AppState {
   /// Retweet itself  is a type of `Tweet`
   Future<FeedModel> fetchTweet(String postID) async {
     FeedModel _tweetDetail;
-    final databaseReference = FirebaseDatabase.instance.reference();
-    var model =
-        await databaseReference.child('tweet').child(postID).once().then(
-      (DataSnapshot snapshot) {
-        if (snapshot.value != null) {
-          var map = snapshot.value;
-          _tweetDetail = FeedModel.fromJson(map);
-          _tweetDetail.key = snapshot.key;
-        }
-      },
-    );
-    if (model != null) {
-      _tweetDetail = model;
+    /// If tweet is availabe in feedlist then no need to fetch it from firebase
+    if (feedlist.any((x) => x.key == postID)) {
+      _tweetDetail = feedlist.firstWhere((x) => x.key == postID);
+    } 
+    /// If tweet is not available in feedlist then need to fetch it from firebase
+    else {
+      cprint("Fetched from DB: " + postID);
+      var model =
+          await kDatabase.child('tweet').child(postID).once().then(
+        (DataSnapshot snapshot) {
+          if (snapshot.value != null) {
+            var map = snapshot.value;
+            _tweetDetail = FeedModel.fromJson(map);
+            _tweetDetail.key = snapshot.key;
+            print(_tweetDetail.description);
+          }
+        },
+      );
+      if (model != null) {
+        
+        _tweetDetail = model;
+      }
+      else{
+        cprint("Fetched null value from  DB");
+      }
     }
     return _tweetDetail;
   }
