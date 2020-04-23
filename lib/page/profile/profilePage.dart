@@ -331,13 +331,13 @@ class _ProfilePageState extends State<ProfilePage>
           body: TabBarView(
             controller: _tabController,
             children: [
-              /// All independent tweers list
+              /// Display all independent tweers list
               _tweetList(context, authstate, list, false, false),
 
-              /// All reply and comments tweet list
+              /// Display all reply tweet list
               _tweetList(context, authstate, list, true, false),
 
-              /// All reply and comments tweet list
+              /// Display all reply and comments tweet list
               _tweetList(context, authstate, list, false, true)
             ],
           ),
@@ -354,17 +354,19 @@ class _ProfilePageState extends State<ProfilePage>
     if (tweetsList == null) {
       // cprint('No Tweet avalible');
     } else if (isMedia) {
-      /// Filter reply or comment tweet list
+      /// Display all Tweets with media file
 
       list = tweetsList.where((x) => x.imagePath != null).toList();
     } else if (!isreply) {
-      /// Filter reply or comment tweet list
+      /// Display all independent Tweets
+      /// No comments Tweet will display
 
       list = tweetsList
           .where((x) => x.parentkey == null || x.childRetwetkey != null)
           .toList();
     } else {
-      /// List independent tweet
+      /// Display all reply Tweets
+      /// No intependent tweet will display
       list = tweetsList
           .where((x) => x.parentkey != null && x.childRetwetkey == null)
           .toList();
@@ -381,7 +383,7 @@ class _ProfilePageState extends State<ProfilePage>
             ),
           )
 
-        /// if tweet list is empty on null then need to show user a message
+        /// if tweet list is empty or null then need to show user a message
         : list == null || list.length < 1
             ? Container(
                 padding: EdgeInsets.only(top: 50, left: 30, right: 30),

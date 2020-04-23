@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
+import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/state/appState.dart';
 import 'package:path/path.dart' as Path;
 // import 'authState.dart';
@@ -20,7 +21,7 @@ class FeedState extends AppState {
   }
 
   List<FeedModel> _commentlist;
-  
+
   List<FeedModel> _feedlist;
   dabase.Query _feedQuery;
   List<FeedModel> _tweetDetailModelList;
@@ -37,6 +38,33 @@ class FeedState extends AppState {
     } else {
       return List.from(_feedlist.reversed);
     }
+  }
+
+  List<FeedModel> getTweetList(User userModel) {
+    if(userModel == null){
+      return null;
+    }
+
+    List<FeedModel> list;
+    
+    if (!isBusy && feedlist != null && feedlist.isNotEmpty) {
+      list = feedlist.where((x) {
+        if(x.parentkey != null && x.childRetwetkey == null && x.user.userId != userModel.userId){
+          return false;
+        }
+        if (x.user.userId == userModel.userId ||
+            (userModel?.followingList != null &&
+                userModel.followingList.contains(x.user.userId))) {
+          return true;
+        } else {
+          return false;
+        }
+      }).toList();
+      if (list.isEmpty) {
+        list = null;
+      }
+    }
+    return list;
   }
 
   /// contain reply tweets list for parent tweet.
@@ -61,7 +89,8 @@ class FeedState extends AppState {
     /// [Skip if any duplicate tweet already present]
     if (_tweetDetailModelList.length >= 0) {
       _tweetDetailModelList.add(model);
-      cprint("Detail Tweet added. Total Tweet: ${_tweetDetailModelList.length}");
+      cprint(
+          "Detail Tweet added. Total Tweet: ${_tweetDetailModelList.length}");
       notifyListeners();
     }
   }
@@ -73,10 +102,12 @@ class FeedState extends AppState {
   void removeLastTweetDetail(String tweetKey) {
     if (_tweetDetailModelList != null && _tweetDetailModelList.length > 0) {
       // var index = _tweetDetailModelList.in
-      FeedModel removeTweet  = _tweetDetailModelList.lastWhere((x)=>x.key == tweetKey);
+      FeedModel removeTweet =
+          _tweetDetailModelList.lastWhere((x) => x.key == tweetKey);
       _tweetDetailModelList.remove(removeTweet);
       tweetReplyMap.removeWhere((key, value) => key == tweetKey);
-      cprint("Last Tweet removed from stack. Remaining Tweet: ${_tweetDetailModelList.length}");
+      cprint(
+          "Last Tweet removed from stack. Remaining Tweet: ${_tweetDetailModelList.length}");
     }
   }
 
@@ -127,9 +158,11 @@ class FeedState extends AppState {
                 _feedlist.add(model);
               }
             });
+
             /// Sort Tweet by time
-           /// It helps to display newest Tweet first.
-            _feedlist.sort((x,y) => DateTime.parse(x.createdAt).compareTo(DateTime.parse(y.createdAt)));
+            /// It helps to display newest Tweet first.
+            _feedlist.sort((x, y) => DateTime.parse(x.createdAt)
+                .compareTo(DateTime.parse(y.createdAt)));
           }
         } else {
           _feedlist = null;
@@ -199,7 +232,8 @@ class FeedState extends AppState {
               if (x == _tweetDetail.replyTweetKeyList.last) {
                 /// Sort comment by time
                 /// It helps to display newest Tweet first.
-                 _commentlist.sort((x,y) => DateTime.parse(y.createdAt).compareTo(DateTime.parse(x.createdAt)));
+                _commentlist.sort((x, y) => DateTime.parse(y.createdAt)
+                    .compareTo(DateTime.parse(x.createdAt)));
                 tweetReplyMap.putIfAbsent(postID, () => _commentlist);
                 notifyListeners();
               }
@@ -559,18 +593,20 @@ class FeedState extends AppState {
           if (retweetModel == null) {
             return;
           }
-          if(retweetModel.retweetCount > 0){
+          if (retweetModel.retweetCount > 0) {
             retweetModel.retweetCount -= 1;
           }
           updateTweet(retweetModel);
         });
       }
+
       /// Delete notification related to deleted Tweet.
-      if(deletedTweet.likeCount > 0){
+      if (deletedTweet.likeCount > 0) {
         kDatabase
             .child('notification')
             .child(tweet.userId)
-            .child(tweet.key).remove();
+            .child(tweet.key)
+            .remove();
       }
       notifyListeners();
     } catch (error) {

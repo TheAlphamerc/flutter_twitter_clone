@@ -47,8 +47,9 @@ class FeedPage extends StatelessWidget {
           child: RefreshIndicator(
             key: refreshIndicatorKey,
             onRefresh: () async {
-              var state = Provider.of<FeedState>(context, listen: false);
-              state.getDataFromDatabase();
+              /// refresh home page feed
+              var feedState = Provider.of<FeedState>(context, listen: false);
+              feedState.getDataFromDatabase();
               return Future.value(true);
             },
             child: _FeedPageBody(
@@ -76,6 +77,7 @@ class _FeedPageBody extends StatelessWidget {
       child: customInkWell(
         context: context,
         onPressed: () {
+          /// Open up sidebaar drawer on user avatar tap
           scaffoldKey.currentState.openDrawer();
         },
         child:
@@ -87,22 +89,9 @@ class _FeedPageBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var state = Provider.of<FeedState>(context);
-    var authstate = Provider.of<AuthState>(context);
-    List<FeedModel> list;
-    if (!state.isBusy && state.feedlist != null && state.feedlist.isNotEmpty) {
-      list = state.feedlist.where((x) {
-        if (x.user.userId == authstate.userId ||
-            (authstate.userModel?.followingList != null &&
-                authstate.userModel.followingList.contains(x.user.userId))) {
-          return true;
-        } else {
-          return false;
-        }
-      }).toList();
-      if (list.isEmpty) {
-        list = null;
-      }
-    }
+    var authstate = Provider.of<AuthState>(context,listen: false);
+
+    final List<FeedModel> list = state.getTweetList(authstate.userModel);
 
     return CustomScrollView(
       slivers: <Widget>[
@@ -135,10 +124,11 @@ class _FeedPageBody extends StatelessWidget {
             : !state.isBusy && list == null
                 ? SliverToBoxAdapter(
                     child: EmptyList(
-                    'No Tweet added yet',
-                    subTitle:
-                        'When new Tweet added, they\'ll show up here \n Tap tweet button to add new',
-                  ))
+                      'No Tweet added yet',
+                      subTitle:
+                          'When new Tweet added, they\'ll show up here \n Tap tweet button to add new',
+                    ),
+                  )
                 : SliverList(
                     delegate: SliverChildListDelegate(
                       list.map(
@@ -148,7 +138,10 @@ class _FeedPageBody extends StatelessWidget {
                             child: Tweet(
                               model: model,
                               trailing: TweetBottomSheet().tweetOptionIcon(
-                                  context, model, TweetType.Tweet),
+                                context,
+                                model,
+                                TweetType.Tweet,
+                              ),
                             ),
                           );
                         },
