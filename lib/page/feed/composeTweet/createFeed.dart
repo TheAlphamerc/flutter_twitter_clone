@@ -71,7 +71,7 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
       return;
     }
     var state = Provider.of<FeedState>(context);
-    var authState = Provider.of<AuthState>(context);
+    var authState = Provider.of<AuthState>(context, listen: false);
     if (state.isBusy) {
       return;
     }
@@ -113,9 +113,7 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
 
   @override
   Widget build(BuildContext context) {
-    var state = Provider.of<AuthState>(
-      context,
-    );
+    var state = Provider.of<AuthState>(context);
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: CustomAppBar(

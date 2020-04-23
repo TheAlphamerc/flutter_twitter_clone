@@ -62,7 +62,7 @@ class _NewMessagePageState extends State<NewMessagePage> {
   }
 
   Future<bool> _onWillPop() async {
-    final state = Provider.of<SearchState>(context);
+    final state = Provider.of<SearchState>(context,listen: false);
     state.filterByUsername("");
     return true;
   }

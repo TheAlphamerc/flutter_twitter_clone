@@ -24,7 +24,7 @@ class _WelcomePageState extends State<WelcomePage> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         color: TwitterColor.dodgetBlue,
         onPressed: () {
-          var state = Provider.of<AuthState>(context);
+          var state = Provider.of<AuthState>(context,listen: false);
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -73,7 +73,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 ),
                 InkWell(
                   onTap: () {
-                    var state = Provider.of<AuthState>(context);
+                    var state = Provider.of<AuthState>(context,listen: false);
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -103,7 +103,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var state = Provider.of<AuthState>(context);
+    var state = Provider.of<AuthState>(context,listen: false);
     return Scaffold(
       body: state.authStatus == AuthStatus.NOT_LOGGED_IN ||
               state.authStatus == AuthStatus.NOT_DETERMINED

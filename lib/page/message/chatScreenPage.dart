@@ -207,7 +207,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
   }
 
   Future<bool> _onWillPop() async {
-    final chatState = Provider.of<ChatState>(context);
+    final chatState = Provider.of<ChatState>(context,listen: false);
     chatState.setIsChatScreenOpen = false;
     chatState.dispose();
     return true;
@@ -244,7 +244,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
       messageController.clear();
     });
     try {
-      final state = Provider.of<ChatState>(context);
+      final state = Provider.of<ChatState>(context,listen: false);
       if (state.messageList != null &&
           state.messageList.length > 1 &&
           _controller.offset > 0) {

@@ -203,7 +203,7 @@ class NotificationTile extends StatelessWidget {
           color: TwitterColor.white,
           child: ListTile(
             onTap: () {
-              var state = Provider.of<FeedState>(context);
+              var state = Provider.of<FeedState>(context, listen: false);
               state.getpostDetailFromDatabase(null, model: model);
               Navigator.of(context).pushNamed('/FeedPostDetail/' + model.key);
             },

@@ -36,9 +36,7 @@ class _ChatListPageState extends State<ChatListPage> {
   }
 
   Widget _body() {
-    final state = Provider.of<ChatState>(
-      context,
-    );
+    final state = Provider.of<ChatState>(context);
     if (state.chatUserList == null) {
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: 30),

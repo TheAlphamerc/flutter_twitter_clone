@@ -28,9 +28,7 @@ class _ImageViewPgeState extends State<ImageViewPge> {
   }
 
   Widget _body() {
-    var state = Provider.of<FeedState>(
-      context,
-    );
+    var state = Provider.of<FeedState>(context);
     return Stack(
       children: <Widget>[
         SingleChildScrollView(
@@ -151,20 +149,21 @@ class _ImageViewPgeState extends State<ImageViewPge> {
   }
 
   void addLikeToTweet() {
-    var state = Provider.of<FeedState>(context);
-    var authState = Provider.of<AuthState>(context);
+    var state = Provider.of<FeedState>(context,listen: false);
+    var authState = Provider.of<AuthState>(context,listen: false);
     state.addLikeToTweet(state.tweetDetailModel.last, authState.userId);
   }
 
   void _submitButton() {
-    if(_textEditingController.text == null || _textEditingController.text.isEmpty){
+    if (_textEditingController.text == null ||
+        _textEditingController.text.isEmpty) {
       return;
     }
-    if(_textEditingController.text.length > 280){
-      return ;
+    if (_textEditingController.text.length > 280) {
+      return;
     }
-    var state = Provider.of<FeedState>(context);
-    var authState = Provider.of<AuthState>(context);
+    var state = Provider.of<FeedState>(context,listen: false);
+    var authState = Provider.of<AuthState>(context,listen: false);
     var user = authState.userModel;
     var profilePic = user.profilePic;
     if (profilePic == null) {
@@ -174,16 +173,16 @@ class _ImageViewPgeState extends State<ImageViewPge> {
         authState.userModel.email.split('@')[0];
     var pic = authState.userModel.profilePic ?? dummyProfilePic;
     var tags = getHashTags(_textEditingController.text);
-    
+
     User commentedUser = User(
         displayName: name,
         userName: authState.userModel.userName,
         isVerified: authState.userModel.isVerified,
         profilePic: pic,
         userId: authState.userId);
-   
+
     var postId = state.tweetDetailModel.last.key;
-   
+
     FeedModel reply = FeedModel(
       description: _textEditingController.text,
       user: commentedUser,

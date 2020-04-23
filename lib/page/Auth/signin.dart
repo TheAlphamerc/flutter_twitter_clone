@@ -149,7 +149,7 @@ class _SignInState extends State<SignIn> {
   }
 
   void _emailLogin() {
-    var state = Provider.of<AuthState>(context);
+    var state = Provider.of<AuthState>(context,listen: false);
     if (state.isbusy) {
       return;
     }
@@ -176,7 +176,7 @@ class _SignInState extends State<SignIn> {
   }
 
   void _googleLogin() {
-    var state = Provider.of<AuthState>(context);
+    var state = Provider.of<AuthState>(context,listen: false);
     if (state.isbusy) {
       return;
     }

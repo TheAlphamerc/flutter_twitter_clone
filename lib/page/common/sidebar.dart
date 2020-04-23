@@ -117,7 +117,7 @@ class _SidebarMenuState extends State<SidebarMenu> {
       BuildContext context, String count, String text, String navigateTo) {
     return InkWell(
       onTap: () {
-        var authstate = Provider.of<AuthState>(context);
+        var authstate = Provider.of<AuthState>(context,listen: false);
         // authstate.profileFollowingList = [];
         authstate.getProfileUser();
         _navigateTo(navigateTo);
@@ -202,7 +202,7 @@ class _SidebarMenuState extends State<SidebarMenu> {
   }
 
   void _logOut() {
-    final state = Provider.of<AuthState>(context);
+    final state = Provider.of<AuthState>(context,listen: false);
     Navigator.pop(context);
     state.logoutCallback();
   }

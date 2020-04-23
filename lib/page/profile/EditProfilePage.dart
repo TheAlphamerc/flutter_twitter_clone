@@ -137,9 +137,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   void _submitButton() {
-    var state = Provider.of<AuthState>(
-      context,
-    );
+    var state = Provider.of<AuthState>(context, listen: false);
     var model = state.userModel.copyWith(
       key: state.userModel.userId,
       displayName: state.userModel.displayName,

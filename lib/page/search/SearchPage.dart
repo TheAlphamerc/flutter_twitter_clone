@@ -28,7 +28,49 @@ class _SearchPageState extends State<SearchPage> {
     super.initState();
   }
 
-  Widget _userTile(User user) {
+  void onSettingIconPressed() {
+    Navigator.pushNamed(context, '/TrendsPage');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final state = Provider.of<SearchState>(context);
+    final list = state.userlist;
+    return Scaffold(
+      appBar: CustomAppBar(
+        scaffoldKey: widget.scaffoldKey,
+        icon: AppIcon.settings,
+        onActionPressed: onSettingIconPressed,
+        onSearchChanged: (text) {
+          state.filterByUsername(text);
+        },
+      ),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          state.getDataFromDatabase();
+          return Future.value(true);
+        },
+        child:
+         ListView.separated(
+          addAutomaticKeepAlives: false,
+          physics: BouncingScrollPhysics(),
+          itemBuilder: (context, index) => _UserTile(user:list[index]),
+          separatorBuilder: (_, index) => Divider(
+            height: 0,
+          ),
+          itemCount: list?.length ?? 0,
+        ),
+      ),
+    );
+  }
+}
+
+class _UserTile extends StatelessWidget {
+  const _UserTile({Key key, this.user}) : super(key: key);
+  final User user;
+
+  @override
+  Widget build(BuildContext context) {
     return ListTile(
       onTap: () {
         kAnalytics.logViewSearchResults(searchTerm: user.userName);
@@ -62,42 +104,6 @@ class _SearchPageState extends State<SearchPage> {
         ],
       ),
       subtitle: Text(user.userName),
-    );
-  }
-
-  void onSettingIconPressed() {
-    Navigator.pushNamed(context, '/TrendsPage');
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    var state = Provider.of<SearchState>(context);
-
-    var list = state.userlist;
-    return Scaffold(
-      appBar: CustomAppBar(
-        scaffoldKey: widget.scaffoldKey,
-        icon: AppIcon.settings,
-        onActionPressed: onSettingIconPressed,
-        onSearchChanged: (text) {
-          state.filterByUsername(text);
-        },
-      ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          state.getDataFromDatabase();
-          return Future.value(true);
-        },
-        child: ListView.separated(
-          addAutomaticKeepAlives: false,
-          physics: BouncingScrollPhysics(),
-          itemBuilder: (context, index) => _userTile(list[index]),
-          separatorBuilder: (_, index) => Divider(
-            height: 0,
-          ),
-          itemCount: list?.length ?? 0,
-        ),
-      ),
     );
   }
 }

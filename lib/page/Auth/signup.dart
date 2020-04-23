@@ -200,7 +200,7 @@ class _SignupState extends State<Signup> {
   }
 
   void _googleLogin() {
-    var state = Provider.of<AuthState>(context);
+    var state = Provider.of<AuthState>(context,listen: false);
     if (state.isbusy) {
       return;
     }
