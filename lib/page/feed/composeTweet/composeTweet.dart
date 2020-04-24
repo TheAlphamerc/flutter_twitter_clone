@@ -6,18 +6,21 @@ import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
+import 'package:flutter_twitter_clone/page/feed/composeTweet/state/composeTweetState.dart';
 import 'package:flutter_twitter_clone/page/feed/composeTweet/widget/composeBottomIconWidget.dart';
 import 'package:flutter_twitter_clone/page/feed/composeTweet/widget/composeTweetImage.dart';
 import 'package:flutter_twitter_clone/page/feed/composeTweet/widget/widgetView.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
+import 'package:flutter_twitter_clone/state/searchState.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
 import 'package:provider/provider.dart';
 
 class ComposeTweetPage extends StatefulWidget {
-  ComposeTweetPage({Key key, this.isRetweet, this.isTweet = true}) : super(key: key);
+  ComposeTweetPage({Key key, this.isRetweet, this.isTweet = true})
+      : super(key: key);
 
   final bool isRetweet;
   final bool isTweet;
@@ -108,7 +111,7 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
         user: commentedUser,
         createdAt: DateTime.now().toUtc().toString(),
         tags: tags,
-        parentkey: widget.isRetweet ? null  : state.tweetToReplyModel.key,
+        parentkey: widget.isRetweet ? null : state.tweetToReplyModel.key,
         childRetwetkey: widget.isRetweet ? model.key : null,
         userId: commentedUser.userId);
     if (_image != null) {
@@ -135,18 +138,16 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
 
   @override
   Widget build(BuildContext context) {
-    var state = Provider.of<FeedState>(context);
-
+    // final composeState = Provider.of<ComposeTweetState>(context);
     return Scaffold(
       appBar: CustomAppBar(
         title: customTitleText(''),
         onActionPressed: _submitButton,
         isCrossButton: true,
-        submitButtonText: widget.isTweet ? 'Tweet' : widget.isRetweet ? 'Retweet' : 'Reply',
-        isSubmitDisable: _textEditingController.text == null ||
-            _textEditingController.text.isEmpty ||
-            _textEditingController.text.length > 280 ||
-            state.isBusy,
+        submitButtonText:
+            widget.isTweet ? 'Tweet' : widget.isRetweet ? 'Retweet' : 'Reply',
+        isSubmitDisable: !Provider.of<ComposeTweetState>(context).enableSubmitButton ||
+            Provider.of<FeedState>(context).isBusy,
         isbootomLine: isScrollingDown,
       ),
       backgroundColor: Theme.of(context).backgroundColor,
@@ -311,16 +312,30 @@ class _ComposeTweet
   _ComposeTweet(this.viewState) : super(viewState);
 
   final _ComposeTweetReplyPageState viewState;
+  List<User> list;
+  String name = "";
 
-  Widget _descriptionEntry() {
-    return TextField(
-      controller: viewState._textEditingController,
-      onChanged: viewState._ontweetDescriptionChanged,
-      maxLines: null,
-      decoration: InputDecoration(
-          border: InputBorder.none,
-          hintText: widget.isTweet ?  'What\'s happening?' : 'Tweet your reply',
-          hintStyle: TextStyle(fontSize: 18)),
+  Widget _descriptionEntry(BuildContext context) {
+    final searchState = Provider.of<SearchState>(context);
+    list = searchState.userlist;
+    // print(list.length);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        TextField(
+          controller: viewState._textEditingController,
+          onChanged: (text) {
+            Provider.of<ComposeTweetState>(context, listen: false)
+                .onDescriptionChanged(text, searchState);
+          },
+          maxLines: null,
+          decoration: InputDecoration(
+              border: InputBorder.none,
+              hintText:
+                  widget.isTweet ? 'What\'s happening?' : 'Tweet your reply',
+              hintStyle: TextStyle(fontSize: 18)),
+        ),
+      ],
     );
   }
 
@@ -422,7 +437,9 @@ class _ComposeTweet
 
   @override
   Widget build(BuildContext context) {
-    var authState = Provider.of<AuthState>(context);
+    var authState = Provider.of<AuthState>(context,listen: false);
+    // final searchState = Provider.of<SearchState>(context);
+    // list = searchState.userlist;
     return Container(
       child: Stack(
         children: <Widget>[
@@ -432,8 +449,9 @@ class _ComposeTweet
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                viewState.widget.isTweet ? SizedBox.shrink() :
-                _tweerCard(context),
+                viewState.widget.isTweet
+                    ? SizedBox.shrink()
+                    : _tweerCard(context),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -442,17 +460,27 @@ class _ComposeTweet
                       width: 20,
                     ),
                     Expanded(
-                      child: _descriptionEntry(),
+                      child: _TextField(
+                        isTweet: widget.isTweet,
+                        textEditingController: viewState._textEditingController,
+                      ),
                     )
                   ],
                 ),
-                ComposeTweetImage(
-                  image: viewState._image,
-                  onCrossIconPressed: viewState._onCrossIconPressed,
+                Flexible(
+                  child: Stack(
+                    children: <Widget>[
+                      ComposeTweetImage(
+                        image: viewState._image,
+                        onCrossIconPressed: viewState._onCrossIconPressed,
+                      ),
+                      _UserList(
+                        list: Provider.of<SearchState>(context).userlist,
+                        textEditingController: viewState._textEditingController,
+                      )
+                    ],
+                  ),
                 ),
-                Expanded(
-                  child: Container(),
-                )
               ],
             ),
           ),
@@ -462,4 +490,112 @@ class _ComposeTweet
   }
 }
 
+class _TextField extends StatelessWidget {
+  const _TextField({Key key, this.textEditingController, this.isTweet})
+      : super(key: key);
+  final TextEditingController textEditingController;
+  final bool isTweet;
 
+  @override
+  Widget build(BuildContext context) {
+    final searchState = Provider.of<SearchState>(context,listen: false);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        TextField(
+          controller: textEditingController,
+          onChanged: (text) {
+            Provider.of<ComposeTweetState>(context, listen: false)
+                .onDescriptionChanged(text, searchState);
+          },
+          maxLines: null,
+          decoration: InputDecoration(
+              border: InputBorder.none,
+              hintText: isTweet ? 'What\'s happening?' : 'Tweet your reply',
+              hintStyle: TextStyle(fontSize: 18)),
+        ),
+      ],
+    );
+  }
+}
+
+class _UserList extends StatelessWidget {
+  const _UserList({Key key, this.list, this.textEditingController})
+      : super(key: key);
+  final List<User> list;
+  final TextEditingController textEditingController;
+
+  @override
+  Widget build(BuildContext context) {
+    return !Provider.of<ComposeTweetState>(context).displayUserList ||
+            list == null ||
+            list.length < 0 ||
+            list.length == 0
+        ? SizedBox.shrink()
+        : Container(
+            padding: EdgeInsetsDirectional.only(bottom: 50),
+            color: TwitterColor.white,
+            constraints:
+                BoxConstraints(minHeight: 30, maxHeight: double.infinity),
+            child: ListView.builder(
+              itemCount: list.length,
+              itemBuilder: (context, index) {
+                return _UserTile(
+                  user: list[index],
+                  onUserSelected: (user) {
+                    print(user.userName);
+                    textEditingController.text +=
+                        user.userName.substring(1, user.userName.length) + " ";
+
+                    textEditingController.selection = TextSelection.collapsed(
+                        offset: textEditingController.text.length);
+                    Provider.of<ComposeTweetState>(context).onUserSelected();
+                  },
+                );
+              },
+            ),
+          );
+  }
+}
+
+class _UserTile extends StatelessWidget {
+  const _UserTile({Key key, this.user, this.onUserSelected}) : super(key: key);
+  final User user;
+  final ValueChanged<User> onUserSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: () {
+        onUserSelected(user);
+      },
+      leading: customImage(context, user.profilePic, height: 35),
+      title: Row(
+        children: <Widget>[
+          Flexible(
+            child: UrlText(
+              text: user.displayName,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 16,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ),
+          SizedBox(width: 3),
+          user.isVerified
+              ? customIcon(
+                  context,
+                  icon: AppIcon.blueTick,
+                  istwitterIcon: true,
+                  iconColor: AppColor.primary,
+                  size: 13,
+                  paddingIcon: 3,
+                )
+              : SizedBox(width: 0),
+        ],
+      ),
+      subtitle: Text(user.userName),
+    );
+  }
+}

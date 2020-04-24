@@ -231,6 +231,9 @@ class _TweetBody extends StatelessWidget {
               ),
               UrlText(
                 text: model.description,
+                onHashTagPressed:(tag){
+                    cprint(tag);
+                  },
                 style: TextStyle(
                     color: Colors.black,
                     fontSize: descriptionFontSize,
@@ -332,6 +335,9 @@ class _TweetDetailBody extends StatelessWidget {
                     : EdgeInsets.symmetric(horizontal: 16),
                 child: UrlText(
                   text: model.description,
+                  onHashTagPressed:(tag){
+                    cprint(tag);
+                  },
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: descriptionFontSize,

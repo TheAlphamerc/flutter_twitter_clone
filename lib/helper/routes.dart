@@ -4,6 +4,7 @@ import 'package:flutter_twitter_clone/page/Auth/verifyEmail.dart';
 import 'package:flutter_twitter_clone/page/common/splash.dart';
 import 'package:flutter_twitter_clone/page/feed/composeTweet/composeTweet.dart';
 import 'package:flutter_twitter_clone/page/feed/composeTweet/createFeed.dart';
+import 'package:flutter_twitter_clone/page/feed/composeTweet/state/composeTweetState.dart';
 import 'package:flutter_twitter_clone/page/message/conversationInformation/conversationInformation.dart';
 import 'package:flutter_twitter_clone/page/message/newMessagePage.dart';
 import 'package:flutter_twitter_clone/page/profile/follow/followerListPage.dart';
@@ -22,6 +23,7 @@ import 'package:flutter_twitter_clone/page/settings/accountSettings/privacyAndSa
 import 'package:flutter_twitter_clone/page/settings/accountSettings/privacyAndSafety/privacyAndSafetyPage.dart';
 import 'package:flutter_twitter_clone/page/settings/accountSettings/proxy/proxyPage.dart';
 import 'package:flutter_twitter_clone/page/settings/settingsAndPrivacyPage.dart';
+import 'package:provider/provider.dart';
 import '../page/Auth/signin.dart';
 import '../helper/customRoute.dart';
 import '../page/feed/imageViewPage.dart';
@@ -61,7 +63,10 @@ class Routes{
         else if(pathElements.length == 3 && pathElements[2].contains('tweet')){
           isTweet = true;
         }
-        return CustomRoute<bool>(builder:(BuildContext context)=> ComposeTweetPage(isRetweet:isRetweet, isTweet: isTweet));
+        return CustomRoute<bool>(builder:(BuildContext context)=> ChangeNotifierProvider<ComposeTweetState>(
+          create: (_) => ComposeTweetState(),
+          child: ComposeTweetPage(isRetweet:isRetweet, isTweet: isTweet),
+        ));
       case "FeedPostDetail":
         var postId = pathElements[2];
           return SlideLeftRoute<bool>(builder:(BuildContext context)=> FeedPostDetail(postId: postId,),settings: RouteSettings(name:'FeedPostDetail'));
