@@ -1,3 +1,9 @@
+## [1.0.6] - UPCOMMING
+
+* Three tabs are added to filter tweet and commnet tweet and tweet with media on profile page.
+* User profile pic view added to view profile picture of any user.
+* User can tag other users in tweet, comment and in retweet.
+
 ## [1.0.5] - 15 Apr 2020
 
 * Notification on chat message in system tray.
