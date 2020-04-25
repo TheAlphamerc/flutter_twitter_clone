@@ -78,11 +78,15 @@ class Routes{
         return CustomRoute<bool>(builder:(BuildContext context)=> ProfilePage(
           profileId: profileId,
         )); 
+      case "CreateFeedPage": return CustomRoute<bool>(builder:(BuildContext context)=> ChangeNotifierProvider<ComposeTweetState>(
+          create: (_) => ComposeTweetState(),
+          child: ComposeTweetPage(isRetweet:false, isTweet: true),
+        ));
+      // return CustomRoute<bool>(builder:(BuildContext context)=> CreateFeedPage(),); 
       case "WelcomePage":return CustomRoute<bool>(builder:(BuildContext context)=> WelcomePage()); 
       case "SignIn":return CustomRoute<bool>(builder:(BuildContext context)=> SignIn()); 
       case "SignUp":return CustomRoute<bool>(builder:(BuildContext context)=> Signup()); 
       case "ForgetPasswordPage":return CustomRoute<bool>(builder:(BuildContext context)=> ForgetPasswordPage()); 
-      case "CreateFeedPage":return CustomRoute<bool>(builder:(BuildContext context)=> CreateFeedPage(),); 
       case "SearchPage":return CustomRoute<bool>(builder:(BuildContext context)=> SearchPage()); 
       case "ImageViewPge":return CustomRoute<bool>(builder:(BuildContext context)=> ImageViewPge());
       case "EditProfile":return CustomRoute<bool>(builder:(BuildContext context)=> EditProfilePage()); 

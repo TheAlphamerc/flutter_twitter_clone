@@ -6,57 +6,77 @@ class ComposeTweetState extends ChangeNotifier {
   bool enableSubmitButton = false;
   bool hideUserList = false;
   String description = "";
-  String name = "";
+  final usernameRegex = r'(@\w*[a-zA-Z1-9]$)';
+
+  bool _isScrollingDown  = false;
+  bool get isScrollingDown  => _isScrollingDown;
+  set setIsScrolllingDown(bool value){
+    _isScrollingDown = value;
+    notifyListeners();
+  }
+
+  /// Display/Hide userlist on the basis of username availability in description
   bool get displayUserList {
-    if(description.contains("@") && !hideUserList){
+    RegExp regExp = new RegExp(usernameRegex);
+    var status = regExp.hasMatch(description);
+    if (status && !hideUserList) {
       return true;
-    }
-    else{
+    } else {
       return false;
     }
   }
-  void onUserSelected(){
+
+  /// Hide userlist when a username is selected from userlist
+  void onUserSelected() {
     hideUserList = true;
-     notifyListeners();
+    notifyListeners();
   }
+
   void onDescriptionChanged(String text, SearchState searchState) {
     description = text;
     hideUserList = false;
-    if(text.isEmpty || text.length > 280){
+    if (text.isEmpty || text.length > 280) {
+      /// Disable submit button if description is not availabele
       enableSubmitButton = false;
       notifyListeners();
       return;
     }
+
+    /// Enable submit button if description is availabele
+    enableSubmitButton = true;
     var last = text.substring(text.length - 1, text.length);
-    final str = r'(@\w*).[^ _!@#$%^&*()+:"<>=[]$';
-    RegExp regExp = new RegExp(str);
+
+    /// Regex to search last username from description
+    /// Ex. `Hello @john do you know @ricky`
+    /// In above description reegex is serch for last username ie. `@ricky`.
+
+    RegExp regExp = new RegExp(usernameRegex);
     var status = regExp.hasMatch(text);
-    // Iterable<Match> _matches = regExp.allMatches(text);
     if (status) {
-      // print(last);
       Iterable<Match> _matches = regExp.allMatches(text);
-      var dd = text.substring(_matches.last.start, _matches.last.end);
+      var name = text.substring(_matches.last.start, _matches.last.end);
+
+      /// If last character is `@` then reset search user list
       if (last == "@") {
-        name = "";
+        /// Reset user list
         searchState.filterByUsername("");
       } else {
-        // name += last;
-        name = dd.substring(1,dd.length);
+        /// Filter user list according to name
         searchState.filterByUsername(name);
       }
-     enableSubmitButton = true;
-     if( dd != null && dd.isNotEmpty){
-       notifyListeners();
-       print(dd);
-     }else{
-        hideUserList = false;
-        notifyListeners();
-        return;
-     }
+    } else {
+      /// Hide userlist if no matched username found
+      hideUserList = false;
+      notifyListeners();
     }
-    else{
-        hideUserList = false;
-        notifyListeners();
-     }
+  }
+
+  /// When user select user from userlist it will add username in description
+  String getDescription(String username) {
+    RegExp regExp = new RegExp(usernameRegex);
+    Iterable<Match> _matches = regExp.allMatches(description);
+    var name = description.substring(0, _matches.last.start);
+    description = '$name $username';
+    return description;
   }
 }
