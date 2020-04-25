@@ -1,4 +1,4 @@
-## [1.0.6] - UPCOMMING
+## [1.0.6] - UPCOMING
 
 * Three tabs are added to filter tweet and commnet tweet and tweet with media on profile page.
 * User profile pic view added to view profile picture of any user.

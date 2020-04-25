@@ -6,6 +6,7 @@ import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/searchState.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
+import 'package:flutter_twitter_clone/widgets/newWidget/emptyList.dart';
 import 'package:provider/provider.dart';
 
 class UsersListPage extends StatelessWidget {
@@ -24,9 +25,9 @@ class UsersListPage extends StatelessWidget {
   final int appBarIcon;
   final List<String> userIdsList;
 
-  List<User> userList;
   @override
   Widget build(BuildContext context) {
+    List<User> userList;
     return Scaffold(
       backgroundColor: TwitterColor.mystic,
       appBar: CustomAppBar(
@@ -38,8 +39,15 @@ class UsersListPage extends StatelessWidget {
           if (userIdsList != null) {
             userList = state.getuserDetail(userIdsList);
           }
-          return userList == null
-              ? LinearProgressIndicator()
+          return !(userList != null && userList.isNotEmpty)
+              ? Container(
+                  width: fullWidth(context),
+                  padding: EdgeInsets.only(top: 0, left: 30, right: 30),
+                  child: NotifyText(
+                    title: emptyScreenText,
+                    subTitle: emptyScreenSubTileText,
+                  ),
+                )
               : UserListWidget(
                   list: userList,
                   emptyScreenText: emptyScreenText,

@@ -3,12 +3,8 @@ import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
-import 'package:flutter_twitter_clone/state/feedState.dart';
-import 'package:flutter_twitter_clone/state/notificationState.dart';
-import 'package:flutter_twitter_clone/state/searchState.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
-import 'package:flutter_twitter_clone/widgets/newWidget/emptyList.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/rippleButton.dart';
 import 'package:provider/provider.dart';
 
