@@ -145,7 +145,6 @@ class ChatState extends AppState {
   }
 
   void onMessageSubmitted(ChatMessage message, {User myUser, User secondUser}) {
-    // print('2RhfEy0MPzdfOp9MtqtSDABau2d25kyFBK0vfDc3AkF6a8zfaudQOHw12RhfEy0MPzdfOp9MtqtSDABau2d25kyFBK0vfDc3AkF6a8zfaudQOHw1');
     try {
       if (_messageList == null || _messageList.length < 1) {
         _database

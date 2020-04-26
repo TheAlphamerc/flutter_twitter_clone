@@ -22,7 +22,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  final refreshIndicatorKey =new GlobalKey<RefreshIndicatorState>();
+  final refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
   int pageIndex = 0;
   @override
   void initState() {
@@ -66,19 +66,32 @@ class _HomePageState extends State<HomePage> {
     final chatState = Provider.of<ChatState>(context, listen: false);
     final state = Provider.of<AuthState>(context, listen: false);
     chatState.databaseInit(state.userId, state.userId);
+    /// It will update fcm token in database 
+    /// fcm token is required to send firebase notification
     state.updateFCMToken();
+    /// It get fcm server key 
+    /// Server key is required to configure firebase notification
+    /// Without fcm server notification can not be sent
     chatState.getFCMServerKey();
   }
 
-  Widget _body() {
-    
+  /// On app launch it checks if app is launch by tapping on notification from notification tray
+  /// If yes, it checks for  which type of notification is recieve
+  /// If notification type is `NotificationType.Message` then chat screen will open
+  /// If notification type is `NotificationType.Mention` then user profile will open who taged you in a tweet
+  ///
+  void _checkNotification() {
     final authstate = Provider.of<AuthState>(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       var state = Provider.of<NotificationState>(context);
+
       /// Check if user recieve chat notification from firebase
       /// Redirect to chat screen
-      if (state.notificationType == NotificationType.Message && state.notificationReciverId == authstate.userModel.userId) {
-        state.setrNotificationType = null;
+      /// `notificationSenderId` is a user id who sends you a message
+      /// `notificationReciverId` is a your user id.
+      if (state.notificationType == NotificationType.Message &&
+          state.notificationReciverId == authstate.userModel.userId) {
+        state.setNotificationType = null;
         state.getuserDetail(state.notificationSenderId).then((user) {
           cprint("Opening user chat screen");
           final chatState = Provider.of<ChatState>(context, listen: false);
@@ -86,8 +99,27 @@ class _HomePageState extends State<HomePage> {
           Navigator.pushNamed(context, '/ChatScreenPage');
         });
       }
+
+      /// Checks for user tag tweet notification
+      /// If you are mentioned in tweet then it redirect to user profile who mentioed you in a tweet
+      /// You can check that tweet on his profile timeline
+      /// `notificationSenderId` is user id who tagged you in a tweet
+      else if (state.notificationType == NotificationType.Mention &&
+          state.notificationReciverId == authstate.userModel.userId) {
+        state.setNotificationType = null;
+        Navigator.of(context)
+            .pushNamed('/ProfilePage/' + state.notificationSenderId);
+      }
     });
-    return SafeArea(child: Container(child: _getPage(Provider.of<AppState>(context).pageIndex)));
+  }
+
+  Widget _body() {
+    _checkNotification();
+    return SafeArea(
+      child: Container(
+        child: _getPage(Provider.of<AppState>(context).pageIndex),
+      ),
+    );
   }
 
   Widget _getPage(int index) {

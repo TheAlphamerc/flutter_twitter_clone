@@ -16,9 +16,10 @@ import 'package:flutter_twitter_clone/state/appState.dart';
 class NotificationState extends AppState {
   String fcmToken;
   NotificationType _notificationType = NotificationType.NOT_DETERMINED;
-  String notificationReciverId;
+  String notificationReciverId, notificationTweetId;
+  FeedModel notificationTweetModel;
   NotificationType get notificationType => _notificationType;
-   set setrNotificationType(NotificationType type){
+   set setNotificationType(NotificationType type){
      _notificationType = type;
    }
   // FcmNotificationModel notification;
@@ -152,7 +153,7 @@ class NotificationState extends AppState {
       print("Notification Removed");
     }
   }
-
+  /// Configure notification services
   void initfirebaseService(){
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
@@ -164,8 +165,15 @@ class NotificationState extends AppState {
         cprint("Notification ",event: "onLaunch");
         var data = message['data'];
         // print(message['data']);
-        notificationSenderId = data["userId"];
-        setrNotificationType = NotificationType.Message;
+        notificationSenderId = data["senderId"];
+        notificationReciverId = data["receiverId"];
+        notificationReciverId = data["receiverId"];
+         if(data["type"] == "NotificationType.Mention"){
+          setNotificationType = NotificationType.Mention;
+        }
+        else if(data["type"] == "NotificationType.Message"){
+          setNotificationType = NotificationType.Message;
+        }
         notifyListeners();
       },
       onResume: (Map<String, dynamic> message) async {
@@ -174,7 +182,12 @@ class NotificationState extends AppState {
         // print(message['data']);
         notificationSenderId = data["senderId"];
         notificationReciverId = data["receiverId"];
-        setrNotificationType = NotificationType.Message;
+         if(data["type"] == "NotificationType.Mention"){
+          setNotificationType = NotificationType.Mention;
+        }
+        else if(data["type"] == "NotificationType.Message"){
+          setNotificationType = NotificationType.Message;
+        }
         notifyListeners();
       },
     );

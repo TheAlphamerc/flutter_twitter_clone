@@ -79,6 +79,7 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
     });
   }
 
+  /// Submit tweet to save in firebase database
   void _submitButton() async {
     if (_textEditingController.text == null ||
         _textEditingController.text.isEmpty ||
@@ -89,30 +90,65 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
     kScreenloader.showLoader(context);
 
     FeedModel tweetModel = createTweetModel();
+
+    /// If tweet contain image
+    /// First image is uploaded on firebase storage
+    /// After sucessfull image upload to firebase storage it returns image path
+    /// Add this image path to tweet model and save to firebase database
     if (_image != null) {
       await state.uploadFile(_image).then((imagePath) {
         if (imagePath != null) {
           tweetModel.imagePath = imagePath;
+
+          /// If type of tweet is new tweet
           if (widget.isTweet) {
             state.createTweet(tweetModel);
-          } else if (widget.isRetweet) {
+          }
+
+          /// If type of tweet is  retweet
+          else if (widget.isRetweet) {
             state.createReTweet(tweetModel);
-          } else {
+          }
+
+          /// If type of tweet is new comment tweet
+          else {
             state.addcommentToPost(tweetModel);
           }
         }
       });
-    } else {
+    }
+
+    /// If tweet did not contain image
+    else {
+      /// If type of tweet is new tweet
       if (widget.isTweet) {
         state.createTweet(tweetModel);
-      } else if (widget.isRetweet) {
+      }
+
+      /// If type of tweet is  retweet
+      else if (widget.isRetweet) {
         state.createReTweet(tweetModel);
-      } else {
+      }
+
+      /// If type of tweet is new comment tweet
+      else {
         state.addcommentToPost(tweetModel);
       }
     }
-    kScreenloader.hideLoader();
-    Navigator.pop(context);
+
+    /// Checks for username in tweet description
+    /// If foud sends notification to all tagged user
+    /// If no user found or not compost tweet screen is closed and redirect back to home page.
+    await Provider.of<ComposeTweetState>(context, listen: false)
+        .sendNotification(
+            tweetModel, Provider.of<SearchState>(context, listen: false))
+        .then((_) {
+      /// Hide running loader on screen
+      kScreenloader.hideLoader();
+
+      /// Navigate back to home page
+      Navigator.pop(context);
+    });
   }
 
   /// Return Tweet model which is either a new Tweet , retweet model or comment model
@@ -147,7 +183,6 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
 
   @override
   Widget build(BuildContext context) {
-    // final composeState = Provider.of<ComposeTweetState>(context);
     return Scaffold(
       appBar: CustomAppBar(
         title: customTitleText(''),

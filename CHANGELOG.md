@@ -3,6 +3,9 @@
 * Three tabs are added to filter tweet and commnet tweet and tweet with media on profile page.
 * User profile pic view added to view profile picture of any user.
 * User can tag other users in tweet, comment and in retweet.
+* A notification will send to you if someone tag you in a tweet.
+* After tapping on notification from system notification tray, you will redirect to user profile who tagged you.
+* You can check the tweet on his profile.
 
 ## [1.0.5] - 15 Apr 2020
 
