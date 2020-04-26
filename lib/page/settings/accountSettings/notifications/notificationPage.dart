@@ -41,13 +41,13 @@ class NotificationPage extends StatelessWidget {
             "Unread notification count badge",
             showCheckBox: true,
             subtitle:
-                'Display a badge with the number of notifications waiting for you inside the Twitter app.',
+                'Display a badge with the number of notifications waiting for you inside the Fwitter app.',
           ),
           SettingRowWidget("Push notifications"),
           SettingRowWidget("SMS notifications"),
           SettingRowWidget(
             "Email notifications",
-            subtitle: 'Control when how often Twitter sends emails to you.',
+            subtitle: 'Control when how often Fwitter sends emails to you.',
           ),
         ],
       ),

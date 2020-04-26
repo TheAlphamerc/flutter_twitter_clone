@@ -124,7 +124,7 @@ class DataUsagePage extends StatelessWidget {
             vPadding: 15,
             showDivider: false,
             subtitle:
-                'When enabled, video won\'t autoplay and lower-quality images load. This automatically reduces your data usage for all Twitter accounts on this device.',
+                'When enabled, video won\'t autoplay and lower-quality images load. This automatically reduces your data usage for all Fwitter accounts on this device.',
           ),
           Divider(height: 0),
           HeaderWidget('Images'),
@@ -175,7 +175,7 @@ class DataUsagePage extends StatelessWidget {
           SettingRowWidget(
             null,
             subtitle:
-                'Allow Twitter to sync data in the background to enhance your experience.',
+                'Allow Fwitter to sync data in the background to enhance your experience.',
             vPadding: 10,
           ),
         ],

@@ -41,7 +41,7 @@ class AccountSettingsPage extends StatelessWidget {
           SettingRowWidget("Security"),
           HeaderWidget('Data and Permission', secondHeader: true,),
           SettingRowWidget("Country"),
-          SettingRowWidget("Your Twitter data"),
+          SettingRowWidget("Your Fwitter data"),
           SettingRowWidget("Apps and sessions"),
           SettingRowWidget(
             "Log out",

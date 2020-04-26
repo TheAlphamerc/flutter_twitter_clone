@@ -234,7 +234,7 @@ class _SidebarMenuState extends State<SidebarMenu> {
                   _menuListRowButton('Lists', icon: AppIcon.lists),
                   _menuListRowButton('Bookamrks', icon: AppIcon.bookmark),
                   _menuListRowButton('Moments', icon: AppIcon.moments),
-                  _menuListRowButton('Twitter ads', icon: AppIcon.twitterAds),
+                  _menuListRowButton('Fwitter ads', icon: AppIcon.twitterAds),
                   Divider(),
                   _menuListRowButton('Settings and privacy', isEnable: true,
                       onPressed: () {

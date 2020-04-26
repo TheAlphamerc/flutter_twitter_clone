@@ -54,7 +54,7 @@ class SettingsAndPrivacyPage extends StatelessWidget {
             showDivider: false,
             vPadding: 10,
             subtitle:
-                'These settings affect all of your Twitter accounts on this devce.',
+                'These settings affect all of your Fwitter accounts on this devce.',
           )
         ],
       ),

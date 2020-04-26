@@ -143,7 +143,7 @@ class DisplayAndSoundPage extends StatelessWidget {
           SettingRowWidget(
             "Emoji",
             subtitle:
-                'Use the Twitter set instead of your device\'s default set',
+                'Use the Fwitter set instead of your device\'s default set',
             showDivider: false,
             showCheckBox: true,
           ),
@@ -162,7 +162,7 @@ class DisplayAndSoundPage extends StatelessWidget {
           ),
           SettingRowWidget(
             "Use in-app browser",
-            subtitle: 'Open external links with Twitter browser',
+            subtitle: 'Open external links with Fwitter browser',
             showCheckBox: true,
           ),
         ],

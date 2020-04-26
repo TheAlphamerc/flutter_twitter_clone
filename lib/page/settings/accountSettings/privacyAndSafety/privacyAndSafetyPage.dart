@@ -107,7 +107,7 @@ class PrivacyAndSaftyPage extends StatelessWidget {
           SettingRowWidget(
             "Precise location",
             subtitle:
-                'Disabled \n\n\nIf enabled, Twitter will collect, store, and use your device\'s precise location, such as your GPS information. This lets Twitter improve your experience - for rxample, showing you mpre local content, ads, and recommendations.',
+                'Disabled \n\n\nIf enabled, Fwitter will collect, store, and use your device\'s precise location, such as your GPS information. This lets Fwitter improve your experience - for rxample, showing you mpre local content, ads, and recommendations.',
           ),
           HeaderWidget(
             'Personalisation and data',
@@ -118,7 +118,7 @@ class PrivacyAndSaftyPage extends StatelessWidget {
             subtitle: "Allow all",
           ),
           SettingRowWidget(
-            "See your Twitter data",
+            "See your Fwitter data",
             subtitle:
                 "Review and edit your profile information and data associated with your account.",
           ),
