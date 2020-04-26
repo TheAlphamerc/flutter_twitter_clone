@@ -6,8 +6,6 @@ import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/page/common/usersListPage.dart';
-import 'package:flutter_twitter_clone/page/common/widget/userListWidget.dart';
-import 'package:flutter_twitter_clone/page/message/chatScreenPage.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
@@ -90,54 +88,54 @@ class TweetIconsRow extends StatelessWidget {
       Color iconColor,
       double size = 20}) {
     return Expanded(
-        child: Container(
-            child: Row(
-      children: <Widget>[
-        IconButton(
-          onPressed: () {
-            if (onPressed != null) onPressed();
-          },
-          icon: sysIcon != null
-              ? Icon(sysIcon, color: iconColor, size: size)
-              : customIcon(context,
-                  size: size,
-                  icon: icon,
-                  istwitterIcon: true,
-                  iconColor: iconColor),
-        ),
-        customText(text,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: iconColor,
-              fontSize: size - 5,
+      child: Container(
+        child: Row(
+          children: <Widget>[
+            IconButton(
+              onPressed: () {
+                if (onPressed != null) onPressed();
+              },
+              icon: sysIcon != null
+                  ? Icon(sysIcon, color: iconColor, size: size)
+                  : customIcon(
+                      context,
+                      size: size,
+                      icon: icon,
+                      istwitterIcon: true,
+                      iconColor: iconColor,
+                    ),
             ),
-            context: context),
-      ],
-    )));
+            customText(
+              text,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: iconColor,
+                fontSize: size - 5,
+              ),
+              context: context,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _timeWidget(BuildContext context) {
     return Column(
       children: <Widget>[
         SizedBox(
-          height: 8,
+          height: 8
         ),
         Row(
           children: <Widget>[
-            SizedBox(
-              width: 5,
-            ),
+            SizedBox(width: 5),
             customText(getPostTime2(model.createdAt), style: textStyle14),
-            SizedBox(
-              width: 10,
-            ),
+            SizedBox(width: 10),
             customText('Fwitter for Android',
                 style: TextStyle(color: Theme.of(context).primaryColor))
           ],
         ),
-        SizedBox(
-          height: 5,
-        ),
+        SizedBox(height: 5),
       ],
     );
   }

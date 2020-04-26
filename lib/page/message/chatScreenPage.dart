@@ -22,6 +22,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
   final messageController = new TextEditingController();
   String senderId;
   String userImage;
+  ChatState state;
   ScrollController _controller;
   GlobalKey<ScaffoldState> _scaffoldKey;
 
@@ -207,14 +208,14 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
   }
 
   Future<bool> _onWillPop() async {
-    final chatState = Provider.of<ChatState>(context,listen: false);
-    chatState.setIsChatScreenOpen = false;
-    chatState.dispose();
+    // final chatState = Provider.of<ChatState>(context,listen: false);
+    state.setIsChatScreenOpen = false;
+    state.dispose();
     return true;
   }
 
   void submitMessage() {
-    var state = Provider.of<ChatState>(context, listen: false);
+    // var state = Provider.of<ChatState>(context, listen: false);
     var authstate = Provider.of<AuthState>(context, listen: false);
     ChatMessage message;
     message = ChatMessage(
@@ -244,7 +245,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
       messageController.clear();
     });
     try {
-      final state = Provider.of<ChatState>(context,listen: false);
+      // final state = Provider.of<ChatState>(context,listen: false);
       if (state.messageList != null &&
           state.messageList.length > 1 &&
           _controller.offset > 0) {
@@ -259,9 +260,10 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
     }
   }
 
+  
   @override
   Widget build(BuildContext context) {
-    var state = Provider.of<ChatState>(context, listen: false);
+    state = Provider.of<ChatState>(context, listen: false);
     userImage = state.chatUser.profilePic;
     return WillPopScope(
       onWillPop: _onWillPop,

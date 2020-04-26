@@ -87,23 +87,25 @@ class Tweet extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Container(
-                  padding: EdgeInsets.only(
-                      top: type == TweetType.Tweet || type == TweetType.Reply
-                          ? 12
-                          : 0),
-                  child: type == TweetType.Tweet || type == TweetType.Reply
-                      ? _TweetBody(
-                          isDisplayOnProfile: isDisplayOnProfile,
-                          model: model,
-                          trailing: trailing,
-                          type: type,
-                        )
-                      : _TweetDetailBody(
-                          isDisplayOnProfile: isDisplayOnProfile,
-                          model: model,
-                          trailing: trailing,
-                          type: type,
-                        )),
+                padding: EdgeInsets.only(
+                  top: type == TweetType.Tweet || type == TweetType.Reply
+                      ? 12
+                      : 0,
+                ),
+                child: type == TweetType.Tweet || type == TweetType.Reply
+                    ? _TweetBody(
+                        isDisplayOnProfile: isDisplayOnProfile,
+                        model: model,
+                        trailing: trailing,
+                        type: type,
+                      )
+                    : _TweetDetailBody(
+                        isDisplayOnProfile: isDisplayOnProfile,
+                        model: model,
+                        trailing: trailing,
+                        type: type,
+                      ),
+              ),
               Padding(
                 padding: EdgeInsets.only(right: 16),
                 child: TweetImage(
@@ -231,9 +233,9 @@ class _TweetBody extends StatelessWidget {
               ),
               UrlText(
                 text: model.description,
-                onHashTagPressed:(tag){
-                    cprint(tag);
-                  },
+                onHashTagPressed: (tag) {
+                  cprint(tag);
+                },
                 style: TextStyle(
                     color: Colors.black,
                     fontSize: descriptionFontSize,
@@ -335,7 +337,7 @@ class _TweetDetailBody extends StatelessWidget {
                     : EdgeInsets.symmetric(horizontal: 16),
                 child: UrlText(
                   text: model.description,
-                  onHashTagPressed:(tag){
+                  onHashTagPressed: (tag) {
                     cprint(tag);
                   },
                   style: TextStyle(
