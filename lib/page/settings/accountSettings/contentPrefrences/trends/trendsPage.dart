@@ -77,7 +77,7 @@ class TrendsPage extends StatelessWidget {
         activeColor: TwitterColor.dodgetBlue,
         groupValue: state.sortBy,
         onChanged: (val) {
-          state.updateFilterProfrence = val;
+          state.updateUserSortPrefrence = val;
           Navigator.pop(context);
         },
         title: Text(text, style: subtitleStyle),

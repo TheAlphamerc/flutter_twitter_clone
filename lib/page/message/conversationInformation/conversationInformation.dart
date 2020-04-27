@@ -10,6 +10,7 @@ import 'package:flutter_twitter_clone/state/chats/chatState.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
+import 'package:flutter_twitter_clone/widgets/newWidget/rippleButton.dart';
 import 'package:provider/provider.dart';
 
 class ConversationInformation extends StatelessWidget {
@@ -26,7 +27,13 @@ class ConversationInformation extends StatelessWidget {
             child: SizedBox(
               height: 80,
               width: 80,
-              child: customImage(context, user.profilePic),
+              child: RippleButton(
+                 onPressed: (){
+                   Navigator.of(context).pushNamed('/ProfilePage/' + user?.userId);
+                 },
+                borderRadius: BorderRadius.circular(40),
+                child:customImage(context, user.profilePic, height: 80),
+              )
             ),
           ),
           Row(

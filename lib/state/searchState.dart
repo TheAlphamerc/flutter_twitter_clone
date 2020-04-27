@@ -86,7 +86,7 @@ class SearchState extends AppState {
   }
 
   /// Sort user list on search user page.
-  set updateFilterProfrence(SortUser val) {
+  set updateUserSortPrefrence(SortUser val) {
     sortBy = val;
     notifyListeners();
   }
