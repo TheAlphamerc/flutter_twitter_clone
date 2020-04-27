@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
+import 'package:flutter_twitter_clone/model/chatModel.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
-import 'package:flutter_twitter_clone/page/common/sidebar.dart';
-import 'package:flutter_twitter_clone/page/message/newMessagePage.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/chats/chatState.dart';
-import 'package:flutter_twitter_clone/state/notificationState.dart';
 import 'package:flutter_twitter_clone/state/searchState.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
@@ -37,6 +34,7 @@ class _ChatListPageState extends State<ChatListPage> {
 
   Widget _body() {
     final state = Provider.of<ChatState>(context);
+    final searchState = Provider.of<SearchState>(context, listen: false);
     if (state.chatUserList == null) {
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: 30),
@@ -50,7 +48,12 @@ class _ChatListPageState extends State<ChatListPage> {
       return ListView.separated(
         physics: BouncingScrollPhysics(),
         itemCount: state.chatUserList.length,
-        itemBuilder: (context, index) => _userCard(state.chatUserList[index]),
+        itemBuilder: (context, index) => _userCard(
+            searchState.userlist.firstWhere(
+              (x) => x.userId == state.chatUserList[index].key,
+              orElse: () => User(userName: "Unknown"),
+            ),
+            state.chatUserList[index]),
         separatorBuilder: (context, index) {
           return Divider(
             height: 0,
@@ -60,7 +63,7 @@ class _ChatListPageState extends State<ChatListPage> {
     }
   }
 
-  Widget _userCard(User model) {
+  Widget _userCard(User model, ChatMessage lastMessage) {
     return Container(
       color: Colors.white,
       child: ListTile(
@@ -101,9 +104,14 @@ class _ChatListPageState extends State<ChatListPage> {
           style: onPrimaryTitleText.copyWith(color: Colors.black),
         ),
         subtitle: customText(
-          '@${model.displayName}',
+          getLastMessage(lastMessage.message) ?? '@${model.displayName}',
           style: onPrimarySubTitleText.copyWith(color: Colors.black54),
         ),
+        trailing: lastMessage == null
+            ? SizedBox.shrink()
+            : Text(
+                getChatTime(lastMessage.createdAt).toString(),
+              ),
       ),
     );
   }
@@ -125,6 +133,18 @@ class _ChatListPageState extends State<ChatListPage> {
 
   void onSettingIconPressed() {
     Navigator.pushNamed(context, '/DirectMessagesPage');
+  }
+
+  String getLastMessage(String message) {
+    if (message != null && message.isNotEmpty) {
+      if (message.length > 100) {
+        message = message.substring(0, 80) + '...';
+        return message;
+      } else {
+        return message;
+      }
+    }
+    return null;
   }
 
   @override

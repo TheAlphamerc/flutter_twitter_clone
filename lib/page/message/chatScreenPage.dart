@@ -91,6 +91,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
             myMessage
                 ? SizedBox()
                 : CircleAvatar(
+                    backgroundColor: Colors.transparent,
                     backgroundImage: customAdvanceNetworkImage(userImage),
                   ),
             Expanded(

@@ -80,3 +80,9 @@ GoogleService-Info.plist
 android/app/google-services.json
 google-services.json
 
+android/.settings/org.eclipse.buildship.core.prefs
+android/app/.classpath
+android/.project
+android/app/.project
+android/app/.settings/org.eclipse.buildship.core.prefs
+android/app/.settings/org.eclipse.jdt.core.prefs

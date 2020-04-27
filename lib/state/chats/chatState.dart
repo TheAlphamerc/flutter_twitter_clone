@@ -14,7 +14,7 @@ class ChatState extends AppState {
   final FirebaseDatabase _database = FirebaseDatabase.instance;
 
   List<ChatMessage> _messageList;
-  List<User> _chatUserList;
+  List<ChatMessage> _chatUserList;
   User _chatUser;
   String serverToken = "<FCM SERVER KEY>";
 
@@ -40,7 +40,7 @@ class ChatState extends AppState {
     }
   }
 
-  List<User> get chatUserList {
+  List<ChatMessage> get chatUserList {
     if (_chatUserList == null) {
       return null;
     } else {
@@ -96,12 +96,12 @@ class ChatState extends AppState {
           .child(userId)
           .once()
           .then((DataSnapshot snapshot) {
-        _chatUserList = List<User>();
+        _chatUserList = List<ChatMessage>();
         if (snapshot.value != null) {
           var map = snapshot.value;
           if (map != null) {
             map.forEach((key, value) {
-              var model = User.fromJson(value);
+              var model = ChatMessage.fromJson(value);
               model.key = key;
               _chatUserList.add(model);
             });
@@ -145,22 +145,23 @@ class ChatState extends AppState {
   }
 
   void onMessageSubmitted(ChatMessage message, {User myUser, User secondUser}) {
+    print(chatUser.userId);
     try {
-      if (_messageList == null || _messageList.length < 1) {
+      // if (_messageList == null || _messageList.length < 1) {
         _database
             .reference()
             .child('chatUsers')
             .child(message.senderId)
             .child(message.receiverId)
-            .set(secondUser.toJson());
+            .set(message.toJson());
 
         _database
             .reference()
             .child('chatUsers')
-            .child(secondUser.userId)
+            .child(chatUser.userId)
             .child(message.senderId)
-            .set(myUser.toJson());
-      }
+            .set(message.toJson());
+      // }
       _database
           .reference()
           .child('chats')
@@ -228,12 +229,12 @@ class ChatState extends AppState {
 
   void _onChatUserAdded(Event event) {
     if (_chatUserList == null) {
-      _chatUserList = List<User>();
+      _chatUserList = List<ChatMessage>();
     }
     if (event.snapshot.value != null) {
       var map = event.snapshot.value;
       if (map != null) {
-        var model = User.fromJson(map);
+        var model = ChatMessage.fromJson(map);
         model.key = event.snapshot.key;
         if (_chatUserList.length > 0 &&
             _chatUserList.any((x) => x.key == model.key)) {
@@ -248,9 +249,11 @@ class ChatState extends AppState {
   }
 
   void dispose() {
-    // messageQuery = null;
+    var user = _chatUserList.firstWhere((x) => x.key == chatUser.userId);
+    user.message =  _messageList.first.message;
+    user.createdAt = _messageList.first.createdAt;//;
     _messageList = null;
-    // _channelName = null;
+    notifyListeners();
   }
 
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging();

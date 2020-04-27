@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter_twitter_clone/helper/enum.dart';
-
+/// This model isn't used anywhere in code
+/// Can be removed/deleted if required
 class FcmNotificationModel {
     String clickAction;
     String id;

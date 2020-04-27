@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class ChatMessage {
     String key;
     String senderId;
@@ -30,6 +28,8 @@ class ChatMessage {
         seen: json["seen"],
         createdAt: json["created_at"],
         timeStamp:json['timeStamp'],
+        senderName: json["senderName"],
+        receiverId: json["receiverId"]
     );
 
     Map<String, dynamic> toJson() => {
