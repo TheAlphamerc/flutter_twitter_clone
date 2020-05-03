@@ -123,7 +123,7 @@ class FeedState extends AppState {
       if (_feedQuery == null) {
         _feedQuery = kDatabase.child("tweet");
         _feedQuery.onChildAdded.listen(_onTweetAdded);
-        _feedQuery.onChildChanged.listen(_onTweetChanged);
+        _feedQuery.onValue.listen(_onTweetChanged);
         _feedQuery.onChildRemoved.listen(_onTweetRemoved);
       }
 
@@ -173,7 +173,7 @@ class FeedState extends AppState {
   /// get [Tweet Detail] from firebase realtime kDatabase
   /// If model is null then fetch tweet from firebase
   /// [getpostDetailFromDatabase] is used to set prepare Tweetr to display Tweet detail
-  /// After getting tweet detail fetch tweet coments from firebase 
+  /// After getting tweet detail fetch tweet coments from firebase
   void getpostDetailFromDatabase(String postID, {FeedModel model}) async {
     try {
       FeedModel _tweetDetail;
@@ -249,15 +249,16 @@ class FeedState extends AppState {
   /// Retweet itself  is a type of `Tweet`
   Future<FeedModel> fetchTweet(String postID) async {
     FeedModel _tweetDetail;
+
     /// If tweet is availabe in feedlist then no need to fetch it from firebase
     if (feedlist.any((x) => x.key == postID)) {
       _tweetDetail = feedlist.firstWhere((x) => x.key == postID);
-    } 
+    }
+
     /// If tweet is not available in feedlist then need to fetch it from firebase
     else {
       cprint("Fetched from DB: " + postID);
-      var model =
-          await kDatabase.child('tweet').child(postID).once().then(
+      var model = await kDatabase.child('tweet').child(postID).once().then(
         (DataSnapshot snapshot) {
           if (snapshot.value != null) {
             var map = snapshot.value;
@@ -268,10 +269,8 @@ class FeedState extends AppState {
         },
       );
       if (model != null) {
-        
         _tweetDetail = model;
-      }
-      else{
+      } else {
         cprint("Fetched null value from  DB");
       }
     }
@@ -384,40 +383,35 @@ class FeedState extends AppState {
     try {
       if (tweet.likeList != null &&
           tweet.likeList.length > 0 &&
-          tweet.likeList.any((x) => x.userId == userId)) {
-        tweet.likeList.removeWhere(
-          (x) => x.userId == userId,
-        );
-        // If user unlike Tweet
+          tweet.likeList.any((id) => id == userId)) {
+        // If user wants to undo/remove his like on tweet
+        tweet.likeList.removeWhere((id) => id == userId);
         tweet.likeCount -= 1;
-        updateTweet(tweet);
-        kDatabase
-            .child('notification')
-            .child(tweet.userId)
-            .child(
-              tweet.key,
-            )
-            .child('likeList')
-            .child(userId)
-            .remove();
       } else {
         // If user like Tweet
-        kDatabase
-            .child('tweet')
-            .child(tweet.key)
-            .child('likeList')
-            .child(userId)
-            .set({'userId': userId});
-        kDatabase
-            .child('notification')
-            .child(tweet.userId)
-            .child(
-              tweet.key,
-            )
-            .child('likeList')
-            .child(userId)
-            .set({'userId': userId});
+        if (tweet.likeList == null) {
+          tweet.likeList = [];
+        }
+        tweet.likeList.add(userId);
+        tweet.likeCount += 1;
       }
+      // update likelist of a tweet
+      kDatabase
+          .child('tweet')
+          .child(tweet.key)
+          .child('likeList')
+          .set(tweet.likeList);
+
+      // Sends notification to user who created tweet
+      // User owner can see notification on notification page
+      kDatabase.child('notification').child(tweet.userId).child(tweet.key).set({
+        'type': tweet.likeList.length == 0
+            ? null
+            : NotificationType.Like.toString(),
+        'updatedAt': tweet.likeList.length == 0
+            ? null
+            : DateTime.now().toUtc().toString(),
+      });
     } catch (error) {
       cprint(error, errorIn: 'addLikeToTweet');
     }

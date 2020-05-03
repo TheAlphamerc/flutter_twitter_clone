@@ -59,17 +59,21 @@ class TweetIconsRow extends StatelessWidget {
               size: size ?? 20, onPressed: () {
             TweetBottomSheet().openRetweetbottomSheet(context, type, model);
           }),
-          _iconWidget(context,
-              text: isTweetDetail ? '' : model.likeCount.toString(),
-              icon: model.likeList.any((x) => x.userId == authState.userId)
-                  ? AppIcon.heartFill
-                  : AppIcon.heartEmpty, onPressed: () {
-            addLikeToTweet(context);
-          },
-              iconColor: model.likeList.any((x) => x.userId == authState.userId)
-                  ? iconEnableColor
-                  : iconColor,
-              size: size ?? 20),
+          _iconWidget(
+            context,
+            text: isTweetDetail ? '' : model.likeCount.toString(),
+            icon: model.likeList.any((userId) => userId == authState.userId)
+                ? AppIcon.heartFill
+                : AppIcon.heartEmpty,
+            onPressed: () {
+              addLikeToTweet(context);
+            },
+            iconColor:
+                model.likeList.any((userId) => userId == authState.userId)
+                    ? iconEnableColor
+                    : iconColor,
+            size: size ?? 20,
+          ),
           _iconWidget(context, text: '', icon: null, sysIcon: Icons.share,
               onPressed: () {
             share('${model.description}',
@@ -123,9 +127,7 @@ class TweetIconsRow extends StatelessWidget {
   Widget _timeWidget(BuildContext context) {
     return Column(
       children: <Widget>[
-        SizedBox(
-          height: 8
-        ),
+        SizedBox(height: 8),
         Row(
           children: <Widget>[
             SizedBox(width: 5),
@@ -226,7 +228,7 @@ class TweetIconsRow extends StatelessWidget {
       CustomRoute<bool>(
         builder: (BuildContext context) => UsersListPage(
           pageTitle: "Liked by",
-          userIdsList: model.likeList.map((x) => x.userId).toList(),
+          userIdsList: model.likeList.map((userId) => userId).toList(),
         ),
       ),
     );

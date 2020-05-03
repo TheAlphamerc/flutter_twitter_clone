@@ -90,7 +90,7 @@ class User {
       'location': location,
       'createdAt': createdAt,
       'followers': followersList != null ? followersList.length : null,
-      'following': followersList!= null ? followersList.length : null,
+      'following': followingList!= null ? followingList.length : null,
       'userName': userName,
       'webSite': webSite,
       'isVerified': isVerified ?? false,

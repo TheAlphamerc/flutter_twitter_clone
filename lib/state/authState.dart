@@ -436,15 +436,16 @@ class AuthState extends AppState {
       profileUserModel.followers = profileUserModel.followersList.length;
       // update logged-in user's following count
       userModel.following = userModel.followingList.length;
-
       kDatabase
           .child('profile')
           .child(profileUserModel.userId)
-          .set(profileUserModel.toJson());
+          .child('followerList')
+          .set(profileUserModel.followersList);
       kDatabase
           .child('profile')
           .child(userModel.userId)
-          .set(userModel.toJson());
+          .child('followingList')
+          .set(userModel.followingList);
       cprint('user added to following list', event: 'add_follow');
       notifyListeners();
     } catch (error) {

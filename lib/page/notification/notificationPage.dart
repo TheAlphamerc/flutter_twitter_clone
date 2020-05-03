@@ -113,7 +113,7 @@ class NotificationPageBody extends StatelessWidget {
 class NotificationTile extends StatelessWidget {
   final FeedModel model;
   const NotificationTile({Key key, this.model}) : super(key: key);
-  Widget _userList(BuildContext context, List<LikeList> list) {
+  Widget _userList(BuildContext context, List<String> list) {
     // List<String> names = [];
     var length = list.length;
     List<Widget> avaterList = [];
@@ -122,8 +122,8 @@ class NotificationTile extends StatelessWidget {
     if (list != null && list.length > 5) {
       list = list.take(5).toList();
     }
-    avaterList = list.map((x) {
-      return _userAvater(x.userId, state, (name) {
+    avaterList = list.map((userId) {
+      return _userAvater(userId, state, (name) {
         // names.add(name);
       });
     }).toList();

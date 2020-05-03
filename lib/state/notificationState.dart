@@ -60,9 +60,10 @@ class NotificationState extends AppState {
           var map = snapshot.value;
           if (map != null) {
             map.forEach((tweetKey, value) {
-              var model = NotificationModel.fromJson(tweetKey);
+              var model = NotificationModel.fromJson(tweetKey,value["updatedAt"],snapshot.value["type"]);
               _notificationList.add(model);
             });
+            _notificationList.sort((x,y)=> DateTime.parse(y.updatedAt).compareTo(DateTime.parse(x.updatedAt)));
           }
         }
        loading = false;
@@ -115,7 +116,7 @@ class NotificationState extends AppState {
   /// Trigger when somneone like your tweet
   void _onNotificationAdded(Event event) {
     if (event.snapshot.value != null) {
-      var model = NotificationModel.fromJson(event.snapshot.key);
+      var model = NotificationModel.fromJson(event.snapshot.key, event.snapshot.value["updatedAt"],event.snapshot.value["type"]);
       if (_notificationList == null) {
         _notificationList = List<NotificationModel>();
       }
@@ -129,7 +130,7 @@ class NotificationState extends AppState {
   /// Trigger when someone changed his like preference
   void _onNotificationChanged(Event event) {
     if (event.snapshot.value != null) {
-      var model = NotificationModel.fromJson(event.snapshot.key);
+      var model = NotificationModel.fromJson(event.snapshot.key, event.snapshot.value["updatedAt"],event.snapshot.value["type"]);
       //update notification list
       _notificationList
           .firstWhere((x) => x.tweetKey == model.tweetKey)
@@ -142,7 +143,7 @@ class NotificationState extends AppState {
   /// Trigger when someone undo his like on tweet
   void _onNotificationRemoved(Event event) {
     if (event.snapshot.value != null) {
-      var model = NotificationModel.fromJson(event.snapshot.key);
+      var model = NotificationModel.fromJson(event.snapshot.key, event.snapshot.value["updatedAt"],event.snapshot.value["type"]);
       // remove notification from list
       _notificationList.removeWhere((x) => x.tweetKey == model.tweetKey);
       notifyListeners();
