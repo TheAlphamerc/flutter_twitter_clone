@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
+import 'package:flutter_twitter_clone/page/Auth/widget/googleLoginButton.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customLoader.dart';
@@ -24,36 +25,46 @@ class _SignInState extends State<SignIn> {
   void initState() {
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
-    // _emailController.text = 'sonu.sharma@kritivity.com';
-    // _passwordController.text = '1234567';
     loader = CustomLoader();
     super.initState();
   }
-
+  @override
+  void dispose() { 
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
   Widget _body(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 30),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(height: 150),
-              _entryFeild('Enter email', controller: _emailController),
-              _entryFeild('Enter password',
-                  controller: _passwordController, isPassword: true),
-              _emailLoginButton(context),
-              SizedBox(
-                height: 20,
-              ),
-              _labelButton('Forget password?', onPressed: () {
-                Navigator.of(context).pushNamed('/ForgetPasswordPage');
-              }),
-              Divider(),
-              _googleLoginButton(context),
-              SizedBox(height: 100),
-            ],
-          )),
+        padding: EdgeInsets.symmetric(horizontal: 30),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(height: 150),
+            _entryFeild('Enter email', controller: _emailController),
+            _entryFeild('Enter password',
+                controller: _passwordController, isPassword: true),
+            _emailLoginButton(context),
+            SizedBox(height: 20),
+            _labelButton('Forget password?', onPressed: () {
+              Navigator.of(context).pushNamed('/ForgetPasswordPage');
+            }),
+            Divider(
+              height: 30,
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            GoogleLoginButton(
+              loginCallback: widget.loginCallback,
+              loader: loader,
+            ),
+            SizedBox(height: 100),
+          ],
+        ),
+      ),
     );
   }
 
@@ -110,46 +121,13 @@ class _SignInState extends State<SignIn> {
         color: TwitterColor.dodgetBlue,
         onPressed: _emailLogin,
         padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-        child: TitleText('Email Login', color: Colors.white),
-      ),
-    );
-  }
-
-  Widget _googleLoginButton(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      margin: EdgeInsets.symmetric(vertical: 35),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          MaterialButton(
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-              color: Colors.white,
-              onPressed: _googleLogin,
-              padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-              child: Row(
-                children: <Widget>[
-                  Image.asset(
-                    'assets/images/google_logo.png',
-                    height: 20,
-                    width: 20,
-                  ),
-                  SizedBox(width: 10),
-                  TitleText(
-                    'Continue with Google',
-                    color: Colors.black54,
-                  ),
-                ],
-              )),
-        ],
+        child: TitleText('Submit', color: Colors.white),
       ),
     );
   }
 
   void _emailLogin() {
-    var state = Provider.of<AuthState>(context,listen: false);
+    var state = Provider.of<AuthState>(context, listen: false);
     if (state.isbusy) {
       return;
     }
@@ -173,25 +151,6 @@ class _SignInState extends State<SignIn> {
     } else {
       loader.hideLoader();
     }
-  }
-
-  void _googleLogin() {
-    var state = Provider.of<AuthState>(context,listen: false);
-    if (state.isbusy) {
-      return;
-    }
-    loader.showLoader(context);
-    state.handleGoogleSignIn().then((status) {
-      // print(status)
-      if (state.user != null) {
-        loader.hideLoader();
-        Navigator.pop(context);
-        widget.loginCallback();
-      } else {
-        loader.hideLoader();
-        cprint('Unable to login', errorIn: '_googleLoginButton');
-      }
-    });
   }
 
   @override

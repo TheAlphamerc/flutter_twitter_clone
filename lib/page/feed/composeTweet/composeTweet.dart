@@ -16,6 +16,7 @@ import 'package:flutter_twitter_clone/state/searchState.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
+import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 import 'package:provider/provider.dart';
 
 class ComposeTweetPage extends StatefulWidget {
@@ -246,13 +247,13 @@ class _ComposeRetweet
                     child: customImage(context, model.user.profilePic),
                   ),
                   SizedBox(width: 10),
-                  UrlText(
-                    text: model.user.displayName,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w800,
-                    ),
+                  ConstrainedBox(
+                    constraints: BoxConstraints(
+                        minWidth: 0, maxWidth: fullWidth(context) * .5),
+                    child: TitleText(model.user.displayName,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                        overflow: TextOverflow.ellipsis),
                   ),
                   SizedBox(width: 3),
                   model.user.isVerified
@@ -422,13 +423,13 @@ class _ComposeTweet
                 customImage(context, viewState.model.user.profilePic,
                     height: 40),
                 SizedBox(width: 10),
-                UrlText(
-                  text: viewState.model.user.displayName,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w800,
-                  ),
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                      minWidth: 0, maxWidth: fullWidth(context) * .5),
+                  child: TitleText(viewState.model.user.displayName,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w800,
+                      overflow: TextOverflow.ellipsis),
                 ),
                 SizedBox(width: 3),
                 viewState.model.user.isVerified
@@ -592,15 +593,13 @@ class _UserTile extends StatelessWidget {
       leading: customImage(context, user.profilePic, height: 35),
       title: Row(
         children: <Widget>[
-          Flexible(
-            child: UrlText(
-              text: user.displayName,
-              style: TextStyle(
-                color: Colors.black,
+          ConstrainedBox(
+            constraints:
+                BoxConstraints(minWidth: 0, maxWidth: fullWidth(context) * .5),
+            child: TitleText(user.displayName,
                 fontSize: 16,
                 fontWeight: FontWeight.w800,
-              ),
-            ),
+                overflow: TextOverflow.ellipsis),
           ),
           SizedBox(width: 3),
           user.isVerified

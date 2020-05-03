@@ -7,6 +7,7 @@ import 'package:flutter_twitter_clone/state/searchState.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
+import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 import 'package:provider/provider.dart';
 
 class SearchPage extends StatefulWidget {
@@ -50,11 +51,10 @@ class _SearchPageState extends State<SearchPage> {
           state.getDataFromDatabase();
           return Future.value(true);
         },
-        child:
-         ListView.separated(
+        child: ListView.separated(
           addAutomaticKeepAlives: false,
           physics: BouncingScrollPhysics(),
-          itemBuilder: (context, index) => _UserTile(user:list[index]),
+          itemBuilder: (context, index) => _UserTile(user: list[index]),
           separatorBuilder: (_, index) => Divider(
             height: 0,
           ),
@@ -81,14 +81,10 @@ class _UserTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Flexible(
-            child: UrlText(
-              text: user.displayName,
-              style: TextStyle(
-                color: Colors.black,
+            child: TitleText(user.displayName,
                 fontSize: 16,
                 fontWeight: FontWeight.w800,
-              ),
-            ),
+                overflow: TextOverflow.ellipsis),
           ),
           SizedBox(width: 3),
           user.isVerified

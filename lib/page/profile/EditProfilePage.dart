@@ -18,6 +18,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   TextEditingController _bio;
   TextEditingController _location;
   TextEditingController _dob;
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   String dob;
   @override
   void initState() {
@@ -32,7 +33,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
     _dob.text = getdob(state?.userModel?.dob);
     super.initState();
   }
-
+  void dispose() { 
+    _name.dispose();
+    _bio.dispose();
+    _location.dispose();
+    _dob.dispose();
+    super.dispose();
+  }
   Widget _body() {
     var authstate = Provider.of<AuthState>(context);
     return Column(
@@ -137,6 +144,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   void _submitButton() {
+    if (_name.text.length > 27) {
+      customSnackBar(_scaffoldKey, 'Name length cannot exceed 27 character');
+      return;
+    }
     var state = Provider.of<AuthState>(context, listen: false);
     var model = state.userModel.copyWith(
       key: state.userModel.userId,
@@ -176,12 +187,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(color: Colors.blue),
-        title: customTitleText(
-          'Profile Edit',
-        ),
+        title: customTitleText('Profile Edit'),
         actions: <Widget>[
           InkWell(
             onTap: _submitButton,
@@ -196,9 +206,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ),
             ),
           ),
-          SizedBox(
-            width: 20,
-          ),
+          SizedBox(width: 20),
         ],
       ),
       body: SingleChildScrollView(

@@ -5,9 +5,11 @@ import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
+import 'package:flutter_twitter_clone/page/Auth/widget/googleLoginButton.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customLoader.dart';
+import 'package:flutter_twitter_clone/widgets/newWidget/rippleButton.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 import 'package:provider/provider.dart';
 
@@ -22,7 +24,6 @@ class Signup extends StatefulWidget {
 class _SignupState extends State<Signup> {
   TextEditingController _nameController;
   TextEditingController _emailController;
-  // TextEditingController _mobileController;
   TextEditingController _passwordController;
   TextEditingController _confirmController;
   CustomLoader loader;
@@ -33,18 +34,17 @@ class _SignupState extends State<Signup> {
     loader = CustomLoader();
     _nameController = TextEditingController();
     _emailController = TextEditingController();
-    // _mobileController = TextEditingController();
     _passwordController = TextEditingController();
     _confirmController = TextEditingController();
-    // _emailController.text = 'bruce.wayne@gmail.com';
-    // _passwordController.text = '1234567';
-    // _nameController.text = 'Bruce Wayne';
-    // _mobileController.text =    '9871234567';
-    // _passwordController.text = '1234567';
-    // _confirmController.text = '1234567';
     super.initState();
   }
-
+  void dispose() { 
+    _emailController.dispose();
+    _passwordController.dispose();
+    _nameController.dispose();
+    _confirmController.dispose();
+    super.dispose();
+  }
   Widget _body(BuildContext context) {
     return Container(
       height: fullHeight(context) - 88,
@@ -64,8 +64,14 @@ class _SignupState extends State<Signup> {
                 controller: _confirmController, isPassword: true),
             _submitButton(context),
 
-            Divider(),
-            _googleLoginButton(context)
+            Divider(height: 30),
+            SizedBox(height: 30),
+            // _googleLoginButton(context),
+            GoogleLoginButton(
+              loginCallback: widget.loginCallback,
+              loader: loader,
+            ),
+            SizedBox(height: 30),
           ],
         ),
       ),
@@ -117,41 +123,34 @@ class _SignupState extends State<Signup> {
     );
   }
 
-  Widget _googleLoginButton(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      margin: EdgeInsets.symmetric(vertical: 35),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          MaterialButton(
-            elevation: 2,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            color: Colors.white,
-            onPressed: _googleLogin,
-            padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-            child: Row(
-              children: <Widget>[
-                Image.asset(
-                  'assets/images/google_logo.png',
-                  height: 20,
-                  width: 20,
-                ),
-                SizedBox(width: 10),
-                TitleText(
-                  'Continue with Google',
-                  color: Colors.black54,
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
+  void _googleLogin() {
+    var state = Provider.of<AuthState>(context, listen: false);
+    if (state.isbusy) {
+      return;
+    }
+    loader.showLoader(context);
+    state.handleGoogleSignIn().then((status) {
+      // print(status)
+      if (state.user != null) {
+        loader.hideLoader();
+        Navigator.pop(context);
+        widget.loginCallback();
+      } else {
+        loader.hideLoader();
+        cprint('Unable to login', errorIn: '_googleLoginButton');
+      }
+    });
   }
 
   void _submitForm() {
+    if (_emailController.text.isEmpty) {
+      customSnackBar(_scaffoldKey, 'Please enter name');
+      return;
+    }
+    if (_emailController.text.length > 27) {
+      customSnackBar(_scaffoldKey, 'Name length cannot exceed 27 character');
+      return;
+    }
     if (_emailController.text == null ||
         _emailController.text.isEmpty ||
         _passwordController.text == null ||
@@ -164,6 +163,7 @@ class _SignupState extends State<Signup> {
           _scaffoldKey, 'Password and confirm password did not match');
       return;
     }
+
     loader.showLoader(context);
     var state = Provider.of<AuthState>(context, listen: false);
     Random random = new Random();
@@ -197,25 +197,6 @@ class _SignupState extends State<Signup> {
         }
       },
     );
-  }
-
-  void _googleLogin() {
-    var state = Provider.of<AuthState>(context,listen: false);
-    if (state.isbusy) {
-      return;
-    }
-    loader.showLoader(context);
-    state.handleGoogleSignIn().then((status) {
-      // print(status)
-      if (state.user != null) {
-        loader.hideLoader();
-        Navigator.pop(context);
-        widget.loginCallback();
-      } else {
-        loader.hideLoader();
-        cprint('Unable to login', errorIn: '_googleLoginButton');
-      }
-    });
   }
 
   @override

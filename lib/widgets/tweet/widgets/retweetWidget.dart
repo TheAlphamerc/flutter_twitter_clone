@@ -8,6 +8,7 @@ import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/rippleButton.dart';
+import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 import 'package:flutter_twitter_clone/widgets/tweet/widgets/tweetImage.dart';
 import 'package:flutter_twitter_clone/widgets/tweet/widgets/unavailableTweet.dart';
 import 'package:provider/provider.dart';
@@ -38,12 +39,14 @@ class RetweetWidget extends StatelessWidget {
                 child: customImage(context, model.user.profilePic),
               ),
               SizedBox(width: 10),
-              UrlText(
-                text: model.user.displayName,
-                style: TextStyle(
-                  color: Colors.black,
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                    minWidth: 0, maxWidth: fullWidth(context) * .5),
+                child: TitleText(
+                  model.user.displayName,
                   fontSize: 16,
                   fontWeight: FontWeight.w800,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
               SizedBox(width: 3),

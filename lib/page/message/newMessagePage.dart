@@ -8,6 +8,7 @@ import 'package:flutter_twitter_clone/state/searchState.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
+import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 import 'package:provider/provider.dart';
 
 class NewMessagePage extends StatefulWidget {
@@ -38,13 +39,13 @@ class _NewMessagePageState extends State<NewMessagePage> {
       leading: customImage(context, user.profilePic, height: 40),
       title: Row(
         children: <Widget>[
-          UrlText(
-            text: user.displayName,
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 16,
-              fontWeight: FontWeight.w800,
-            ),
+          ConstrainedBox(
+            constraints:
+                BoxConstraints(minWidth: 0, maxWidth: fullWidth(context) - 104),
+            child: TitleText(user.displayName,
+                fontSize: 16,
+                fontWeight: FontWeight.w800,
+                overflow: TextOverflow.ellipsis),
           ),
           SizedBox(width: 3),
           user.isVerified
@@ -62,7 +63,7 @@ class _NewMessagePageState extends State<NewMessagePage> {
   }
 
   Future<bool> _onWillPop() async {
-    final state = Provider.of<SearchState>(context,listen: false);
+    final state = Provider.of<SearchState>(context, listen: false);
     state.filterByUsername("");
     return true;
   }

@@ -6,6 +6,7 @@ import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/rippleButton.dart';
+import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 import 'package:provider/provider.dart';
 
 class UserListWidget extends StatelessWidget {
@@ -93,15 +94,13 @@ class UserTile extends StatelessWidget {
             ),
             title: Row(
               children: <Widget>[
-                Flexible(
-                  child: UrlText(
-                    text: user.displayName,
-                    style: TextStyle(
-                      color: Colors.black,
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                      minWidth: 0, maxWidth: fullWidth(context) * .4),
+                  child: TitleText(user.displayName,
                       fontSize: 16,
                       fontWeight: FontWeight.w800,
-                    ),
-                  ),
+                      overflow: TextOverflow.ellipsis),
                 ),
                 SizedBox(width: 3),
                 user.isVerified

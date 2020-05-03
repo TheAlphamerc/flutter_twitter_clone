@@ -7,14 +7,16 @@ class TitleText extends StatelessWidget {
   final Color color;
   final FontWeight fontWeight;
   final TextAlign textAlign;
-  const TitleText(this.text,
-      {Key key,
-      this.fontSize = 18,
-      this.color = Colors.black,
-      this.fontWeight = FontWeight.w800,
-      this.textAlign = TextAlign.left,
-      })
-      : super(key: key);
+  final TextOverflow overflow;
+  const TitleText(
+    this.text, {
+    Key key,
+    this.fontSize = 18,
+    this.color = Colors.black,
+    this.fontWeight = FontWeight.w800,
+    this.textAlign = TextAlign.left,
+    this.overflow = TextOverflow.visible,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Text(
@@ -25,6 +27,7 @@ class TitleText extends StatelessWidget {
         color: color,
       ),
       textAlign: textAlign,
+      overflow: overflow,
     );
   }
 }

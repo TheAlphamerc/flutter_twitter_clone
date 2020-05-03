@@ -11,6 +11,7 @@ import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/emptyList.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/rippleButton.dart';
+import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 import 'package:provider/provider.dart';
 
 class ChatListPage extends StatefulWidget {
@@ -98,10 +99,11 @@ class _ChatListPageState extends State<ChatListPage> {
             ),
           ),
         ),
-        title: customText(
-          model.displayName ??
-              (model.email == null ? '' : model.email.split('.')[0]),
-          style: onPrimaryTitleText.copyWith(color: Colors.black),
+        title: TitleText(
+          model.displayName,
+          fontSize: 16,
+          fontWeight: FontWeight.w800,
+          overflow: TextOverflow.ellipsis,
         ),
         subtitle: customText(
           getLastMessage(lastMessage.message) ?? '@${model.displayName}',

@@ -148,19 +148,19 @@ class ChatState extends AppState {
     print(chatUser.userId);
     try {
       // if (_messageList == null || _messageList.length < 1) {
-        _database
-            .reference()
-            .child('chatUsers')
-            .child(message.senderId)
-            .child(message.receiverId)
-            .set(message.toJson());
+      _database
+          .reference()
+          .child('chatUsers')
+          .child(message.senderId)
+          .child(message.receiverId)
+          .set(message.toJson());
 
-        _database
-            .reference()
-            .child('chatUsers')
-            .child(chatUser.userId)
-            .child(message.senderId)
-            .set(message.toJson());
+      _database
+          .reference()
+          .child('chatUsers')
+          .child(chatUser.userId)
+          .child(message.senderId)
+          .set(message.toJson());
       // }
       _database
           .reference()
@@ -250,10 +250,12 @@ class ChatState extends AppState {
 
   void dispose() {
     var user = _chatUserList.firstWhere((x) => x.key == chatUser.userId);
-    user.message =  _messageList.first.message;
-    user.createdAt = _messageList.first.createdAt;//;
-    _messageList = null;
-    notifyListeners();
+    if (_messageList != null) {
+      user.message = _messageList.first.message;
+      user.createdAt = _messageList.first.createdAt; //;
+      _messageList = null;
+      notifyListeners();
+    }
   }
 
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
