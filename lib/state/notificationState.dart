@@ -1,11 +1,7 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:flutter_twitter_clone/helper/enum.dart';
-import 'package:flutter_twitter_clone/model/fcmNotificationModel.dart';
-import 'package:http/http.dart' as http;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:firebase_database/firebase_database.dart' as dabase;
 import 'package:flutter_twitter_clone/model/feedModel.dart';
@@ -50,7 +46,7 @@ class NotificationState extends AppState {
     }
   }
 
-  /// get [Notification list] from firebase realtime kDatabase
+  /// get [Notification list] from firebase realtime database
   void getDataFromDatabase(String userId) {
     try {
        loading = true;

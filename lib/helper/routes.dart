@@ -3,7 +3,6 @@ import 'package:flutter_twitter_clone/page/Auth/selectAuthMethod.dart';
 import 'package:flutter_twitter_clone/page/Auth/verifyEmail.dart';
 import 'package:flutter_twitter_clone/page/common/splash.dart';
 import 'package:flutter_twitter_clone/page/feed/composeTweet/composeTweet.dart';
-import 'package:flutter_twitter_clone/page/feed/composeTweet/createFeed.dart';
 import 'package:flutter_twitter_clone/page/feed/composeTweet/state/composeTweetState.dart';
 import 'package:flutter_twitter_clone/page/message/conversationInformation/conversationInformation.dart';
 import 'package:flutter_twitter_clone/page/message/newMessagePage.dart';
@@ -82,7 +81,6 @@ class Routes{
           create: (_) => ComposeTweetState(),
           child: ComposeTweetPage(isRetweet:false, isTweet: true),
         ));
-      // return CustomRoute<bool>(builder:(BuildContext context)=> CreateFeedPage(),); 
       case "WelcomePage":return CustomRoute<bool>(builder:(BuildContext context)=> WelcomePage()); 
       case "SignIn":return CustomRoute<bool>(builder:(BuildContext context)=> SignIn()); 
       case "SignUp":return CustomRoute<bool>(builder:(BuildContext context)=> Signup()); 

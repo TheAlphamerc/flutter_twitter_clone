@@ -30,7 +30,7 @@ class FeedState extends AppState {
 
   List<FeedModel> get tweetDetailModel => _tweetDetailModelList;
 
-  /// `feedlist` always [contain all tweets] fetched from firebase kDatabase
+  /// `feedlist` always [contain all tweets] fetched from firebase database
   List<FeedModel> get feedlist {
     if (_feedlist == null) {
       return null;
@@ -70,16 +70,6 @@ class FeedState extends AppState {
       }
     }
     return list;
-  }
-
-  /// contain reply tweets list for parent tweet.
-  /// commentlist changes when another Tweet get opened.
-  List<FeedModel> get commentlist {
-    if (_commentlist == null) {
-      return null;
-    } else {
-      return List.from(_commentlist);
-    }
   }
 
   /// set tweet for detail tweet page
@@ -144,7 +134,7 @@ class FeedState extends AppState {
     }
   }
 
-  /// get [Tweet list] from firebase realtime kDatabase
+  /// get [Tweet list] from firebase realtime database
   void getDataFromDatabase() {
     try {
       isBusy = true;
