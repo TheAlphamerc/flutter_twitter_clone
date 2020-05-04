@@ -15,9 +15,10 @@ class NotificationState extends AppState {
   String notificationReciverId, notificationTweetId;
   FeedModel notificationTweetModel;
   NotificationType get notificationType => _notificationType;
-   set setNotificationType(NotificationType type){
-     _notificationType = type;
-   }
+  set setNotificationType(NotificationType type) {
+    _notificationType = type;
+  }
+
   // FcmNotificationModel notification;
   String notificationSenderId;
   dabase.Query query;
@@ -49,7 +50,7 @@ class NotificationState extends AppState {
   /// get [Notification list] from firebase realtime database
   void getDataFromDatabase(String userId) {
     try {
-       loading = true;
+      loading = true;
       _notificationList = [];
       kDatabase
           .child('notification')
@@ -60,13 +61,22 @@ class NotificationState extends AppState {
           var map = snapshot.value;
           if (map != null) {
             map.forEach((tweetKey, value) {
-              var model = NotificationModel.fromJson(tweetKey,value["updatedAt"],snapshot.value["type"]);
+              var model = NotificationModel.fromJson(
+                  tweetKey, value["updatedAt"], snapshot.value["type"]);
               _notificationList.add(model);
             });
-            _notificationList.sort((x,y)=> DateTime.parse(y.updatedAt).compareTo(DateTime.parse(x.updatedAt)));
+            _notificationList.sort((x, y) {
+              if (x.updatedAt != null && y.updatedAt != null) {
+                return DateTime.parse(y.updatedAt)
+                    .compareTo(DateTime.parse(x.updatedAt));
+              } else if (x.updatedAt != null) {
+                return 1;
+              } else
+                return 0;
+            });
           }
         }
-       loading = false;
+        loading = false;
       });
     } catch (error) {
       loading = false;
@@ -94,8 +104,7 @@ class NotificationState extends AppState {
     if (userList.length > 0 && userList.any((x) => x.userId == userId)) {
       return Future.value(userList.firstWhere((x) => x.userId == userId));
     }
-    var snapshot =
-        await kDatabase.child('profile').child(userId).once();
+    var snapshot = await kDatabase.child('profile').child(userId).once();
     if (snapshot.value != null) {
       var map = snapshot.value;
       user = User.fromJson(map);
@@ -106,17 +115,17 @@ class NotificationState extends AppState {
       return null;
     }
   }
+
   /// Remove notification if related Tweet is not found or deleted
-  void removeNotification(String userId, String tweetkey)async{
-     kDatabase
-            .child('notification')
-            .child(userId)
-            .child(tweetkey).remove();
+  void removeNotification(String userId, String tweetkey) async {
+    kDatabase.child('notification').child(userId).child(tweetkey).remove();
   }
+
   /// Trigger when somneone like your tweet
   void _onNotificationAdded(Event event) {
     if (event.snapshot.value != null) {
-      var model = NotificationModel.fromJson(event.snapshot.key, event.snapshot.value["updatedAt"],event.snapshot.value["type"]);
+      var model = NotificationModel.fromJson(event.snapshot.key,
+          event.snapshot.value["updatedAt"], event.snapshot.value["type"]);
       if (_notificationList == null) {
         _notificationList = List<NotificationModel>();
       }
@@ -130,7 +139,8 @@ class NotificationState extends AppState {
   /// Trigger when someone changed his like preference
   void _onNotificationChanged(Event event) {
     if (event.snapshot.value != null) {
-      var model = NotificationModel.fromJson(event.snapshot.key, event.snapshot.value["updatedAt"],event.snapshot.value["type"]);
+      var model = NotificationModel.fromJson(event.snapshot.key,
+          event.snapshot.value["updatedAt"], event.snapshot.value["type"]);
       //update notification list
       _notificationList
           .firstWhere((x) => x.tweetKey == model.tweetKey)
@@ -143,15 +153,17 @@ class NotificationState extends AppState {
   /// Trigger when someone undo his like on tweet
   void _onNotificationRemoved(Event event) {
     if (event.snapshot.value != null) {
-      var model = NotificationModel.fromJson(event.snapshot.key, event.snapshot.value["updatedAt"],event.snapshot.value["type"]);
+      var model = NotificationModel.fromJson(event.snapshot.key,
+          event.snapshot.value["updatedAt"], event.snapshot.value["type"]);
       // remove notification from list
       _notificationList.removeWhere((x) => x.tweetKey == model.tweetKey);
       notifyListeners();
       print("Notification Removed");
     }
   }
+
   /// Configure notification services
-  void initfirebaseService(){
+  void initfirebaseService() {
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         // print("onMessage: $message");
@@ -159,30 +171,28 @@ class NotificationState extends AppState {
         notifyListeners();
       },
       onLaunch: (Map<String, dynamic> message) async {
-        cprint("Notification ",event: "onLaunch");
+        cprint("Notification ", event: "onLaunch");
         var data = message['data'];
         // print(message['data']);
         notificationSenderId = data["senderId"];
         notificationReciverId = data["receiverId"];
         notificationReciverId = data["receiverId"];
-         if(data["type"] == "NotificationType.Mention"){
+        if (data["type"] == "NotificationType.Mention") {
           setNotificationType = NotificationType.Mention;
-        }
-        else if(data["type"] == "NotificationType.Message"){
+        } else if (data["type"] == "NotificationType.Message") {
           setNotificationType = NotificationType.Message;
         }
         notifyListeners();
       },
       onResume: (Map<String, dynamic> message) async {
-        cprint("Notification ",event: "onResume");
+        cprint("Notification ", event: "onResume");
         var data = message['data'];
         // print(message['data']);
         notificationSenderId = data["senderId"];
         notificationReciverId = data["receiverId"];
-         if(data["type"] == "NotificationType.Mention"){
+        if (data["type"] == "NotificationType.Mention") {
           setNotificationType = NotificationType.Mention;
-        }
-        else if(data["type"] == "NotificationType.Message"){
+        } else if (data["type"] == "NotificationType.Message") {
           setNotificationType = NotificationType.Message;
         }
         notifyListeners();
@@ -201,5 +211,4 @@ class NotificationState extends AppState {
       print(token);
     });
   }
-
 }

@@ -72,10 +72,13 @@ class FeedModel {
     }
     if (map["likeList"] != null) {
       likeList = List<String>();
-      map['likeList'].forEach((value) {
-        likeList.add(value);
-      });
-      likeCount = likeList.length;
+      final list = map['likeList'];
+      if (list is List) {
+        map['likeList'].forEach((value) {
+          likeList.add(value);
+        });
+        likeCount = likeList.length;
+      }
     } else {
       likeList = [];
       likeCount = 0;
