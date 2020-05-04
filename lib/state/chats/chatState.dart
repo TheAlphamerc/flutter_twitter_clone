@@ -11,7 +11,7 @@ import 'package:flutter_twitter_clone/state/appState.dart';
 
 class ChatState extends AppState {
   bool setIsChatScreenOpen;
-  final FirebaseDatabase _database = FirebaseDatabase.instance;
+  // final FirebaseDatabase _database = FirebaseDatabase.instance;
 
   List<ChatMessage> _messageList;
   List<ChatMessage> _chatUserList;
@@ -53,21 +53,21 @@ class ChatState extends AppState {
     if (_channelName == null) {
       getChannelName(userId, myId);
     }
-    _database
-        .reference()
+    kDatabase
         .child("chatUsers")
         .child(myId)
         .onChildAdded
         .listen(_onChatUserAdded);
     if (messageQuery == null || _channelName != getChannelName(userId, myId)) {
-      messageQuery = _database.reference().child("chats").child(_channelName);
+      messageQuery = kDatabase.child("chats").child(_channelName);
       messageQuery.onChildAdded.listen(_onMessageAdded);
       messageQuery.onChildChanged.listen(_onMessageChanged);
     }
   }
 
+  /// Fecth FCM server key from firebase Remote config
   /// FCM server key is stored in firebase remote config
-  /// you have to save server key in firebase remote config
+  /// you have to add server key in firebase remote config
   /// To fetch this key go to project setting in firebase
   /// Click on `cloud messaging` tab
   /// Copy server key from `Project credentials`
@@ -77,7 +77,8 @@ class ChatState extends AppState {
   ///  {
   ///    "key": "FCM server key here"
   ///  } ```
-  /// For more detail visit:- https://pub.dev/packages/firebase_remote_config#-readme-tab-
+  /// For more detail visit:- https://github.com/TheAlphamerc/flutter_twitter_clone/issues/28#issue-611695533
+  /// For package detail check:-  https://pub.dev/packages/firebase_remote_config#-readme-tab-
   void getFCMServerKey() async {
     final RemoteConfig remoteConfig = await RemoteConfig.instance;
     await remoteConfig.fetch(expiration: const Duration(hours: 5));
@@ -88,10 +89,10 @@ class ChatState extends AppState {
     }
   }
 
+  /// Fetch users list to who have ever engaged in chat message with logged-in user
   void getUserchatList(String userId) {
     try {
-      final databaseReference = FirebaseDatabase.instance.reference();
-      databaseReference
+      kDatabase
           .child('chatUsers')
           .child(userId)
           .once()
@@ -116,10 +117,12 @@ class ChatState extends AppState {
     }
   }
 
+  /// Fetch chat  all chat messages
+  /// `_channelName` is used as primary key for chat message table
+  /// `_channelName` is created from  by combining first 5 letters from user ids of two users
   void getchatDetailAsync() async {
     try {
-      final databaseReference = FirebaseDatabase.instance.reference();
-      databaseReference
+      kDatabase
           .child('chats')
           .child(_channelName)
           .once()
@@ -148,26 +151,19 @@ class ChatState extends AppState {
     print(chatUser.userId);
     try {
       // if (_messageList == null || _messageList.length < 1) {
-      _database
-          .reference()
+      kDatabase
           .child('chatUsers')
           .child(message.senderId)
           .child(message.receiverId)
           .set(message.toJson());
 
-      _database
-          .reference()
+      kDatabase
           .child('chatUsers')
           .child(chatUser.userId)
           .child(message.senderId)
           .set(message.toJson());
-      // }
-      _database
-          .reference()
-          .child('chats')
-          .child(_channelName)
-          .push()
-          .set(message.toJson());
+
+      kDatabase.child('chats').child(_channelName).push().set(message.toJson());
       sendAndRetrieveMessage(message);
       logEvent('send_message');
     } catch (error) {
@@ -256,6 +252,9 @@ class ChatState extends AppState {
       _messageList = null;
       notifyListeners();
     }
+    /// [Warning] do not call super.dispose() from this method
+    /// If this method called here it will dipose chat state data 
+    // super.dispose();
   }
 
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging();

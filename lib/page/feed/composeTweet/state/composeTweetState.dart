@@ -24,6 +24,9 @@ class ComposeTweetState extends ChangeNotifier {
   }
 
   /// Display/Hide userlist on the basis of username availability in description
+  /// To display userlist in compose screen two condion is required
+  /// First is value of `status` should be true
+  /// Second value of  `hideUserList` should be false
   bool get displayUserList {
     RegExp regExp = new RegExp(usernameRegex);
     var status = regExp.hasMatch(description);
@@ -34,12 +37,18 @@ class ComposeTweetState extends ChangeNotifier {
     }
   }
 
-  /// Hide userlist when a username is selected from userlist
+  /// Hide userlist when a  user select a username from userlist
   void onUserSelected() {
     hideUserList = true;
     notifyListeners();
   }
 
+  /// This method will trigger every time when user writes tweet description.
+  /// `hideUserList` is set to false to reset user list show flag.
+  /// If description is not empty and its lenth is lesser then 280 characters
+  /// then value of `enableSubmitButton` is set to true.
+  ///
+  /// `enableSubmitButton` is responsible to enable/disable tweet submit button
   void onDescriptionChanged(String text, SearchState searchState) {
     description = text;
     hideUserList = false;
@@ -54,7 +63,7 @@ class ComposeTweetState extends ChangeNotifier {
     enableSubmitButton = true;
     var last = text.substring(text.length - 1, text.length);
 
-    /// Regex to search last username from description
+    /// Regex to search last username available from description
     /// Ex. `Hello @john do you know @ricky`
     /// In above description reegex is serch for last username ie. `@ricky`.
 
@@ -88,8 +97,25 @@ class ComposeTweetState extends ChangeNotifier {
     return description;
   }
 
-  /// Fecth FCM server key from firebase Remote config
+  /// Fetch FCM server key from firebase Remote config
+  /// FCM server key is stored in firebase remote config
+  /// you have to add server key in firebase remote config
+  /// To fetch this key go to project setting in firebase
+  /// Click on `cloud messaging` tab
+  /// Copy server key from `Project credentials`
+  /// Now goto `Remote Congig` section in fireabse
+  /// Add [FcmServerKey]  as paramerter key and below json in Default vslue
+  ///  ``` json
+  ///  {
+  ///    "key": "FCM server key here"
+  ///  } ```
+  /// For more detail visit:- https://github.com/TheAlphamerc/flutter_twitter_clone/issues/28#issue-611695533
+  /// For package detail check:-  https://pub.dev/packages/firebase_remote_config#-readme-tab-
   Future<Null> getFCMServerKey() async {
+    /// If FCM server key is already fetched then no need to fetch it again.
+    if(serverToken != null && serverToken.isNotEmpty){
+      return Future.value(null);
+    }
     final RemoteConfig remoteConfig = await RemoteConfig.instance;
     await remoteConfig.fetch(expiration: const Duration(hours: 5));
     await remoteConfig.activateFetched();
@@ -98,16 +124,17 @@ class ComposeTweetState extends ChangeNotifier {
       serverToken = jsonDecode(data)["key"];
     }
   }
-
+   /// Fecth FCM server key from firebase Remote config
+  /// send notification to user once fcmToken is retrieved from firebase
   Future<void> sendNotification(FeedModel model, SearchState state) async {
     final usernameRegex = r"(@\w*[a-zA-Z1-9])";
     RegExp regExp = new RegExp(usernameRegex);
     var status = regExp.hasMatch(description);
+    /// Check if username is availeble in description or not
     if (status) {
-      /// Fecth FCM server key from firebase Remote config
-      /// send notification to user once fcmToken is retrieved from firebase
+      /// Get FCM server key from firebase remote config
       getFCMServerKey().then((val) async {
-        /// Reset userlist
+        /// Reset userlist 
         state.filterByUsername("");
 
         /// Search all username from description
