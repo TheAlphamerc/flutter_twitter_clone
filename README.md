@@ -19,7 +19,6 @@ A working Twitter clone written in Flutter using Firebase auth,realtime database
 * [intl](https://pub.dev/packages/intl)
 * [uuid](https://pub.dev/packages/uuid)
 * [http](https://pub.dev/packages/http)
-* [async](https://pub.dev/packages/async)
 * [share](https://pub.dev/packages/share)
 * [provider](https://pub.dev/packages/provider)
 * [url_launcher](https://pub.dev/packages/url_launcher)
@@ -30,7 +29,6 @@ A working Twitter clone written in Flutter using Firebase auth,realtime database
 * [firebase_analytics](https://pub.dev/packages/firebase_analytics)
 * [firebase_database](https://pub.dev/packages/firebase_database)
 * [shared_preferences](https://pub.dev/packages/shared_preferences)
-* [flutter_native_splash](https://pub.dev/packages/flutter_native_splash)
 * [flutter_advanced_networkimage](https://pub.dev/packages/flutter_advanced_networkimage)
      
 </details>
@@ -157,7 +155,6 @@ keytool -exportcert -list -v \
 |   |-- main.dart
 |   |-- model
 |   |   |-- chatModel.dart
-|   |   |-- commentModel.dart
 |   |   |-- feedModel.dart
 |   |   |-- notificationModel.dart
 |   |   '-- user.dart
@@ -167,7 +164,9 @@ keytool -exportcert -list -v \
 |   |   |   |-- selectAuthMethod.dart
 |   |   |   |-- signin.dart
 |   |   |   |-- signup.dart
-|   |   |   '-- verifyEmail.dart
+|   |   |   |-- verifyEmail.dart
+|   |   |   '-- widget
+|   |   |       '-- googleLoginButton.dart
 |   |   |-- common
 |   |   |   |-- sidebar.dart
 |   |   |   |-- splash.dart
@@ -177,7 +176,8 @@ keytool -exportcert -list -v \
 |   |   |-- feed
 |   |   |   |-- composeTweet
 |   |   |   |   |-- composeTweet.dart
-|   |   |   |   |-- createFeed.dart
+|   |   |   |   |-- state
+|   |   |   |   |   '-- composeTweetState.dart
 |   |   |   |   '-- widget
 |   |   |   |       |-- composeBottomIconWidget.dart
 |   |   |   |       |-- composeTweetImage.dart
@@ -199,7 +199,10 @@ keytool -exportcert -list -v \
 |   |   |   |-- follow
 |   |   |   |   |-- followerListPage.dart
 |   |   |   |   '-- followingListPage.dart
-|   |   |   '-- profilePage.dart
+|   |   |   |-- profileImageView.dart
+|   |   |   |-- profilePage.dart
+|   |   |   '-- widgets
+|   |   |       '-- tabPainter.dart
 |   |   |-- search
 |   |   |   '-- SearchPage.dart
 |   |   '-- settings
