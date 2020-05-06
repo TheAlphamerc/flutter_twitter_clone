@@ -84,8 +84,11 @@ class ChatState extends AppState {
     await remoteConfig.fetch(expiration: const Duration(hours: 5));
     await remoteConfig.activateFetched();
     var data = remoteConfig.getString('FcmServerKey');
-    if (data != null) {
+    if (data != null && data.isNotEmpty) {
       serverToken = jsonDecode(data)["key"];
+    }
+    else{
+      cprint("Please configure Remote config in firebase", errorIn: "getFCMServerKey");
     }
   }
 
