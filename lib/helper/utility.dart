@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
@@ -13,6 +14,7 @@ import 'dart:developer' as developer;
 
 final kAnalytics = FirebaseAnalytics();
 final DatabaseReference kDatabase = FirebaseDatabase.instance.reference();
+final Firestore kfirestore = Firestore.instance;
 final kScreenloader = CustomLoader();
 
 String getPostTime2(String date) {
@@ -122,13 +124,9 @@ launchURL(String url) async {
   }
 }
 
-void cprint(dynamic data, {String errorIn, String event}) {
+void cprint(dynamic data, {String errorIn, String event, String warningIn}) {
   if (errorIn != null) {
-    print(
-        '****************************** error ******************************');
     developer.log('[Error]', time: DateTime.now(), error:data, name:errorIn);
-    print(
-        '****************************** error ******************************');
   } else if (data != null) {
      developer.log(data, time: DateTime.now(), );
   }

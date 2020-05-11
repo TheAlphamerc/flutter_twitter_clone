@@ -1,8 +1,6 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
-import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:provider/provider.dart';
@@ -33,34 +31,38 @@ class _EditProfilePageState extends State<EditProfilePage> {
     _dob.text = getdob(state?.userModel?.dob);
     super.initState();
   }
-  void dispose() { 
+
+  void dispose() {
     _name.dispose();
     _bio.dispose();
     _location.dispose();
     _dob.dispose();
     super.dispose();
   }
+
   Widget _body() {
-    var authstate = Provider.of<AuthState>(context);
+    var authstate = Provider.of<AuthState>(context, listen: false);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Container(
-            height: 180,
-            child: Stack(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(top: 0),
-                  child: customNetworkImage(
-                      'https://pbs.twimg.com/profile_banners/457684585/1510495215/1500x500',
-                      fit: BoxFit.fill),
-                ),
-                Align(
-                  alignment: Alignment.bottomLeft,
-                  child: _userImage(authstate),
-                ),
-              ],
-            )),
+          height: 180,
+          child: Stack(
+            children: <Widget>[
+              Container(
+                    height: 180,
+                    padding: EdgeInsets.only(bottom: 50),
+                child: customNetworkImage(
+                    'https://pbs.twimg.com/profile_banners/457684585/1510495215/1500x500',
+                    fit: BoxFit.fill),
+              ),
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: _userImage(authstate),
+              ),
+            ],
+          ),
+        ),
         _entry('Name', controller: _name),
         _entry('Bio', controller: _bio, maxLine: null),
         _entry('Location', controller: _location),

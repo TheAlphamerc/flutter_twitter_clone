@@ -5,7 +5,7 @@ import 'package:flutter_twitter_clone/page/feed/feedPage.dart';
 import 'package:flutter_twitter_clone/page/message/chatListPage.dart';
 import 'package:flutter_twitter_clone/state/appState.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
-import 'package:flutter_twitter_clone/state/chats/chatState.dart';
+import 'package:flutter_twitter_clone/state/chats/chatUserState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/state/notificationState.dart';
 import 'package:flutter_twitter_clone/state/searchState.dart';
@@ -59,11 +59,12 @@ class _HomePageState extends State<HomePage> {
     var state = Provider.of<NotificationState>(context, listen: false);
     var authstate = Provider.of<AuthState>(context, listen: false);
     state.databaseInit(authstate.userId);
+    state.getDataFromDatabase(authstate.userId);
     state.initfirebaseService();
   }
 
   void initChat() {
-    final chatState = Provider.of<ChatState>(context, listen: false);
+    final chatState = Provider.of<ChatUserState>(context, listen: false);
     final state = Provider.of<AuthState>(context, listen: false);
     chatState.databaseInit(state.userId, state.userId);
     /// It will update fcm token in database 
@@ -94,7 +95,7 @@ class _HomePageState extends State<HomePage> {
         state.setNotificationType = null;
         state.getuserDetail(state.notificationSenderId).then((user) {
           cprint("Opening user chat screen");
-          final chatState = Provider.of<ChatState>(context, listen: false);
+          final chatState = Provider.of<ChatUserState>(context, listen: false);
           chatState.setChatUser = user;
           Navigator.pushNamed(context, '/ChatScreenPage');
         });

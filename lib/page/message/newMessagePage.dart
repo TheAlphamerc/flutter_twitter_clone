@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
-import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
-import 'package:flutter_twitter_clone/state/chats/chatState.dart';
+import 'package:flutter_twitter_clone/state/chats/chatUserState.dart';
 import 'package:flutter_twitter_clone/state/searchState.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
-import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 import 'package:provider/provider.dart';
 
@@ -32,7 +30,7 @@ class _NewMessagePageState extends State<NewMessagePage> {
   Widget _userTile(User user) {
     return ListTile(
       onTap: () {
-        final chatState = Provider.of<ChatState>(context, listen: false);
+        final chatState = Provider.of<ChatUserState>(context, listen: false);
         chatState.setChatUser = user;
         Navigator.pushNamed(context, '/ChatScreenPage');
       },

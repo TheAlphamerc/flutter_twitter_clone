@@ -60,3 +60,14 @@ class AppIcon{
   static final int edit = 0xf112;
 
 }
+
+/// Firestore collections
+const String MESSAGES_COLLECTION = "messages";
+const String CHAT_USER_LIST_COLLECTION = "chatUsers";
+const String FOLLOWER_COLLECTION = "followerList";
+const String FOLLOWING_COLLECTION = "followingList";
+const String TWEET_COLLECTION = "tweet";
+const String TWEET_LIKE_COLLECTION = "likeList";
+const String NOTIFICATION_COLLECTION = "notification";
+const String USERS_COLLECTION = "profile";
+const String TIMESTAMP_FIELD = "timestamp";

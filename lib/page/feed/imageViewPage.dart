@@ -43,7 +43,8 @@ class _ImageViewPgeState extends State<ImageViewPge> {
                   isToolAvailable = !isToolAvailable;
                 });
               },
-              child: _imageFeed(state.tweetDetailModel.last.imagePath),
+              child: 
+                  _imageFeed(state.tweetToReplyModel.imagePath),
             ),
           ),
         ),
@@ -77,7 +78,7 @@ class _ImageViewPgeState extends State<ImageViewPge> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
                       TweetIconsRow(
-                        model: state.tweetDetailModel.last,
+                        model: state.tweetToReplyModel,
                         iconColor: Theme.of(context).colorScheme.onPrimary,
                         iconEnableColor:
                             Theme.of(context).colorScheme.onPrimary,
@@ -149,9 +150,9 @@ class _ImageViewPgeState extends State<ImageViewPge> {
   }
 
   void addLikeToTweet() {
-    var state = Provider.of<FeedState>(context,listen: false);
-    var authState = Provider.of<AuthState>(context,listen: false);
-    state.addLikeToTweet(state.tweetDetailModel.last, authState.userId);
+    var state = Provider.of<FeedState>(context, listen: false);
+    var authState = Provider.of<AuthState>(context, listen: false);
+    state.addLikeToTweet(state.tweetToReplyModel, authState.userId);
   }
 
   void _submitButton() {
@@ -162,8 +163,8 @@ class _ImageViewPgeState extends State<ImageViewPge> {
     if (_textEditingController.text.length > 280) {
       return;
     }
-    var state = Provider.of<FeedState>(context,listen: false);
-    var authState = Provider.of<AuthState>(context,listen: false);
+    var state = Provider.of<FeedState>(context, listen: false);
+    var authState = Provider.of<AuthState>(context, listen: false);
     var user = authState.userModel;
     var profilePic = user.profilePic;
     if (profilePic == null) {
@@ -181,7 +182,7 @@ class _ImageViewPgeState extends State<ImageViewPge> {
         profilePic: pic,
         userId: authState.userId);
 
-    var postId = state.tweetDetailModel.last.key;
+    var postId = state.tweetToReplyModel.key;
 
     FeedModel reply = FeedModel(
       description: _textEditingController.text,

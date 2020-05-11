@@ -13,13 +13,14 @@ import 'package:flutter_twitter_clone/state/appState.dart';
 
 import '../../helper/utility.dart';
 
-class ChatState extends AppState {
-  List<ChatMessage> _messageList;
+class ChatUserState extends AppState {
+  bool setIsChatScreenOpen;
+  // final FirebaseDatabase _database = FirebaseDatabase.instance;
+
+  List<ChatMessage> _chatUserList;
   User _chatUser;
   String serverToken = "<FCM SERVER KEY>";
-  StreamSubscription<QuerySnapshot> _messageSubscription;
-  static final CollectionReference _messageCollection =
-      kfirestore.collection(MESSAGES_COLLECTION);
+  StreamSubscription<QuerySnapshot> _userListSubscription;
 
   static final CollectionReference _userCollection =
       kfirestore.collection(USERS_COLLECTION);
@@ -33,40 +34,37 @@ class ChatState extends AppState {
   String _channelName;
   // Query messageQuery;
 
-  List<ChatMessage> get messageList {
-    if (_messageList == null) {
+  List<ChatMessage> get chatUserList {
+    if (_chatUserList == null) {
       return null;
     } else {
-      _messageList.sort((x, y) => DateTime.parse(x.createdAt)
-          .toLocal()
-          .compareTo(DateTime.parse(y.createdAt).toLocal()));
-      _messageList.reversed;
-      _messageList = _messageList.reversed.toList();
-      return List.from(_messageList);
+      return List.from(_chatUserList);
     }
   }
 
   void databaseInit(String userId, String myId) async {
-    _messageList = null;
+    if (_channelName == null) {
+      getChannelName(userId, myId);
+    }
+    // getChannelName(userId, myId);
 
-    getChannelName(userId, myId);
-
-    _messageSubscription = _messageCollection
-        .document(_channelName)
-        .collection(MESSAGES_COLLECTION)
+    _userListSubscription = _userCollection
+        .document(userId)
+        .collection(CHAT_USER_LIST_COLLECTION)
         .snapshots()
         .listen((QuerySnapshot snapshot) {
       if (snapshot.documentChanges.isEmpty) {
         return;
       }
       if (snapshot.documentChanges.first.type == DocumentChangeType.added) {
-        _onMessageAdded(snapshot.documentChanges.first.document);
-      } else if (snapshot.documentChanges.first.type ==
-          DocumentChangeType.removed) {
-        // _onNotificationRemoved(snapshot.documentChanges.first.document);
-      } else if (snapshot.documentChanges.first.type ==
+        _onChatUserAdded(snapshot.documentChanges.first.document);
+      }
+      // else if (snapshot.documentChanges.first.type ==
+      //     DocumentChangeType.removed) {
+      //   // _onNotificationRemoved(snapshot.documentChanges.first.document);
+      else if (snapshot.documentChanges.first.type ==
           DocumentChangeType.modified) {
-        _onMessageChanged(snapshot.documentChanges.first.document);
+        _onChatUserUpdated(snapshot.documentChanges.first.document);
       }
     });
   }
@@ -92,58 +90,57 @@ class ChatState extends AppState {
     var data = remoteConfig.getString('FcmServerKey');
     if (data != null && data.isNotEmpty) {
       serverToken = jsonDecode(data)["key"];
-    }
-    else{
-      cprint("Please configure Remote config in firebase", errorIn: "getFCMServerKey");
+    } else {
+      cprint("Please configure Remote config in firebase",
+          errorIn: "getFCMServerKey");
     }
   }
 
-  /// Fetch chat  all chat messages
-  /// `_channelName` is used as primary key for chat message table
-  /// `_channelName` is created from  by combining first 5 letters from user ids of two users
-  void getchatDetailAsync() async {
+  /// Fetch users list to who have ever engaged in chat message with logged-in user
+  void getUserchatList(String userId) async {
     try {
-      // _messageList.clear();
-      if (_messageList == null) {
-        _messageList = [];
-      }
-      _messageCollection
-          .document(_channelName)
-          .collection(MESSAGES_COLLECTION)
+      // _userListCollection.document(userId).get()
+      _chatUserList = List<ChatMessage>();
+
+      await _userCollection
+          .document(userId)
+          .collection(CHAT_USER_LIST_COLLECTION)
           .getDocuments()
           .then((QuerySnapshot querySnapshot) {
         if (querySnapshot != null && querySnapshot.documents.isNotEmpty) {
           for (var i = 0; i < querySnapshot.documents.length; i++) {
-            final model = ChatMessage.fromJson(querySnapshot.documents[i].data);
+            final model = ChatMessage.fromJson(
+                querySnapshot.documents[i].data["lastMessage"]);
             model.key = querySnapshot.documents[i].documentID;
-            _messageList.add(model);
+            _chatUserList.add(model);
           }
           // _userlist.addAll(_userFilterlist);
           // _userFilterlist.sort((x, y) => y.followers.compareTo(x.followers));
-          notifyListeners();
         } else {
-          _messageList = null;
+          _chatUserList = null;
         }
       });
+
       // kDatabase
-      //     .child('chats')
-      //     .child(_channelName)
+      //     .child('chatUsers')
+      //     .child(userId)
       //     .once()
       //     .then((DataSnapshot snapshot) {
-      //   _messageList = List<ChatMessage>();
+      //   _chatUserList = List<ChatMessage>();
       //   if (snapshot.value != null) {
       //     var map = snapshot.value;
       //     if (map != null) {
       //       map.forEach((key, value) {
       //         var model = ChatMessage.fromJson(value);
       //         model.key = key;
-      //         _messageList.add(model);
+      //         _chatUserList.add(model);
       //       });
       //     }
       //   } else {
-      //     _messageList = null;
-      //   }
+      //     _chatUserList = null;
+      // //   }
       // });
+      notifyListeners();
     } catch (error) {
       cprint(error);
     }
@@ -152,29 +149,46 @@ class ChatState extends AppState {
   void onMessageSubmitted(ChatMessage message, {User myUser, User secondUser}) {
     print(chatUser.userId);
     try {
-      if (message.message != null &&
-          message.message.length > 0 &&
-          message.message.length < 400) {
-        _userCollection
-            .document(message.senderId)
-            .collection(CHAT_USER_LIST_COLLECTION)
-            .document(message.receiverId)
-            .setData({"lastMessage": message.toJson()});
-        _userCollection
-            .document(message.receiverId)
-            .collection(CHAT_USER_LIST_COLLECTION)
-            .document(message.senderId)
-            .setData({"lastMessage": message.toJson()});
+      // if (_messageList == null || _messageList.length < 1) {
+      // kfirestore.document(message.senderId).setData({"receiver":message.receiverId, "lastMessage":message.toJson()});
+      // _userListCollection.document(message.senderId).setData({
+      //   "users": FieldValue.arrayUnion([message.receiverId]),
+      //   "lastMessage": message.toJson()
+      // });
+      // _userListCollection.document(chatUser.userId).setData({
+      //   "users": FieldValue.arrayUnion([message.senderId]),
+      //   "lastMessage": message.toJson()
+      // });
+      _userCollection
+          .document(message.senderId)
+          .collection(CHAT_USER_LIST_COLLECTION)
+          .document(message.receiverId)
+          .setData({"lastMessage": message.toJson()});
+      _userCollection
+          .document(message.receiverId)
+          .collection(CHAT_USER_LIST_COLLECTION)
+          .document(message.senderId)
+          .setData({"lastMessage": message.toJson()});
+      // kDatabase
+      //     .child('chatUsers')
+      //     .child(message.senderId)
+      //     .child(message.receiverId)
+      //     .set(message.toJson());
 
-        kfirestore
-            .collection(MESSAGES_COLLECTION)
-            .document(_channelName)
-            .collection(MESSAGES_COLLECTION)
-            .document()
-            .setData(message.toJson());
-        // sendAndRetrieveMessage(message);
-        logEvent('send_message');
-      }
+      // kDatabase
+      //     .child('chatUsers')
+      //     .child(chatUser.userId)
+      //     .child(message.senderId)
+      //     .set(message.toJson());
+      kfirestore
+          .collection(MESSAGES_COLLECTION)
+          .document(_channelName)
+          .collection(MESSAGES_COLLECTION)
+          .document()
+          .setData(message.toJson());
+      // kDatabase.child('chats').child(_channelName).push().set(message.toJson());
+      // sendAndRetrieveMessage(message);
+      logEvent('send_message');
     } catch (error) {
       cprint(error);
     }
@@ -188,69 +202,6 @@ class ChatState extends AppState {
     _channelName = '${list[0]}-${list[1]}';
     // cprint(_channelName); //2RhfE-5kyFB
     return _channelName;
-  }
-
-  void _onMessageAdded(DocumentSnapshot snapshot) {
-    if (_messageList == null) {
-      _messageList = List<ChatMessage>();
-    }
-    if (snapshot.data != null) {
-      var map = snapshot.data;
-      if (map != null) {
-        var model = ChatMessage.fromJson(map);
-        model.key = snapshot.documentID;
-        if (_messageList.length > 0 &&
-            _messageList.any((x) => x.key == model.key)) {
-          return;
-        }
-        _messageList.add(model);
-      }
-    } else {
-      _messageList = null;
-    }
-    notifyListeners();
-  }
-
-  void _onMessageChanged(DocumentSnapshot snapshot) {
-    if (_messageList == null) {
-      _messageList = List<ChatMessage>();
-    }
-    if (snapshot.data != null) {
-      var map = snapshot.data;
-      if (map != null) {
-        var model = ChatMessage.fromJson(map);
-        model.key = snapshot.documentID;
-        if (_messageList.length > 0 &&
-            _messageList.any((x) => x.key == model.key)) {
-          return;
-        }
-        _messageList.add(model);
-      }
-    } else {
-      _messageList = null;
-    }
-    notifyListeners();
-  }
-
-  void onChatScreenClosed() {
-    if (_messageSubscription != null) {
-      _messageSubscription.cancel();
-    }
-    // if (_chatUserList != null && _chatUserList.isNotEmpty) {
-    //   var user = _chatUserList.firstWhere((x) => x.key == chatUser.userId);
-    //   if (_messageList != null) {
-    //     user.message = _messageList.first.message;
-    //     user.createdAt = _messageList.first.createdAt; //;
-    //     _messageList = null;
-    //     notifyListeners();
-    //   }
-    // }
-  }
-
-  @override
-  void dispose() {
-    _messageSubscription.cancel();
-    super.dispose();
   }
 
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
@@ -291,5 +242,48 @@ class ChatState extends AppState {
         },
         body: body);
     print(response.body.toString());
+  }
+
+  void _onChatUserUpdated(DocumentSnapshot snapshot) {
+    if (_chatUserList == null) {
+      _chatUserList = List<ChatMessage>();
+    }
+    if (snapshot.data != null) {
+      var map = snapshot.data;
+      if (map != null) {
+        var model = ChatMessage.fromJson(map["lastMessage"]);
+        model.key = snapshot.documentID;
+        if (_chatUserList.length > 0 &&
+            _chatUserList.any((x) => x.key == model.key)) {
+          final index = _chatUserList.indexWhere((x) => x.key == model.key);
+          _chatUserList[index] = model;
+          cprint("chat user updated1" + model.message);
+          notifyListeners();
+
+        }
+      }
+    } 
+  }
+
+  void _onChatUserAdded(DocumentSnapshot snapshot) {
+    if (_chatUserList == null) {
+      _chatUserList = List<ChatMessage>();
+    }
+    if (snapshot.data != null) {
+      var map = snapshot.data;
+      if (map != null) {
+        var model = ChatMessage.fromJson(map);
+        model.key = snapshot.documentID;
+        if (_chatUserList.length > 0 &&
+            _chatUserList.any((x) => x.key == model.key)) {
+          return;
+        }
+        _chatUserList.add(model);
+        cprint("New chat user added");
+      }
+    } else {
+      _chatUserList = null;
+    }
+    notifyListeners();
   }
 }

@@ -6,6 +6,7 @@ import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/chats/chatState.dart';
+import 'package:flutter_twitter_clone/state/chats/chatUserState.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
 import 'package:provider/provider.dart';
@@ -36,9 +37,10 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
   void initState() {
     _scaffoldKey = GlobalKey<ScaffoldState>();
     _controller = ScrollController();
+    final chatUserState = Provider.of<ChatUserState>(context, listen: false);
     final chatState = Provider.of<ChatState>(context, listen: false);
     final state = Provider.of<AuthState>(context, listen: false);
-    chatState.setIsChatScreenOpen = true;
+    chatState.setChatUser = chatUserState.chatUser;
     senderId = state.userId;
     chatState.databaseInit(chatState.chatUser.userId, state.userId);
     chatState.getchatDetailAsync();
@@ -208,15 +210,8 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
     );
   }
 
-  Future<bool> _onWillPop() async {
-    // final chatState = Provider.of<ChatState>(context,listen: false);
-    state.setIsChatScreenOpen = false;
-    state.dispose();
-    return true;
-  }
-
   void submitMessage() {
-    // var state = Provider.of<ChatState>(context, listen: false);
+    // var state = Provider.of<ChatUserState>(context, listen: false);
     var authstate = Provider.of<AuthState>(context, listen: false);
     ChatMessage message;
     message = ChatMessage(
@@ -246,7 +241,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
       messageController.clear();
     });
     try {
-      // final state = Provider.of<ChatState>(context,listen: false);
+      // final state = Provider.of<ChatUserState>(context,listen: false);
       if (state.messageList != null &&
           state.messageList.length > 1 &&
           _controller.offset > 0) {
@@ -261,55 +256,51 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
     }
   }
 
-  
   @override
   Widget build(BuildContext context) {
     state = Provider.of<ChatState>(context, listen: false);
     userImage = state.chatUser.profilePic;
-    return WillPopScope(
-      onWillPop: _onWillPop,
-      child: Scaffold(
-        key: _scaffoldKey,
-        appBar: AppBar(
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              UrlText(
-                text: state.chatUser.displayName,
-                style: TextStyle(
-                    color: Colors.black87,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
-              ),
-              Text(
-                state.chatUser.userName,
-                style: TextStyle(color: AppColor.darkGrey, fontSize: 15),
-              )
-            ],
-          ),
-          iconTheme: IconThemeData(color: Colors.blue),
-          backgroundColor: Colors.white,
-          actions: <Widget>[
-            IconButton(
-                icon: Icon(Icons.info, color: AppColor.primary),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/ConversationInformation');
-                })
+    return Scaffold(
+      key: _scaffoldKey,
+      appBar: AppBar(
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            UrlText(
+              text: state.chatUser.displayName,
+              style: TextStyle(
+                  color: Colors.black87,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
+            ),
+            Text(
+              state.chatUser.userName,
+              style: TextStyle(color: AppColor.darkGrey, fontSize: 15),
+            )
           ],
         ),
-        body: SafeArea(
-          child: Stack(
-            children: <Widget>[
-              Align(
-                alignment: Alignment.topRight,
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: 50),
-                  child: _chatScreenBody(),
-                ),
+        iconTheme: IconThemeData(color: Colors.blue),
+        backgroundColor: Colors.white,
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(Icons.info, color: AppColor.primary),
+              onPressed: () {
+                Navigator.pushNamed(context, '/ConversationInformation');
+              })
+        ],
+      ),
+      body: SafeArea(
+        child: Stack(
+          children: <Widget>[
+            Align(
+              alignment: Alignment.topRight,
+              child: Padding(
+                padding: EdgeInsets.only(bottom: 50),
+                child: _chatScreenBody(),
               ),
-              _bottomEntryField()
-            ],
-          ),
+            ),
+            _bottomEntryField()
+          ],
         ),
       ),
     );

@@ -1,11 +1,10 @@
 
   import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_advanced_networkimage/provider.dart';
-import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:image_picker/image_picker.dart';
@@ -133,22 +132,31 @@ SizedBox sizedBox({double height = 5, String title}){
     );
   }
 Widget customNetworkImage(String path,{BoxFit fit = BoxFit.contain}){
-  return Image(
-    image: customAdvanceNetworkImage(path),
-    fit: fit);
+  return CachedNetworkImage(
+    fit: fit,
+    imageUrl: path ?? dummyProfilePic,
+    imageBuilder: (context, imageProvider) => Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+            image: imageProvider,
+            fit: fit,
+           ),
+      ),
+    ),
+    placeholderFadeInDuration: Duration(milliseconds: 500),
+    placeholder: (context, url) => Container(
+      color: Color(0xffeeeeee),
+    ),
+    errorWidget: (context, url, error) => Icon(Icons.error),
+  );
 }
 dynamic customAdvanceNetworkImage(String path){
-  return AdvancedNetworkImage(
-     path ?? dummyProfilePic,
-     useDiskCache: true,
-     printError: true,
-    //  fallbackAssetImage: 'assets/images/userIcon.png',
-     loadFailedCallback: (){
-       cprint(' Image load failed' + path);
-     },
-     cacheRule: CacheRule(
-     maxAge: const Duration(days: 7)
-  ),);
+if(path == null){
+    path = dummyProfilePic;
+  }
+  return CachedNetworkImageProvider(
+    path ?? dummyProfilePic,
+  );
 }
 void showAlert(BuildContext context,{@required Function onPressedOk,@required String title,String okText = 'OK', String cancelText = 'Cancel'}) async{
    showDialog(

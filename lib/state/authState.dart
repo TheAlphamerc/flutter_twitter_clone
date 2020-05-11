@@ -1,7 +1,7 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +12,8 @@ import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:path/path.dart' as Path;
+import '../helper/constant.dart';
+import '../helper/utility.dart';
 import 'appState.dart';
 import 'package:firebase_database/firebase_database.dart' as dabase;
 
@@ -36,6 +38,9 @@ class AuthState extends AppState {
       return null;
     }
   }
+
+  static final CollectionReference _userCollection =
+      kfirestore.collection(USERS_COLLECTION);
 
   void removeLastUser() {
     _profileUserModelList.removeLast();
@@ -63,11 +68,13 @@ class AuthState extends AppState {
     notifyListeners();
   }
 
+  Stream<DocumentSnapshot> callStream({String uid}) =>
+      _userCollection.document(uid).snapshots();
+
   databaseInit() {
     try {
       if (_profileQuery == null) {
-        _profileQuery = kDatabase.child("profile").child(user.uid);
-        _profileQuery.onValue.listen(_onProfileChanged);
+        _userCollection.document(user.uid).snapshots().listen(_onProfileChanged);
       }
     } catch (error) {
       cprint(error, errorIn: 'databaseInit');
@@ -141,7 +148,7 @@ class AuthState extends AppState {
   createUserFromGoogleSignIn(FirebaseUser user) {
     var diff = DateTime.now().difference(user.metadata.creationTime);
     // Check if user is new or old
-    // If user is new then add new user to firebase realtime kDatabase
+    // If user is new then add new user to firebase realtime katabase
     if (diff < Duration(seconds: 15)) {
       User model = User(
         bio: 'Edit profile to update bio',
@@ -203,8 +210,10 @@ class AuthState extends AppState {
       // Time at which user is created
       user.createdAt = DateTime.now().toUtc().toString();
     }
-
-    kDatabase.child('profile').child(user.userId).set(user.toJson());
+    kfirestore
+        .collection(USERS_COLLECTION)
+        .document(user.userId)
+        .setData(user.toJson());
     _userModel = user;
     if (_profileUserModelList != null) {
       _profileUserModelList.last = _userModel;
@@ -242,7 +251,7 @@ class AuthState extends AppState {
     if (user.isEmailVerified) {
       userModel.isVerified = true;
       // If user verifed his email
-      // Update user in firebase realtime kDatabase
+      // Update user in firebase realtime database
       createUser(userModel);
       cprint('User email verification complete');
       logEvent('email_verification_complete',
@@ -329,56 +338,47 @@ class AuthState extends AppState {
     }
   }
 
-  /// `Fetch` user `detail` whoose userId is passed
-  Future<User> getuserDetail(String userId) async {
-    User user;
-    var snapshot = await kDatabase.child('profile').child(userId).once();
-    if (snapshot.value != null) {
-      var map = snapshot.value;
-      user = User.fromJson(map);
-      user.key = snapshot.key;
-      return user;
-    } else {
-      return null;
-    }
-  }
-
-  /// Fetch user profile
- /// If `userProfileId` is null then logged in user's profile will fetched
-  getProfileUser({String userProfileId}) {
+  /// Fetch user profile `detail` whoose userId is passed
+  /// If `userProfileId` is null then logged in user's profile will fetched
+  getProfileUser({String userProfileId}) async {
     try {
       loading = true;
       if (_profileUserModelList == null) {
         _profileUserModelList = [];
       }
-      
       userProfileId = userProfileId == null ? user.uid : userProfileId;
-      kDatabase
-          .child("profile")
-          .child(userProfileId)
-          .once()
-          .then((DataSnapshot snapshot) {
-        if (snapshot.value != null) {
-          var map = snapshot.value;
-          if (map != null) {
-            _profileUserModelList.add(User.fromJson(map));
-            if (userProfileId == user.uid) {
-              _userModel = _profileUserModelList.last;
-              _userModel.isVerified = user.isEmailVerified;
-              if (!user.isEmailVerified) {
-                // Check if logged in user verified his email address or not
-                reloadUser();
-              }
-              if (_userModel.fcmToken == null) {
-                updateFCMToken();
-              }
-            }
+      DocumentSnapshot documentSnapshot =
+          await _userCollection.document(userProfileId).get();
 
-            logEvent('get_profile');
+      if (documentSnapshot.data != null) {
+        _profileUserModelList.add(User.fromJson(documentSnapshot.data));
+
+        /// Get follower list
+        final follower = await getfollowersList(userProfileId);
+        _profileUserModelList.last.followersList = follower;
+        _profileUserModelList.last.followers = follower.length;
+
+        /// Get following list
+        final followingUsers = await getfollowingList(userProfileId);
+        _profileUserModelList.last.followingList = followingUsers;
+        _profileUserModelList.last.following = followingUsers.length;
+        if (userProfileId == user.uid) {
+          _userModel = _profileUserModelList.last;
+          _userModel.isVerified = user.isEmailVerified;
+
+          if (!user.isEmailVerified) {
+            // Check if logged in user verified his email address or not
+            reloadUser();
+          }
+          if (_userModel.fcmToken == null) {
+            updateFCMToken();
           }
         }
-        loading = false;
-      });
+
+        logEvent('get_profile');
+      }
+
+      loading = false;
     } catch (error) {
       loading = false;
       cprint(error, errorIn: 'getProfileUser');
@@ -398,6 +398,34 @@ class AuthState extends AppState {
       _userModel.fcmToken = token;
       createUser(_userModel);
     });
+  }
+
+  Future<List<String>> getfollowersList(String userId) async {
+    final List<String> follower = [];
+    QuerySnapshot querySnapshot = await _userCollection
+        .document(userId)
+        .collection(FOLLOWER_COLLECTION)
+        .getDocuments();
+    if (querySnapshot != null && querySnapshot.documents.isNotEmpty) {
+      querySnapshot.documents.first.data["data"].forEach((x) {
+        follower.add(x);
+      });
+    }
+    return follower;
+  }
+
+  Future<List<String>> getfollowingList(String userId) async {
+    final List<String> follower = [];
+    QuerySnapshot querySnapshot = await _userCollection
+        .document(userId)
+        .collection(FOLLOWING_COLLECTION)
+        .getDocuments();
+    if (querySnapshot != null && querySnapshot.documents.isNotEmpty) {
+      querySnapshot.documents.first.data["data"].forEach((x) {
+        follower.add(x);
+      });
+    }
+    return follower;
   }
 
   /// Follow / Unfollow user
@@ -436,16 +464,27 @@ class AuthState extends AppState {
       profileUserModel.followers = profileUserModel.followersList.length;
       // update logged-in user's following count
       userModel.following = userModel.followingList.length;
-      kDatabase
-          .child('profile')
-          .child(profileUserModel.userId)
-          .child('followerList')
-          .set(profileUserModel.followersList);
-      kDatabase
-          .child('profile')
-          .child(userModel.userId)
-          .child('followingList')
-          .set(userModel.followingList);
+
+      try {
+        final updateWithTimestamp = <String, dynamic>{
+          'data': FieldValue.arrayUnion(profileUserModel.followersList)
+        };
+        _userCollection
+            .document(profileUserModel.userId)
+            .collection(FOLLOWER_COLLECTION)
+            .document(FOLLOWER_COLLECTION)
+            .setData(updateWithTimestamp);
+
+        _userCollection
+            .document(userModel.userId)
+            .collection(FOLLOWING_COLLECTION)
+            .document(FOLLOWING_COLLECTION)
+            .setData({"data": FieldValue.arrayUnion(userModel.followingList)});
+      } on PlatformException catch (error) {
+        cprint(error.message, errorIn: "Updateing Follow");
+      } on MissingPluginException catch (error) {
+        cprint(error.message, errorIn: "Missing plugin Follow");
+      }
       cprint('user added to following list', event: 'add_follow');
       notifyListeners();
     } catch (error) {
@@ -455,10 +494,10 @@ class AuthState extends AppState {
 
   /// Trigger when logged-in user's profile change or updated
   /// Firebase event callback for profile update
-  void _onProfileChanged(Event event) {
-    if (event.snapshot != null) {
-      final updatedUser = User.fromJson(event.snapshot.value);
-      if(updatedUser.userId == user.uid){
+  void _onProfileChanged(DocumentSnapshot event) {
+    if (event.data != null) {
+      final updatedUser = User.fromJson(event.data);
+      if (updatedUser.userId == user.uid) {
         _userModel = updatedUser;
       }
       cprint('User Updated');

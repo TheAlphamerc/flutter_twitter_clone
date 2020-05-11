@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
@@ -28,14 +29,14 @@ class _NotificationPageState extends State<NotificationPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      var state = Provider.of<NotificationState>(context, listen: false);
-      var authstate = Provider.of<AuthState>(context, listen: false);
-      state.getDataFromDatabase(authstate.userId);
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   var state = Provider.of<NotificationState>(context, listen: false);
+    //   var authstate = Provider.of<AuthState>(context, listen: false);
+    //   state.getDataFromDatabase(authstate.userId);
+    // });
   }
 
-  void onSettingIconPressed() {
+  void onSettingIconPressed(context) {
     Navigator.pushNamed(context, '/NotificationPage');
   }
 
@@ -59,7 +60,8 @@ class _NotificationPageState extends State<NotificationPage> {
 class NotificationPageBody extends StatelessWidget {
   const NotificationPageBody({Key key}) : super(key: key);
 
-  Widget _notificationRow(BuildContext context, NotificationModel model) {
+  Widget _notificationRow(
+      BuildContext context, NotificationModel model, bool isFirstNotification) {
     var state = Provider.of<NotificationState>(context);
     return FutureBuilder(
       future: state.getTweetDetail(model.tweetKey),
@@ -68,16 +70,15 @@ class NotificationPageBody extends StatelessWidget {
           return NotificationTile(
             model: snapshot.data,
           );
-        } else if (snapshot.connectionState == ConnectionState.waiting ||
-            snapshot.connectionState == ConnectionState.active) {
+        } else if (isFirstNotification &&
+            (snapshot.connectionState == ConnectionState.waiting ||
+                snapshot.connectionState == ConnectionState.active)) {
           return SizedBox(
             height: 4,
             child: LinearProgressIndicator(),
           );
         } else {
-          /// remove notification from firebase db if tweet in not available or deleted.
-          var authstate = Provider.of<AuthState>(context);
-          state.removeNotification(authstate.userId, model.tweetKey);
+          
           return SizedBox();
         }
       },
@@ -88,12 +89,7 @@ class NotificationPageBody extends StatelessWidget {
   Widget build(BuildContext context) {
     var state = Provider.of<NotificationState>(context);
     var list = state.notificationList;
-    if (state?.isbusy ?? true && (list == null || list.isEmpty)) {
-      return SizedBox(
-        height: 3,
-        child: LinearProgressIndicator(),
-      );
-    } else if (list == null || list.isEmpty) {
+    if (list == null || list.isEmpty) {
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: 30),
         child: EmptyList(
@@ -104,7 +100,8 @@ class NotificationPageBody extends StatelessWidget {
     }
     return ListView.builder(
       addAutomaticKeepAlives: true,
-      itemBuilder: (context, index) => _notificationRow(context, list[index]),
+      itemBuilder: (context, index) =>
+          _notificationRow(context, list[index], index == 0),
       itemCount: list.length,
     );
   }
@@ -118,7 +115,7 @@ class NotificationTile extends StatelessWidget {
     var length = list.length;
     List<Widget> avaterList = [];
     final int noOfUser = list.length;
-    var state = Provider.of<NotificationState>(context);
+    var state = Provider.of<NotificationState>(context, listen: false);
     if (list != null && list.length > 5) {
       list = list.take(5).toList();
     }
@@ -207,7 +204,7 @@ class NotificationTile extends StatelessWidget {
               state.getpostDetailFromDatabase(null, model: model);
               Navigator.of(context).pushNamed('/FeedPostDetail/' + model.key);
             },
-            title: _userList(context, model.likeList),
+            title:_userList(context, model.likeList),
             subtitle: Padding(
               padding: EdgeInsets.only(left: 60),
               child: UrlText(

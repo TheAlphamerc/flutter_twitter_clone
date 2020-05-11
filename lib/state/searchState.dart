@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
+import '../helper/constant.dart';
 import 'appState.dart';
 
 class SearchState extends AppState {
@@ -19,31 +21,54 @@ class SearchState extends AppState {
   }
 
   /// get [User list] from firebase realtime Database
-  void getDataFromDatabase() {
+  void getDataFromDatabase() async {
     try {
       isBusy = true;
-      kDatabase.child('profile').once().then(
-        (DataSnapshot snapshot) {
-          _userlist = List<User>();
-          _userFilterlist = List<User>();
-          if (snapshot.value != null) {
-            var map = snapshot.value;
-            if (map != null) {
-              map.forEach((key, value) {
-                var model = User.fromJson(value);
-                model.key = key;
-                _userlist.add(model);
-                _userFilterlist.add(model);
-              });
-              _userFilterlist
-                  .sort((x, y) => y.followers.compareTo(x.followers));
-            }
-          } else {
-            _userlist = null;
-          }
-          isBusy = false;
-        },
-      );
+      if (_userFilterlist == null) {
+        _userFilterlist = List<User>();
+      }
+      else{}
+      if(_userlist == null){
+        _userlist = List<User>();
+      }
+      _userFilterlist.clear();
+      _userlist.clear();
+
+      QuerySnapshot querySnapshot =
+          await kfirestore.collection(USERS_COLLECTION).getDocuments();
+      if (querySnapshot != null && querySnapshot.documents.isNotEmpty) {
+        for (var i = 0; i < querySnapshot.documents.length; i++) {
+          _userFilterlist.add(User.fromJson(querySnapshot.documents[i].data));
+        }
+        _userlist.addAll(_userFilterlist);
+        _userFilterlist.sort((x, y) => y.followers.compareTo(x.followers));
+      } else {
+        _userlist = null;
+      }
+
+      isBusy = false;
+
+      // kDatabase.child('profile').once().then(
+      //   (DataSnapshot snapshot) {
+      //     _userlist = List<User>();
+      //     _userFilterlist = List<User>();
+      //     if (snapshot.value != null) {
+      //       var map = snapshot.value;
+      //       if (map != null) {
+      //         map.forEach((key, value) {
+      //           var model = User.fromJson(value);
+      //           model.key = key;
+      //           _userlist.add(model);
+      //           _userFilterlist.add(model);
+      //         });
+      //
+      //       }
+      //     } else {
+      //       _userlist = null;
+      //     }
+      //     isBusy = false;
+      //   },
+      // );
     } catch (error) {
       isBusy = false;
       cprint(error, errorIn: 'getDataFromDatabase');
@@ -125,19 +150,18 @@ class SearchState extends AppState {
         return "Unknown";
     }
   }
-  /// Return user list relative to provided `userIds` 
-  /// Method is used on 
+
+  /// Return user list relative to provided `userIds`
+  /// Method is used on
   List<User> userList = [];
-   List<User> getuserDetail(List<String> userIds){
-     final list = _userlist.where((x) {
-       if(userIds.contains(x.key)){
-         return true;
-       }
-       else{
-         return false;
-       }
-     
-     }).toList();
+  List<User> getuserDetail(List<String> userIds) {
+    final list = _userlist.where((x) {
+      if (userIds.contains(x.key)) {
+        return true;
+      } else {
+        return false;
+      }
+    }).toList();
     return list;
   }
 }

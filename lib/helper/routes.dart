@@ -22,6 +22,7 @@ import 'package:flutter_twitter_clone/page/settings/accountSettings/privacyAndSa
 import 'package:flutter_twitter_clone/page/settings/accountSettings/privacyAndSafety/privacyAndSafetyPage.dart';
 import 'package:flutter_twitter_clone/page/settings/accountSettings/proxy/proxyPage.dart';
 import 'package:flutter_twitter_clone/page/settings/settingsAndPrivacyPage.dart';
+import 'package:flutter_twitter_clone/state/chats/chatState.dart';
 import 'package:provider/provider.dart';
 import '../page/Auth/signin.dart';
 import '../helper/customRoute.dart';
@@ -81,6 +82,10 @@ class Routes{
           create: (_) => ComposeTweetState(),
           child: ComposeTweetPage(isRetweet:false, isTweet: true),
         ));
+       case "ChatScreenPage": return CustomRoute<bool>(builder:(BuildContext context)=> ChangeNotifierProvider<ChatState>(
+          create: (_) => ChatState(),
+          child: ChatScreenPage(),
+        ));
       case "WelcomePage":return CustomRoute<bool>(builder:(BuildContext context)=> WelcomePage()); 
       case "SignIn":return CustomRoute<bool>(builder:(BuildContext context)=> SignIn()); 
       case "SignUp":return CustomRoute<bool>(builder:(BuildContext context)=> Signup()); 
@@ -89,7 +94,6 @@ class Routes{
       case "ImageViewPge":return CustomRoute<bool>(builder:(BuildContext context)=> ImageViewPge());
       case "EditProfile":return CustomRoute<bool>(builder:(BuildContext context)=> EditProfilePage()); 
       case "ProfileImageView":return SlideLeftRoute<bool>(builder:(BuildContext context)=> ProfileImageView()); 
-      case "ChatScreenPage":return CustomRoute<bool>(builder:(BuildContext context)=> ChatScreenPage()); 
       case "NewMessagePage":return CustomRoute<bool>(builder:(BuildContext context)=> NewMessagePage(),); 
       case "SettingsAndPrivacyPage":return CustomRoute<bool>(builder:(BuildContext context)=> SettingsAndPrivacyPage(),); 
       case "AccountSettingsPage":return CustomRoute<bool>(builder:(BuildContext context)=> AccountSettingsPage(),); 

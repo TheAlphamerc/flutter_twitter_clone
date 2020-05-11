@@ -83,7 +83,7 @@ class FeedModel {
       likeList = [];
       likeCount = 0;
     }
-    if (map['replyTweetKeyList'] != null) {
+    if (map['replyTweetKeyList'] != null && map['replyTweetKeyList'].length > 0) {
       map['replyTweetKeyList'].forEach((value) {
         replyTweetKeyList = List<String>();
         map['replyTweetKeyList'].forEach((value) {

@@ -1,8 +1,8 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
+import 'package:flutter_twitter_clone/state/notificationState.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
 import 'package:provider/provider.dart';
@@ -203,6 +203,8 @@ class _SidebarMenuState extends State<SidebarMenu> {
 
   void _logOut() {
     final state = Provider.of<AuthState>(context,listen: false);
+    final notificationDtate = Provider.of<NotificationState>(context,listen: false);
+    notificationDtate.unsubscribeNotifications(state.userModel.userId);
     Navigator.pop(context);
     state.logoutCallback();
   }

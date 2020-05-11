@@ -75,7 +75,6 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
 
   @override
   Widget build(BuildContext context) {
-    var state = Provider.of<FeedState>(context);
     return WillPopScope(
       onWillPop: () async {
         Provider.of<FeedState>(context, listen: false)
@@ -100,38 +99,44 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
                 preferredSize: Size.fromHeight(0.0),
               ),
             ),
-            SliverList(
-              delegate: SliverChildListDelegate(
-                [
-                  state.tweetDetailModel == null ||
-                          state.tweetDetailModel.length == 0
-                      ? Container()
-                      : _tweetDetail(state.tweetDetailModel?.last),
-                  Container(
-                    height: 6,
-                    width: fullWidth(context),
-                    color: TwitterColor.mystic,
-                  )
-                ],
-              ),
+            Consumer<FeedState>(
+              builder: (context, state, child) {
+                return SliverList(
+                  delegate: SliverChildListDelegate(
+                    [
+                      state.tweetDetailModel == null ||
+                              state.tweetDetailModel.length == 0
+                          ? Container()
+                          : _tweetDetail(state.tweetDetailModel?.last),
+                      Container(
+                        height: 6,
+                        width: fullWidth(context),
+                        color: TwitterColor.mystic,
+                      )
+                    ],
+                  ),
+                );
+              },
             ),
-            SliverList(
-              delegate: SliverChildListDelegate(
-                state.tweetReplyMap == null ||
-                        state.tweetReplyMap.length == 0 ||
-                        state.tweetReplyMap[postId] == null
-                    ? [
-                        Container(
-                          child: Center(
-                              //  child: Text('No comments'),
-                              ),
-                        )
-                      ]
-                    : state.tweetReplyMap[postId]
-                        .map((x) => _commentRow(x))
-                        .toList(),
-              ),
-            )
+            Consumer<FeedState>(builder: (context, state, child) {
+              return SliverList(
+                delegate: SliverChildListDelegate(
+                  state.tweetReplyMap == null ||
+                          state.tweetReplyMap.length == 0 ||
+                          state.tweetReplyMap[postId] == null
+                      ? [
+                          Container(
+                            child: Center(
+                                //  child: Text('No comments'),
+                                ),
+                          )
+                        ]
+                      : state.tweetReplyMap[postId]
+                          .map((x) => _commentRow(x))
+                          .toList(),
+                ),
+              );
+            })
           ],
         ),
       ),

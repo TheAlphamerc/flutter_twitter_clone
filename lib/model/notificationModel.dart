@@ -7,10 +7,10 @@ class NotificationModel {
     this.tweetKey,
   });
 
-  NotificationModel.fromJson(String tweetId, String updatedAt,String type) {
-    tweetKey = tweetId;
-    this.updatedAt = updatedAt;
-    this.type = type;
+  NotificationModel.fromJson(Map<String, dynamic> json, ) {
+    // tweetKey = tweetId;
+    this.updatedAt = json["updatedAt"];
+    this.type = json["type"];
   }
 
   Map<String, dynamic> toJson() => {

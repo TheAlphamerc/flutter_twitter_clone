@@ -6,7 +6,7 @@ import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/state/searchState.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
-import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
+import 'package:flutter_twitter_clone/widgets/newWidget/rippleButton.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 import 'package:provider/provider.dart';
 
@@ -71,35 +71,40 @@ class _UserTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      onTap: () {
+    return RippleButton(
+      onPressed: () {
         kAnalytics.logViewSearchResults(searchTerm: user.userName);
         Navigator.of(context).pushNamed('/ProfilePage/' + user?.userId);
       },
-      leading: customImage(context, user.profilePic, height: 40),
-      title: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Flexible(
-            child: TitleText(user.displayName,
-                fontSize: 16,
-                fontWeight: FontWeight.w800,
-                overflow: TextOverflow.ellipsis),
+      child: Container(
+        color: TwitterColor.white,
+        child: ListTile(
+          leading: customImage(context, user.profilePic, height: 40),
+          title: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Flexible(
+                child: TitleText(user.displayName,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w800,
+                    overflow: TextOverflow.ellipsis),
+              ),
+              SizedBox(width: 3),
+              user.isVerified
+                  ? customIcon(
+                      context,
+                      icon: AppIcon.blueTick,
+                      istwitterIcon: true,
+                      iconColor: AppColor.primary,
+                      size: 13,
+                      paddingIcon: 3,
+                    )
+                  : SizedBox(width: 0),
+            ],
           ),
-          SizedBox(width: 3),
-          user.isVerified
-              ? customIcon(
-                  context,
-                  icon: AppIcon.blueTick,
-                  istwitterIcon: true,
-                  iconColor: AppColor.primary,
-                  size: 13,
-                  paddingIcon: 3,
-                )
-              : SizedBox(width: 0),
-        ],
+          subtitle: Text(user.userName),
+        ),
       ),
-      subtitle: Text(user.userName),
     );
   }
 }
