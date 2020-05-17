@@ -37,7 +37,7 @@ class UnavailableTweet extends StatelessWidget {
                 ),
               ),
             )
-          : Text('This Tweet is unavailable', style: userNameStyle),
+          : Text('This quoted Tweet is unavailable', style: userNameStyle),
     );
   }
 }
