@@ -37,7 +37,7 @@ import '../widgets/customWidgets.dart';
 class Routes{
   static dynamic route(){
       return {
-          '/': (BuildContext context) =>   SplashPage(),
+          'SplashPage': (BuildContext context) =>   SplashPage(),
       };
   }
 

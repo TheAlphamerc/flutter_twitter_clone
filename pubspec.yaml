@@ -24,18 +24,18 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
   # empty_widget:
-  flutter_advanced_networkimage: ^0.6.0-alpha.1
+  # flutter_advanced_networkimage:
+  cached_network_image: ^2.2.0+1
   provider:
   # flutter_native_splash: ^0.1.9
   firebase_auth:
   firebase_database:
   firebase_analytics:
 
-  # cloud_firestore:
+  cloud_firestore:
   firebase_storage: 
   image_picker: ^0.6.2
   uuid: ^2.0.0
-  # async:
   http: 
   shared_preferences: ^0.5.1+2
   firebase_messaging: ^6.0.13
@@ -46,12 +46,10 @@ dependencies:
   google_fonts: ^0.3.9
   firebase_remote_config: ^0.3.0+3
 
-  # firebase_analytics:
   # camera:
   # image: ^2.0.75
   # path_provider: ^0.5.0+1
-  # font_awesome_flutter: ^8.4.0
-   # location: ^2.3.3
+  # location: ^2.3.3
   # geocoder: ^0.1.2
 dev_dependencies:
   test:
