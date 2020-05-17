@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
@@ -54,8 +53,9 @@ class _ProfilePageState extends State<ProfilePage>
     var authstate = Provider.of<AuthState>(context);
     return SliverAppBar(
       forceElevated: false,
-      expandedHeight: 180,
+      expandedHeight: 200,
       elevation: 0,
+      stretch: true,
       iconTheme: IconThemeData(color: Colors.white),
       backgroundColor: Colors.transparent,
       actions: <Widget>[
@@ -74,9 +74,11 @@ class _ProfilePageState extends State<ProfilePage>
               ),
       ],
       flexibleSpace: FlexibleSpaceBar(
+        stretchModes: <StretchMode>[StretchMode.zoomBackground, StretchMode.blurBackground],
         background: authstate.isbusy
             ? SizedBox.shrink()
             : Stack(
+              alignment: Alignment.topCenter,
                 children: <Widget>[
                   SizedBox.expand(
                     child: Container(
@@ -85,14 +87,16 @@ class _ProfilePageState extends State<ProfilePage>
                       color: Colors.white,
                     ),
                   ),
-                  Container(height: 50, color: Colors.black),
+                  // Container(height: 50, color: Colors.black),
 
                   /// Banner image
-                  Padding(
-                    padding: EdgeInsets.only(top: 30),
+                  Container(
+                    height: 180,
+                    padding: EdgeInsets.only(top: 28),
                     child: customNetworkImage(
-                        'https://pbs.twimg.com/profile_banners/457684585/1510495215/1500x500',
-                        fit: BoxFit.fill),
+                      'https://pbs.twimg.com/profile_banners/457684585/1510495215/1500x500',
+                      fit: BoxFit.fill,
+                    ),
                   ),
 
                   /// User avatar, message icon, profile edit and follow/following button
@@ -100,6 +104,7 @@ class _ProfilePageState extends State<ProfilePage>
                     alignment: Alignment.bottomLeft,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
                         AnimatedContainer(
                           duration: Duration(milliseconds: 500),
@@ -120,7 +125,7 @@ class _ProfilePageState extends State<ProfilePage>
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.only(top: 60, right: 30),
+                          margin: EdgeInsets.only(top: 90, right: 30),
                           child: Row(
                             children: <Widget>[
                               isMyProfile
@@ -134,7 +139,8 @@ class _ProfilePageState extends State<ProfilePage>
                                       onPressed: () {
                                         if (!isMyProfile) {
                                           final chatState =
-                                              Provider.of<ChatState>(context,
+                                              Provider.of<ChatState>(
+                                                  context,
                                                   listen: false);
                                           chatState.setChatUser =
                                               authstate.profileUserModel;
@@ -213,7 +219,7 @@ class _ProfilePageState extends State<ProfilePage>
                                           : isFollower()
                                               ? TwitterColor.white
                                               : Colors.blue,
-                                         fontSize: 17,
+                                      fontSize: 17,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -508,6 +514,7 @@ class UserNameRowWidget extends StatelessWidget {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               customIcon(context,
                   icon: AppIcon.locationPin,
@@ -516,10 +523,12 @@ class UserNameRowWidget extends StatelessWidget {
                   paddingIcon: 5,
                   iconColor: AppColor.darkGrey),
               SizedBox(width: 10),
-              customText(
+              Expanded(
+                child:customText(
                 user.location,
                 style: TextStyle(color: AppColor.darkGrey),
               ),
+              )
             ],
           ),
         ),

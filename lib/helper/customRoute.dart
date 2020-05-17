@@ -11,7 +11,7 @@ class CustomRoute<T> extends MaterialPageRoute<T> {
   Widget buildTransitions(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation, Widget child) {
     Routes.sendNavigationEventToFirebase(settings.name);
-    if (settings.isInitialRoute) {
+    if (settings.name == "SplashPage") {
       return child;
     }
     return FadeTransition(
@@ -28,7 +28,7 @@ class SlideLeftRoute<T> extends MaterialPageRoute<T> {
   Widget buildTransitions(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation, Widget child) {
     Routes.sendNavigationEventToFirebase(settings.name);
-    if (settings.isInitialRoute) {
+    if (settings.name == "SplashPage"){
       return child;
     }
     return SlideTransition(
