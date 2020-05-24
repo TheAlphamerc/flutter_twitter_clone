@@ -1,4 +1,5 @@
 import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
@@ -9,8 +10,6 @@ import 'package:flutter_twitter_clone/page/Auth/widget/googleLoginButton.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customLoader.dart';
-import 'package:flutter_twitter_clone/widgets/newWidget/rippleButton.dart';
-import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 import 'package:provider/provider.dart';
 
 class Signup extends StatefulWidget {
@@ -38,13 +37,15 @@ class _SignupState extends State<Signup> {
     _confirmController = TextEditingController();
     super.initState();
   }
-  void dispose() { 
+
+  void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     _nameController.dispose();
     _confirmController.dispose();
     super.dispose();
   }
+
   Widget _body(BuildContext context) {
     return Container(
       height: fullHeight(context) - 88,
@@ -56,7 +57,8 @@ class _SignupState extends State<Signup> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             _entryFeild('Name', controller: _nameController),
-            _entryFeild('Enter email', controller: _emailController),
+            _entryFeild('Enter email',
+                controller: _emailController, isEmail: true),
             // _entryFeild('Mobile no',controller: _mobileController),
             _entryFeild('Enter password',
                 controller: _passwordController, isPassword: true),
@@ -79,7 +81,9 @@ class _SignupState extends State<Signup> {
   }
 
   Widget _entryFeild(String hint,
-      {TextEditingController controller, bool isPassword = false}) {
+      {TextEditingController controller,
+      bool isPassword = false,
+      bool isEmail = false}) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 15),
       decoration: BoxDecoration(
@@ -88,7 +92,7 @@ class _SignupState extends State<Signup> {
       ),
       child: TextField(
         controller: controller,
-        keyboardType: TextInputType.emailAddress,
+        keyboardType: isEmail ? TextInputType.emailAddress : TextInputType.text,
         style: TextStyle(
           fontStyle: FontStyle.normal,
           fontWeight: FontWeight.normal,
