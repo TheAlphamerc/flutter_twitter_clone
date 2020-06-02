@@ -62,12 +62,26 @@ class AppIcon{
 }
 
 /// Firestore collections
-const String MESSAGES_COLLECTION = "messages";
-const String CHAT_USER_LIST_COLLECTION = "chatUsers";
-const String FOLLOWER_COLLECTION = "followerList";
-const String FOLLOWING_COLLECTION = "followingList";
-const String TWEET_COLLECTION = "tweet";
-const String TWEET_LIKE_COLLECTION = "likeList";
-const String NOTIFICATION_COLLECTION = "notification";
+/// 
+/// Store `User` Model in db
 const String USERS_COLLECTION = "profile";
-const String TIMESTAMP_FIELD = "timestamp";
+
+/// Store `FeedModel` Model in db
+const String TWEET_COLLECTION = "tweet";
+
+/// Store `ChatMessage` Model in db
+const String MESSAGES_COLLECTION = "messages";
+
+/// Store `ChatMessage` Model in db
+/// `chatUsers` ate stored in `ChatMessage` on purpose
+const String CHAT_USER_LIST_COLLECTION = "chatUsers";
+
+/// Store `NotificationModel` Model in db
+const String NOTIFICATION_COLLECTION = "notification";
+
+const String FOLLOWER_COLLECTION = "followerList";
+
+const String FOLLOWING_COLLECTION = "followingList";
+
+// // Below collections is not used yet
+// const String TWEET_LIKE_COLLECTION = "likeList";
