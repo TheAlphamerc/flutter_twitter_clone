@@ -4,18 +4,17 @@ import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
-import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/rippleButton.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 import 'package:provider/provider.dart';
 
 class UserListWidget extends StatelessWidget {
-  final List<User> list;
+  final List<User> userslist;
   final String emptyScreenText;
   final String emptyScreenSubTileText;
   UserListWidget({
     Key key,
-    this.list,
+    this.userslist,
     this.emptyScreenText,
     this.emptyScreenSubTileText,
   }) : super(key: key);
@@ -23,29 +22,35 @@ class UserListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var state = Provider.of<AuthState>(context, listen: false);
+    var myFollowingList = state.userModel.followingList;
     String myId = state.userModel.key;
     return ListView.separated(
       itemBuilder: (context, index) {
         return UserTile(
-          user: list[index],
-          myId: myId,
-        );
+            user: userslist[index],
+            myId: myId,
+            isFollow:
+                myFollowingList.any((id) => id == userslist[index].userId));
       },
       separatorBuilder: (context, index) {
         return Divider(
           height: 0,
         );
       },
-      itemCount: list.length,
+      itemCount: userslist.length,
     );
-    // : LinearProgressIndicator();
   }
 }
 
+/// if value of `isFollow` is true then display [Following] button
+/// if value of `isFollow` is false then display [Follow] button
+/// if myId is equal to [user.userId] then hide [Follow]/[Following] button
 class UserTile extends StatelessWidget {
-  const UserTile({Key key, this.user, this.myId}) : super(key: key);
+  const UserTile({Key key, this.user, this.myId, this.isFollow})
+      : super(key: key);
   final User user;
   final String myId;
+  final bool isFollow;
 
   /// Return empty string for default bio
   /// Max length of bio is 100
@@ -61,20 +66,8 @@ class UserTile extends StatelessWidget {
     return null;
   }
 
-  /// Check if user followerlist contain your or not
-  /// If your id exist in follower list it mean you are following him
-  bool isFollowing() {
-    if (user.followersList != null &&
-        user.followersList.any((x) => x == myId)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    bool isFollow = isFollowing();
     return Container(
       padding: EdgeInsets.symmetric(vertical: 10),
       color: TwitterColor.white,
@@ -116,31 +109,37 @@ class UserTile extends StatelessWidget {
               ],
             ),
             subtitle: Text(user.userName),
-            trailing: RippleButton(
-              onPressed: () {},
-              splashColor: TwitterColor.dodgetBlue_50.withAlpha(100),
-              borderRadius: BorderRadius.circular(25),
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: isFollow ? 15 : 20,
-                  vertical: 3,
-                ),
-                decoration: BoxDecoration(
-                  color:
-                      isFollow ? TwitterColor.dodgetBlue : TwitterColor.white,
-                  border: Border.all(color: TwitterColor.dodgetBlue, width: 1),
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                child: Text(
-                  isFollow ? 'Following' : 'Follow',
-                  style: TextStyle(
-                    color: isFollow ? TwitterColor.white : Colors.blue,
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold,
+            trailing: myId == user.userId
+                ? SizedBox.shrink()
+                : RippleButton(
+                    onPressed: () {},
+                    splashColor: TwitterColor.dodgetBlue_50.withAlpha(100),
+                    borderRadius: BorderRadius.circular(25),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: isFollow ? 15 : 20,
+                        vertical: 3,
+                      ),
+                      decoration: BoxDecoration(
+                        color: isFollow
+                            ? TwitterColor.dodgetBlue
+                            : TwitterColor.white,
+                        border: Border.all(
+                          color: TwitterColor.dodgetBlue,
+                          width: 1,
+                        ),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      child: Text(
+                        isFollow ? 'Following' : 'Follow',
+                        style: TextStyle(
+                          color: isFollow ? TwitterColor.white : Colors.blue,
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ),
           ),
           getBio(user.bio) == null
               ? SizedBox.shrink()

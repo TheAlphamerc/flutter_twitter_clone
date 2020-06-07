@@ -47,17 +47,17 @@ class AuthState extends AppState {
   }
 
   /// Logout from device
-  void logoutCallback() {
+  void logoutCallback() async{
     authStatus = AuthStatus.NOT_LOGGED_IN;
     userId = '';
     _userModel = null;
     user = null;
     _profileUserModelList = null;
     if (isSignInWithGoogle) {
-      _googleSignIn.signOut();
+      await _googleSignIn.signOut();
       logEvent('google_logout');
     }
-    _firebaseAuth.signOut();
+    await _firebaseAuth.signOut();
     notifyListeners();
   }
 

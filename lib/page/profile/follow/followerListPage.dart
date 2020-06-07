@@ -8,7 +8,7 @@ class FollowerListPage extends StatelessWidget {
   FollowerListPage({Key key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    var state = Provider.of<AuthState>(context);
+    var state = Provider.of<AuthState>(context, listen: false);
     return UsersListPage(
       pageTitle: 'Followers',
       userIdsList: state.profileUserModel?.followersList,

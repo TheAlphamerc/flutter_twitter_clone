@@ -204,7 +204,7 @@ class _SidebarMenuState extends State<SidebarMenu> {
   void _logOut() {
     final state = Provider.of<AuthState>(context,listen: false);
     final notificationDtate = Provider.of<NotificationState>(context,listen: false);
-    notificationDtate.unsubscribeNotifications(state.userModel.userId);
+    notificationDtate.unsubscribeNotifications(state.userModel?.userId);
     Navigator.pop(context);
     state.logoutCallback();
   }
