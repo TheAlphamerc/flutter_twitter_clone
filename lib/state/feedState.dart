@@ -26,7 +26,7 @@ class FeedState extends AppState {
   List<FeedModel> _commentlist;
 
   List<FeedModel> _feedlist;
-  dabase.Query _feedQuery;
+  // dabase.Query _feedQuery;
   List<FeedModel> _tweetDetailModelList;
   List<String> _userfollowingList;
   List<String> get followingList => _userfollowingList;
@@ -130,20 +130,21 @@ class FeedState extends AppState {
   /// [Subscribe Tweets] firebase Database
   Future<bool> databaseInit() {
     try {
-      if (_feedQuery == null) {
-        _feedQuery = kDatabase.child("tweet");
-        _tweetCollection.snapshots().listen((QuerySnapshot snapshot) {
-          if (snapshot.documentChanges.first.type == DocumentChangeType.added) {
-            _onTweetAdded(snapshot.documentChanges.first.document);
-          } else if (snapshot.documentChanges.first.type ==
-              DocumentChangeType.removed) {
-            _onTweetRemoved(snapshot.documentChanges.first.document);
-          } else if (snapshot.documentChanges.first.type ==
-              DocumentChangeType.modified) {
-            _onTweetChanged(snapshot.documentChanges.first.document);
-          }
-        });
-      }
+      _tweetCollection.snapshots().listen((QuerySnapshot snapshot) {
+        // Return if there is no tweets in database
+        if (snapshot.documentChanges.isEmpty) {
+          return;
+        }
+        if (snapshot.documentChanges.first.type == DocumentChangeType.added) {
+          _onTweetAdded(snapshot.documentChanges.first.document);
+        } else if (snapshot.documentChanges.first.type ==
+            DocumentChangeType.removed) {
+          _onTweetRemoved(snapshot.documentChanges.first.document);
+        } else if (snapshot.documentChanges.first.type ==
+            DocumentChangeType.modified) {
+          _onTweetChanged(snapshot.documentChanges.first.document);
+        }
+      });
 
       return Future.value(true);
     } catch (error) {
