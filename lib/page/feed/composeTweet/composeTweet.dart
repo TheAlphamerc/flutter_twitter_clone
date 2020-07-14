@@ -567,7 +567,7 @@ class _UserList extends StatelessWidget {
                   onUserSelected: (user) {
                     textEditingController.text =
                         Provider.of<ComposeTweetState>(context)
-                            .getDescription(user.userName);
+                            .getDescription(user.userName) + " ";
                     textEditingController.selection = TextSelection.collapsed(
                         offset: textEditingController.text.length);
                     Provider.of<ComposeTweetState>(context).onUserSelected();

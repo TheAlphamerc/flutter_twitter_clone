@@ -46,6 +46,9 @@ class _ChatListPageState extends State<ChatListPage> {
         ),
       );
     } else {
+      if(searchState.userList.isEmpty){
+        searchState.resetFilterList();
+      }
       return ListView.separated(
         physics: BouncingScrollPhysics(),
         itemCount: state.chatUserList.length,
@@ -100,7 +103,7 @@ class _ChatListPageState extends State<ChatListPage> {
           ),
         ),
         title: TitleText(
-          model.displayName,
+          model.displayName ?? "NA",
           fontSize: 16,
           fontWeight: FontWeight.w800,
           overflow: TextOverflow.ellipsis,

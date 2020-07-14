@@ -143,7 +143,7 @@ class TweetIconsRow extends StatelessWidget {
   }
 
   Widget _likeCommentWidget(BuildContext context) {
-    bool isLikeAvailable = model.likeCount > 0;
+    bool isLikeAvailable = model.likeCount != null ?  model.likeCount > 0 : false;
     bool isRetweetAvailable = model.retweetCount > 0;
     bool isLikeRetweetAvailable = isRetweetAvailable || isLikeAvailable;
     return Column(

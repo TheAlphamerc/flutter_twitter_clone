@@ -54,7 +54,7 @@ class FeedModel {
     userId = map['userId'];
     //  name = map['name'];
     //  profilePic = map['profilePic'];
-    likeCount = map['likeCount'];
+    likeCount = map['likeCount'] ?? 0;
     commentCount = map['commentCount'];
     retweetCount = map["retweetCount"] ?? 0;
     imagePath = map['imagePath'];
@@ -72,12 +72,17 @@ class FeedModel {
     }
     if (map["likeList"] != null) {
       likeList = List<String>();
-      final list = map['likeList'];
-      if (list is List) {
-        map['likeList'].forEach((value) {
-          likeList.add(value);
-        });
-        likeCount = likeList.length;
+      try {
+        final list = map['likeList'];
+        if (list is List) {
+          map['likeList'].forEach((value) {
+            likeList.add(value);
+          });
+          likeCount = likeList.length ?? 0;
+        }
+      } catch (e) {
+        likeCount = 0;
+        likeList = [];
       }
     } else {
       likeList = [];
