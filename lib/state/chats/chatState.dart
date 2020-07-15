@@ -81,7 +81,7 @@ class ChatState extends AppState {
   /// For package detail check:-  https://pub.dev/packages/firebase_remote_config#-readme-tab-
   void getFCMServerKey() async {
     final RemoteConfig remoteConfig = await RemoteConfig.instance;
-    await remoteConfig.fetch(expiration: const Duration(hours: 5));
+    await remoteConfig.fetch(expiration: const Duration(days: 5));
     await remoteConfig.activateFetched();
     var data = remoteConfig.getString('FcmServerKey');
     if (data != null && data.isNotEmpty) {

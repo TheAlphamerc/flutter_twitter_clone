@@ -31,16 +31,16 @@ dependencies:
   firebase_auth:
   firebase_database:
   firebase_analytics:
-
   cloud_firestore:
   firebase_storage: 
-  image_picker: ^0.6.2
   uuid: ^2.0.0
+  intl: ^0.15.8
   http: 
+  google_sign_in: 
+  image_picker: ^0.6.2
+  package_info: ^0.4.1
   shared_preferences: ^0.5.1+2
   firebase_messaging: ^6.0.13
-  google_sign_in: 
-  intl: ^0.15.8
   url_launcher:
   share: ^0.6.3
   google_fonts: ^0.3.9
