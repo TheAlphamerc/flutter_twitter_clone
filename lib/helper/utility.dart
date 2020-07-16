@@ -166,8 +166,11 @@ List<String> getHashTags(String text) {
   return resultMatches;
 }
 
-String getUserName({String name, String id}) {
+String getUserName({ String id,String name,}) {
   String userName = '';
+  if(name.length > 15){
+     name = name.substring(0,6);
+  }
   name = name.split(' ')[0];
   id = id.substring(0, 4).toLowerCase();
   userName = '@$name$id';
