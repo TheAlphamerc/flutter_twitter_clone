@@ -27,19 +27,21 @@ class ChatState extends AppState {
   String _channelName;
   Query messageQuery;
 
+  /// Contains list of chat messages on main chat screen
+  /// List is sortBy mesage timeStamp
+  /// Last message will be display on the bottom of screen
   List<ChatMessage> get messageList {
     if (_messageList == null) {
       return null;
     } else {
-      _messageList.sort((x, y) => DateTime.parse(x.createdAt)
+      _messageList.sort((x, y) => DateTime.parse(y.createdAt)
           .toLocal()
-          .compareTo(DateTime.parse(y.createdAt).toLocal()));
-      _messageList.reversed;
-      _messageList = _messageList.reversed.toList();
-      return List.from(_messageList);
+          .compareTo(DateTime.parse(x.createdAt).toLocal()));
+      return _messageList;
     }
   }
 
+  /// Contain list of users who have chat history with logged in user
   List<ChatMessage> get chatUserList {
     if (_chatUserList == null) {
       return null;
@@ -86,9 +88,9 @@ class ChatState extends AppState {
     var data = remoteConfig.getString('FcmServerKey');
     if (data != null && data.isNotEmpty) {
       serverToken = jsonDecode(data)["key"];
-    }
-    else{
-      cprint("Please configure Remote config in firebase", errorIn: "getFCMServerKey");
+    } else {
+      cprint("Please configure Remote config in firebase",
+          errorIn: "getFCMServerKey");
     }
   }
 
@@ -110,6 +112,19 @@ class ChatState extends AppState {
               _chatUserList.add(model);
             });
           }
+          _chatUserList.sort((x, y) {
+            if (x.createdAt != null && y.createdAt != null) {
+              return DateTime.parse(y.createdAt)
+                  .compareTo(DateTime.parse(x.createdAt));
+            } else {
+              if(x.createdAt != null){
+                return 0;
+              }
+              else{
+                 return 1;
+              }
+            }
+          });
         } else {
           _chatUserList = null;
         }
@@ -255,8 +270,9 @@ class ChatState extends AppState {
       _messageList = null;
       notifyListeners();
     }
+
     /// [Warning] do not call super.dispose() from this method
-    /// If this method called here it will dipose chat state data 
+    /// If this method called here it will dipose chat state data
     // super.dispose();
   }
 
