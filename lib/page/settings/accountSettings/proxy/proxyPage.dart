@@ -24,7 +24,7 @@ class ProxyPage extends StatelessWidget {
         children: <Widget>[
           SettingRowWidget(
             "Enable HTTP Proxy",
-            showCheckBox: true,
+            showCheckBox: false,
             vPadding: 15,
             showDivider: true,
             subtitle:

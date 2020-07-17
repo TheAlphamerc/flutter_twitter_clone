@@ -120,7 +120,7 @@ class DisplayAndSoundPage extends StatelessWidget {
           HeaderWidget('Media'),
           SettingRowWidget(
             "Media Previews",
-            showCheckBox: true,
+            showCheckBox: false,
           ),
           Divider(height: 0),
           HeaderWidget('Display'),
@@ -145,7 +145,7 @@ class DisplayAndSoundPage extends StatelessWidget {
             subtitle:
                 'Use the Fwitter set instead of your device\'s default set',
             showDivider: false,
-            showCheckBox: true,
+            showCheckBox: false,
           ),
           HeaderWidget(
             'Sound',
@@ -154,16 +154,16 @@ class DisplayAndSoundPage extends StatelessWidget {
           SettingRowWidget(
             "Sound effects",
             // vPadding: 15,
-            showCheckBox: true,
+            showCheckBox: false,
           ),
           HeaderWidget(
             'Web browser',
-            secondHeader: true,
+            secondHeader: false,
           ),
           SettingRowWidget(
             "Use in-app browser",
             subtitle: 'Open external links with Fwitter browser',
-            showCheckBox: true,
+            showCheckBox: false,
           ),
         ],
       ),

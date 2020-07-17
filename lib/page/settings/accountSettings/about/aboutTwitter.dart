@@ -29,7 +29,7 @@ class AboutPage extends StatelessWidget {
           ),
           SettingRowWidget(
             "Help Centre",
-            vPadding: 15,
+            vPadding: 0,
             showDivider: false,
             onPressed: (){
               launchURL("https://github.com/TheAlphamerc/flutter_twitter_clone/issues");
@@ -59,7 +59,36 @@ class AboutPage extends StatelessWidget {
                 useRootNavigator: true,
               );
             },
-          )
+          ),
+          HeaderWidget('Developer'),
+          SettingRowWidget(
+            "Github",
+            showDivider: true,
+            onPressed: (){
+              launchURL("https://github.com/TheAlphamerc");
+            }
+          ),
+          SettingRowWidget(
+            "LinkidIn",
+            showDivider: true,
+            onPressed: (){
+              launchURL("https://www.linkedin.com/in/thealphamerc/");
+            }
+          ),
+          SettingRowWidget(
+            "Twitter",
+            showDivider: true,
+            onPressed: (){
+              launchURL("https://twitter.com/TheAlphaMerc");
+            }
+          ),
+          SettingRowWidget(
+            "Blog",
+            showDivider: true,
+            onPressed: (){
+              launchURL("https://dev.to/thealphamerc");
+            }
+          ),
         ],
       ),
     );

@@ -129,7 +129,7 @@ class AccessibilityPage extends StatelessWidget {
             subtitle:
                 'Adds the ability to describe images for the visually impaired.',
             vPadding: 15,
-            showCheckBox: true,
+            showCheckBox: false,
             onPressed: () {
               openDarkModeSettings(context);
             },
@@ -144,7 +144,7 @@ class AccessibilityPage extends StatelessWidget {
             subtitle:
                 'Limit the amount of in-app animations, including live engagement counts.',
             vPadding: 15,
-            showCheckBox: true,
+            showCheckBox: false,
             onPressed: () {
               openDarkModeSettings(context);
             },

@@ -5,7 +5,6 @@ import 'package:flutter_twitter_clone/page/settings/widgets/headerWidget.dart';
 import 'package:flutter_twitter_clone/page/settings/widgets/settingsAppbar.dart';
 import 'package:flutter_twitter_clone/page/settings/widgets/settingsRowWidget.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
-import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
 import 'package:provider/provider.dart';
 
 class PrivacyAndSaftyPage extends StatelessWidget {
@@ -107,7 +106,7 @@ class PrivacyAndSaftyPage extends StatelessWidget {
           SettingRowWidget(
             "Precise location",
             subtitle:
-                'Disabled \n\n\nIf enabled, Fwitter will collect, store, and use your device\'s precise location, such as your GPS information. This lets Fwitter improve your experience - for rxample, showing you mpre local content, ads, and recommendations.',
+                'Disabled \n\n\nIf enabled, Fwitter will collect, store, and use your device\'s precise location, such as your GPS information. This lets Fwitter improve your experience - for example, showing you mpre local content, ads, and recommendations.',
           ),
           HeaderWidget(
             'Personalisation and data',

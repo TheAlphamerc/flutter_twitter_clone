@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
+import 'package:flutter_twitter_clone/widgets/newWidget/customCheckBox.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
+import 'package:provider/provider.dart';
 
 class SettingRowWidget extends StatelessWidget {
   const SettingRowWidget(
@@ -12,8 +14,8 @@ class SettingRowWidget extends StatelessWidget {
     this.onPressed,
     this.vPadding = 0,
     this.showDivider = true,
-    this.visibleSwitch = false,
-    this.showCheckBox = false,
+    this.visibleSwitch ,
+    this.showCheckBox ,
   }) : super(key: key);
   final bool visibleSwitch, showDivider, showCheckBox;
   final String navigateTo;
@@ -52,19 +54,12 @@ class SettingRowWidget extends StatelessWidget {
                   style: TextStyle(
                       color: TwitterColor.paleSky, fontWeight: FontWeight.w400),
                 ),
-          trailing: showCheckBox
-              ? !showCheckBox
-                  ? SizedBox()
-                  : Checkbox(value: true, onChanged: (val) {})
-              : !visibleSwitch
-                  ? null
-                  : Switch(
-                      onChanged: (val) {},
-                      value: false,
-                    ),
+          trailing: CustomCheckBox(isChecked:showCheckBox,visibleSwitch: visibleSwitch, )
+              
         ),
         !showDivider ? SizedBox() : Divider(height: 0)
       ],
     );
   }
 }
+
