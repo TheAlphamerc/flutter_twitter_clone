@@ -234,7 +234,7 @@ class _SidebarMenuState extends State<SidebarMenu> {
                     _navigateTo('ProfilePage');
                   }),
                   _menuListRowButton('Lists', icon: AppIcon.lists),
-                  _menuListRowButton('Bookamrks', icon: AppIcon.bookmark),
+                  _menuListRowButton('Bookmark', icon: AppIcon.bookmark),
                   _menuListRowButton('Moments', icon: AppIcon.moments),
                   _menuListRowButton('Fwitter ads', icon: AppIcon.twitterAds),
                   Divider(),
