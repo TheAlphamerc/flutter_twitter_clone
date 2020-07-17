@@ -36,7 +36,7 @@ class UsersListPage extends StatelessWidget {
           icon: appBarIcon),
       body: Consumer<SearchState>(
         builder: (context, state, child) {
-          if (userIdsList != null) {
+          if (userIdsList != null && userIdsList.isNotEmpty) {
             userList = state.getuserDetail(userIdsList);
           }
           return !(userList != null && userList.isNotEmpty)
