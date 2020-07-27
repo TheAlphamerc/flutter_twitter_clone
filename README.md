@@ -238,7 +238,7 @@ and send a [pull request](https://github.com/TheAlphamerc/flutter_twitter_clone/
 
 > If you found this project helpful or you learned something from the source code and want to thank me, consider buying me a cup of :coffee:
 >
-> * [PayPal](https://paypal.me/shubhamsinghchahar/)
+> * [PayPal](https://paypal.me/TheAlphamerc/)
 
 ## Sponsors
 * [Abdulbasit](https://github.com/AbdulbasitSaid)
