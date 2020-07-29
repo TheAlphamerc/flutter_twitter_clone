@@ -242,3 +242,7 @@ and send a [pull request](https://github.com/TheAlphamerc/flutter_twitter_clone/
 
 ## Sponsors
 * [Abdulbasit](https://github.com/AbdulbasitSaid)
+
+## Visitors Count
+
+<img align="left" src = "https://profile-counter.glitch.me/flutter_twitter_clone/count.svg" alt ="Loading">
