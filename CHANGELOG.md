@@ -1,4 +1,4 @@
-## [1.0.6] - UPCOMING
+## [1.0.6] - 17 Jul 2020
 
 * In user profile page three tabs are added to filter tweet and commnet tweet and tweet with media.
 * User profile pic view added to view user profile picture.
