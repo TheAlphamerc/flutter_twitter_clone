@@ -238,7 +238,11 @@ and send a [pull request](https://github.com/TheAlphamerc/flutter_twitter_clone/
 
 > If you found this project helpful or you learned something from the source code and want to thank me, consider buying me a cup of :coffee:
 >
-> * [PayPal](https://paypal.me/shubhamsinghchahar/)
+> * [PayPal](https://paypal.me/TheAlphamerc/)
 
 ## Sponsors
 * [Abdulbasit](https://github.com/AbdulbasitSaid)
+  <a href="https://tracking.gitads.io/?repo=flutter_twitter_clone"><img src="https://images.gitads.io/flutter_twitter_clone" alt="GitAds"/></a>
+## Visitors Count
+
+<img align="left" src = "https://profile-counter.glitch.me/flutter_twitter_clone/count.svg" alt ="Loading">
