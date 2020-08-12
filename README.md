@@ -240,6 +240,9 @@ and send a [pull request](https://github.com/TheAlphamerc/flutter_twitter_clone/
 >
 > * [PayPal](https://paypal.me/TheAlphamerc/)
 
+> You can also nominate me for Github Star developer program
+> https://stars.github.com/nominate
+
 ## Sponsors
 * [Abdulbasit](https://github.com/AbdulbasitSaid)
 ## Visitors Count
