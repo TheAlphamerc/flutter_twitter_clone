@@ -38,14 +38,19 @@ class _ImageViewPgeState extends State<ImageViewPge> {
               maxHeight: fullHeight(context),
             ),
             child: InkWell(
-              onTap: () {
-                setState(() {
-                  isToolAvailable = !isToolAvailable;
-                });
-              },
-              child: 
-                  _imageFeed(state.tweetToReplyModel.imagePath),
-            ),
+                onTap: () {
+                  setState(() {
+                    isToolAvailable = !isToolAvailable;
+                  });
+                },
+                child: InteractiveViewer(
+                  child: _imageFeed(state.tweetToReplyModel.imagePath),
+                  maxScale: 4,
+                  minScale: .1,
+                  panEnabled: true,
+                  constrained: true,
+                  scaleEnabled: true,
+                )),
           ),
         ),
         !isToolAvailable
@@ -175,7 +180,7 @@ class _ImageViewPgeState extends State<ImageViewPge> {
     var pic = authState.userModel.profilePic ?? dummyProfilePic;
     var tags = getHashTags(_textEditingController.text);
 
-    User commentedUser = User(
+    UserModel commentedUser = UserModel(
         displayName: name,
         userName: authState.userModel.userName,
         isVerified: authState.userModel.isVerified,

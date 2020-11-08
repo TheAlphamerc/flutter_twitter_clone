@@ -1,12 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
-import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/model/notificationModel.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
-import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/state/notificationState.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
@@ -36,7 +33,7 @@ class _NotificationPageState extends State<NotificationPage> {
     // });
   }
 
-  void onSettingIconPressed(context) {
+  void onSettingIconPressed() {
     Navigator.pushNamed(context, '/NotificationPage');
   }
 
@@ -78,7 +75,6 @@ class NotificationPageBody extends StatelessWidget {
             child: LinearProgressIndicator(),
           );
         } else {
-          
           return SizedBox();
         }
       },
@@ -168,7 +164,7 @@ class NotificationTile extends StatelessWidget {
     return FutureBuilder(
       future: state.getuserDetail(userId),
       //  initialData: InitialData,
-      builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
         if (snapshot.hasData) {
           name(snapshot.data.displayName);
           return Padding(
@@ -204,7 +200,7 @@ class NotificationTile extends StatelessWidget {
               state.getpostDetailFromDatabase(null, model: model);
               Navigator.of(context).pushNamed('/FeedPostDetail/' + model.key);
             },
-            title:_userList(context, model.likeList),
+            title: _userList(context, model.likeList),
             subtitle: Padding(
               padding: EdgeInsets.only(left: 60),
               child: UrlText(

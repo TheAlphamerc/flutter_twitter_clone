@@ -225,12 +225,12 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
     if (messageController.text == null || messageController.text.isEmpty) {
       return;
     }
-    User myUser = User(
+    UserModel myUser = UserModel(
         displayName: authstate.userModel.displayName,
         userId: authstate.userModel.userId,
         userName: authstate.userModel.userName,
         profilePic: authstate.userModel.profilePic);
-    User secondUser = User(
+    UserModel secondUser = UserModel(
       displayName: state.chatUser.displayName,
       userId: state.chatUser.userId,
       userName: state.chatUser.userName,

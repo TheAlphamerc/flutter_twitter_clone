@@ -15,7 +15,7 @@ class ContentPrefrencePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var user = Provider.of<AuthState>(context).userModel ?? User();
+    var user = Provider.of<AuthState>(context).userModel ?? UserModel();
     return Scaffold(
       backgroundColor: TwitterColor.white,
       appBar: SettingsAppBar(
@@ -33,19 +33,24 @@ class ContentPrefrencePage extends StatelessWidget {
           Divider(height: 0),
           SettingRowWidget(
             "Search settings",
-            navigateTo:null,
-            ),
-         
-          HeaderWidget('Languages', secondHeader: true,),
+            navigateTo: null,
+          ),
+          HeaderWidget(
+            'Languages',
+            secondHeader: true,
+          ),
           SettingRowWidget(
             "Recommendations",
             vPadding: 15,
-            subtitle: "Select which language you want recommended Tweets, people, and trends to include",
-            ),
-          HeaderWidget('Safety', secondHeader: true,),
+            subtitle:
+                "Select which language you want recommended Tweets, people, and trends to include",
+          ),
+          HeaderWidget(
+            'Safety',
+            secondHeader: true,
+          ),
           SettingRowWidget("Blocked accounts"),
           SettingRowWidget("Muted accounts"),
-
         ],
       ),
     );

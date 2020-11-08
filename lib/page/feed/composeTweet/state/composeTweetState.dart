@@ -113,7 +113,7 @@ class ComposeTweetState extends ChangeNotifier {
   /// For package detail check:-  https://pub.dev/packages/firebase_remote_config#-readme-tab-
   Future<Null> getFCMServerKey() async {
     /// If FCM server key is already fetched then no need to fetch it again.
-    if(serverToken != null && serverToken.isNotEmpty){
+    if (serverToken != null && serverToken.isNotEmpty) {
       return Future.value(null);
     }
     final RemoteConfig remoteConfig = await RemoteConfig.instance;
@@ -122,25 +122,28 @@ class ComposeTweetState extends ChangeNotifier {
     var data = remoteConfig.getString('FcmServerKey');
     if (data != null && data.isNotEmpty) {
       serverToken = jsonDecode(data)["key"];
-    }
-    else{
-      cprint("Please configure Remote config in firebase", errorIn: "getFCMServerKey");
+    } else {
+      cprint("Please configure Remote config in firebase",
+          errorIn: "getFCMServerKey");
     }
   }
-   /// Fecth FCM server key from firebase Remote config
+
+  /// Fecth FCM server key from firebase Remote config
   /// send notification to user once fcmToken is retrieved from firebase
   Future<void> sendNotification(FeedModel model, SearchState state) async {
     final usernameRegex = r"(@\w*[a-zA-Z1-9])";
     RegExp regExp = new RegExp(usernameRegex);
     var status = regExp.hasMatch(description);
+
     /// Check if username is availeble in description or not
     if (status) {
       /// Get FCM server key from firebase remote config
       getFCMServerKey().then((val) async {
-        if(serverToken == null){
+        if (serverToken == null) {
           return;
         }
-        /// Reset userlist 
+
+        /// Reset userlist
         state.filterByUsername("");
 
         /// Search all username from description
@@ -164,7 +167,7 @@ class ComposeTweetState extends ChangeNotifier {
   }
 
   /// Send notificatinn by using firebase notification rest api;
-  Future<void> sendNotificationToUser(FeedModel model, User user) async {
+  Future<void> sendNotificationToUser(FeedModel model, UserModel user) async {
     print("Send notification to: ${user.userName}");
 
     /// Return from here if fcmToken is null

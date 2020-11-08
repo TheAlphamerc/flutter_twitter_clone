@@ -14,7 +14,7 @@ class FeedModel {
   String imagePath;
   List<String> tags;
   List<String> replyTweetKeyList;
-  User user;
+  UserModel user;
   FeedModel(
       {this.key,
       this.description,
@@ -61,7 +61,7 @@ class FeedModel {
     createdAt = map['createdAt'];
     imagePath = map['imagePath'];
     //  username = map['username'];
-    user = User.fromJson(map['user']);
+    user = UserModel.fromJson(map['user']);
     parentkey = map['parentkey'];
     childRetwetkey = map['childRetwetkey'];
     if (map['tags'] != null) {
@@ -83,7 +83,8 @@ class FeedModel {
       likeList = [];
       likeCount = 0;
     }
-    if (map['replyTweetKeyList'] != null && map['replyTweetKeyList'].length > 0) {
+    if (map['replyTweetKeyList'] != null &&
+        map['replyTweetKeyList'].length > 0) {
       map['replyTweetKeyList'].forEach((value) {
         replyTweetKeyList = List<String>();
         map['replyTweetKeyList'].forEach((value) {

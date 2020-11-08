@@ -18,7 +18,7 @@ class ChatUserState extends AppState {
   // final FirebaseDatabase _database = FirebaseDatabase.instance;
 
   List<ChatMessage> _chatUserList;
-  User _chatUser;
+  UserModel _chatUser;
   String serverToken = "<FCM SERVER KEY>";
   StreamSubscription<QuerySnapshot> _userListSubscription;
 
@@ -26,8 +26,8 @@ class ChatUserState extends AppState {
       kfirestore.collection(USERS_COLLECTION);
 
   /// Get FCM server key from firebase project settings
-  User get chatUser => _chatUser;
-  set setChatUser(User model) {
+  UserModel get chatUser => _chatUser;
+  set setChatUser(UserModel model) {
     _chatUser = model;
   }
 
@@ -49,22 +49,21 @@ class ChatUserState extends AppState {
     // getChannelName(userId, myId);
 
     _userListSubscription = _userCollection
-        .document(userId)
+        .doc(userId)
         .collection(CHAT_USER_LIST_COLLECTION)
         .snapshots()
         .listen((QuerySnapshot snapshot) {
-      if (snapshot.documentChanges.isEmpty) {
+      if (snapshot.docChanges.isEmpty) {
         return;
       }
-      if (snapshot.documentChanges.first.type == DocumentChangeType.added) {
-        _onChatUserAdded(snapshot.documentChanges.first.document);
+      if (snapshot.docChanges.first.type == DocumentChangeType.added) {
+        _onChatUserAdded(snapshot.docChanges.first.doc);
       }
-      // else if (snapshot.documentChanges.first.type ==
+      // else if (snapshot.docChanges.first.type ==
       //     DocumentChangeType.removed) {
-      //   // _onNotificationRemoved(snapshot.documentChanges.first.document);
-      else if (snapshot.documentChanges.first.type ==
-          DocumentChangeType.modified) {
-        _onChatUserUpdated(snapshot.documentChanges.first.document);
+      //   // _onNotificationRemoved(snapshot.docChanges.first.doc);
+      else if (snapshot.docChanges.first.type == DocumentChangeType.modified) {
+        _onChatUserUpdated(snapshot.docChanges.first.doc);
       }
     });
   }
@@ -99,19 +98,19 @@ class ChatUserState extends AppState {
   /// Fetch users list to who have ever engaged in chat message with logged-in user
   void getUserchatList(String userId) async {
     try {
-      // _userListCollection.document(userId).get()
+      // _userListCollection.doc(userId).get()
       _chatUserList = List<ChatMessage>();
 
       await _userCollection
-          .document(userId)
+          .doc(userId)
           .collection(CHAT_USER_LIST_COLLECTION)
-          .getDocuments()
+          .get()
           .then((QuerySnapshot querySnapshot) {
-        if (querySnapshot != null && querySnapshot.documents.isNotEmpty) {
-          for (var i = 0; i < querySnapshot.documents.length; i++) {
+        if (querySnapshot != null && querySnapshot.docs.isNotEmpty) {
+          for (var i = 0; i < querySnapshot.docs.length; i++) {
             final model = ChatMessage.fromJson(
-                querySnapshot.documents[i].data["lastMessage"]);
-            model.key = querySnapshot.documents[i].documentID;
+                querySnapshot.docs[i].data()["lastMessage"]);
+            model.key = querySnapshot.docs[i].id;
             _chatUserList.add(model);
           }
           // _userlist.addAll(_userFilterlist);
@@ -146,29 +145,30 @@ class ChatUserState extends AppState {
     }
   }
 
-  void onMessageSubmitted(ChatMessage message, {User myUser, User secondUser}) {
+  void onMessageSubmitted(ChatMessage message,
+      {UserModel myUser, UserModel secondUser}) {
     print(chatUser.userId);
     try {
       // if (_messageList == null || _messageList.length < 1) {
-      // kfirestore.document(message.senderId).setData({"receiver":message.receiverId, "lastMessage":message.toJson()});
-      // _userListCollection.document(message.senderId).setData({
+      // kfirestore.doc(message.senderId).set({"receiver":message.receiverId, "lastMessage":message.toJson()});
+      // _userListCollection.doc(message.senderId).set({
       //   "users": FieldValue.arrayUnion([message.receiverId]),
       //   "lastMessage": message.toJson()
       // });
-      // _userListCollection.document(chatUser.userId).setData({
+      // _userListCollection.doc(chatUser.userId).set({
       //   "users": FieldValue.arrayUnion([message.senderId]),
       //   "lastMessage": message.toJson()
       // });
       _userCollection
-          .document(message.senderId)
+          .doc(message.senderId)
           .collection(CHAT_USER_LIST_COLLECTION)
-          .document(message.receiverId)
-          .setData({"lastMessage": message.toJson()});
+          .doc(message.receiverId)
+          .set({"lastMessage": message.toJson()});
       _userCollection
-          .document(message.receiverId)
+          .doc(message.receiverId)
           .collection(CHAT_USER_LIST_COLLECTION)
-          .document(message.senderId)
-          .setData({"lastMessage": message.toJson()});
+          .doc(message.senderId)
+          .set({"lastMessage": message.toJson()});
       // kDatabase
       //     .child('chatUsers')
       //     .child(message.senderId)
@@ -182,10 +182,10 @@ class ChatUserState extends AppState {
       //     .set(message.toJson());
       kfirestore
           .collection(MESSAGES_COLLECTION)
-          .document(_channelName)
+          .doc(_channelName)
           .collection(MESSAGES_COLLECTION)
-          .document()
-          .setData(message.toJson());
+          .doc()
+          .set(message.toJson());
       // kDatabase.child('chats').child(_channelName).push().set(message.toJson());
       // sendAndRetrieveMessage(message);
       logEvent('send_message');
@@ -249,20 +249,19 @@ class ChatUserState extends AppState {
       _chatUserList = List<ChatMessage>();
     }
     if (snapshot.data != null) {
-      var map = snapshot.data;
+      var map = snapshot.data();
       if (map != null) {
         var model = ChatMessage.fromJson(map["lastMessage"]);
-        model.key = snapshot.documentID;
+        model.key = snapshot.id;
         if (_chatUserList.length > 0 &&
             _chatUserList.any((x) => x.key == model.key)) {
           final index = _chatUserList.indexWhere((x) => x.key == model.key);
           _chatUserList[index] = model;
           cprint("chat user updated1" + model.message);
           notifyListeners();
-
         }
       }
-    } 
+    }
   }
 
   void _onChatUserAdded(DocumentSnapshot snapshot) {
@@ -270,10 +269,10 @@ class ChatUserState extends AppState {
       _chatUserList = List<ChatMessage>();
     }
     if (snapshot.data != null) {
-      var map = snapshot.data;
+      var map = snapshot.data();
       if (map != null) {
         var model = ChatMessage.fromJson(map);
-        model.key = snapshot.documentID;
+        model.key = snapshot.id;
         if (_chatUserList.length > 0 &&
             _chatUserList.any((x) => x.key == model.key)) {
           return;

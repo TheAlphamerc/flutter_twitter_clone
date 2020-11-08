@@ -9,10 +9,10 @@ import 'appState.dart';
 class SearchState extends AppState {
   bool isBusy = false;
   SortUser sortBy = SortUser.ByMaxFollower;
-  List<User> _userFilterlist;
-  List<User> _userlist;
+  List<UserModel> _userFilterlist;
+  List<UserModel> _userlist;
 
-  List<User> get userlist {
+  List<UserModel> get userlist {
     if (_userFilterlist == null) {
       return null;
     } else {
@@ -25,20 +25,19 @@ class SearchState extends AppState {
     try {
       isBusy = true;
       if (_userFilterlist == null) {
-        _userFilterlist = List<User>();
-      }
-      else{}
-      if(_userlist == null){
-        _userlist = List<User>();
+        _userFilterlist = List<UserModel>();
+      } else {}
+      if (_userlist == null) {
+        _userlist = List<UserModel>();
       }
       _userFilterlist.clear();
       _userlist.clear();
 
       QuerySnapshot querySnapshot =
-          await kfirestore.collection(USERS_COLLECTION).getDocuments();
-      if (querySnapshot != null && querySnapshot.documents.isNotEmpty) {
-        for (var i = 0; i < querySnapshot.documents.length; i++) {
-          _userFilterlist.add(User.fromJson(querySnapshot.documents[i].data));
+          await kfirestore.collection(USERS_COLLECTION).get();
+      if (querySnapshot != null && querySnapshot.docs.isNotEmpty) {
+        for (var i = 0; i < querySnapshot.docs.length; i++) {
+          _userFilterlist.add(UserModel.fromJson(querySnapshot.docs[i].data()));
         }
         _userlist.addAll(_userFilterlist);
         _userFilterlist.sort((x, y) => y.followers.compareTo(x.followers));
@@ -153,8 +152,8 @@ class SearchState extends AppState {
 
   /// Return user list relative to provided `userIds`
   /// Method is used on
-  List<User> userList = [];
-  List<User> getuserDetail(List<String> userIds) {
+  List<UserModel> userList = [];
+  List<UserModel> getuserDetail(List<String> userIds) {
     final list = _userlist.where((x) {
       if (userIds.contains(x.key)) {
         return true;

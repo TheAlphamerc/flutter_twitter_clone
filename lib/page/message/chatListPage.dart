@@ -52,7 +52,7 @@ class _ChatListPageState extends State<ChatListPage> {
         itemBuilder: (context, index) => _userCard(
             searchState.userlist.firstWhere(
               (x) => x.userId == state.chatUserList[index].key,
-              orElse: () => User(userName: "Unknown"),
+              orElse: () => UserModel(userName: "Unknown"),
             ),
             state.chatUserList[index]),
         separatorBuilder: (context, index) {
@@ -64,7 +64,7 @@ class _ChatListPageState extends State<ChatListPage> {
     }
   }
 
-  Widget _userCard(User model, ChatMessage lastMessage) {
+  Widget _userCard(UserModel model, ChatMessage lastMessage) {
     return Container(
       color: Colors.white,
       child: ListTile(

@@ -14,7 +14,7 @@ import 'dart:developer' as developer;
 
 final kAnalytics = FirebaseAnalytics();
 final DatabaseReference kDatabase = FirebaseDatabase.instance.reference();
-final Firestore kfirestore = Firestore.instance;
+final FirebaseFirestore kfirestore = FirebaseFirestore.instance;
 final kScreenloader = CustomLoader();
 
 String getPostTime2(String date) {
@@ -126,9 +126,12 @@ launchURL(String url) async {
 
 void cprint(dynamic data, {String errorIn, String event, String warningIn}) {
   if (errorIn != null) {
-    developer.log('[Error]', time: DateTime.now(), error:data, name:errorIn);
+    developer.log('[Error]', time: DateTime.now(), error: data, name: errorIn);
   } else if (data != null) {
-     developer.log(data, time: DateTime.now(), );
+    developer.log(
+      data,
+      time: DateTime.now(),
+    );
   }
   if (event != null) {
     // logEvent(event);

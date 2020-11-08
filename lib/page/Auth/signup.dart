@@ -173,7 +173,7 @@ class _SignupState extends State<Signup> {
     Random random = new Random();
     int randomNumber = random.nextInt(8);
 
-    User user = User(
+    UserModel user = UserModel(
       email: _emailController.text.toLowerCase(),
       bio: 'Edit profile to update bio',
       // contact:  _mobileController.text,

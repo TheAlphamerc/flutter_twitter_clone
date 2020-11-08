@@ -23,7 +23,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final state = Provider.of<SearchState>(context);
+      final state = Provider.of<SearchState>(context, listen: false);
       state.resetFilterList();
     });
     super.initState();
@@ -67,7 +67,7 @@ class _SearchPageState extends State<SearchPage> {
 
 class _UserTile extends StatelessWidget {
   const _UserTile({Key key, this.user}) : super(key: key);
-  final User user;
+  final UserModel user;
 
   @override
   Widget build(BuildContext context) {

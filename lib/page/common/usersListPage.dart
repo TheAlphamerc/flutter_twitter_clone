@@ -26,7 +26,7 @@ class UsersListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<User> userList;
+    List<UserModel> userList;
     return Scaffold(
       backgroundColor: TwitterColor.mystic,
       appBar: CustomAppBar(
@@ -42,6 +42,7 @@ class UsersListPage extends StatelessWidget {
             userList = state.getuserDetail(userIdsList);
           }
           return !(userList != null && userList.isNotEmpty)
+
               /// If user list is empty then display empty list message
               ? Container(
                   width: fullWidth(context),
@@ -51,6 +52,7 @@ class UsersListPage extends StatelessWidget {
                     subTitle: emptyScreenSubTileText,
                   ),
                 )
+
               /// If user list is not empty then display user list
               : UserListWidget(
                   userslist: userList,

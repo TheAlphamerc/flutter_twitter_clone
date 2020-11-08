@@ -9,7 +9,7 @@ import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 import 'package:provider/provider.dart';
 
 class UserListWidget extends StatelessWidget {
-  final List<User> userslist;
+  final List<UserModel> userslist;
   final String emptyScreenText;
   final String emptyScreenSubTileText;
   UserListWidget({
@@ -48,7 +48,7 @@ class UserListWidget extends StatelessWidget {
 class UserTile extends StatelessWidget {
   const UserTile({Key key, this.user, this.myId, this.isFollow})
       : super(key: key);
-  final User user;
+  final UserModel user;
   final String myId;
   final bool isFollow;
 

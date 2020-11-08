@@ -161,7 +161,7 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
     var authState = Provider.of<AuthState>(context, listen: false);
     var myUser = authState.userModel;
     var profilePic = myUser.profilePic ?? dummyProfilePic;
-    var commentedUser = User(
+    var commentedUser = UserModel(
         displayName: myUser.displayName ?? myUser.email.split('@')[0],
         profilePic: profilePic,
         userId: myUser.userId,
@@ -175,9 +175,14 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
         tags: tags,
         parentkey: widget.isTweet
             ? null
-            : widget.isRetweet ? null : state.tweetToReplyModel.key,
-        childRetwetkey:
-            widget.isTweet ? null : widget.isRetweet ? model.key : null,
+            : widget.isRetweet
+                ? null
+                : state.tweetToReplyModel.key,
+        childRetwetkey: widget.isTweet
+            ? null
+            : widget.isRetweet
+                ? model.key
+                : null,
         userId: myUser.userId);
     return reply;
   }
@@ -189,8 +194,11 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
         title: customTitleText(''),
         onActionPressed: _submitButton,
         isCrossButton: true,
-        submitButtonText:
-            widget.isTweet ? 'Tweet' : widget.isRetweet ? 'Retweet' : 'Reply',
+        submitButtonText: widget.isTweet
+            ? 'Tweet'
+            : widget.isRetweet
+                ? 'Retweet'
+                : 'Reply',
         isSubmitDisable:
             !Provider.of<ComposeTweetState>(context).enableSubmitButton ||
                 Provider.of<FeedState>(context).isBusy,
@@ -309,7 +317,7 @@ class _ComposeRetweet
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child:
-                    customImage(context, authState.user?.photoUrl, height: 40),
+                    customImage(context, authState.user?.photoURL, height: 40),
               ),
               Expanded(
                 child: _TextField(
@@ -473,7 +481,7 @@ class _ComposeTweet
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              customImage(context, authState.user?.photoUrl, height: 40),
+              customImage(context, authState.user?.photoURL, height: 40),
               SizedBox(
                 width: 10,
               ),
@@ -533,7 +541,9 @@ class _TextField extends StatelessWidget {
               border: InputBorder.none,
               hintText: isTweet
                   ? 'What\'s happening?'
-                  : isRetweet ? 'Add a comment' : 'Tweet your reply',
+                  : isRetweet
+                      ? 'Add a comment'
+                      : 'Tweet your reply',
               hintStyle: TextStyle(fontSize: 18)),
         ),
       ],
@@ -544,7 +554,7 @@ class _TextField extends StatelessWidget {
 class _UserList extends StatelessWidget {
   const _UserList({Key key, this.list, this.textEditingController})
       : super(key: key);
-  final List<User> list;
+  final List<UserModel> list;
   final TextEditingController textEditingController;
 
   @override
@@ -581,8 +591,8 @@ class _UserList extends StatelessWidget {
 
 class _UserTile extends StatelessWidget {
   const _UserTile({Key key, this.user, this.onUserSelected}) : super(key: key);
-  final User user;
-  final ValueChanged<User> onUserSelected;
+  final UserModel user;
+  final ValueChanged<UserModel> onUserSelected;
 
   @override
   Widget build(BuildContext context) {

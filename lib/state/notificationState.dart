@@ -25,7 +25,7 @@ class NotificationState extends AppState {
   // FcmNotificationModel notification;
   String notificationSenderId;
   dabase.Query query;
-  List<User> userList = [];
+  List<UserModel> userList = [];
   StreamSubscription<QuerySnapshot> notificationSubscription;
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
@@ -41,21 +41,21 @@ class NotificationState extends AppState {
       // query = kDatabase.child("notification").child(userId);
 
       notificationSubscription = _userCollection
-          .document(userId)
+          .doc(userId)
           .collection(NOTIFICATION_COLLECTION)
           .snapshots()
           .listen((QuerySnapshot snapshot) {
-        if (snapshot.documentChanges.isEmpty) {
+        if (snapshot.docChanges.isEmpty) {
           return;
         }
-        if (snapshot.documentChanges.first.type == DocumentChangeType.added) {
-          _onNotificationAdded(snapshot.documentChanges.first.document);
-        } else if (snapshot.documentChanges.first.type ==
+        if (snapshot.docChanges.first.type == DocumentChangeType.added) {
+          _onNotificationAdded(snapshot.docChanges.first.doc);
+        } else if (snapshot.docChanges.first.type ==
             DocumentChangeType.removed) {
-          _onNotificationRemoved(snapshot.documentChanges.first.document);
-        } else if (snapshot.documentChanges.first.type ==
+          _onNotificationRemoved(snapshot.docChanges.first.doc);
+        } else if (snapshot.docChanges.first.type ==
             DocumentChangeType.modified) {
-          _onNotificationChanged(snapshot.documentChanges.first.document);
+          _onNotificationChanged(snapshot.docChanges.first.doc);
         }
       });
 
@@ -79,17 +79,17 @@ class NotificationState extends AppState {
       loading = true;
       _notificationList = [];
       _userCollection
-          .document(userId)
+          .doc(userId)
           .collection(NOTIFICATION_COLLECTION)
-          .getDocuments()
+          .get()
           .then((QuerySnapshot querySnapshot) {
         // _feedlist = List<FeedModel>();
-        if (querySnapshot != null && querySnapshot.documents.isNotEmpty) {
-          for (var i = 0; i < querySnapshot.documents.length; i++) {
+        if (querySnapshot != null && querySnapshot.docs.isNotEmpty) {
+          for (var i = 0; i < querySnapshot.docs.length; i++) {
             var model = NotificationModel.fromJson(
-              querySnapshot.documents[i].data,
+              querySnapshot.docs[i].data(),
             );
-            model.tweetKey = querySnapshot.documents[i].documentID;
+            model.tweetKey = querySnapshot.docs[i].id;
             if (_notificationList.any((x) => x.tweetKey == model.tweetKey)) {
               continue;
             }
@@ -138,12 +138,12 @@ class NotificationState extends AppState {
   Future<FeedModel> getTweetDetail(String tweetId) async {
     FeedModel _tweetDetail;
     var snapshot =
-        await kfirestore.collection(TWEET_COLLECTION).document(tweetId).get();
+        await kfirestore.collection(TWEET_COLLECTION).doc(tweetId).get();
 
-    var map = snapshot.data;
+    var map = snapshot.data();
     if (map != null) {
       _tweetDetail = FeedModel.fromJson(map);
-      _tweetDetail.key = snapshot.documentID;
+      _tweetDetail.key = snapshot.id;
     }
     if (_tweetDetail == null) {
       cprint("Tweet not found " + tweetId);
@@ -157,8 +157,8 @@ class NotificationState extends AppState {
   }
 
   /// get user who liked your tweet
-  Future<User> getuserDetail(String userId) async {
-    User user;
+  Future<UserModel> getuserDetail(String userId) async {
+    UserModel user;
 
     /// if user already available in userlist then get user data from list
     /// It reduce api load
@@ -168,12 +168,12 @@ class NotificationState extends AppState {
 
     /// If user sata not available in userlist then fetch user data from firestore
     var snapshot =
-        await kfirestore.collection(USERS_COLLECTION).document(userId).get();
+        await kfirestore.collection(USERS_COLLECTION).doc(userId).get();
 
-    var map = snapshot.data;
+    var map = snapshot.data();
     if (map != null) {
-      user = User.fromJson(map);
-      user.key = snapshot.documentID;
+      user = UserModel.fromJson(map);
+      user.key = snapshot.id;
 
       /// Add user data to userlist
       /// Next time user data can be get from this list
@@ -186,19 +186,19 @@ class NotificationState extends AppState {
   void removeNotification(String userId, String tweetkey) async {
     print("removeNotification " + tweetkey);
     _userCollection
-        .document(userId)
+        .doc(userId)
         .collection(NOTIFICATION_COLLECTION)
-        .document(tweetkey)
+        .doc(tweetkey)
         .delete();
     // kDatabase.child('notification').child(userId).child(tweetkey).remove();
   }
 
   /// Trigger when somneone like your tweet
   void _onNotificationAdded(DocumentSnapshot event) {
-    if (event.data != null) {
-      var model = NotificationModel.fromJson(event.data);
-      model.tweetKey = event.documentID;
-      // event.data["updatedAt"], event.data["type"]);
+    if (event.data() != null) {
+      var model = NotificationModel.fromJson(event.data());
+      model.tweetKey = event.id;
+      // event.data()["updatedAt"], event.data()["type"]);
       if (_notificationList == null) {
         _notificationList = List<NotificationModel>();
       }
@@ -215,9 +215,9 @@ class NotificationState extends AppState {
 
   // /// Trigger when someone changed his like preference
   void _onNotificationChanged(DocumentSnapshot event) {
-    if (event.data != null) {
-      var model = NotificationModel.fromJson(event.data);
-      model.tweetKey = event.documentID;
+    if (event.data() != null) {
+      var model = NotificationModel.fromJson(event.data());
+      model.tweetKey = event.id;
       //update notification list
       _notificationList
           .firstWhere((x) => x.tweetKey == model.tweetKey)
@@ -229,9 +229,9 @@ class NotificationState extends AppState {
 
   /// Trigger when someone undo his like on tweet
   void _onNotificationRemoved(DocumentSnapshot event) {
-    if (event.data != null) {
-      var model = NotificationModel.fromJson(event.data); 
-      model.tweetKey = event.documentID;
+    if (event.data() != null) {
+      var model = NotificationModel.fromJson(event.data());
+      model.tweetKey = event.id;
       // remove notification from list
       _notificationList.removeWhere((x) => x.tweetKey == model.tweetKey);
       if (_notificationList.isEmpty) {

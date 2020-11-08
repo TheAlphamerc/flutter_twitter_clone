@@ -1,4 +1,4 @@
-class User {
+class UserModel {
   String key;
   String email;
   String userId;
@@ -18,31 +18,31 @@ class User {
   List<String> followersList;
   List<String> followingList;
 
-  User(
-      {this.email,
-      this.userId,
-      this.displayName,
-      this.profilePic,
-      this.key,
-      this.contact,
-      this.bio,
-      this.dob,
-      this.location,
-      this.createdAt,
-      this.userName,
-      this.followers,
-      this.following,
-      this.webSite,
-      this.isVerified,
-      this.fcmToken,
-      this.followersList,
-      });
+  UserModel({
+    this.email,
+    this.userId,
+    this.displayName,
+    this.profilePic,
+    this.key,
+    this.contact,
+    this.bio,
+    this.dob,
+    this.location,
+    this.createdAt,
+    this.userName,
+    this.followers,
+    this.following,
+    this.webSite,
+    this.isVerified,
+    this.fcmToken,
+    this.followersList,
+  });
 
-  User.fromJson(Map<dynamic, dynamic> map) {
+  UserModel.fromJson(Map<dynamic, dynamic> map) {
     if (map == null) {
       return;
     }
-    if(followersList == null){
+    if (followersList == null) {
       followersList = [];
     }
     email = map['email'];
@@ -61,20 +61,20 @@ class User {
     webSite = map['webSite'];
     fcmToken = map['fcmToken'];
     isVerified = map['isVerified'] ?? false;
-    if(map['followerList'] != null){
+    if (map['followerList'] != null) {
       followersList = List<String>();
-      map['followerList'].forEach((value){
-         followersList.add(value);
-     });
-   }
-   followers = followersList != null ? followersList.length : null;
-   if(map['followingList'] != null){
+      map['followerList'].forEach((value) {
+        followersList.add(value);
+      });
+    }
+    followers = followersList != null ? followersList.length : null;
+    if (map['followingList'] != null) {
       followingList = List<String>();
-      map['followingList'].forEach((value){
-         followingList.add(value);
-     });
-   }
-   following = followingList != null ? followingList.length : null;
+      map['followingList'].forEach((value) {
+        followingList.add(value);
+      });
+    }
+    following = followingList != null ? followingList.length : null;
   }
   toJson() {
     return {
@@ -82,7 +82,6 @@ class User {
       "userId": userId,
       "email": email,
       'displayName': displayName,
-      'userId': userId,
       'profilePic': profilePic,
       'contact': contact,
       'dob': dob,
@@ -90,54 +89,54 @@ class User {
       'location': location,
       'createdAt': createdAt,
       'followers': followersList != null ? followersList.length : null,
-      'following': followingList!= null ? followingList.length : null,
+      'following': followingList != null ? followingList.length : null,
       'userName': userName,
       'webSite': webSite,
       'isVerified': isVerified ?? false,
-      'fcmToken':fcmToken,
-      'followerList' : followersList,
-      'followingList':followingList
+      'fcmToken': fcmToken,
+      'followerList': followersList,
+      'followingList': followingList
     };
   }
 
-  User copyWith(
-      {String email,
-      String userId,
-      String displayName,
-      String profilePic,
-      String key,
-      String contact,
-      bio,
-      String dob,
-      String location,
-      String createdAt,
-      String userName,
-      int followers,
-      int following,
-      String webSite,
-      bool isVerified,
-      String fcmToken,
-      List<String> followingList,
-      }) {
-    return User(
-        email: email ?? this.email,
-        bio: bio ?? this.bio,
-        contact: contact ?? this.contact,
-        createdAt: createdAt ?? this.createdAt,
-        displayName: displayName ?? this.displayName,
-        dob: dob ?? this.dob,
-        followers: followersList != null ? followersList.length : null,
-        following: following ?? this.following,
-        isVerified: isVerified ?? this.isVerified,
-        key: key ?? this.key,
-        location: location ?? this.location,
-        profilePic: profilePic ?? this.profilePic,
-        userId: userId ?? this.userId,
-        userName: userName ?? this.userName,
-        webSite: webSite ?? this.webSite,
-        fcmToken:fcmToken ?? this.fcmToken,
-        followersList: followersList ?? this.followersList,
-        );
+  UserModel copyWith({
+    String email,
+    String userId,
+    String displayName,
+    String profilePic,
+    String key,
+    String contact,
+    bio,
+    String dob,
+    String location,
+    String createdAt,
+    String userName,
+    int followers,
+    int following,
+    String webSite,
+    bool isVerified,
+    String fcmToken,
+    List<String> followingList,
+  }) {
+    return UserModel(
+      email: email ?? this.email,
+      bio: bio ?? this.bio,
+      contact: contact ?? this.contact,
+      createdAt: createdAt ?? this.createdAt,
+      displayName: displayName ?? this.displayName,
+      dob: dob ?? this.dob,
+      followers: followersList != null ? followersList.length : null,
+      following: following ?? this.following,
+      isVerified: isVerified ?? this.isVerified,
+      key: key ?? this.key,
+      location: location ?? this.location,
+      profilePic: profilePic ?? this.profilePic,
+      userId: userId ?? this.userId,
+      userName: userName ?? this.userName,
+      webSite: webSite ?? this.webSite,
+      fcmToken: fcmToken ?? this.fcmToken,
+      followersList: followersList ?? this.followersList,
+    );
   }
 
   String getFollower() {

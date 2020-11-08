@@ -15,7 +15,7 @@ import '../../helper/utility.dart';
 
 class ChatState extends AppState {
   List<ChatMessage> _messageList;
-  User _chatUser;
+  UserModel _chatUser;
   String serverToken = "<FCM SERVER KEY>";
   StreamSubscription<QuerySnapshot> _messageSubscription;
   static final CollectionReference _messageCollection =
@@ -25,8 +25,8 @@ class ChatState extends AppState {
       kfirestore.collection(USERS_COLLECTION);
 
   /// Get FCM server key from firebase project settings
-  User get chatUser => _chatUser;
-  set setChatUser(User model) {
+  UserModel get chatUser => _chatUser;
+  set setChatUser(UserModel model) {
     _chatUser = model;
   }
 
@@ -52,21 +52,20 @@ class ChatState extends AppState {
     getChannelName(userId, myId);
 
     _messageSubscription = _messageCollection
-        .document(_channelName)
+        .doc(_channelName)
         .collection(MESSAGES_COLLECTION)
         .snapshots()
         .listen((QuerySnapshot snapshot) {
-      if (snapshot.documentChanges.isEmpty) {
+      if (snapshot.docChanges.isEmpty) {
         return;
       }
-      if (snapshot.documentChanges.first.type == DocumentChangeType.added) {
-        _onMessageAdded(snapshot.documentChanges.first.document);
-      } else if (snapshot.documentChanges.first.type ==
-          DocumentChangeType.removed) {
-        // _onNotificationRemoved(snapshot.documentChanges.first.document);
-      } else if (snapshot.documentChanges.first.type ==
+      if (snapshot.docChanges.first.type == DocumentChangeType.added) {
+        _onMessageAdded(snapshot.docChanges.first.doc);
+      } else if (snapshot.docChanges.first.type == DocumentChangeType.removed) {
+        // _onNotificationRemoved(snapshot.docChanges.first.doc);
+      } else if (snapshot.docChanges.first.type ==
           DocumentChangeType.modified) {
-        _onMessageChanged(snapshot.documentChanges.first.document);
+        _onMessageChanged(snapshot.docChanges.first.doc);
       }
     });
   }
@@ -92,9 +91,9 @@ class ChatState extends AppState {
     var data = remoteConfig.getString('FcmServerKey');
     if (data != null && data.isNotEmpty) {
       serverToken = jsonDecode(data)["key"];
-    }
-    else{
-      cprint("Please configure Remote config in firebase", errorIn: "getFCMServerKey");
+    } else {
+      cprint("Please configure Remote config in firebase",
+          errorIn: "getFCMServerKey");
     }
   }
 
@@ -108,14 +107,14 @@ class ChatState extends AppState {
         _messageList = [];
       }
       _messageCollection
-          .document(_channelName)
+          .doc(_channelName)
           .collection(MESSAGES_COLLECTION)
-          .getDocuments()
+          .get()
           .then((QuerySnapshot querySnapshot) {
-        if (querySnapshot != null && querySnapshot.documents.isNotEmpty) {
-          for (var i = 0; i < querySnapshot.documents.length; i++) {
-            final model = ChatMessage.fromJson(querySnapshot.documents[i].data);
-            model.key = querySnapshot.documents[i].documentID;
+        if (querySnapshot != null && querySnapshot.docs.isNotEmpty) {
+          for (var i = 0; i < querySnapshot.docs.length; i++) {
+            final model = ChatMessage.fromJson(querySnapshot.docs[i].data());
+            model.key = querySnapshot.docs[i].id;
             _messageList.add(model);
           }
           // _userlist.addAll(_userFilterlist);
@@ -149,29 +148,30 @@ class ChatState extends AppState {
     }
   }
 
-  void onMessageSubmitted(ChatMessage message, {User myUser, User secondUser}) {
+  void onMessageSubmitted(ChatMessage message,
+      {UserModel myUser, UserModel secondUser}) {
     print(chatUser.userId);
     try {
       if (message.message != null &&
           message.message.length > 0 &&
           message.message.length < 400) {
         _userCollection
-            .document(message.senderId)
+            .doc(message.senderId)
             .collection(CHAT_USER_LIST_COLLECTION)
-            .document(message.receiverId)
-            .setData({"lastMessage": message.toJson()});
+            .doc(message.receiverId)
+            .set({"lastMessage": message.toJson()});
         _userCollection
-            .document(message.receiverId)
+            .doc(message.receiverId)
             .collection(CHAT_USER_LIST_COLLECTION)
-            .document(message.senderId)
-            .setData({"lastMessage": message.toJson()});
+            .doc(message.senderId)
+            .set({"lastMessage": message.toJson()});
 
         kfirestore
             .collection(MESSAGES_COLLECTION)
-            .document(_channelName)
+            .doc(_channelName)
             .collection(MESSAGES_COLLECTION)
-            .document()
-            .setData(message.toJson());
+            .doc()
+            .set(message.toJson());
         // sendAndRetrieveMessage(message);
         logEvent('send_message');
       }
@@ -194,11 +194,11 @@ class ChatState extends AppState {
     if (_messageList == null) {
       _messageList = List<ChatMessage>();
     }
-    if (snapshot.data != null) {
-      var map = snapshot.data;
+    if (snapshot.data() != null) {
+      var map = snapshot.data();
       if (map != null) {
         var model = ChatMessage.fromJson(map);
-        model.key = snapshot.documentID;
+        model.key = snapshot.id;
         if (_messageList.length > 0 &&
             _messageList.any((x) => x.key == model.key)) {
           return;
@@ -215,11 +215,11 @@ class ChatState extends AppState {
     if (_messageList == null) {
       _messageList = List<ChatMessage>();
     }
-    if (snapshot.data != null) {
-      var map = snapshot.data;
+    if (snapshot.data() != null) {
+      var map = snapshot.data();
       if (map != null) {
         var model = ChatMessage.fromJson(map);
-        model.key = snapshot.documentID;
+        model.key = snapshot.id;
         if (_messageList.length > 0 &&
             _messageList.any((x) => x.key == model.key)) {
           return;
@@ -271,7 +271,7 @@ class ChatState extends AppState {
         'title': "Message from ${model.senderName}"
       },
       'priority': 'high',
-      'data': <String, dynamic>{
+      'data()': <String, dynamic>{
         'click_action': 'FLUTTER_NOTIFICATION_CLICK',
         'id': '1',
         'status': 'done',
