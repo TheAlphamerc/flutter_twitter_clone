@@ -261,7 +261,7 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   isFollower() {
-    var authstate = Provider.of<AuthState>(context);
+    var authstate = Provider.of<AuthState>(context, listen: false);
     if (authstate.profileUserModel.followersList != null &&
         authstate.profileUserModel.followersList.isNotEmpty) {
       return (authstate.profileUserModel.followersList
