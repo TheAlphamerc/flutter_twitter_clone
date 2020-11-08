@@ -26,9 +26,9 @@ dependencies:
   # empty_widget:
   # flutter_advanced_networkimage:
   cached_network_image: ^2.2.0+1
-  provider:
+  provider: ^4.3.2+2
   # flutter_native_splash: ^0.1.9
-  firebase_auth:
+  firebase_auth: ^0.18.3
   firebase_database:
   firebase_analytics:
 
@@ -39,8 +39,8 @@ dependencies:
   http: 
   shared_preferences: ^0.5.1+2
   firebase_messaging: ^6.0.13
-  google_sign_in: 
-  intl: ^0.15.8
+  google_sign_in: "^4.5.1" 
+  intl: ^0.16.1
   url_launcher:
   share: ^0.6.3
   google_fonts: ^0.3.9
