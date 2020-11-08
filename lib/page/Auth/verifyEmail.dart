@@ -25,7 +25,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: state.user.isEmailVerified
+        children: state.user.emailVerified
             ? <Widget>[
                 NotifyText(
                   title: 'Your email address is verified',
@@ -75,7 +75,6 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
   void _submit() {
     var state = Provider.of<AuthState>(context, listen: false);
     state.sendEmailVerification(_scaffoldKey);
-    
   }
 
   @override

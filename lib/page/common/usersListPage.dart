@@ -27,7 +27,7 @@ class UsersListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<User> userList;
+    List<UserModel> userList;
     return Scaffold(
       backgroundColor: TwitterColor.mystic,
       appBar: CustomAppBar(

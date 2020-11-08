@@ -7,10 +7,10 @@ import 'appState.dart';
 class SearchState extends AppState {
   bool isBusy = false;
   SortUser sortBy = SortUser.ByMaxFollower;
-  List<User> _userFilterlist;
-  List<User> _userlist;
+  List<UserModel> _userFilterlist;
+  List<UserModel> _userlist;
 
-  List<User> get userlist {
+  List<UserModel> get userlist {
     if (_userFilterlist == null) {
       return null;
     } else {
@@ -18,19 +18,19 @@ class SearchState extends AppState {
     }
   }
 
-  /// get [User list] from firebase realtime Database
+  /// get [UserModel list] from firebase realtime Database
   void getDataFromDatabase() {
     try {
       isBusy = true;
       kDatabase.child('profile').once().then(
         (DataSnapshot snapshot) {
-          _userlist = List<User>();
-          _userFilterlist = List<User>();
+          _userlist = List<UserModel>();
+          _userFilterlist = List<UserModel>();
           if (snapshot.value != null) {
             var map = snapshot.value;
             if (map != null) {
               map.forEach((key, value) {
-                var model = User.fromJson(value);
+                var model = UserModel.fromJson(value);
                 model.key = key;
                 _userlist.add(model);
                 _userFilterlist.add(model);
@@ -62,7 +62,7 @@ class SearchState extends AppState {
   }
 
   /// This function call when search fiels text change.
-  /// User list on  search field get filter by `name` string
+  /// UserModel list on  search field get filter by `name` string
   void filterByUsername(String name) {
     if (name.isEmpty &&
         _userlist != null &&
@@ -101,7 +101,7 @@ class SearchState extends AppState {
       case SortUser.ByMaxFollower:
         _userFilterlist.sort((x, y) => y.followers.compareTo(x.followers));
         notifyListeners();
-        return "User with max follower";
+        return "UserModel with max follower";
 
       case SortUser.ByNewest:
         _userFilterlist.sort((x, y) =>
@@ -125,19 +125,18 @@ class SearchState extends AppState {
         return "Unknown";
     }
   }
-  /// Return user list relative to provided `userIds` 
-  /// Method is used on 
-  List<User> userList = [];
-   List<User> getuserDetail(List<String> userIds){
-     final list = _userlist.where((x) {
-       if(userIds.contains(x.key)){
-         return true;
-       }
-       else{
-         return false;
-       }
-     
-     }).toList();
+
+  /// Return user list relative to provided `userIds`
+  /// Method is used on
+  List<UserModel> userList = [];
+  List<UserModel> getuserDetail(List<String> userIds) {
+    final list = _userlist.where((x) {
+      if (userIds.contains(x.key)) {
+        return true;
+      } else {
+        return false;
+      }
+    }).toList();
     return list;
   }
 }

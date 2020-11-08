@@ -22,7 +22,7 @@ class NotificationState extends AppState {
   // FcmNotificationModel notification;
   String notificationSenderId;
   dabase.Query query;
-  List<User> userList = [];
+  List<UserModel> userList = [];
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
@@ -99,15 +99,15 @@ class NotificationState extends AppState {
   }
 
   /// get user who liked your tweet
-  Future<User> getuserDetail(String userId) async {
-    User user;
+  Future<UserModel> getuserDetail(String userId) async {
+    UserModel user;
     if (userList.length > 0 && userList.any((x) => x.userId == userId)) {
       return Future.value(userList.firstWhere((x) => x.userId == userId));
     }
     var snapshot = await kDatabase.child('profile').child(userId).once();
     if (snapshot.value != null) {
       var map = snapshot.value;
-      user = User.fromJson(map);
+      user = UserModel.fromJson(map);
       user.key = snapshot.key;
       userList.add(user);
       return user;

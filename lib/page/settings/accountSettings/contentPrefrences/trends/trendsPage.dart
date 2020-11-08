@@ -62,7 +62,8 @@ class TrendsPage extends StatelessWidget {
           Divider(height: 0),
           _row(context, "Oldest user first", SortUser.ByOldest),
           Divider(height: 0),
-          _row(context, "User with max follower", SortUser.ByMaxFollower),
+          _row(context, "UserModelModel with max follower",
+              SortUser.ByMaxFollower),
         ],
       ),
     );

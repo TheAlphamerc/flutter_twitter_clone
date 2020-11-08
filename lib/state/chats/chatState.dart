@@ -15,12 +15,12 @@ class ChatState extends AppState {
 
   List<ChatMessage> _messageList;
   List<ChatMessage> _chatUserList;
-  User _chatUser;
+  UserModel _chatUser;
   String serverToken = "<FCM SERVER KEY>";
 
   /// Get FCM server key from firebase project settings
-  User get chatUser => _chatUser;
-  set setChatUser(User model) {
+  UserModel get chatUser => _chatUser;
+  set setChatUser(UserModel model) {
     _chatUser = model;
   }
 
@@ -117,11 +117,10 @@ class ChatState extends AppState {
               return DateTime.parse(y.createdAt)
                   .compareTo(DateTime.parse(x.createdAt));
             } else {
-              if(x.createdAt != null){
+              if (x.createdAt != null) {
                 return 0;
-              }
-              else{
-                 return 1;
+              } else {
+                return 1;
               }
             }
           });
@@ -165,7 +164,8 @@ class ChatState extends AppState {
     }
   }
 
-  void onMessageSubmitted(ChatMessage message, {User myUser, User secondUser}) {
+  void onMessageSubmitted(ChatMessage message,
+      {UserModel myUser, UserModel secondUser}) {
     print(chatUser.userId);
     try {
       // if (_messageList == null || _messageList.length < 1) {

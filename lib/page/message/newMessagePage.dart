@@ -29,7 +29,7 @@ class _NewMessagePageState extends State<NewMessagePage> {
     super.initState();
   }
 
-  Widget _userTile(User user) {
+  Widget _userTile(UserModel user) {
     return ListTile(
       onTap: () {
         final chatState = Provider.of<ChatState>(context, listen: false);

@@ -18,18 +18,18 @@ import 'package:firebase_database/firebase_database.dart' as dabase;
 class AuthState extends AppState {
   AuthStatus authStatus = AuthStatus.NOT_DETERMINED;
   bool isSignInWithGoogle = false;
-  FirebaseUser user;
+  User user;
   String userId;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   dabase.Query _profileQuery;
-  List<User> _profileUserModelList;
-  User _userModel;
+  List<UserModel> _profileUserModelList;
+  UserModel _userModel;
 
-  User get userModel => _userModel;
+  UserModel get userModel => _userModel;
 
-  User get profileUserModel {
+  UserModel get profileUserModel {
     if (_profileUserModelList != null && _profileUserModelList.length > 0) {
       return _profileUserModelList.last;
     } else {
@@ -97,7 +97,7 @@ class AuthState extends AppState {
   /// Create user from `google login`
   /// If user is new then it create a new user
   /// If user is old then it just `authenticate` user and return firebase user data
-  Future<FirebaseUser> handleGoogleSignIn() async {
+  Future<User> handleGoogleSignIn() async {
     try {
       /// Record log in firebase kAnalytics about Google login
       kAnalytics.logLogin(loginMethod: 'google_login');
@@ -138,23 +138,23 @@ class AuthState extends AppState {
   }
 
   /// Create user profile from google login
-  createUserFromGoogleSignIn(FirebaseUser user) {
+  createUserFromGoogleSignIn(User user) {
     var diff = DateTime.now().difference(user.metadata.creationTime);
     // Check if user is new or old
     // If user is new then add new user to firebase realtime kDatabase
     if (diff < Duration(seconds: 15)) {
-      User model = User(
+      UserModel model = UserModel(
         bio: 'Edit profile to update bio',
         dob: DateTime(1950, DateTime.now().month, DateTime.now().day + 3)
             .toString(),
         location: 'Somewhere in universe',
-        profilePic: user.photoUrl,
+        profilePic: user.photoURL,
         displayName: user.displayName,
         email: user.email,
         key: user.uid,
         userId: user.uid,
         contact: user.phoneNumber,
-        isVerified: user.isEmailVerified,
+        isVerified: user.emailVerified,
       );
       createUser(model, newUser: true);
     } else {
@@ -163,7 +163,7 @@ class AuthState extends AppState {
   }
 
   /// Create new user's profile in db
-  Future<String> signUp(User userModel,
+  Future<String> signUp(UserModel userModel,
       {GlobalKey<ScaffoldState> scaffoldKey, String password}) async {
     try {
       loading = true;
@@ -174,10 +174,9 @@ class AuthState extends AppState {
       user = result.user;
       authStatus = AuthStatus.LOGGED_IN;
       kAnalytics.logSignUp(signUpMethod: 'register');
-      UserUpdateInfo updateInfo = UserUpdateInfo();
-      updateInfo.displayName = userModel.displayName;
-      updateInfo.photoUrl = userModel.profilePic;
-      await result.user.updateProfile(updateInfo);
+      result.user.updateProfile(
+          displayName: userModel.displayName, photoURL: userModel.profilePic);
+
       _userModel = userModel;
       _userModel.key = user.uid;
       _userModel.userId = user.uid;
@@ -194,7 +193,7 @@ class AuthState extends AppState {
   /// `Create` and `Update` user
   /// IF `newUser` is true new user is created
   /// Else existing user will update with new values
-  createUser(User user, {bool newUser = false}) {
+  createUser(UserModel user, {bool newUser = false}) {
     if (newUser) {
       // Create username by the combination of name and id
       user.userName = getUserName(id: user.userId, name: user.displayName);
@@ -213,11 +212,11 @@ class AuthState extends AppState {
   }
 
   /// Fetch current user profile
-  Future<FirebaseUser> getCurrentUser() async {
+  Future<User> getCurrentUser() async {
     try {
       loading = true;
       logEvent('get_currentUSer');
-      user = await _firebaseAuth.currentUser();
+      user = _firebaseAuth.currentUser;
       if (user != null) {
         authStatus = AuthStatus.LOGGED_IN;
         userId = user.uid;
@@ -238,13 +237,13 @@ class AuthState extends AppState {
   /// Reload user to get refresh user data
   reloadUser() async {
     await user.reload();
-    user = await _firebaseAuth.currentUser();
-    if (user.isEmailVerified) {
+    user = _firebaseAuth.currentUser;
+    if (user.emailVerified) {
       userModel.isVerified = true;
       // If user verifed his email
       // Update user in firebase realtime kDatabase
       createUser(userModel);
-      cprint('User email verification complete');
+      cprint('UserModel email verification complete');
       logEvent('email_verification_complete',
           parameter: {userModel.userName: user.email});
     }
@@ -253,7 +252,7 @@ class AuthState extends AppState {
   /// Send email verification link to email2
   Future<void> sendEmailVerification(
       GlobalKey<ScaffoldState> scaffoldKey) async {
-    FirebaseUser user = await _firebaseAuth.currentUser();
+    User user = _firebaseAuth.currentUser;
     user.sendEmailVerification().then((_) {
       logEvent('email_verifcation_sent',
           parameter: {userModel.displayName: user.email});
@@ -273,9 +272,9 @@ class AuthState extends AppState {
   }
 
   /// Check if user's email is verified
-  Future<bool> isEmailVerified() async {
-    FirebaseUser user = await _firebaseAuth.currentUser();
-    return user.isEmailVerified;
+  Future<bool> emailVerified() async {
+    User user = _firebaseAuth.currentUser;
+    return user.emailVerified;
   }
 
   /// Send password reset link to email
@@ -297,32 +296,31 @@ class AuthState extends AppState {
   }
 
   /// `Update user` profile
-  Future<void> updateUserProfile(User userModel, {File image}) async {
+  Future<void> updateUserProfile(UserModel userModel, {File image}) async {
     try {
       if (image == null) {
         createUser(userModel);
       } else {
-        StorageReference storageReference = FirebaseStorage.instance
+        var storageReference = FirebaseStorage.instance
             .ref()
             .child('user/profile/${Path.basename(image.path)}');
-        StorageUploadTask uploadTask = storageReference.putFile(image);
-        await uploadTask.onComplete.then((value) {
-          storageReference.getDownloadURL().then((fileURL) async {
-            print(fileURL);
-            UserUpdateInfo updateInfo = UserUpdateInfo();
-            updateInfo.displayName = userModel?.displayName ?? user.displayName;
-            updateInfo.photoUrl = fileURL;
-            await user.updateProfile(updateInfo);
-            if (userModel != null) {
-              userModel.profilePic = fileURL;
-              createUser(userModel);
-            } else {
-              _userModel.profilePic = fileURL;
-              createUser(_userModel);
-            }
-          });
+        await storageReference.putFile(image);
+
+        storageReference.getDownloadURL().then((fileURL) async {
+          print(fileURL);
+          var name = userModel?.displayName ?? user.displayName;
+          _firebaseAuth.currentUser
+              .updateProfile(displayName: name, photoURL: fileURL);
+          if (userModel != null) {
+            userModel.profilePic = fileURL;
+            createUser(userModel);
+          } else {
+            _userModel.profilePic = fileURL;
+            createUser(_userModel);
+          }
         });
       }
+
       logEvent('update_user');
     } catch (error) {
       cprint(error, errorIn: 'updateUserProfile');
@@ -330,12 +328,12 @@ class AuthState extends AppState {
   }
 
   /// `Fetch` user `detail` whoose userId is passed
-  Future<User> getuserDetail(String userId) async {
-    User user;
+  Future<UserModel> getuserDetail(String userId) async {
+    UserModel user;
     var snapshot = await kDatabase.child('profile').child(userId).once();
     if (snapshot.value != null) {
       var map = snapshot.value;
-      user = User.fromJson(map);
+      user = UserModel.fromJson(map);
       user.key = snapshot.key;
       return user;
     } else {
@@ -344,14 +342,14 @@ class AuthState extends AppState {
   }
 
   /// Fetch user profile
- /// If `userProfileId` is null then logged in user's profile will fetched
+  /// If `userProfileId` is null then logged in user's profile will fetched
   getProfileUser({String userProfileId}) {
     try {
       loading = true;
       if (_profileUserModelList == null) {
         _profileUserModelList = [];
       }
-      
+
       userProfileId = userProfileId == null ? user.uid : userProfileId;
       kDatabase
           .child("profile")
@@ -361,11 +359,11 @@ class AuthState extends AppState {
         if (snapshot.value != null) {
           var map = snapshot.value;
           if (map != null) {
-            _profileUserModelList.add(User.fromJson(map));
+            _profileUserModelList.add(UserModel.fromJson(map));
             if (userProfileId == user.uid) {
               _userModel = _profileUserModelList.last;
-              _userModel.isVerified = user.isEmailVerified;
-              if (!user.isEmailVerified) {
+              _userModel.isVerified = user.emailVerified;
+              if (!user.emailVerified) {
                 // Check if logged in user verified his email address or not
                 reloadUser();
               }
@@ -457,11 +455,11 @@ class AuthState extends AppState {
   /// Firebase event callback for profile update
   void _onProfileChanged(Event event) {
     if (event.snapshot != null) {
-      final updatedUser = User.fromJson(event.snapshot.value);
-      if(updatedUser.userId == user.uid){
+      final updatedUser = UserModel.fromJson(event.snapshot.value);
+      if (updatedUser.userId == user.uid) {
         _userModel = updatedUser;
       }
-      cprint('User Updated');
+      cprint('UserModel Updated');
       notifyListeners();
     }
   }

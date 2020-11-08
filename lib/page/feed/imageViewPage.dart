@@ -149,8 +149,8 @@ class _ImageViewPgeState extends State<ImageViewPge> {
   }
 
   void addLikeToTweet() {
-    var state = Provider.of<FeedState>(context,listen: false);
-    var authState = Provider.of<AuthState>(context,listen: false);
+    var state = Provider.of<FeedState>(context, listen: false);
+    var authState = Provider.of<AuthState>(context, listen: false);
     state.addLikeToTweet(state.tweetDetailModel.last, authState.userId);
   }
 
@@ -162,8 +162,8 @@ class _ImageViewPgeState extends State<ImageViewPge> {
     if (_textEditingController.text.length > 280) {
       return;
     }
-    var state = Provider.of<FeedState>(context,listen: false);
-    var authState = Provider.of<AuthState>(context,listen: false);
+    var state = Provider.of<FeedState>(context, listen: false);
+    var authState = Provider.of<AuthState>(context, listen: false);
     var user = authState.userModel;
     var profilePic = user.profilePic;
     if (profilePic == null) {
@@ -174,7 +174,7 @@ class _ImageViewPgeState extends State<ImageViewPge> {
     var pic = authState.userModel.profilePic ?? dummyProfilePic;
     var tags = getHashTags(_textEditingController.text);
 
-    User commentedUser = User(
+    UserModel commentedUser = UserModel(
         displayName: name,
         userName: authState.userModel.userName,
         isVerified: authState.userModel.isVerified,

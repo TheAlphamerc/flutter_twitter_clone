@@ -12,7 +12,7 @@ class PrivacyAndSaftyPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var user = Provider.of<AuthState>(context).userModel ?? User();
+    var user = Provider.of<AuthState>(context).userModel ?? UserModel();
     return Scaffold(
       backgroundColor: TwitterColor.white,
       appBar: SettingsAppBar(
@@ -41,8 +41,8 @@ class PrivacyAndSaftyPage extends StatelessWidget {
           ),
           SettingRowWidget(
             'Direct Message',
-             navigateTo: 'DirectMessagesPage',
-            ),
+            navigateTo: 'DirectMessagesPage',
+          ),
           HeaderWidget(
             'Live Video',
             secondHeader: true,

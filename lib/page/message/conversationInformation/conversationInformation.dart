@@ -16,8 +16,7 @@ import 'package:provider/provider.dart';
 class ConversationInformation extends StatelessWidget {
   const ConversationInformation({Key key}) : super(key: key);
 
-  Widget _header(BuildContext context, User user) {
-    
+  Widget _header(BuildContext context, UserModel user) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 25),
       child: Column(
@@ -25,16 +24,16 @@ class ConversationInformation extends StatelessWidget {
           Container(
             alignment: Alignment.center,
             child: SizedBox(
-              height: 80,
-              width: 80,
-              child: RippleButton(
-                 onPressed: (){
-                   Navigator.of(context).pushNamed('/ProfilePage/' + user?.userId);
-                 },
-                borderRadius: BorderRadius.circular(40),
-                child:customImage(context, user.profilePic, height: 80),
-              )
-            ),
+                height: 80,
+                width: 80,
+                child: RippleButton(
+                  onPressed: () {
+                    Navigator.of(context)
+                        .pushNamed('/ProfilePage/' + user?.userId);
+                  },
+                  borderRadius: BorderRadius.circular(40),
+                  child: customImage(context, user.profilePic, height: 80),
+                )),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -75,7 +74,7 @@ class ConversationInformation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     var user = Provider.of<ChatState>(context).chatUser ?? User();
+    var user = Provider.of<ChatState>(context).chatUser ?? UserModel();
     return Scaffold(
       backgroundColor: TwitterColor.white,
       appBar: CustomAppBar(
@@ -96,9 +95,15 @@ class ConversationInformation extends StatelessWidget {
             height: 15,
             color: TwitterColor.mystic,
           ),
-          SettingRowWidget("Block ${user.userName}",textColor: TwitterColor.dodgetBlue,showDivider: false,),
-          SettingRowWidget("Report ${user.userName}",textColor: TwitterColor.dodgetBlue,showDivider: false),
-          SettingRowWidget("Delete conversation", textColor: TwitterColor.ceriseRed,showDivider: false),
+          SettingRowWidget(
+            "Block ${user.userName}",
+            textColor: TwitterColor.dodgetBlue,
+            showDivider: false,
+          ),
+          SettingRowWidget("Report ${user.userName}",
+              textColor: TwitterColor.dodgetBlue, showDivider: false),
+          SettingRowWidget("Delete conversation",
+              textColor: TwitterColor.ceriseRed, showDivider: false),
         ],
       ),
     );

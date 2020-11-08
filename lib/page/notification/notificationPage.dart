@@ -171,7 +171,7 @@ class NotificationTile extends StatelessWidget {
     return FutureBuilder(
       future: state.getuserDetail(userId),
       //  initialData: InitialData,
-      builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
         if (snapshot.hasData) {
           name(snapshot.data.displayName);
           return Padding(

@@ -14,7 +14,7 @@ class DirectMessagesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var user = Provider.of<AuthState>(context).userModel ?? User();
+    var user = Provider.of<AuthState>(context).userModel ?? UserModel();
     return Scaffold(
       backgroundColor: TwitterColor.white,
       appBar: SettingsAppBar(
@@ -24,22 +24,27 @@ class DirectMessagesPage extends StatelessWidget {
       body: ListView(
         physics: BouncingScrollPhysics(),
         children: <Widget>[
-          HeaderWidget('Direct Messages', secondHeader: true,),
+          HeaderWidget(
+            'Direct Messages',
+            secondHeader: true,
+          ),
           SettingRowWidget(
             "Receive message requests",
             navigateTo: null,
             showDivider: false,
             visibleSwitch: true,
             vPadding: 20,
-            subtitle: 'You will be able to receive Direct Message requests from anyone on Fwitter, even if you don\'t follow them.',
+            subtitle:
+                'You will be able to receive Direct Message requests from anyone on Fwitter, even if you don\'t follow them.',
           ),
           SettingRowWidget(
             "Show read receipts",
-            navigateTo:null,
+            navigateTo: null,
             showDivider: false,
             visibleSwitch: true,
-            subtitle: 'When someone sends you a message, people in the conversation will know you\'ve seen it. If you turn off this setting, you won\'t be able to see read receipt from others.',
-            ),
+            subtitle:
+                'When someone sends you a message, people in the conversation will know you\'ve seen it. If you turn off this setting, you won\'t be able to see read receipt from others.',
+          ),
         ],
       ),
     );

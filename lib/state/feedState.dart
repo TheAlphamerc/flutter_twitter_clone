@@ -40,7 +40,7 @@ class FeedState extends AppState {
   }
 
   /// contain tweet list for home page
-  List<FeedModel> getTweetList(User userModel) {
+  List<FeedModel> getTweetList(UserModel userModel) {
     if (userModel == null) {
       return null;
     }
@@ -333,17 +333,18 @@ class FeedState extends AppState {
     try {
       isBusy = true;
       notifyListeners();
-      StorageReference storageReference = FirebaseStorage.instance
+      var storageReference = FirebaseStorage.instance
           .ref()
           .child('tweetImage${Path.basename(file.path)}');
-      StorageUploadTask uploadTask = storageReference.putFile(file);
-      var snapshot = await uploadTask.onComplete;
-      if (snapshot != null) {
+      await storageReference.putFile(file);
+
+      storageReference.getDownloadURL().then((fileURL) async {
         var url = await storageReference.getDownloadURL();
         if (url != null) {
           return url;
         }
-      }
+        return null;
+      });
     } catch (error) {
       cprint(error, errorIn: 'uploadFile');
       return null;
@@ -361,7 +362,7 @@ class FeedState extends AppState {
       filePath = filePath.replaceAll(new RegExp(r'(\?alt).*'), '');
       //  filePath = filePath.replaceAll('tweetImage/', '');
       //  cprint('[Path]'+filePath);
-      StorageReference storageReference = FirebaseStorage.instance.ref();
+      var storageReference = FirebaseStorage.instance.ref();
       await storageReference.child(filePath).delete().catchError((val) {
         cprint('[Error]' + val);
       }).then((_) {
@@ -403,7 +404,7 @@ class FeedState extends AppState {
           .set(tweet.likeList);
 
       // Sends notification to user who created tweet
-      // User owner can see notification on notification page
+      // UserModel owner can see notification on notification page
       kDatabase.child('notification').child(tweet.userId).child(tweet.key).set({
         'type': tweet.likeList.length == 0
             ? null

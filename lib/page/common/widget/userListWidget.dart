@@ -10,7 +10,7 @@ import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 import 'package:provider/provider.dart';
 
 class UserListWidget extends StatelessWidget {
-  final List<User> list;
+  final List<UserModel> list;
   final String emptyScreenText;
   final String emptyScreenSubTileText;
   UserListWidget({
@@ -44,7 +44,7 @@ class UserListWidget extends StatelessWidget {
 
 class UserTile extends StatelessWidget {
   const UserTile({Key key, this.user, this.myId}) : super(key: key);
-  final User user;
+  final UserModel user;
   final String myId;
 
   /// Return empty string for default bio

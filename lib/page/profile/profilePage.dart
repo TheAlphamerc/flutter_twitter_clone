@@ -74,11 +74,14 @@ class _ProfilePageState extends State<ProfilePage>
               ),
       ],
       flexibleSpace: FlexibleSpaceBar(
-        stretchModes: <StretchMode>[StretchMode.zoomBackground, StretchMode.blurBackground],
+        stretchModes: <StretchMode>[
+          StretchMode.zoomBackground,
+          StretchMode.blurBackground
+        ],
         background: authstate.isbusy
             ? SizedBox.shrink()
             : Stack(
-              alignment: Alignment.topCenter,
+                alignment: Alignment.topCenter,
                 children: <Widget>[
                   SizedBox.expand(
                     child: Container(
@@ -99,7 +102,7 @@ class _ProfilePageState extends State<ProfilePage>
                     ),
                   ),
 
-                  /// User avatar, message icon, profile edit and follow/following button
+                  /// UserModel avatar, message icon, profile edit and follow/following button
                   Container(
                     alignment: Alignment.bottomLeft,
                     child: Row(
@@ -139,8 +142,7 @@ class _ProfilePageState extends State<ProfilePage>
                                       onPressed: () {
                                         if (!isMyProfile) {
                                           final chatState =
-                                              Provider.of<ChatState>(
-                                                  context,
+                                              Provider.of<ChatState>(context,
                                                   listen: false);
                                           chatState.setChatUser =
                                               authstate.profileUserModel;
@@ -212,7 +214,9 @@ class _ProfilePageState extends State<ProfilePage>
                                   child: Text(
                                     isMyProfile
                                         ? 'Edit Profile'
-                                        : isFollower() ? 'Following' : 'Follow',
+                                        : isFollower()
+                                            ? 'Following'
+                                            : 'Follow',
                                     style: TextStyle(
                                       color: isMyProfile
                                           ? Colors.black87.withAlpha(180)
@@ -431,7 +435,7 @@ class UserNameRowWidget extends StatelessWidget {
   }) : super(key: key);
 
   final bool isMyProfile;
-  final User user;
+  final UserModel user;
 
   String getBio(String bio) {
     if (isMyProfile) {
@@ -524,10 +528,10 @@ class UserNameRowWidget extends StatelessWidget {
                   iconColor: AppColor.darkGrey),
               SizedBox(width: 10),
               Expanded(
-                child:customText(
-                user.location,
-                style: TextStyle(color: AppColor.darkGrey),
-              ),
+                child: customText(
+                  user.location,
+                  style: TextStyle(color: AppColor.darkGrey),
+                ),
               )
             ],
           ),
