@@ -23,7 +23,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final state = Provider.of<SearchState>(context);
+      final state = Provider.of<SearchState>(context, listen: false);
       state.resetFilterList();
     });
     super.initState();
