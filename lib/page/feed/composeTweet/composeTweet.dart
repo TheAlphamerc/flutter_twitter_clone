@@ -82,6 +82,7 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
 
   /// Submit tweet to save in firebase database
   void _submitButton() async {
+    FocusManager.instance.primaryFocus.unfocus();
     if (_textEditingController.text == null ||
         _textEditingController.text.isEmpty ||
         _textEditingController.text.length > 280) {
@@ -576,11 +577,12 @@ class _UserList extends StatelessWidget {
                   user: list[index],
                   onUserSelected: (user) {
                     textEditingController.text =
-                        Provider.of<ComposeTweetState>(context)
+                        Provider.of<ComposeTweetState>(context, listen: false)
                             .getDescription(user.userName);
                     textEditingController.selection = TextSelection.collapsed(
                         offset: textEditingController.text.length);
-                    Provider.of<ComposeTweetState>(context).onUserSelected();
+                    Provider.of<ComposeTweetState>(context, listen: false)
+                        .onUserSelected();
                   },
                 );
               },

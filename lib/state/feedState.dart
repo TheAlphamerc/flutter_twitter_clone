@@ -389,27 +389,15 @@ class FeedState extends AppState {
       notifyListeners();
       var storageReference = FirebaseStorage.instance
           .ref()
-          .child('tweetImage${Path.basename(file.path)}');
+          .child("tweetImage")
+          .child(Path.basename(file.path));
       await storageReference.putFile(file);
 
-      storageReference.getDownloadURL().then((fileURL) async {
-        var url = await storageReference.getDownloadURL();
-        if (url != null) {
-          return url;
-        }
-        return null;
-      });
-      // StorageReference storageReference = FirebaseStorage.instance
-      //     .ref()
-      //     .child('tweetImage${Path.basename(file.path)}');
-      // StorageUploadTask uploadTask = storageReference.putFile(file);
-      // var snapshot = await uploadTask.onComplete;
-      // if (snapshot != null) {
-      //   var url = await storageReference.getDownloadURL();
-      //   if (url != null) {
-      //     return url;
-      //   }
-      // }
+      var url = await storageReference.getDownloadURL();
+      if (url != null) {
+        return url;
+      }
+      return null;
     } catch (error) {
       cprint(error, errorIn: 'uploadFile');
       return null;
@@ -419,14 +407,9 @@ class FeedState extends AppState {
   /// [Delete file] from firebase storage
   Future<void> deleteFile(String url, String baseUrl) async {
     try {
-      String filePath = url.replaceAll(
-          new RegExp(
-              r'https://firebasestorage.googleapis.com/v0/b/twitter-clone-4fce9.appspot.com/o/'),
-          '');
+      String filePath = url.split(".com/o/")[1];
       filePath = filePath.replaceAll(new RegExp(r'%2F'), '/');
       filePath = filePath.replaceAll(new RegExp(r'(\?alt).*'), '');
-      //  filePath = filePath.replaceAll('tweetImage/', '');
-      //  cprint('[Path]'+filePath);
       var storageReference = FirebaseStorage.instance.ref();
       await storageReference.child(filePath).delete().catchError((val) {
         cprint('[Error]' + val);
