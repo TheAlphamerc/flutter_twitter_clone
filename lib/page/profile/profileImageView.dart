@@ -23,12 +23,16 @@ class ProfileImageView extends StatelessWidget {
         actions: <Widget>[
           PopupMenuButton<Choice>(
             onSelected: (d) {
-                switch (d.title) {
-                  case "Share image link": share(authstate.profileUserModel.profilePic); break;
-                  case "Open in browser": launchURL(authstate.profileUserModel.profilePic); break;
-                  case "Save":  break;
-                }
-                
+              switch (d.title) {
+                case "Share image link":
+                  share(authstate.profileUserModel.profilePic);
+                  break;
+                case "Open in browser":
+                  launchURL(authstate.profileUserModel.profilePic);
+                  break;
+                case "Save":
+                  break;
+              }
             },
             itemBuilder: (BuildContext context) {
               return choices.map((Choice choice) {
@@ -42,15 +46,17 @@ class ProfileImageView extends StatelessWidget {
         ],
       ),
       body: Center(
-        child: Container(
-          alignment: Alignment.center,
-          width: fullWidth(context),
-          // height: fullWidth(context),
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: customAdvanceNetworkImage(
-                  authstate.profileUserModel.profilePic),
-              fit: BoxFit.contain,
+        child: InteractiveViewer(
+          child: Container(
+            alignment: Alignment.center,
+            width: fullWidth(context),
+            // height: fullWidth(context),
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: customAdvanceNetworkImage(
+                    authstate.profileUserModel.profilePic),
+                fit: BoxFit.contain,
+              ),
             ),
           ),
         ),

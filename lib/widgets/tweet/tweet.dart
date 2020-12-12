@@ -158,7 +158,9 @@ class _TweetBody extends StatelessWidget {
   Widget build(BuildContext context) {
     double descriptionFontSize = type == TweetType.Tweet
         ? 15
-        : type == TweetType.Detail || type == TweetType.ParentTweet ? 18 : 14;
+        : type == TweetType.Detail || type == TweetType.ParentTweet
+            ? 18
+            : 14;
     FontWeight descriptionFontWeight =
         type == TweetType.Tweet || type == TweetType.Tweet
             ? FontWeight.w400
@@ -270,7 +272,9 @@ class _TweetDetailBody extends StatelessWidget {
         ? getDimention(context, 15)
         : type == TweetType.Detail
             ? getDimention(context, 18)
-            : type == TweetType.ParentTweet ? getDimention(context, 14) : 10;
+            : type == TweetType.ParentTweet
+                ? getDimention(context, 14)
+                : 10;
 
     FontWeight descriptionFontWeight =
         type == TweetType.Tweet || type == TweetType.Tweet

@@ -162,7 +162,7 @@ class NotificationState extends AppState {
     }
   }
 
-  /// Configure notification services
+  /// Initilise push notification services
   void initfirebaseService() {
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {

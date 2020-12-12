@@ -140,18 +140,13 @@ class _ImageViewPgeState extends State<ImageViewPge> {
         : Container(
             alignment: Alignment.center,
             child: Container(
+                child: InteractiveViewer(
               child: customNetworkImage(
                 _image,
                 fit: BoxFit.fitWidth,
               ),
-            ),
+            )),
           );
-  }
-
-  void addLikeToTweet() {
-    var state = Provider.of<FeedState>(context, listen: false);
-    var authState = Provider.of<AuthState>(context, listen: false);
-    state.addLikeToTweet(state.tweetDetailModel.last, authState.userId);
   }
 
   void _submitButton() {

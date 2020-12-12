@@ -11,7 +11,7 @@ import 'package:flutter_twitter_clone/state/appState.dart';
 
 class ChatState extends AppState {
   bool setIsChatScreenOpen;
-  // final FirebaseDatabase _database = FirebaseDatabase.instance;
+  final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
 
   List<ChatMessage> _messageList;
   List<ChatMessage> _chatUserList;
@@ -262,6 +262,9 @@ class ChatState extends AppState {
     notifyListeners();
   }
 
+  /// [Warning] do not call super.dispose() from this method
+  /// If this method called here it will dipose chat state data
+  // super.dispose();
   void dispose() {
     var user = _chatUserList.firstWhere((x) => x.key == chatUser.userId);
     if (_messageList != null) {
@@ -270,16 +273,10 @@ class ChatState extends AppState {
       _messageList = null;
       notifyListeners();
     }
-
-    /// [Warning] do not call super.dispose() from this method
-    /// If this method called here it will dipose chat state data
-    // super.dispose();
   }
 
-  final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
-
+  /// Push notification will be sent to other user whrn you send him a message on in chat.
   void sendAndRetrieveMessage(ChatMessage model) async {
-    /// on noti
     await firebaseMessaging.requestNotificationPermissions(
       const IosNotificationSettings(
           sound: true, badge: true, alert: true, provisional: false),
@@ -303,7 +300,6 @@ class ChatState extends AppState {
         "receiverId": model.receiverId,
         "title": "title",
         "body": model.message,
-        "tweetId": ""
       },
       'to': chatUser.fcmToken
     });
@@ -313,6 +309,10 @@ class ChatState extends AppState {
           'Authorization': 'key=$serverToken',
         },
         body: body);
+    if (response.reasonPhrase.contains("INVALID_KEY")) {
+      cprint("You are using Invalid FCM key");
+      return;
+    }
     print(response.body.toString());
   }
 }

@@ -16,15 +16,17 @@ class ComposeTweetImage extends StatelessWidget {
           ? Container()
           : Stack(
               children: <Widget>[
-                Container(
-                  alignment: Alignment.topRight,
+                InteractiveViewer(
                   child: Container(
-                    height: 220,
-                    width: fullWidth(context) * .8,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      image: DecorationImage(
-                          image: FileImage(image), fit: BoxFit.cover),
+                    alignment: Alignment.topRight,
+                    child: Container(
+                      height: 220,
+                      width: fullWidth(context) * .8,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        image: DecorationImage(
+                            image: FileImage(image), fit: BoxFit.cover),
+                      ),
                     ),
                   ),
                 ),
