@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
@@ -126,11 +127,14 @@ void cprint(dynamic data, {String errorIn, String event}) {
   if (errorIn != null) {
     print(
         '****************************** error ******************************');
-    developer.log('[Error]', time: DateTime.now(), error:data, name:errorIn);
+    developer.log('[Error]', time: DateTime.now(), error: data, name: errorIn);
     print(
         '****************************** error ******************************');
   } else if (data != null) {
-     developer.log(data, time: DateTime.now(), );
+    developer.log(
+      data,
+      time: DateTime.now(),
+    );
   }
   if (event != null) {
     // logEvent(event);
@@ -166,10 +170,13 @@ List<String> getHashTags(String text) {
   return resultMatches;
 }
 
-String getUserName({ String id,String name,}) {
+String getUserName({
+  String id,
+  String name,
+}) {
   String userName = '';
-  if(name.length > 15){
-     name = name.substring(0,6);
+  if (name.length > 15) {
+    name = name.substring(0, 6);
   }
   name = name.split(' ')[0];
   id = id.substring(0, 4).toLowerCase();
@@ -206,4 +213,28 @@ bool validateEmal(String email) {
 
   var status = regExp.hasMatch(email);
   return status;
+}
+
+createLinkAndShare(BuildContext context, String id,
+    {SocialMetaTagParameters socialMetaTagParameters}) async {
+  final DynamicLinkParameters parameters = DynamicLinkParameters(
+      uriPrefix: 'https://fwitterdev.page.link',
+      link: Uri.parse('https://twitter.com/$id'),
+      androidParameters: AndroidParameters(
+        packageName: 'com.thealphamerc.flutter_twitter_clone_dev',
+        minimumVersion: 0,
+      ),
+      dynamicLinkParametersOptions: DynamicLinkParametersOptions(
+        shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
+      ),
+      socialMetaTagParameters: socialMetaTagParameters);
+  Uri url;
+  if (true) {
+    final ShortDynamicLink shortLink = await parameters.buildShortLink();
+    url = shortLink.shortUrl;
+  } else {
+    url = await parameters.buildUrl();
+  }
+
+  share(url.toString(), subject: "Tweet");
 }

@@ -45,7 +45,7 @@ dependencies:
   share: ^0.6.3
   google_fonts: ^0.3.9
   firebase_remote_config: ^0.6.0
-  # firebase_dynamic_links: ^0.7.0+1
+  firebase_dynamic_links: ^0.7.0+1
   # simple_url_preview: ^1.1.0
 
   # camera:

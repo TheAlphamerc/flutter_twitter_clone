@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -9,8 +10,10 @@ import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/page/Auth/selectAuthMethod.dart';
 import 'package:flutter_twitter_clone/page/common/updateApp.dart';
+import 'package:flutter_twitter_clone/page/feed/feedPostDetail.dart';
 import 'package:flutter_twitter_clone/page/homePage.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
+import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
@@ -27,8 +30,44 @@ class _SplashPageState extends State<SplashPage> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       timer();
+      initDynamicLinks();
     });
     super.initState();
+  }
+
+  void initDynamicLinks() async {
+    FirebaseDynamicLinks.instance.onLink(
+        onSuccess: (PendingDynamicLinkData dynamicLink) async {
+      final Uri deepLink = dynamicLink?.link;
+
+      if (deepLink != null) {
+        redirectFromDeepLink(deepLink);
+      }
+    }, onError: (OnLinkErrorException e) async {
+      print('onLinkError');
+      print(e.message);
+    });
+
+    final PendingDynamicLinkData data =
+        await FirebaseDynamicLinks.instance.getInitialLink();
+    final Uri deepLink = data?.link;
+
+    if (deepLink != null) {
+      redirectFromDeepLink(deepLink);
+    }
+  }
+
+  void redirectFromDeepLink(Uri deepLink) {
+    print("Found Url from share: ${deepLink.path}");
+    var type = deepLink.path.split("/")[1];
+    var id = deepLink.path.split("/")[2];
+    if (type == "profilePage") {
+      Navigator.of(context).pushNamed('/ProfilePage/' + id);
+    } else if (type == "tweet") {
+      var feedstate = Provider.of<FeedState>(context, listen: false);
+      feedstate.getpostDetailFromDatabase(id);
+      Navigator.of(context).pushNamed('/FeedPostDetail/' + id);
+    }
   }
 
   void timer() async {
@@ -42,10 +81,11 @@ class _SplashPageState extends State<SplashPage> {
       });
     }
   }
-  /// Return installed app version 
+
+  /// Return installed app version
   /// For testing purpose in debug mode update screen will not be open up
-  /// In  an old version of  realease app is installed on user's device then 
-  /// User will not be able to see home screen 
+  /// In  an old version of  realease app is installed on user's device then
+  /// User will not be able to see home screen
   /// User will redirected to update app screen.
   /// Once user update app with latest verson and back to app then user automatically redirected to welcome / Home page
   Future<bool> _checkAppVersion() async {
@@ -53,10 +93,12 @@ class _SplashPageState extends State<SplashPage> {
     final currentAppVersion = "${packageInfo.version}";
     final appVersion = await _getAppVersionFromFirebaseConfig();
     if (appVersion != currentAppVersion) {
-      if(kDebugMode){
+      if (kDebugMode) {
         cprint("Latest version of app is not installed on your system");
-        cprint("In debug mode we are not restrict devlopers to redirect to update screen");
-        cprint("Redirect devs to update screen can put other devs in confusion");
+        cprint(
+            "In debug mode we are not restrict devlopers to redirect to update screen");
+        cprint(
+            "Redirect devs to update screen can put other devs in confusion");
         return true;
       }
       Navigator.pushReplacement(

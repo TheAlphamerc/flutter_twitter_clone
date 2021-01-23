@@ -1,3 +1,4 @@
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
@@ -62,7 +63,11 @@ class _ProfilePageState extends State<ProfilePage>
         authstate.isbusy
             ? SizedBox.shrink()
             : PopupMenuButton<Choice>(
-                onSelected: (d) {},
+                onSelected: (d) {
+                  if (d.title == "Share") {
+                    shareProfile(context);
+                  }
+                },
                 itemBuilder: (BuildContext context) {
                   return choices.map((Choice choice) {
                     return PopupMenuItem<Choice>(
@@ -97,8 +102,9 @@ class _ProfilePageState extends State<ProfilePage>
                     height: 180,
                     padding: EdgeInsets.only(top: 28),
                     child: customNetworkImage(
-                      authstate.userModel.bannerImage ??
-                          'https://pbs.twimg.com/profile_banners/457684585/1510495215/1500x500',
+                      authstate.profileUserModel.bannerImage != null
+                          ? authstate.profileUserModel.bannerImage
+                          : 'https://pbs.twimg.com/profile_banners/457684585/1510495215/1500x500',
                       fit: BoxFit.fill,
                     ),
                   ),
@@ -284,6 +290,19 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   TabController _tabController;
+
+  void shareProfile(BuildContext context) async {
+    var authstate = context.read<AuthState>();
+    var user = authstate.profileUserModel;
+    createLinkAndShare(
+      context,
+      "profilePage/${widget.profileId}/",
+      socialMetaTagParameters: SocialMetaTagParameters(
+          description: user.bio ?? "Checkout ${user.displayName}'s profile",
+          title: "${user.displayName} is on Fwitter app",
+          imageUrl: Uri.parse(user.profilePic)),
+    );
+  }
 
   @override
   build(BuildContext context) {

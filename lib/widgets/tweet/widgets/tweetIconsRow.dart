@@ -1,3 +1,4 @@
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/helper/customRoute.dart';
@@ -77,8 +78,7 @@ class TweetIconsRow extends StatelessWidget {
           ),
           _iconWidget(context, text: '', icon: null, sysIcon: Icons.share,
               onPressed: () {
-            share('${model.description}',
-                subject: '${model.user.displayName}\'s post');
+            shareTweet(context);
           }, iconColor: iconColor, size: size ?? 20),
         ],
       ),
@@ -144,7 +144,8 @@ class TweetIconsRow extends StatelessWidget {
   }
 
   Widget _likeCommentWidget(BuildContext context) {
-    bool isLikeAvailable = model.likeCount != null ?  model.likeCount > 0 : false;
+    bool isLikeAvailable =
+        model.likeCount != null ? model.likeCount > 0 : false;
     bool isRetweetAvailable = model.retweetCount > 0;
     bool isLikeRetweetAvailable = isRetweetAvailable || isLikeAvailable;
     return Column(
@@ -231,9 +232,23 @@ class TweetIconsRow extends StatelessWidget {
           pageTitle: "Liked by",
           userIdsList: model.likeList.map((userId) => userId).toList(),
           emptyScreenText: "This tweet has no like yet",
-          emptyScreenSubTileText: "Once a user likes this tweet, user list will be shown here",
+          emptyScreenSubTileText:
+              "Once a user likes this tweet, user list will be shown here",
         ),
       ),
+    );
+  }
+
+  void shareTweet(BuildContext context) async {
+    createLinkAndShare(
+      context,
+      "tweet/${model.key}",
+      socialMetaTagParameters: SocialMetaTagParameters(
+          description: model.description ??
+              "${model.user.displayName} posted a tweet on Fwitter.",
+          title: "Tweet on Fwitter app",
+          imageUrl: Uri.parse(
+              "https://play-lh.googleusercontent.com/e66XMuvW5hZ7HnFf8R_lcA3TFgkxm0SuyaMsBs3KENijNHZlogUAjxeu9COqsejV5w=s180-rw")),
     );
   }
 
