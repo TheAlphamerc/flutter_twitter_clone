@@ -234,20 +234,22 @@ class _TweetBody extends StatelessWidget {
                   Container(child: trailing == null ? SizedBox() : trailing),
                 ],
               ),
-              UrlText(
-                text: model.description,
-                onHashTagPressed: (tag) {
-                  cprint(tag);
-                },
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: descriptionFontSize,
-                    fontWeight: descriptionFontWeight),
-                urlStyle: TextStyle(
-                    color: Colors.blue,
-                    fontSize: descriptionFontSize,
-                    fontWeight: descriptionFontWeight),
-              ),
+              model.description == null
+                  ? SizedBox()
+                  : UrlText(
+                      text: model.description,
+                      onHashTagPressed: (tag) {
+                        cprint(tag);
+                      },
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: descriptionFontSize,
+                          fontWeight: descriptionFontWeight),
+                      urlStyle: TextStyle(
+                          color: Colors.blue,
+                          fontSize: descriptionFontSize,
+                          fontWeight: descriptionFontWeight),
+                    ),
             ],
           ),
         ),
@@ -336,27 +338,29 @@ class _TweetDetailBody extends StatelessWidget {
                     customText('${model.user.userName}', style: userNameStyle),
                 trailing: trailing,
               ),
-              Padding(
-                padding: type == TweetType.ParentTweet
-                    ? EdgeInsets.only(left: 80, right: 16)
-                    : EdgeInsets.symmetric(horizontal: 16),
-                child: UrlText(
-                  text: model.description,
-                  onHashTagPressed: (tag) {
-                    cprint(tag);
-                  },
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: descriptionFontSize,
-                    fontWeight: descriptionFontWeight,
-                  ),
-                  urlStyle: TextStyle(
-                    color: Colors.blue,
-                    fontSize: descriptionFontSize,
-                    fontWeight: descriptionFontWeight,
-                  ),
-                ),
-              )
+              model.description == null
+                  ? SizedBox()
+                  : Padding(
+                      padding: type == TweetType.ParentTweet
+                          ? EdgeInsets.only(left: 80, right: 16)
+                          : EdgeInsets.symmetric(horizontal: 16),
+                      child: UrlText(
+                        text: model.description,
+                        onHashTagPressed: (tag) {
+                          cprint(tag);
+                        },
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: descriptionFontSize,
+                          fontWeight: descriptionFontWeight,
+                        ),
+                        urlStyle: TextStyle(
+                          color: Colors.blue,
+                          fontSize: descriptionFontSize,
+                          fontWeight: descriptionFontWeight,
+                        ),
+                      ),
+                    )
             ],
           ),
         ),

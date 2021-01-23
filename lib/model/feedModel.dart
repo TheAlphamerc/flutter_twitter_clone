@@ -115,9 +115,7 @@ class FeedModel {
 
   bool get isValidTweet {
     bool isValid = false;
-    if (description != null &&
-        description.isNotEmpty &&
-        this.user != null &&
+    if (this.user != null &&
         this.user.userName != null &&
         this.user.userName.isNotEmpty) {
       isValid = true;

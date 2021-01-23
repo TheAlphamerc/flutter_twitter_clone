@@ -76,19 +76,21 @@ class RetweetWidget extends StatelessWidget {
             ],
           ),
         ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8),
-          child: UrlText(
-            text: model.description,
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-            ),
-            urlStyle:
-                TextStyle(color: Colors.blue, fontWeight: FontWeight.w400),
-          ),
-        ),
+        model.description == null
+            ? SizedBox()
+            : Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8),
+                child: UrlText(
+                  text: model.description,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  urlStyle: TextStyle(
+                      color: Colors.blue, fontWeight: FontWeight.w400),
+                ),
+              ),
         SizedBox(height: model.imagePath == null ? 8 : 0),
         TweetImage(model: model, type: type, isRetweetImage: true),
       ],

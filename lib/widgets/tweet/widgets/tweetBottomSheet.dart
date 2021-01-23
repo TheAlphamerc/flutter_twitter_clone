@@ -3,6 +3,7 @@ import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
+import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
@@ -313,7 +314,27 @@ class TweetBottomSheet {
         _widgetBottomSheetRow(
           context,
           AppIcon.retweet,
+          isEnable: true,
           text: 'Retweet',
+          onPressed: () {
+            var state = Provider.of<FeedState>(context, listen: false);
+            var authState = Provider.of<AuthState>(context, listen: false);
+            var myUser = authState.userModel;
+            myUser = UserModel(
+                displayName: myUser.displayName ?? myUser.email.split('@')[0],
+                profilePic: myUser.profilePic,
+                userId: myUser.userId,
+                isVerified: authState.userModel.isVerified,
+                userName: authState.userModel.userName);
+            // Prepare current Tweet model to reply
+            FeedModel post = new FeedModel(
+                childRetwetkey: model.key,
+                createdAt: DateTime.now().toUtc().toString(),
+                user: myUser,
+                userId: myUser.userId);
+            state.createReTweet(post);
+            Navigator.pop(context);
+          },
         ),
         _widgetBottomSheetRow(
           context,
