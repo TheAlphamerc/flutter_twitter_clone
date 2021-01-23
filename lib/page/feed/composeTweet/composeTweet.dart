@@ -317,7 +317,7 @@ class _ComposeRetweet
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child:
-                    customImage(context, authState.user?.photoUrl, height: 40),
+                    customImage(context, authState.user?.photoURL, height: 40),
               ),
               Expanded(
                 child: _TextField(
@@ -481,7 +481,7 @@ class _ComposeTweet
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              customImage(context, authState.user?.photoUrl, height: 40),
+              customImage(context, authState.user?.photoURL, height: 40),
               SizedBox(
                 width: 10,
               ),

@@ -90,7 +90,7 @@ class TrendsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final state = Provider.of<SearchState>(context);
+      final state = Provider.of<SearchState>(context, listen: false);
       sortBy = state.selectedFilter;
     });
     return Scaffold(

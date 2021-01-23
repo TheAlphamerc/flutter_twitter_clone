@@ -211,7 +211,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
   Future<bool> _onWillPop() async {
     // final chatState = Provider.of<ChatState>(context,listen: false);
     state.setIsChatScreenOpen = false;
-    state.dispose();
+    state.onChatScreenClosed();
     return true;
   }
 

@@ -164,6 +164,7 @@ class ChatState extends AppState {
     }
   }
 
+  /// Send message to other user
   void onMessageSubmitted(ChatMessage message,
       {UserModel myUser, UserModel secondUser}) {
     print(chatUser.userId);
@@ -189,6 +190,8 @@ class ChatState extends AppState {
     }
   }
 
+  /// Channel name is like a room name
+  /// which save messages of two user uniquely in database
   String getChannelName(String user1, String user2) {
     user1 = user1.substring(0, 5);
     user2 = user2.substring(0, 5);
@@ -199,6 +202,7 @@ class ChatState extends AppState {
     return _channelName;
   }
 
+  /// Method will trigger every time when you send/recieve  from/to someone messgae.
   void _onMessageAdded(Event event) {
     if (_messageList == null) {
       _messageList = List<ChatMessage>();
@@ -262,20 +266,21 @@ class ChatState extends AppState {
     notifyListeners();
   }
 
-  /// [Warning] do not call super.dispose() from this method
-  /// If this method called here it will dipose chat state data
-  // super.dispose();
-  void dispose() {
-    var user = _chatUserList.firstWhere((x) => x.key == chatUser.userId);
-    if (_messageList != null) {
-      user.message = _messageList.first.message;
-      user.createdAt = _messageList.first.createdAt; //;
-      _messageList = null;
-      notifyListeners();
+  // update last message on chat user list screen when manin chat screen get closed.
+  void onChatScreenClosed() {
+    if (_chatUserList != null && _chatUserList.isNotEmpty) {
+      var user = _chatUserList.firstWhere((x) => x.key == chatUser.userId);
+      if (_messageList != null) {
+        user.message = _messageList.first.message;
+        user.createdAt = _messageList.first.createdAt; //;
+        _messageList = null;
+        notifyListeners();
+      }
     }
   }
 
-  /// Push notification will be sent to other user whrn you send him a message on in chat.
+  /// Push notification will be sent to other user when you send him a message in chat.
+  /// To send push notification make sure you have FCM `serverToken`
   void sendAndRetrieveMessage(ChatMessage model) async {
     await firebaseMessaging.requestNotificationPermissions(
       const IosNotificationSettings(
