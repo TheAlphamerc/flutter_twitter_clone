@@ -12,6 +12,7 @@ class EditProfilePage extends StatefulWidget {
 
 class _EditProfilePageState extends State<EditProfilePage> {
   File _image;
+  File _banner;
   TextEditingController _name;
   TextEditingController _bio;
   TextEditingController _location;
@@ -49,13 +50,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           height: 180,
           child: Stack(
             children: <Widget>[
-              Container(
-                    height: 180,
-                    padding: EdgeInsets.only(bottom: 50),
-                child: customNetworkImage(
-                    'https://pbs.twimg.com/profile_banners/457684585/1510495215/1500x500',
-                    fit: BoxFit.fill),
-              ),
+              _bannerImage(authstate),
               Align(
                 alignment: Alignment.bottomLeft,
                 child: _userImage(authstate),
@@ -102,6 +97,42 @@ class _EditProfilePageState extends State<EditProfilePage> {
               icon: Icon(Icons.camera_alt, color: Colors.white),
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _bannerImage(AuthState authstate) {
+    return Container(
+      height: 180,
+      decoration: BoxDecoration(
+        image: authstate.userModel.bannerImage == null
+            ? null
+            : DecorationImage(
+                image:
+                    customAdvanceNetworkImage(authstate.userModel.bannerImage),
+                fit: BoxFit.cover),
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.black45,
+        ),
+        child: Stack(
+          children: [
+            _banner != null
+                ? Image.file(_banner,
+                    fit: BoxFit.fill, width: MediaQuery.of(context).size.width)
+                : customNetworkImage(
+                    authstate.userModel.bannerImage ??
+                        'https://pbs.twimg.com/profile_banners/457684585/1510495215/1500x500',
+                    fit: BoxFit.fill),
+            Center(
+              child: IconButton(
+                onPressed: uploadBanner,
+                icon: Icon(Icons.camera_alt, color: Colors.white),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -161,6 +192,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       location: state.userModel.location,
       profilePic: state.userModel.profilePic,
       userId: state.userModel.userId,
+      bannerImage: state.userModel.bannerImage,
     );
     if (_name.text != null && _name.text.isNotEmpty) {
       model.displayName = _name.text;
@@ -174,7 +206,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     if (dob != null) {
       model.dob = dob;
     }
-    state.updateUserProfile(model, image: _image);
+    state.updateUserProfile(model, image: _image, bannerImage: _banner);
     Navigator.of(context).pop();
   }
 
@@ -182,6 +214,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
     openImagePicker(context, (file) {
       setState(() {
         _image = file;
+      });
+    });
+  }
+
+  void uploadBanner() {
+    openImagePicker(context, (file) {
+      setState(() {
+        _banner = file;
       });
     });
   }

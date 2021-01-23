@@ -23,6 +23,7 @@ class AuthState extends AppState {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
   dabase.Query _profileQuery;
   List<UserModel> _profileUserModelList;
   UserModel _userModel;
@@ -296,35 +297,50 @@ class AuthState extends AppState {
   }
 
   /// `Update user` profile
-  Future<void> updateUserProfile(UserModel userModel, {File image}) async {
+  Future<void> updateUserProfile(UserModel userModel,
+      {File image, File bannerImage}) async {
     try {
-      if (image == null) {
+      if (image == null && bannerImage == null) {
         createUser(userModel);
       } else {
-        var storageReference = FirebaseStorage.instance
-            .ref()
-            .child('user/profile/${Path.basename(image.path)}');
-        await storageReference.putFile(image);
-
-        storageReference.getDownloadURL().then((fileURL) async {
-          print(fileURL);
+        /// upload profile image if not null
+        if (image != null) {
+          /// get image storage path from server
+          userModel.profilePic = await _uploadFileToStorage(image,
+              'user/profile/${userModel.userName}/${Path.basename(image.path)}');
+          // print(fileURL);
           var name = userModel?.displayName ?? user.displayName;
           _firebaseAuth.currentUser
-              .updateProfile(displayName: name, photoURL: fileURL);
-          if (userModel != null) {
-            userModel.profilePic = fileURL;
-            createUser(userModel);
-          } else {
-            _userModel.profilePic = fileURL;
-            createUser(_userModel);
-          }
-        });
+              .updateProfile(displayName: name, photoURL: userModel.profilePic);
+        }
+
+        /// upload banner image if not null
+        if (bannerImage != null) {
+          /// get banner storage path from server
+          userModel.bannerImage = await _uploadFileToStorage(bannerImage,
+              'user/profile/${userModel.userName}/${Path.basename(bannerImage.path)}');
+        }
+
+        if (userModel != null) {
+          createUser(userModel);
+        } else {
+          createUser(_userModel);
+        }
       }
 
       logEvent('update_user');
     } catch (error) {
       cprint(error, errorIn: 'updateUserProfile');
     }
+  }
+
+  Future<String> _uploadFileToStorage(File file, path) async {
+    var task = _firebaseStorage.ref().child(path);
+    var status = await task.putFile(file);
+    print(status.state);
+
+    /// get file storage path from server
+    return await task.getDownloadURL();
   }
 
   /// `Fetch` user `detail` whoose userId is passed

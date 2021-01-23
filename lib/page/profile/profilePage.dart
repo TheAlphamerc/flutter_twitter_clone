@@ -97,7 +97,8 @@ class _ProfilePageState extends State<ProfilePage>
                     height: 180,
                     padding: EdgeInsets.only(top: 28),
                     child: customNetworkImage(
-                      'https://pbs.twimg.com/profile_banners/457684585/1510495215/1500x500',
+                      authstate.userModel.bannerImage ??
+                          'https://pbs.twimg.com/profile_banners/457684585/1510495215/1500x500',
                       fit: BoxFit.fill,
                     ),
                   ),

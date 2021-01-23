@@ -6,6 +6,7 @@ class UserModel {
   String userName;
   String webSite;
   String profilePic;
+  String bannerImage;
   String contact;
   String bio;
   String location;
@@ -23,6 +24,7 @@ class UserModel {
     this.userId,
     this.displayName,
     this.profilePic,
+    this.bannerImage,
     this.key,
     this.contact,
     this.bio,
@@ -49,6 +51,7 @@ class UserModel {
     userId = map['userId'];
     displayName = map['displayName'];
     profilePic = map['profilePic'];
+    bannerImage = map['bannerImage'];
     key = map['key'];
     dob = map['dob'];
     bio = map['bio'];
@@ -82,8 +85,8 @@ class UserModel {
       "userId": userId,
       "email": email,
       'displayName': displayName,
-      'userId': userId,
       'profilePic': profilePic,
+      'bannerImage': bannerImage,
       'contact': contact,
       'dob': dob,
       'bio': bio,
@@ -109,6 +112,7 @@ class UserModel {
     String contact,
     bio,
     String dob,
+    String bannerImage,
     String location,
     String createdAt,
     String userName,
@@ -132,6 +136,7 @@ class UserModel {
       key: key ?? this.key,
       location: location ?? this.location,
       profilePic: profilePic ?? this.profilePic,
+      bannerImage: bannerImage ?? this.bannerImage,
       userId: userId ?? this.userId,
       userName: userName ?? this.userName,
       webSite: webSite ?? this.webSite,
