@@ -123,10 +123,10 @@ class _FeedPageBody extends StatelessWidget {
                                 child: Tweet(
                                   model: model,
                                   trailing: TweetBottomSheet().tweetOptionIcon(
-                                    context,
-                                    model,
-                                    TweetType.Tweet,
-                                  ),
+                                      context,
+                                      model: model,
+                                      type: TweetType.Tweet,
+                                      scaffoldKey: scaffoldKey),
                                 ),
                               );
                             },

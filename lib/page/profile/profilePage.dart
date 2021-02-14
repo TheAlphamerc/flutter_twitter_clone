@@ -31,7 +31,7 @@ class _ProfilePageState extends State<ProfilePage>
     with SingleTickerProviderStateMixin {
   bool isMyProfile = false;
   int pageIndex = 0;
-
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -318,6 +318,7 @@ class _ProfilePageState extends State<ProfilePage>
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
+        key: scaffoldKey,
         floatingActionButton: !isMyProfile ? null : _floatingActionButton(),
         backgroundColor: TwitterColor.mystic,
         body: NestedScrollView(
@@ -438,8 +439,9 @@ class _ProfilePageState extends State<ProfilePage>
                     isDisplayOnProfile: true,
                     trailing: TweetBottomSheet().tweetOptionIcon(
                       context,
-                      list[index],
-                      TweetType.Tweet,
+                      model: list[index],
+                      type: TweetType.Tweet,
+                      scaffoldKey: scaffoldKey,
                     ),
                   ),
                 ),

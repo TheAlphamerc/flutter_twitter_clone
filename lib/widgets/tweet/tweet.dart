@@ -21,26 +21,22 @@ class Tweet extends StatelessWidget {
   final Widget trailing;
   final TweetType type;
   final bool isDisplayOnProfile;
-  const Tweet(
-      {Key key,
-      this.model,
-      this.trailing,
-      this.type = TweetType.Tweet,
-      this.isDisplayOnProfile = false})
-      : super(key: key);
+  final GlobalKey<ScaffoldState> scaffoldKey;
+  const Tweet({
+    Key key,
+    this.model,
+    this.trailing,
+    this.type = TweetType.Tweet,
+    this.isDisplayOnProfile = false,
+    this.scaffoldKey,
+  }) : super(key: key);
 
   void onLongPressedTweet(BuildContext context) {
     if (type == TweetType.Detail || type == TweetType.ParentTweet) {
-      var text = ClipboardData(text: model.description);
-      Clipboard.setData(text);
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: TwitterColor.black,
-          content: Text(
-            'Tweet copied to clipboard',
-          ),
-        ),
-      );
+      copyToClipBoard(
+          scaffoldKey: scaffoldKey,
+          text: model.description ?? "",
+          message: "Tweet copy to clipboard");
     }
   }
 

@@ -20,6 +20,7 @@ class TweetIconsRow extends StatelessWidget {
   final double size;
   final bool isTweetDetail;
   final TweetType type;
+  final GlobalKey<ScaffoldState> scaffoldKey;
   const TweetIconsRow(
       {Key key,
       this.model,
@@ -27,7 +28,8 @@ class TweetIconsRow extends StatelessWidget {
       this.iconEnableColor,
       this.size,
       this.isTweetDetail = false,
-      this.type})
+      this.type,
+      this.scaffoldKey})
       : super(key: key);
 
   Widget _likeCommentsIcons(BuildContext context, FeedModel model) {
@@ -59,7 +61,8 @@ class TweetIconsRow extends StatelessWidget {
               icon: AppIcon.retweet,
               iconColor: iconColor,
               size: size ?? 20, onPressed: () {
-            TweetBottomSheet().openRetweetbottomSheet(context, type, model);
+            TweetBottomSheet().openRetweetbottomSheet(context,
+                type: type, model: model, scaffoldKey: scaffoldKey);
           }),
           _iconWidget(
             context,

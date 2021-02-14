@@ -5,6 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customLoader.dart';
 import 'package:intl/intl.dart';
@@ -215,7 +216,7 @@ bool validateEmal(String email) {
   return status;
 }
 
-createLinkAndShare(BuildContext context, String id,
+Future<Uri> createLinkToShare(BuildContext context, String id,
     {SocialMetaTagParameters socialMetaTagParameters}) async {
   final DynamicLinkParameters parameters = DynamicLinkParameters(
       uriPrefix: 'https://fwitterdev.page.link',
@@ -232,9 +233,28 @@ createLinkAndShare(BuildContext context, String id,
   if (true) {
     final ShortDynamicLink shortLink = await parameters.buildShortLink();
     url = shortLink.shortUrl;
+    return url;
   } else {
     url = await parameters.buildUrl();
   }
+}
+
+createLinkAndShare(BuildContext context, String id,
+    {SocialMetaTagParameters socialMetaTagParameters}) async {
+  var url = createLinkToShare(context, id,
+      socialMetaTagParameters: socialMetaTagParameters);
 
   share(url.toString(), subject: "Tweet");
+}
+
+void copyToClipBoard({
+  GlobalKey<ScaffoldState> scaffoldKey,
+  String text,
+  String message,
+}) {
+  assert(message != null);
+  assert(text != null);
+  var data = ClipboardData(text: text);
+  Clipboard.setData(data);
+  customSnackBar(scaffoldKey, message);
 }

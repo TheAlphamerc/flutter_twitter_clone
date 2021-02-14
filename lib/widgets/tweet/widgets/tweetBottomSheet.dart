@@ -1,7 +1,9 @@
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/helper/theme.dart';
+import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
@@ -10,13 +12,14 @@ import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:provider/provider.dart';
 
 class TweetBottomSheet {
-  Widget tweetOptionIcon(
-      BuildContext context, FeedModel model, TweetType type) {
+  Widget tweetOptionIcon(BuildContext context,
+      {FeedModel model, TweetType type, GlobalKey<ScaffoldState> scaffoldKey}) {
     return customInkWell(
         radius: BorderRadius.circular(20),
         context: context,
         onPressed: () {
-          _openbottomSheet(context, type, model);
+          _openbottomSheet(context,
+              type: type, model: model, scaffoldKey: scaffoldKey);
         },
         child: Container(
           width: 25,
@@ -31,8 +34,10 @@ class TweetBottomSheet {
         ));
   }
 
-  void _openbottomSheet(
-      BuildContext context, TweetType type, FeedModel model) async {
+  void _openbottomSheet(BuildContext context,
+      {TweetType type,
+      FeedModel model,
+      GlobalKey<ScaffoldState> scaffoldKey}) async {
     var authState = Provider.of<AuthState>(context, listen: false);
     bool isMyTweet = authState.userId == model.userId;
     await showModalBottomSheet(
@@ -54,14 +59,25 @@ class TweetBottomSheet {
               ),
             ),
             child: type == TweetType.Tweet
-                ? _tweetOptions(context, isMyTweet, model, type)
-                : _tweetDetailOptions(context, isMyTweet, model, type));
+                ? _tweetOptions(context,
+                    scaffoldKey: scaffoldKey,
+                    isMyTweet: isMyTweet,
+                    model: model,
+                    type: type)
+                : _tweetDetailOptions(context,
+                    scaffoldKey: scaffoldKey,
+                    isMyTweet: isMyTweet,
+                    model: model,
+                    type: type));
       },
     );
   }
 
-  Widget _tweetDetailOptions(
-      BuildContext context, bool isMyTweet, FeedModel model, TweetType type) {
+  Widget _tweetDetailOptions(BuildContext context,
+      {bool isMyTweet,
+      FeedModel model,
+      TweetType type,
+      GlobalKey<ScaffoldState> scaffoldKey}) {
     return Column(
       children: <Widget>[
         Container(
@@ -74,11 +90,25 @@ class TweetBottomSheet {
             ),
           ),
         ),
-        _widgetBottomSheetRow(
-          context,
-          AppIcon.link,
-          text: 'Copy link to tweet',
-        ),
+        _widgetBottomSheetRow(context, AppIcon.link,
+            text: 'Copy link to tweet', isEnable: true, onPressed: () async {
+          var uri = await createLinkToShare(
+            context,
+            "tweet/${model.key}",
+            socialMetaTagParameters: SocialMetaTagParameters(
+                description: model.description ??
+                    "${model.user.displayName} posted a tweet on Fwitter.",
+                title: "Tweet on Fwitter app",
+                imageUrl: Uri.parse(
+                    "https://play-lh.googleusercontent.com/e66XMuvW5hZ7HnFf8R_lcA3TFgkxm0SuyaMsBs3KENijNHZlogUAjxeu9COqsejV5w=s180-rw")),
+          );
+
+          Navigator.pop(context);
+          copyToClipBoard(
+              scaffoldKey: scaffoldKey,
+              text: uri.toString(),
+              message: "Tweet link copy to clipboard");
+        }),
         isMyTweet
             ? _widgetBottomSheetRow(
                 context,
@@ -141,8 +171,11 @@ class TweetBottomSheet {
     );
   }
 
-  Widget _tweetOptions(
-      BuildContext context, bool isMyTweet, FeedModel model, TweetType type) {
+  Widget _tweetOptions(BuildContext context,
+      {bool isMyTweet,
+      FeedModel model,
+      TweetType type,
+      GlobalKey<ScaffoldState> scaffoldKey}) {
     return Column(
       children: <Widget>[
         Container(
@@ -155,11 +188,24 @@ class TweetBottomSheet {
             ),
           ),
         ),
-        _widgetBottomSheetRow(
-          context,
-          AppIcon.link,
-          text: 'Copy link to tweet',
-        ),
+        _widgetBottomSheetRow(context, AppIcon.link,
+            text: 'Copy link to tweet', isEnable: true, onPressed: () async {
+          var uri = await createLinkToShare(
+            context,
+            "tweet/${model.key}",
+            socialMetaTagParameters: SocialMetaTagParameters(
+                description: model.description ??
+                    "${model.user.displayName} posted a tweet on Fwitter.",
+                title: "Tweet on Fwitter app",
+                imageUrl: Uri.parse(
+                    "https://play-lh.googleusercontent.com/e66XMuvW5hZ7HnFf8R_lcA3TFgkxm0SuyaMsBs3KENijNHZlogUAjxeu9COqsejV5w=s180-rw")),
+          );
+          Navigator.pop(context);
+          copyToClipBoard(
+              scaffoldKey: scaffoldKey,
+              text: uri.toString(),
+              message: "Tweet link copy to clipboard");
+        }),
         isMyTweet
             ? _widgetBottomSheetRow(
                 context,
@@ -241,7 +287,8 @@ class TweetBottomSheet {
                 istwitterIcon: true,
                 size: 25,
                 paddingIcon: 8,
-                iconColor: isEnable ? AppColor.darkGrey : AppColor.lightGrey,
+                iconColor:
+                    onPressed != null ? AppColor.darkGrey : AppColor.lightGrey,
               ),
               SizedBox(
                 width: 15,
@@ -276,8 +323,10 @@ class TweetBottomSheet {
     }
   }
 
-  void openRetweetbottomSheet(
-      BuildContext context, TweetType type, FeedModel model) async {
+  void openRetweetbottomSheet(BuildContext context,
+      {TweetType type,
+      FeedModel model,
+      GlobalKey<ScaffoldState> scaffoldKey}) async {
     await showModalBottomSheet(
       backgroundColor: Colors.transparent,
       context: context,

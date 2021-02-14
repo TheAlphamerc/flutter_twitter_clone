@@ -19,6 +19,7 @@ class FeedPostDetail extends StatefulWidget {
 
 class _FeedPostDetailState extends State<FeedPostDetail> {
   String postId;
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
     postId = widget.postId;
@@ -42,8 +43,8 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
     return Tweet(
       model: model,
       type: TweetType.Reply,
-      trailing:
-          TweetBottomSheet().tweetOptionIcon(context, model, TweetType.Reply),
+      trailing: TweetBottomSheet().tweetOptionIcon(context,
+          scaffoldKey: scaffoldKey, model: model, type: TweetType.Reply),
     );
   }
 
@@ -51,8 +52,8 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
     return Tweet(
       model: model,
       type: TweetType.Detail,
-      trailing:
-          TweetBottomSheet().tweetOptionIcon(context, model, TweetType.Detail),
+      trailing: TweetBottomSheet().tweetOptionIcon(context,
+          scaffoldKey: scaffoldKey, model: model, type: TweetType.Detail),
     );
   }
 
@@ -83,6 +84,7 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
         return Future.value(true);
       },
       child: Scaffold(
+        key: scaffoldKey,
         floatingActionButton: _floatingActionButton(),
         backgroundColor: Theme.of(context).backgroundColor,
         body: CustomScrollView(
