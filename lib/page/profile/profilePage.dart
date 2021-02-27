@@ -1,3 +1,4 @@
+import 'package:flutter_twitter_clone/page/profile/qrCode/scanner.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
@@ -66,6 +67,9 @@ class _ProfilePageState extends State<ProfilePage>
                 onSelected: (d) {
                   if (d.title == "Share") {
                     shareProfile(context);
+                  } else if (d.title == "QR code") {
+                    Navigator.push(context,
+                        ScanScreen.getRoute(authstate.profileUserModel));
                   }
                 },
                 itemBuilder: (BuildContext context) {

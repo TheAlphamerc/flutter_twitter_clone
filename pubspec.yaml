@@ -48,6 +48,9 @@ dependencies:
   firebase_dynamic_links: ^0.7.0+1
   # simple_url_preview: ^1.1.0
 
+  qr_code_scanner: ^0.3.5
+  qr_flutter: ^3.2.0
+
   # camera:
   # image: ^2.0.75
   # path_provider: ^0.5.0+1
