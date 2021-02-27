@@ -241,10 +241,18 @@ Future<Uri> createLinkToShare(BuildContext context, String id,
 
 createLinkAndShare(BuildContext context, String id,
     {SocialMetaTagParameters socialMetaTagParameters}) async {
-  var url = createLinkToShare(context, id,
+  var url = await createLinkToShare(context, id,
       socialMetaTagParameters: socialMetaTagParameters);
 
   share(url.toString(), subject: "Tweet");
+}
+
+shareFile(List<String> path, {String text = ""}) {
+  try {
+    Share.shareFiles(path, text: text);
+  } catch (error) {
+    print(error);
+  }
 }
 
 void copyToClipBoard({

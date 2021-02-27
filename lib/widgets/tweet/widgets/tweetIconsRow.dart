@@ -243,16 +243,7 @@ class TweetIconsRow extends StatelessWidget {
   }
 
   void shareTweet(BuildContext context) async {
-    createLinkAndShare(
-      context,
-      "tweet/${model.key}",
-      socialMetaTagParameters: SocialMetaTagParameters(
-          description: model.description ??
-              "${model.user.displayName} posted a tweet on Fwitter.",
-          title: "Tweet on Fwitter app",
-          imageUrl: Uri.parse(
-              "https://play-lh.googleusercontent.com/e66XMuvW5hZ7HnFf8R_lcA3TFgkxm0SuyaMsBs3KENijNHZlogUAjxeu9COqsejV5w=s180-rw")),
-    );
+    TweetBottomSheet().openShareTweetBottomSheet(context, model, type);
   }
 
   @override

@@ -9,6 +9,8 @@ import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
+import 'package:flutter_twitter_clone/widgets/share_widget.dart';
+import 'package:flutter_twitter_clone/widgets/tweet/tweet.dart';
 import 'package:provider/provider.dart';
 
 class TweetBottomSheet {
@@ -399,6 +401,90 @@ class TweetBottomSheet {
             /// `/ComposeTweetPage/retweet` route is used to identify that tweet is going to be retweet.
             /// To simple reply on any `Tweet` use `ComposeTweetPage` route.
             Navigator.of(context).pushNamed('/ComposeTweetPage/retweet');
+          },
+        )
+      ],
+    );
+  }
+
+  void openShareTweetBottomSheet(
+      BuildContext context, FeedModel model, TweetType type) async {
+    await showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder: (context) {
+        return Container(
+            padding: EdgeInsets.only(top: 5, bottom: 0),
+            height: 130,
+            width: fullWidth(context),
+            decoration: BoxDecoration(
+              color: Theme.of(context).bottomSheetTheme.backgroundColor,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
+            ),
+            child: _shareTweet(context, model, type));
+      },
+    );
+  }
+
+  Widget _shareTweet(BuildContext context, FeedModel model, TweetType type) {
+    var socialMetaTagParameters = SocialMetaTagParameters(
+        description: model.description ??
+            "${model.user.displayName} posted a tweet on Fwitter.",
+        title: "Tweet on Fwitter app",
+        imageUrl: Uri.parse(
+            "https://play-lh.googleusercontent.com/e66XMuvW5hZ7HnFf8R_lcA3TFgkxm0SuyaMsBs3KENijNHZlogUAjxeu9COqsejV5w=s180-rw"));
+    return Column(
+      children: <Widget>[
+        Container(
+          width: fullWidth(context) * .1,
+          height: 5,
+          decoration: BoxDecoration(
+            color: Theme.of(context).dividerColor,
+            borderRadius: BorderRadius.all(
+              Radius.circular(10),
+            ),
+          ),
+        ),
+        _widgetBottomSheetRow(
+          context,
+          AppIcon.link,
+          isEnable: true,
+          text: 'Share Link',
+          onPressed: () async {
+            var url = createLinkToShare(
+              context,
+              "tweet/${model.key}",
+              socialMetaTagParameters: socialMetaTagParameters,
+            );
+            var uri = await url;
+            share(uri.toString(), subject: "Tweet");
+            Navigator.pop(context);
+          },
+        ),
+        _widgetBottomSheetRow(
+          context,
+          AppIcon.image,
+          text: 'Share with Tweet thumbnail',
+          isEnable: true,
+          onPressed: () {
+            socialMetaTagParameters = SocialMetaTagParameters(
+                title: "${model.user.displayName} posted a tweet on Fwitter.",
+                imageUrl: Uri.parse(
+                    "https://play-lh.googleusercontent.com/e66XMuvW5hZ7HnFf8R_lcA3TFgkxm0SuyaMsBs3KENijNHZlogUAjxeu9COqsejV5w=s180-rw"));
+            Navigator.pop(context);
+            Navigator.push(
+              context,
+              ShareWidget.getRoute(
+                  child: Tweet(
+                    model: model,
+                    type: type,
+                  ),
+                  id: "tweet/${model.key}",
+                  socialMetaTagParameters: socialMetaTagParameters),
+            );
           },
         )
       ],

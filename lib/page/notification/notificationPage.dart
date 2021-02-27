@@ -193,9 +193,12 @@ class NotificationTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var description = model.description.length > 150
-        ? model.description.substring(0, 150) + '...'
-        : model.description;
+    String description = "";
+    if (model.description != null) {
+      description = model.description.length > 150
+          ? model.description.substring(0, 150) + '...'
+          : model.description;
+    }
     return Column(
       children: <Widget>[
         Container(
