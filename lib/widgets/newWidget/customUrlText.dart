@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
+
 class UrlText extends StatelessWidget {
   final String text;
   final TextStyle style;
@@ -70,11 +71,12 @@ class _LinkTextSpan extends TextSpan {
             text: text,
             recognizer: TapGestureRecognizer()
               ..onTap = () {
-                if(onHashTagPressed != null && (text.substring(0,1).contains("#") || text.substring(0,1).contains("#"))){
+                if (onHashTagPressed != null &&
+                    (text.substring(0, 1).contains("#") ||
+                        text.substring(0, 1).contains("#"))) {
                   onHashTagPressed(text);
-                }
-                else{
-                  launchURL(text);
+                } else {
+                  Utility.launchURL(text);
                 }
               });
 }

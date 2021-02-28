@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
-import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
+import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/rippleButton.dart';
@@ -66,13 +66,13 @@ class RetweetWidget extends StatelessWidget {
               Flexible(
                 child: customText(
                   '${model.user.userName}',
-                  style: userNameStyle,
+                  style: TextStyles.userNameStyle,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
               SizedBox(width: 4),
-              customText('· ${getChatTime(model.createdAt)}',
-                  style: userNameStyle),
+              customText('· ${Utility.getChatTime(model.createdAt)}',
+                  style: TextStyles.userNameStyle),
             ],
           ),
         ),

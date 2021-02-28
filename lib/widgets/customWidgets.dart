@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
-import 'package:flutter_twitter_clone/helper/theme.dart';
+import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:image_picker/image_picker.dart';
 
 Widget customTitleText(String title, {BuildContext context}) {
@@ -43,7 +43,7 @@ Widget userImage(String path, {double height = 100}) {
       height: height,
       alignment: FractionalOffset.topCenter,
       decoration: BoxDecoration(
-        boxShadow: shadow,
+        boxShadow: AppTheme.shadow,
         border: Border.all(color: Colors.white, width: 1),
         borderRadius: BorderRadius.circular(height / 2),
         image: DecorationImage(image: NetworkImage(path)),
@@ -54,11 +54,10 @@ Widget userImage(String path, {double height = 100}) {
 
 Widget customIcon(
   BuildContext context, {
-  int icon,
+  IconData icon,
   bool isEnable = false,
   double size = 18,
   bool istwitterIcon = true,
-  bool isFontAwesomeRegular = false,
   bool isFontAwesomeSolid = false,
   Color iconColor,
   double paddingIcon = 10,
@@ -67,28 +66,27 @@ Widget customIcon(
   return Padding(
     padding: EdgeInsets.only(bottom: istwitterIcon ? paddingIcon : 0),
     child: Icon(
-      IconData(icon,
-          fontFamily: istwitterIcon
-              ? 'TwitterIcon'
-              : isFontAwesomeRegular
-                  ? 'AwesomeRegular'
-                  : isFontAwesomeSolid ? 'AwesomeSolid' : 'Fontello'),
+      icon,
+      // IconData(icon,
+      //     fontFamily: istwitterIcon
+      //         ? 'TwitterIcon'
+      //         : isFontAwesomeRegular
+      //             ? 'AwesomeRegular'
+      //             : isFontAwesomeSolid ? 'AwesomeSolid' : 'Fontello'),
       size: size,
       color: isEnable ? Theme.of(context).primaryColor : iconColor,
     ),
   );
 }
 
-Widget customTappbleIcon(BuildContext context, int icon,
+Widget customTappbleIcon(BuildContext context, IconData icon,
     {double size = 16,
     bool isEnable = false,
     Function(bool, int) onPressed1,
     bool isBoolValue,
     int id,
     Function onPressed2,
-    bool isFontAwesomeRegular = false,
     bool istwitterIcon = false,
-    bool isFontAwesomeSolid = false,
     Color iconColor,
     EdgeInsetsGeometry padding}) {
   if (padding == null) {
@@ -114,8 +112,6 @@ Widget customTappbleIcon(BuildContext context, int icon,
         size: size,
         isEnable: isEnable,
         istwitterIcon: istwitterIcon,
-        isFontAwesomeRegular: isFontAwesomeRegular,
-        isFontAwesomeSolid: isFontAwesomeSolid,
         iconColor: iconColor),
   );
 }
@@ -165,7 +161,8 @@ Widget customImage(
     child: CircleAvatar(
       maxRadius: height / 2,
       backgroundColor: Theme.of(context).cardColor,
-      backgroundImage: customAdvanceNetworkImage(path ?? dummyProfilePic),
+      backgroundImage:
+          customAdvanceNetworkImage(path ?? Constants.dummyProfilePic),
     ),
   );
 }
@@ -221,7 +218,7 @@ SizedBox sizedBox({double height = 5, String title}) {
 Widget customNetworkImage(String path, {BoxFit fit = BoxFit.contain}) {
   return CachedNetworkImage(
     fit: fit,
-    imageUrl: path ?? dummyProfilePic,
+    imageUrl: path ?? Constants.dummyProfilePic,
     imageBuilder: (context, imageProvider) => Container(
       decoration: BoxDecoration(
         image: DecorationImage(
@@ -240,10 +237,10 @@ Widget customNetworkImage(String path, {BoxFit fit = BoxFit.contain}) {
 
 dynamic customAdvanceNetworkImage(String path) {
   if (path == null) {
-    path = dummyProfilePic;
+    path = Constants.dummyProfilePic;
   }
   return CachedNetworkImageProvider(
-    path ?? dummyProfilePic,
+    path ?? Constants.dummyProfilePic,
   );
 }
 

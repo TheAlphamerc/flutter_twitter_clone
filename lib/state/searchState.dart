@@ -6,7 +6,7 @@ import 'appState.dart';
 
 class SearchState extends AppState {
   bool isBusy = false;
-  SortUser sortBy = SortUser.ByMaxFollower;
+  SortUser sortBy = SortUser.MaxFollower;
   List<UserModel> _userFilterlist;
   List<UserModel> _userlist;
 
@@ -93,29 +93,29 @@ class SearchState extends AppState {
 
   String get selectedFilter {
     switch (sortBy) {
-      case SortUser.ByAlphabetically:
+      case SortUser.Alphabetically:
         _userFilterlist.sort((x, y) => x.displayName.compareTo(y.displayName));
         notifyListeners();
         return "alphabetically";
 
-      case SortUser.ByMaxFollower:
+      case SortUser.MaxFollower:
         _userFilterlist.sort((x, y) => y.followers.compareTo(x.followers));
         notifyListeners();
         return "UserModel with max follower";
 
-      case SortUser.ByNewest:
+      case SortUser.Newest:
         _userFilterlist.sort((x, y) =>
             DateTime.parse(y.createdAt).compareTo(DateTime.parse(x.createdAt)));
         notifyListeners();
         return "Newest user first";
 
-      case SortUser.ByOldest:
+      case SortUser.Oldest:
         _userFilterlist.sort((x, y) =>
             DateTime.parse(x.createdAt).compareTo(DateTime.parse(y.createdAt)));
         notifyListeners();
         return "Oldest user first";
 
-      case SortUser.ByVerified:
+      case SortUser.Verified:
         _userFilterlist.sort((x, y) =>
             y.isVerified.toString().compareTo(x.isVerified.toString()));
         notifyListeners();

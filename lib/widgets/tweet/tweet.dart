@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
-import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
+import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 import 'package:flutter_twitter_clone/widgets/tweet/widgets/parentTweet.dart';
@@ -33,7 +33,7 @@ class Tweet extends StatelessWidget {
 
   void onLongPressedTweet(BuildContext context) {
     if (type == TweetType.Detail || type == TweetType.ParentTweet) {
-      copyToClipBoard(
+      Utility.copyToClipBoard(
           scaffoldKey: scaffoldKey,
           text: model.description ?? "",
           message: "Tweet copy to clipboard");
@@ -217,13 +217,13 @@ class _TweetBody extends StatelessWidget {
                         Flexible(
                           child: customText(
                             '${model.user.userName}',
-                            style: userNameStyle,
+                            style: TextStyles.userNameStyle,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         SizedBox(width: 4),
-                        customText('· ${getChatTime(model.createdAt)}',
-                            style: userNameStyle),
+                        customText('· ${Utility.getChatTime(model.createdAt)}',
+                            style: TextStyles.userNameStyle),
                       ],
                     ),
                   ),
@@ -330,8 +330,8 @@ class _TweetDetailBody extends StatelessWidget {
                     ),
                   ],
                 ),
-                subtitle:
-                    customText('${model.user.userName}', style: userNameStyle),
+                subtitle: customText('${model.user.userName}',
+                    style: TextStyles.userNameStyle),
                 trailing: trailing,
               ),
               model.description == null

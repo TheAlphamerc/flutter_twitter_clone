@@ -184,7 +184,7 @@ class ChatState extends AppState {
 
       kDatabase.child('chats').child(_channelName).push().set(message.toJson());
       sendAndRetrieveMessage(message);
-      logEvent('send_message');
+      Utility.logEvent('send_message');
     } catch (error) {
       cprint(error);
     }

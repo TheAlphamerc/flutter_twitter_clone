@@ -3,22 +3,22 @@ enum AuthStatus {
   NOT_LOGGED_IN,
   LOGGED_IN,
 }
-enum TweetType{
+enum TweetType {
   Tweet,
   Detail,
   Reply,
-  ParentTweet
+  ParentTweet,
 }
 
-enum SortUser{
-  ByVerified,
-  ByAlphabetically,
-  ByNewest,
-  ByOldest,
-  ByMaxFollower
+enum SortUser {
+  Verified,
+  Alphabetically,
+  Newest,
+  Oldest,
+  MaxFollower,
 }
 
-enum NotificationType{
+enum NotificationType {
   NOT_DETERMINED,
   Message,
   Tweet,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
-import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
+import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 
 class UnavailableTweet extends StatelessWidget {
   const UnavailableTweet({Key key, this.snapshot, this.type}) : super(key: key);
@@ -37,7 +37,7 @@ class UnavailableTweet extends StatelessWidget {
                 ),
               ),
             )
-          : Text('This Tweet is unavailable', style: userNameStyle),
+          : Text('This Tweet is unavailable', style: TextStyles.userNameStyle),
     );
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
+import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:provider/provider.dart';
 
 import 'customWidgets.dart';
@@ -20,13 +20,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.submitButtonText,
       this.isSubmitDisable = true,
       this.isbootomLine = true,
-      this.onSearchChanged
-      })
+      this.onSearchChanged})
       : super(key: key);
 
   final List<Widget> actions;
   final Size appBarHeight = Size.fromHeight(56.0);
-  final int icon;
+  final IconData icon;
   final bool isBackButton;
   final bool isbootomLine;
   final bool isCrossButton;
@@ -44,26 +43,25 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   Widget _searchField() {
     return Container(
-      height: 50,
-      padding: EdgeInsets.symmetric(vertical: 5),
-      child: TextField(
-        onChanged: onSearchChanged,
-        controller: textController,
-        decoration: InputDecoration(
-          border: OutlineInputBorder(
-            borderSide: BorderSide(width: 0, style: BorderStyle.none),
-            borderRadius: const BorderRadius.all(
-              const Radius.circular(25.0),
+        height: 50,
+        padding: EdgeInsets.symmetric(vertical: 5),
+        child: TextField(
+          onChanged: onSearchChanged,
+          controller: textController,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderSide: BorderSide(width: 0, style: BorderStyle.none),
+              borderRadius: const BorderRadius.all(
+                const Radius.circular(25.0),
+              ),
             ),
+            hintText: 'Search..',
+            fillColor: AppColor.extraLightGrey,
+            filled: true,
+            focusColor: Colors.white,
+            contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
           ),
-          hintText: 'Search..',
-          fillColor: AppColor.extraLightGrey,
-          filled: true,
-          focusColor: Colors.white,
-          contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-         ),
-      )
-    );
+        ));
   }
 
   List<Widget> _getActionButtons(BuildContext context) {

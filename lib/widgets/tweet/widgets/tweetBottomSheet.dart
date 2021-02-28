@@ -2,12 +2,12 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
-import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
+import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/share_widget.dart';
 import 'package:flutter_twitter_clone/widgets/tweet/tweet.dart';
@@ -94,7 +94,7 @@ class TweetBottomSheet {
         ),
         _widgetBottomSheetRow(context, AppIcon.link,
             text: 'Copy link to tweet', isEnable: true, onPressed: () async {
-          var uri = await createLinkToShare(
+          var uri = await Utility.createLinkToShare(
             context,
             "tweet/${model.key}",
             socialMetaTagParameters: SocialMetaTagParameters(
@@ -106,7 +106,7 @@ class TweetBottomSheet {
           );
 
           Navigator.pop(context);
-          copyToClipBoard(
+          Utility.copyToClipBoard(
               scaffoldKey: scaffoldKey,
               text: uri.toString(),
               message: "Tweet link copy to clipboard");
@@ -192,7 +192,7 @@ class TweetBottomSheet {
         ),
         _widgetBottomSheetRow(context, AppIcon.link,
             text: 'Copy link to tweet', isEnable: true, onPressed: () async {
-          var uri = await createLinkToShare(
+          var uri = await Utility.createLinkToShare(
             context,
             "tweet/${model.key}",
             socialMetaTagParameters: SocialMetaTagParameters(
@@ -203,7 +203,7 @@ class TweetBottomSheet {
                     "https://play-lh.googleusercontent.com/e66XMuvW5hZ7HnFf8R_lcA3TFgkxm0SuyaMsBs3KENijNHZlogUAjxeu9COqsejV5w=s180-rw")),
           );
           Navigator.pop(context);
-          copyToClipBoard(
+          Utility.copyToClipBoard(
               scaffoldKey: scaffoldKey,
               text: uri.toString(),
               message: "Tweet link copy to clipboard");
@@ -267,7 +267,7 @@ class TweetBottomSheet {
     );
   }
 
-  Widget _widgetBottomSheetRow(BuildContext context, int icon,
+  Widget _widgetBottomSheetRow(BuildContext context, IconData icon,
       {String text, Function onPressed, bool isEnable = false}) {
     return Expanded(
       child: customInkWell(
@@ -454,13 +454,13 @@ class TweetBottomSheet {
           isEnable: true,
           text: 'Share Link',
           onPressed: () async {
-            var url = createLinkToShare(
+            var url = Utility.createLinkToShare(
               context,
               "tweet/${model.key}",
               socialMetaTagParameters: socialMetaTagParameters,
             );
             var uri = await url;
-            share(uri.toString(), subject: "Tweet");
+            Utility.share(uri.toString(), subject: "Tweet");
             Navigator.pop(context);
           },
         ),

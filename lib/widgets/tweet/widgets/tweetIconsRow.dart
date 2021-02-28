@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/helper/customRoute.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
-import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
-import 'package:flutter_twitter_clone/page/common/usersListPage.dart';
+import 'package:flutter_twitter_clone/ui/page/common/usersListPage.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
+import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/tweet/widgets/tweetBottomSheet.dart';
 import 'package:provider/provider.dart';
@@ -90,7 +90,7 @@ class TweetIconsRow extends StatelessWidget {
 
   Widget _iconWidget(BuildContext context,
       {String text,
-      int icon,
+      IconData icon,
       Function onPressed,
       IconData sysIcon,
       Color iconColor,
@@ -135,7 +135,8 @@ class TweetIconsRow extends StatelessWidget {
         Row(
           children: <Widget>[
             SizedBox(width: 5),
-            customText(getPostTime2(model.createdAt), style: textStyle14),
+            customText(Utility.getPostTime2(model.createdAt),
+                style: TextStyles.textStyle14),
             SizedBox(width: 10),
             customText('Fwitter for Android',
                 style: TextStyle(color: Theme.of(context).primaryColor))
@@ -176,7 +177,8 @@ class TweetIconsRow extends StatelessWidget {
                         : SizedBox(width: 5),
                     AnimatedCrossFade(
                       firstChild: SizedBox.shrink(),
-                      secondChild: customText('Retweets', style: subtitleStyle),
+                      secondChild: customText('Retweets',
+                          style: TextStyles.subtitleStyle),
                       crossFadeState: !isRetweetAvailable
                           ? CrossFadeState.showFirst
                           : CrossFadeState.showSecond,
@@ -200,7 +202,7 @@ class TweetIconsRow extends StatelessWidget {
                                   key: ValueKey(model.likeCount)),
                             ),
                             SizedBox(width: 5),
-                            customText('Likes', style: subtitleStyle)
+                            customText('Likes', style: TextStyles.subtitleStyle)
                           ],
                         ),
                         crossFadeState: !isLikeAvailable

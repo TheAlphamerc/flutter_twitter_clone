@@ -51,7 +51,7 @@ class AuthState extends AppState {
     _profileUserModelList = null;
     if (isSignInWithGoogle) {
       _googleSignIn.signOut();
-      logEvent('google_logout');
+      Utility.logEvent('google_logout');
     }
     _firebaseAuth.signOut();
     notifyListeners();
@@ -197,7 +197,8 @@ class AuthState extends AppState {
   createUser(UserModel user, {bool newUser = false}) {
     if (newUser) {
       // Create username by the combination of name and id
-      user.userName = getUserName(id: user.userId, name: user.displayName);
+      user.userName =
+          Utility.getUserName(id: user.userId, name: user.displayName);
       kAnalytics.logEvent(name: 'create_newUser');
 
       // Time at which user is created
@@ -216,7 +217,7 @@ class AuthState extends AppState {
   Future<User> getCurrentUser() async {
     try {
       loading = true;
-      logEvent('get_currentUSer');
+      Utility.logEvent('get_currentUSer');
       user = _firebaseAuth.currentUser;
       if (user != null) {
         authStatus = AuthStatus.LOGGED_IN;
@@ -245,7 +246,7 @@ class AuthState extends AppState {
       // Update user in firebase realtime kDatabase
       createUser(userModel);
       cprint('UserModel email verification complete');
-      logEvent('email_verification_complete',
+      Utility.logEvent('email_verification_complete',
           parameter: {userModel.userName: user.email});
     }
   }
@@ -255,7 +256,7 @@ class AuthState extends AppState {
       GlobalKey<ScaffoldState> scaffoldKey) async {
     User user = _firebaseAuth.currentUser;
     user.sendEmailVerification().then((_) {
-      logEvent('email_verifcation_sent',
+      Utility.logEvent('email_verifcation_sent',
           parameter: {userModel.displayName: user.email});
       customSnackBar(
         scaffoldKey,
@@ -263,7 +264,7 @@ class AuthState extends AppState {
       );
     }).catchError((error) {
       cprint(error.message, errorIn: 'sendEmailVerification');
-      logEvent('email_verifcation_block',
+      Utility.logEvent('email_verifcation_block',
           parameter: {userModel.displayName: user.email});
       customSnackBar(
         scaffoldKey,
@@ -285,7 +286,7 @@ class AuthState extends AppState {
       await _firebaseAuth.sendPasswordResetEmail(email: email).then((value) {
         customSnackBar(scaffoldKey,
             'A reset password link is sent yo your mail.You can reset your password from there');
-        logEvent('forgot+password');
+        Utility.logEvent('forgot+password');
       }).catchError((error) {
         cprint(error.message);
         return false;
@@ -328,7 +329,7 @@ class AuthState extends AppState {
         }
       }
 
-      logEvent('update_user');
+      Utility.logEvent('update_user');
     } catch (error) {
       cprint(error, errorIn: 'updateUserProfile');
     }
@@ -388,7 +389,7 @@ class AuthState extends AppState {
               }
             }
 
-            logEvent('get_profile');
+            Utility.logEvent('get_profile');
           }
         }
         loading = false;
