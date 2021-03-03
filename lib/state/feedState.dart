@@ -511,7 +511,8 @@ class FeedState extends AppState {
     }
     if (tweetReplyMap != null && tweetReplyMap.length > 0) {
       if (tweetReplyMap[tweet.parentkey] != null) {
-        tweetReplyMap[tweet.parentkey].add(tweet);
+        /// Instert new comment at the top of all available comment
+        tweetReplyMap[tweet.parentkey].insert(0, tweet);
       } else {
         tweetReplyMap[tweet.parentkey] = [tweet];
       }

@@ -118,9 +118,7 @@ class _SplashPageState extends State<SplashPage> {
   /// To check current installed app version check [version] in pubspec.yaml
   /// you have to add latest app version in firebase remote config
   /// To fetch this key go to project setting in firebase
-  /// Click on `cloud messaging` tab
-  /// Copy server key from `Project credentials`
-  /// Now goto `Remote Congig` section in fireabse
+  /// Open `Remote Config` section in fireabse
   /// Add [appVersion]  as paramerter key and below json in Default value
   ///  ``` json
   ///  {
