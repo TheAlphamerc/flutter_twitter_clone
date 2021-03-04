@@ -6,7 +6,7 @@ import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
-import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
+import 'package:flutter_twitter_clone/widgets/url_text/customUrlText.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 import 'package:flutter_twitter_clone/widgets/tweet/widgets/parentTweet.dart';
 import 'package:flutter_twitter_clone/widgets/tweet/widgets/tweetIconsRow.dart';

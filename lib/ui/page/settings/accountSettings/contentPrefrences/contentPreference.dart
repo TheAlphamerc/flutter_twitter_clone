@@ -5,9 +5,6 @@ import 'package:flutter_twitter_clone/ui/page/settings/widgets/settingsAppbar.da
 import 'package:flutter_twitter_clone/ui/page/settings/widgets/settingsRowWidget.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
-import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
-import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
-import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
 import 'package:provider/provider.dart';
 
 class ContentPrefrencePage extends StatelessWidget {
