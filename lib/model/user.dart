@@ -19,26 +19,26 @@ class UserModel {
   List<String> followersList;
   List<String> followingList;
 
-  UserModel({
-    this.email,
-    this.userId,
-    this.displayName,
-    this.profilePic,
-    this.bannerImage,
-    this.key,
-    this.contact,
-    this.bio,
-    this.dob,
-    this.location,
-    this.createdAt,
-    this.userName,
-    this.followers,
-    this.following,
-    this.webSite,
-    this.isVerified,
-    this.fcmToken,
-    this.followersList,
-  });
+  UserModel(
+      {this.email,
+      this.userId,
+      this.displayName,
+      this.profilePic,
+      this.bannerImage,
+      this.key,
+      this.contact,
+      this.bio,
+      this.dob,
+      this.location,
+      this.createdAt,
+      this.userName,
+      this.followers,
+      this.following,
+      this.webSite,
+      this.isVerified,
+      this.fcmToken,
+      this.followersList,
+      this.followingList});
 
   UserModel.fromJson(Map<dynamic, dynamic> map) {
     if (map == null) {
@@ -65,14 +65,14 @@ class UserModel {
     fcmToken = map['fcmToken'];
     isVerified = map['isVerified'] ?? false;
     if (map['followerList'] != null) {
-      followersList = List<String>();
+      followersList = <String>[];
       map['followerList'].forEach((value) {
         followersList.add(value);
       });
     }
     followers = followersList != null ? followersList.length : null;
     if (map['followingList'] != null) {
-      followingList = List<String>();
+      followingList = <String>[];
       map['followingList'].forEach((value) {
         followingList.add(value);
       });
@@ -122,6 +122,7 @@ class UserModel {
     bool isVerified,
     String fcmToken,
     List<String> followingList,
+    List<String> followersList,
   }) {
     return UserModel(
       email: email ?? this.email,
@@ -142,6 +143,7 @@ class UserModel {
       webSite: webSite ?? this.webSite,
       fcmToken: fcmToken ?? this.fcmToken,
       followersList: followersList ?? this.followersList,
+      followingList: followingList ?? this.followingList,
     );
   }
 
