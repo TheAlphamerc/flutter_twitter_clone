@@ -10,7 +10,9 @@
      <application
         android:name="io.flutter.app.FlutterApplication"
         android:label="Fwitter"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:usesCleartextTraffic="true"
+        >
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
@@ -35,6 +37,8 @@
               android:name="io.flutter.embedding.android.SplashScreenDrawable"
               android:resource="@drawable/launch_background"
               />
+            <meta-data android:name="io.flutter.network-policy"
+              android:resource="@xml/network_security_config"/>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

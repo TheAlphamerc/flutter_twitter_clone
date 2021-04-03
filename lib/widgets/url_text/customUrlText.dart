@@ -12,11 +12,11 @@ class UrlText extends StatelessWidget {
   UrlText({this.text, this.style, this.urlStyle, this.onHashTagPressed});
 
   List<InlineSpan> getTextSpans() {
-    List<InlineSpan> widgets = List<InlineSpan>();
+    List<InlineSpan> widgets = <InlineSpan>[];
     RegExp reg = RegExp(
         r"([#])\w+| [@]\w+|(https?|ftp|file|#)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]*");
     Iterable<Match> _matches = reg.allMatches(text);
-    List<_ResultMatch> resultMatches = List<_ResultMatch>();
+    List<_ResultMatch> resultMatches = <_ResultMatch>[];
     int start = 0;
     for (Match match in _matches) {
       if (match.group(0).isNotEmpty) {
@@ -59,6 +59,7 @@ class UrlText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         RichText(
           text: TextSpan(children: getTextSpans()),

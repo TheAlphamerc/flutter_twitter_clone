@@ -102,7 +102,7 @@ class ChatState extends AppState {
           .child(userId)
           .once()
           .then((DataSnapshot snapshot) {
-        _chatUserList = List<ChatMessage>();
+        _chatUserList = <ChatMessage>[];
         if (snapshot.value != null) {
           var map = snapshot.value;
           if (map != null) {
@@ -144,7 +144,7 @@ class ChatState extends AppState {
           .child(_channelName)
           .once()
           .then((DataSnapshot snapshot) {
-        _messageList = List<ChatMessage>();
+        _messageList = <ChatMessage>[];
         if (snapshot.value != null) {
           var map = snapshot.value;
           if (map != null) {
@@ -205,7 +205,7 @@ class ChatState extends AppState {
   /// Method will trigger every time when you send/recieve  from/to someone messgae.
   void _onMessageAdded(Event event) {
     if (_messageList == null) {
-      _messageList = List<ChatMessage>();
+      _messageList = <ChatMessage>[];
     }
     if (event.snapshot.value != null) {
       var map = event.snapshot.value;
@@ -226,7 +226,7 @@ class ChatState extends AppState {
 
   void _onMessageChanged(Event event) {
     if (_messageList == null) {
-      _messageList = List<ChatMessage>();
+      _messageList = <ChatMessage>[];
     }
     if (event.snapshot.value != null) {
       var map = event.snapshot.value;
@@ -247,7 +247,7 @@ class ChatState extends AppState {
 
   void _onChatUserAdded(Event event) {
     if (_chatUserList == null) {
-      _chatUserList = List<ChatMessage>();
+      _chatUserList = <ChatMessage>[];
     }
     if (event.snapshot.value != null) {
       var map = event.snapshot.value;

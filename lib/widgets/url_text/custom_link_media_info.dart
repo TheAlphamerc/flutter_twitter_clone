@@ -20,7 +20,7 @@ class CustomLinkMediaInfo extends StatelessWidget {
       return null;
     }
     RegExp reg = RegExp(
-        r"([#])\w+| [@]\w+|(https?|ftp|file|#)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]*");
+        r"(https?|http)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]*");
     Iterable<Match> _matches = reg.allMatches(text);
     if (_matches.isNotEmpty) {
       return _matches.first.group(0);
@@ -125,7 +125,13 @@ class CustomLinkMediaInfo extends StatelessWidget {
                           ),
                         ),
                       ),
-                    Padding(
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: model.thumbnailUrl != null
+                            ? Theme.of(context).colorScheme.onPrimary
+                            : const Color(0xFFF0F1F2),
+                      ),
                       padding:
                           EdgeInsets.only(bottom: 5, left: 8, right: 8, top: 4),
                       child: Column(

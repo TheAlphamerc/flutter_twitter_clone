@@ -127,7 +127,7 @@ class NotificationState extends AppState {
       var model = NotificationModel.fromJson(event.snapshot.key,
           event.snapshot.value["updatedAt"], event.snapshot.value["type"]);
       if (_notificationList == null) {
-        _notificationList = List<NotificationModel>();
+        _notificationList = <NotificationModel>[];
       }
       _notificationList.add(model);
       // added notification to list

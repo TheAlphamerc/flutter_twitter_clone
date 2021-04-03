@@ -65,13 +65,13 @@ class FeedModel {
     parentkey = map['parentkey'];
     childRetwetkey = map['childRetwetkey'];
     if (map['tags'] != null) {
-      tags = List<String>();
+      tags = <String>[];
       map['tags'].forEach((value) {
         tags.add(value);
       });
     }
     if (map["likeList"] != null) {
-      likeList = List<String>();
+      likeList = <String>[];
 
       final list = map['likeList'];
 
@@ -101,7 +101,7 @@ class FeedModel {
     }
     if (map['replyTweetKeyList'] != null) {
       map['replyTweetKeyList'].forEach((value) {
-        replyTweetKeyList = List<String>();
+        replyTweetKeyList = <String>[];
         map['replyTweetKeyList'].forEach((value) {
           replyTweetKeyList.add(value);
         });

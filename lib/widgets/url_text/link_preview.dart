@@ -17,7 +17,7 @@ class LinkPreview extends StatelessWidget {
       return null;
     }
     RegExp reg = RegExp(
-        r"([#])\w+| [@]\w+|(https?|ftp|file|#)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]*");
+        r"(https?|http)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]*");
     Iterable<Match> _matches = reg.allMatches(text);
     if (_matches.isNotEmpty) {
       return _matches.first.group(0);
@@ -62,7 +62,7 @@ class LinkPreview extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
               border: Border.all(color: AppColor.extraLightGrey),
               color: webInfo.image != null
-                  ? Colors.transparent
+                  ? Theme.of(context).colorScheme.onPrimary
                   : const Color(0xFFF0F1F2),
             ),
             child: Column(

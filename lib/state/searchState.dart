@@ -24,8 +24,8 @@ class SearchState extends AppState {
       isBusy = true;
       kDatabase.child('profile').once().then(
         (DataSnapshot snapshot) {
-          _userlist = List<UserModel>();
-          _userFilterlist = List<UserModel>();
+          _userlist = <UserModel>[];
+          _userFilterlist = <UserModel>[];
           if (snapshot.value != null) {
             var map = snapshot.value;
             if (map != null) {

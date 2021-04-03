@@ -165,7 +165,7 @@ class Utility {
     RegExp reg = RegExp(
         r"([#])\w+|(https?|ftp|file|#)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]*");
     Iterable<Match> _matches = reg.allMatches(text);
-    List<String> resultMatches = List<String>();
+    List<String> resultMatches = <String>[];
     for (Match match in _matches) {
       if (match.group(0).isNotEmpty) {
         var tag = match.group(0);

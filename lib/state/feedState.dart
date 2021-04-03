@@ -141,7 +141,7 @@ class FeedState extends AppState {
       _feedlist = null;
       notifyListeners();
       kDatabase.child('tweet').once().then((DataSnapshot snapshot) {
-        _feedlist = List<FeedModel>();
+        _feedlist = <FeedModel>[];
         if (snapshot.value != null) {
           var map = snapshot.value;
           if (map != null) {
@@ -201,7 +201,7 @@ class FeedState extends AppState {
 
       if (_tweetDetail != null) {
         // Fetch comment tweets
-        _commentlist = List<FeedModel>();
+        _commentlist = <FeedModel>[];
         // Check if parent tweet has reply tweets or not
         if (_tweetDetail.replyTweetKeyList != null &&
             _tweetDetail.replyTweetKeyList.length > 0) {
@@ -489,7 +489,7 @@ class FeedState extends AppState {
     _onCommentAdded(tweet);
     tweet.key = event.snapshot.key;
     if (_feedlist == null) {
-      _feedlist = List<FeedModel>();
+      _feedlist = <FeedModel>[];
     }
     if ((_feedlist.length == 0 || _feedlist.any((x) => x.key != tweet.key)) &&
         tweet.isValidTweet) {
