@@ -5,6 +5,7 @@ import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
+import 'package:flutter_twitter_clone/ui/page/profile/profilePage.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/url_text/customUrlText.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
@@ -174,7 +175,8 @@ class _TweetBody extends StatelessWidget {
               if (isDisplayOnProfile) {
                 return;
               }
-              Navigator.of(context).pushNamed('/ProfilePage/' + model?.userId);
+              Navigator.push(
+                  context, ProfilePage.getRoute(profileId: model.userId));
             },
             child: customImage(context, model.user.profilePic),
           ),
@@ -299,8 +301,8 @@ class _TweetDetailBody extends StatelessWidget {
                 contentPadding: EdgeInsets.symmetric(horizontal: 16),
                 leading: GestureDetector(
                   onTap: () {
-                    Navigator.of(context)
-                        .pushNamed('/ProfilePage/' + model?.userId);
+                    Navigator.push(
+                        context, ProfilePage.getRoute(profileId: model.userId));
                   },
                   child: customImage(context, model.user.profilePic),
                 ),
