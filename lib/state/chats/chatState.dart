@@ -268,7 +268,9 @@ class ChatState extends AppState {
 
   // update last message on chat user list screen when manin chat screen get closed.
   void onChatScreenClosed() {
-    if (_chatUserList != null && _chatUserList.isNotEmpty) {
+    if (_chatUserList != null &&
+        _chatUserList.isNotEmpty &&
+        _chatUserList.any((element) => element.key == chatUser.userId)) {
       var user = _chatUserList.firstWhere((x) => x.key == chatUser.userId);
       if (_messageList != null) {
         user.message = _messageList.first.message;

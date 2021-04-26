@@ -2,6 +2,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
+import 'package:flutter_twitter_clone/state/profile_state.dart';
+import 'package:flutter_twitter_clone/ui/page/profile/profilePage.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/url_text/customUrlText.dart';
@@ -57,7 +59,8 @@ class _SidebarMenuState extends State<SidebarMenu> {
             ),
             ListTile(
               onTap: () {
-                _navigateTo("ProfilePage");
+                Navigator.push(context,
+                    ProfilePage.getRoute(profileId: state.userModel.userId));
               },
               title: Row(
                 children: <Widget>[
@@ -228,7 +231,9 @@ class _SidebarMenuState extends State<SidebarMenu> {
                   Divider(),
                   _menuListRowButton('Profile',
                       icon: AppIcon.profile, isEnable: true, onPressed: () {
-                    _navigateTo('ProfilePage');
+                    var state = context.read<AuthState>();
+                    Navigator.push(
+                        context, ProfilePage.getRoute(profileId: state.userId));
                   }),
                   _menuListRowButton('Lists', icon: AppIcon.lists),
                   _menuListRowButton('Bookmark', icon: AppIcon.bookmark),

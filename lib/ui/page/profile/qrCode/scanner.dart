@@ -2,6 +2,8 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:ui' as ui;
 import 'dart:typed_data';
+import 'package:flutter_twitter_clone/ui/page/profile/profilePage.dart';
+
 import 'dot_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -181,7 +183,7 @@ class _ScanState extends State<ScanScreen> with SingleTickerProviderStateMixin {
         isFound = true;
         Navigator.pop(context);
         var userId = result.code.split("/")[2];
-        Navigator.of(context).pushNamed('/ProfilePage/' + userId);
+        Navigator.push(context, ProfilePage.getRoute(profileId: userId));
       }
     });
   }

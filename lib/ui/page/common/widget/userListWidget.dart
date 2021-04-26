@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
+import 'package:flutter_twitter_clone/ui/page/profile/profilePage.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/url_text/customUrlText.dart';
@@ -83,11 +84,13 @@ class UserTile extends StatelessWidget {
         children: <Widget>[
           ListTile(
             onTap: () {
-              Navigator.of(context).pushNamed('/ProfilePage/' + user?.userId);
+              Navigator.push(
+                  context, ProfilePage.getRoute(profileId: user.userId));
             },
             leading: RippleButton(
               onPressed: () {
-                Navigator.of(context).pushNamed('/ProfilePage/' + user?.userId);
+                Navigator.push(
+                    context, ProfilePage.getRoute(profileId: user.userId));
               },
               borderRadius: BorderRadius.all(Radius.circular(60)),
               child: customImage(context, user.profilePic, height: 55),

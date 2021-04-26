@@ -6,6 +6,7 @@ import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/chats/chatState.dart';
 import 'package:flutter_twitter_clone/state/searchState.dart';
+import 'package:flutter_twitter_clone/ui/page/profile/profilePage.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
@@ -85,7 +86,8 @@ class _ChatListPageState extends State<ChatListPage> {
         },
         leading: RippleButton(
           onPressed: () {
-            Navigator.of(context).pushNamed('/ProfilePage/${model.userId}');
+            Navigator.push(
+                context, ProfilePage.getRoute(profileId: model.userId));
           },
           borderRadius: BorderRadius.circular(28),
           child: Container(

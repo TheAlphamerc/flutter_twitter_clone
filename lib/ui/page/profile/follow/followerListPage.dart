@@ -1,21 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_twitter_clone/helper/constant.dart';
+import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/ui/page/common/usersListPage.dart';
-import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
-import 'package:provider/provider.dart';
 
 class FollowerListPage extends StatelessWidget {
-  FollowerListPage({Key key}) : super(key: key);
+  FollowerListPage({Key key, this.userList, this.profile}) : super(key: key);
+  final List<String> userList;
+  final UserModel profile;
+
+  static MaterialPageRoute getRoute(
+      {List<String> userList, UserModel profile}) {
+    return MaterialPageRoute(
+      builder: (BuildContext context) {
+        return FollowerListPage(
+          profile: profile,
+          userList: userList,
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    var state = Provider.of<AuthState>(context);
     return UsersListPage(
       pageTitle: 'Followers',
-      userIdsList: state.profileUserModel?.followersList,
+      userIdsList: userList,
       appBarIcon: AppIcon.follow,
-      emptyScreenText:
-          '${state?.profileUserModel?.userName ?? state.userModel.userName} doesn\'t have any followers',
+      emptyScreenText: '${profile?.userName} doesn\'t have any followers',
       emptyScreenSubTileText:
           'When someone follow them, they\'ll be listed here.',
     );

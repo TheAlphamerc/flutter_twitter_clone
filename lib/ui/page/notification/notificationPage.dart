@@ -7,6 +7,7 @@ import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/state/notificationState.dart';
+import 'package:flutter_twitter_clone/ui/page/profile/profilePage.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
@@ -178,8 +179,8 @@ class NotificationTile extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 3),
             child: GestureDetector(
               onTap: () {
-                Navigator.of(context)
-                    .pushNamed('/ProfilePage/' + snapshot.data?.userId);
+                Navigator.push(context,
+                    ProfilePage.getRoute(profileId: snapshot.data?.userId));
               },
               child: customImage(context, snapshot.data.profilePic, height: 30),
             ),

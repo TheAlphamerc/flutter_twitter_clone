@@ -1,8 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/state/searchState.dart';
+import 'package:flutter_twitter_clone/ui/page/profile/profilePage.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
@@ -73,8 +75,9 @@ class _UserTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () {
-        kAnalytics.logViewSearchResults(searchTerm: user.userName);
-        Navigator.of(context).pushNamed('/ProfilePage/' + user?.userId);
+        if (kReleaseMode)
+          kAnalytics.logViewSearchResults(searchTerm: user.userName);
+        Navigator.push(context, ProfilePage.getRoute(profileId: user.userId));
       },
       leading: customImage(context, user.profilePic, height: 40),
       title: Row(

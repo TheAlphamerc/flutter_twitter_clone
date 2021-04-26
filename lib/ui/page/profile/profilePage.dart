@@ -1,7 +1,8 @@
+import 'package:flutter_twitter_clone/state/profile_state.dart';
+import 'package:flutter_twitter_clone/ui/page/profile/follow/followerListPage.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/qrCode/scanner.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
@@ -24,6 +25,19 @@ class ProfilePage extends StatefulWidget {
   ProfilePage({Key key, this.profileId}) : super(key: key);
 
   final String profileId;
+  static MaterialPageRoute getRoute({String profileId}) {
+    return new MaterialPageRoute(
+      builder: (_) => Provider(
+        create: (_) => ProfileState(profileId),
+        child: ChangeNotifierProvider(
+          create: (BuildContext context) => ProfileState(profileId),
+          builder: (_, child) => ProfilePage(
+            profileId: profileId,
+          ),
+        ),
+      ),
+    );
+  }
 
   _ProfilePageState createState() => _ProfilePageState();
 }
@@ -36,10 +50,11 @@ class _ProfilePageState extends State<ProfilePage>
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      var authstate = Provider.of<AuthState>(context, listen: false);
+      var authstate = Provider.of<ProfileState>(context, listen: false);
       authstate.getProfileUser(userProfileId: widget.profileId);
-      isMyProfile =
-          widget.profileId == null || widget.profileId == authstate.userId;
+      authstate.isMyProfile().then((value) {
+        isMyProfile = value;
+      });
     });
     _tabController = TabController(length: 3, vsync: this);
     super.initState();
@@ -52,7 +67,7 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   SliverAppBar getAppbar() {
-    var authstate = Provider.of<AuthState>(context);
+    var authstate = Provider.of<ProfileState>(context);
     return SliverAppBar(
       forceElevated: false,
       expandedHeight: 200,
@@ -271,7 +286,7 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   isFollower() {
-    var authstate = Provider.of<AuthState>(context, listen: false);
+    var authstate = Provider.of<ProfileState>(context, listen: false);
     if (authstate.profileUserModel.followersList != null &&
         authstate.profileUserModel.followersList.isNotEmpty) {
       return (authstate.profileUserModel.followersList
@@ -285,10 +300,6 @@ class _ProfilePageState extends State<ProfilePage>
   /// When profile page is about to close
   /// Maintain minimum user's profile in profile page list
   Future<bool> _onWillPop() async {
-    final state = Provider.of<AuthState>(context, listen: false);
-
-    /// It will remove last user's profile from profileUserModelList
-    state.removeLastUser();
     return true;
   }
 
@@ -310,7 +321,7 @@ class _ProfilePageState extends State<ProfilePage>
   @override
   build(BuildContext context) {
     var state = Provider.of<FeedState>(context);
-    var authstate = Provider.of<AuthState>(context);
+    var authstate = Provider.of<ProfileState>(context);
     List<FeedModel> list;
     String id = widget.profileId ?? authstate.userId;
 
@@ -380,7 +391,7 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
-  Widget _tweetList(BuildContext context, AuthState authstate,
+  Widget _tweetList(BuildContext context, ProfileState authstate,
       List<FeedModel> tweetsList, bool isreply, bool isMedia) {
     List<FeedModel> list;
 
@@ -473,10 +484,14 @@ class UserNameRowWidget extends StatelessWidget {
   }
 
   Widget _tappbleText(
-      BuildContext context, String count, String text, String navigateTo) {
+    BuildContext context,
+    String count,
+    String text,
+    Function onPressed,
+  ) {
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, '/$navigateTo');
+        onPressed();
       },
       child: Row(
         children: <Widget>[
@@ -587,11 +602,23 @@ class UserNameRowWidget extends StatelessWidget {
                 width: 10,
                 height: 30,
               ),
-              _tappbleText(context, '${user.getFollower()}', ' Followers',
-                  'FollowerListPage'),
+              _tappbleText(context, '${user.getFollower()}', ' Followers', () {
+                var state = context.read<ProfileState>();
+                Navigator.push(
+                    context,
+                    FollowerListPage.getRoute(
+                        profile: state.profileUserModel,
+                        userList: state.profileUserModel.followersList));
+              }),
               SizedBox(width: 40),
-              _tappbleText(context, '${user.getFollowing()}', ' Following',
-                  'FollowingListPage'),
+              _tappbleText(context, '${user.getFollowing()}', ' Following', () {
+                var state = context.read<ProfileState>();
+                Navigator.push(
+                    context,
+                    FollowerListPage.getRoute(
+                        profile: state.profileUserModel,
+                        userList: state.profileUserModel.followingList));
+              }),
             ],
           ),
         ),

@@ -7,8 +7,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
+import 'package:flutter_twitter_clone/helper/shared_prefrence_helper.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
+import 'package:flutter_twitter_clone/ui/page/common/locator.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:path/path.dart' as Path;
@@ -387,6 +389,8 @@ class AuthState extends AppState {
               if (_userModel.fcmToken == null) {
                 updateFCMToken();
               }
+
+              getIt<SharedPreferenceHelper>().saveUserProfile(_userModel);
             }
 
             Utility.logEvent('get_profile');
@@ -413,59 +417,6 @@ class AuthState extends AppState {
       _userModel.fcmToken = token;
       createUser(_userModel);
     });
-  }
-
-  /// Follow / Unfollow user
-  ///
-  /// If `removeFollower` is true then remove user from follower list
-  ///
-  /// If `removeFollower` is false then add user to follower list
-  followUser({bool removeFollower = false}) {
-    /// `userModel` is user who is looged-in app.
-    /// `profileUserModel` is user whoose profile is open in app.
-    try {
-      if (removeFollower) {
-        /// If logged-in user `alredy follow `profile user then
-        /// 1.Remove logged-in user from profile user's `follower` list
-        /// 2.Remove profile user from logged-in user's `following` list
-        profileUserModel.followersList.remove(userModel.userId);
-
-        /// Remove profile user from logged-in user's following list
-        userModel.followingList.remove(profileUserModel.userId);
-        cprint('user removed from following list', event: 'remove_follow');
-      } else {
-        /// if logged in user is `not following` profile user then
-        /// 1.Add logged in user to profile user's `follower` list
-        /// 2. Add profile user to logged in user's `following` list
-        if (profileUserModel.followersList == null) {
-          profileUserModel.followersList = [];
-        }
-        profileUserModel.followersList.add(userModel.userId);
-        // Adding profile user to logged-in user's following list
-        if (userModel.followingList == null) {
-          userModel.followingList = [];
-        }
-        userModel.followingList.add(profileUserModel.userId);
-      }
-      // update profile user's user follower count
-      profileUserModel.followers = profileUserModel.followersList.length;
-      // update logged-in user's following count
-      userModel.following = userModel.followingList.length;
-      kDatabase
-          .child('profile')
-          .child(profileUserModel.userId)
-          .child('followerList')
-          .set(profileUserModel.followersList);
-      kDatabase
-          .child('profile')
-          .child(userModel.userId)
-          .child('followingList')
-          .set(userModel.followingList);
-      cprint('user added to following list', event: 'add_follow');
-      notifyListeners();
-    } catch (error) {
-      cprint(error, errorIn: 'followUser');
-    }
   }
 
   /// Trigger when logged-in user's profile change or updated

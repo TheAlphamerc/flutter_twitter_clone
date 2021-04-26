@@ -9,6 +9,7 @@ import 'package:flutter_twitter_clone/state/chats/chatState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/state/notificationState.dart';
 import 'package:flutter_twitter_clone/state/searchState.dart';
+import 'package:flutter_twitter_clone/ui/page/profile/profilePage.dart';
 import 'package:flutter_twitter_clone/widgets/bottomMenuBar/bottomMenuBar.dart';
 import 'package:provider/provider.dart';
 import 'common/sidebar.dart';
@@ -109,8 +110,8 @@ class _HomePageState extends State<HomePage> {
       else if (state.notificationType == NotificationType.Mention &&
           state.notificationReciverId == authstate.userModel.userId) {
         state.setNotificationType = null;
-        Navigator.of(context)
-            .pushNamed('/ProfilePage/' + state.notificationSenderId);
+        Navigator.push(context,
+            ProfilePage.getRoute(profileId: state.notificationSenderId));
       }
     });
   }
