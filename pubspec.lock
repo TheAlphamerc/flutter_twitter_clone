@@ -397,7 +397,7 @@ packages:
       name: flutter_cache_manager
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "2.1.2"
   flutter_launcher_icons:
     dependency: "direct dev"
     description:
@@ -794,12 +794,12 @@ packages:
     source: hosted
     version: "2.1.5"
   rxdart:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: rxdart
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.24.1"
+    version: "0.25.0"
   share:
     dependency: "direct main"
     description:

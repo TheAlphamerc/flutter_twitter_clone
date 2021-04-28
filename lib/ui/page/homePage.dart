@@ -1,6 +1,11 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
+import 'package:flutter_twitter_clone/model/push_notification_model.dart';
+import 'package:flutter_twitter_clone/resource/push_notification_service.dart';
 import 'package:flutter_twitter_clone/ui/page/feed/feedPage.dart';
 import 'package:flutter_twitter_clone/ui/page/message/chatListPage.dart';
 import 'package:flutter_twitter_clone/state/appState.dart';
@@ -11,7 +16,9 @@ import 'package:flutter_twitter_clone/state/notificationState.dart';
 import 'package:flutter_twitter_clone/state/searchState.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/profilePage.dart';
 import 'package:flutter_twitter_clone/widgets/bottomMenuBar/bottomMenuBar.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
+import 'common/locator.dart';
 import 'common/sidebar.dart';
 import 'notification/notificationPage.dart';
 import 'search/SearchPage.dart';
@@ -25,6 +32,8 @@ class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
   int pageIndex = 0;
+  // ignore: cancel_subscriptions
+  StreamSubscription<PushNotificationModel> pushNotificationSubscription;
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -38,6 +47,12 @@ class _HomePageState extends State<HomePage> {
     });
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    // getIt<PushNotificationService>().pushBehaviorSubject.close();
+    super.dispose();
   }
 
   void initTweets() {
@@ -60,7 +75,48 @@ class _HomePageState extends State<HomePage> {
     var state = Provider.of<NotificationState>(context, listen: false);
     var authstate = Provider.of<AuthState>(context, listen: false);
     state.databaseInit(authstate.userId);
+
+    /// configure push notifications
     state.initfirebaseService();
+
+    /// Suscribe the push notifications
+    /// Whenever devices recieve push notifcation, `listenPushNotification` callback will trigger.
+    pushNotificationSubscription = getIt<PushNotificationService>()
+        .pushNotificationResponseStream
+        .listen(listenPushNotification);
+  }
+
+  /// Listen for every push notifications when app is in background
+  /// Check for push notifications when app is launched by tapping on push notifications from system tray.
+  /// If notification type is `NotificationType.Message` then chat screen will open
+  /// If notification type is `NotificationType.Mention` then user profile will open who taged/mentioned you in a tweet
+  void listenPushNotification(PushNotificationModel model) {
+    final authstate = Provider.of<AuthState>(context, listen: false);
+    var state = Provider.of<NotificationState>(context, listen: false);
+
+    /// Check if user recieve chat notification
+    /// Redirect to chat screen
+    /// `model.data.senderId` is a user id who sends you a message
+    /// `model.data.receiverId` is a your user id.
+    if (model.data.type == NotificationType.Message.toString() &&
+        model.data.receiverId == authstate.user.uid) {
+      /// Get sender profile detail from firebase
+      state.getuserDetail(model.data.senderId).then((user) {
+        final chatState = Provider.of<ChatState>(context, listen: false);
+        chatState.setChatUser = user;
+        Navigator.pushNamed(context, '/ChatScreenPage');
+      });
+    }
+
+    /// Checks for user tag tweet notification
+    /// If you are mentioned in tweet then it redirect to user profile who mentioed you in a tweet
+    /// You can check that tweet on his profile timeline
+    /// `model.data.senderId` is user id who tagged you in a tweet
+    else if (model.data.type == NotificationType.Mention.toString() &&
+        model.data.receiverId == authstate.user.uid) {
+      Navigator.push(
+          context, ProfilePage.getRoute(profileId: model.data.senderId));
+    }
   }
 
   void initChat() {
@@ -78,46 +134,7 @@ class _HomePageState extends State<HomePage> {
     chatState.getFCMServerKey();
   }
 
-  /// On app launch it checks if app is launch by tapping on notification from notification tray
-  /// If yes, it checks for  which type of notification is recieve
-  /// If notification type is `NotificationType.Message` then chat screen will open
-  /// If notification type is `NotificationType.Mention` then user profile will open who taged you in a tweet
-  ///
-  void _checkNotification() {
-    final authstate = Provider.of<AuthState>(context, listen: false);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      var state = Provider.of<NotificationState>(context, listen: false);
-
-      /// Check if user recieve chat notification from firebase
-      /// Redirect to chat screen
-      /// `notificationSenderId` is a user id who sends you a message
-      /// `notificationReciverId` is a your user id.
-      if (state.notificationType == NotificationType.Message &&
-          state.notificationReciverId == authstate.userModel.userId) {
-        state.setNotificationType = null;
-        state.getuserDetail(state.notificationSenderId).then((user) {
-          cprint("Opening user chat screen");
-          final chatState = Provider.of<ChatState>(context, listen: false);
-          chatState.setChatUser = user;
-          Navigator.pushNamed(context, '/ChatScreenPage');
-        });
-      }
-
-      /// Checks for user tag tweet notification
-      /// If you are mentioned in tweet then it redirect to user profile who mentioed you in a tweet
-      /// You can check that tweet on his profile timeline
-      /// `notificationSenderId` is user id who tagged you in a tweet
-      else if (state.notificationType == NotificationType.Mention &&
-          state.notificationReciverId == authstate.userModel.userId) {
-        state.setNotificationType = null;
-        Navigator.push(context,
-            ProfilePage.getRoute(profileId: state.notificationSenderId));
-      }
-    });
-  }
-
   Widget _body() {
-    _checkNotification();
     return SafeArea(
       child: Container(
         child: _getPage(Provider.of<AppState>(context).pageIndex),
@@ -156,5 +173,13 @@ class _HomePageState extends State<HomePage> {
       drawer: SidebarMenu(),
       body: _body(),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(
+        DiagnosticsProperty<StreamSubscription<PushNotificationModel>>(
+            'pushNotificationSubscription', pushNotificationSubscription));
   }
 }

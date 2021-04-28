@@ -51,7 +51,7 @@ dependencies:
   firebase_dynamic_links: ^0.7.0+1
   qr_code_scanner: ^0.3.5
   qr_flutter: ^3.2.0
-
+  rxdart: ^0.25.0
 
 dev_dependencies:
   test:

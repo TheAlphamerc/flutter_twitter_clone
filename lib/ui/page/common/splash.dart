@@ -36,6 +36,7 @@ class _SplashPageState extends State<SplashPage> {
     super.initState();
   }
 
+  /// Initilise the firebase dynamic link sdk
   void initDynamicLinks() async {
     FirebaseDynamicLinks.instance.onLink(
         onSuccess: (PendingDynamicLinkData dynamicLink) async {
@@ -58,6 +59,7 @@ class _SplashPageState extends State<SplashPage> {
     }
   }
 
+  /// Redirect user to specfic screen when app is launched by tapping on deep link.
   void redirectFromDeepLink(Uri deepLink) {
     print("Found Url from share: ${deepLink.path}");
     var type = deepLink.path.split("/")[1];
@@ -71,6 +73,8 @@ class _SplashPageState extends State<SplashPage> {
     }
   }
 
+  /// Check if current app is updated app or not
+  /// If app is not updated then redirect user to update app screen
   void timer() async {
     final isAppUpdated = await _checkAppVersion();
     if (isAppUpdated) {
@@ -85,7 +89,7 @@ class _SplashPageState extends State<SplashPage> {
 
   /// Return installed app version
   /// For testing purpose in debug mode update screen will not be open up
-  /// In  an old version of  realease app is installed on user's device then
+  /// If an old version of app is installed on user's device then
   /// User will not be able to see home screen
   /// User will redirected to update app screen.
   /// Once user update app with latest verson and back to app then user automatically redirected to welcome / Home page

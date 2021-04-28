@@ -7,24 +7,18 @@ import 'package:firebase_database/firebase_database.dart' as dabase;
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/model/notificationModel.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
+import 'package:flutter_twitter_clone/resource/push_notification_service.dart';
 import 'package:flutter_twitter_clone/state/appState.dart';
+import 'package:flutter_twitter_clone/ui/page/common/locator.dart';
 
 class NotificationState extends AppState {
   String fcmToken;
-  NotificationType _notificationType = NotificationType.NOT_DETERMINED;
-  String notificationReciverId, notificationTweetId;
   FeedModel notificationTweetModel;
-  NotificationType get notificationType => _notificationType;
-  set setNotificationType(NotificationType type) {
-    _notificationType = type;
-  }
 
   // FcmNotificationModel notification;
   String notificationSenderId;
   dabase.Query query;
   List<UserModel> userList = [];
-
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   List<NotificationModel> _notificationList;
 
@@ -164,51 +158,15 @@ class NotificationState extends AppState {
 
   /// Initilise push notification services
   void initfirebaseService() {
-    _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        // print("onMessage: $message");
-        print(message['data']);
-        notifyListeners();
-      },
-      onLaunch: (Map<String, dynamic> message) async {
-        cprint("Notification ", event: "onLaunch");
-        var data = message['data'];
-        // print(message['data']);
-        notificationSenderId = data["senderId"];
-        notificationReciverId = data["receiverId"];
-        notificationReciverId = data["receiverId"];
-        if (data["type"] == "NotificationType.Mention") {
-          setNotificationType = NotificationType.Mention;
-        } else if (data["type"] == "NotificationType.Message") {
-          setNotificationType = NotificationType.Message;
-        }
-        notifyListeners();
-      },
-      onResume: (Map<String, dynamic> message) async {
-        cprint("Notification ", event: "onResume");
-        var data = message['data'];
-        // print(message['data']);
-        notificationSenderId = data["senderId"];
-        notificationReciverId = data["receiverId"];
-        if (data["type"] == "NotificationType.Mention") {
-          setNotificationType = NotificationType.Mention;
-        } else if (data["type"] == "NotificationType.Message") {
-          setNotificationType = NotificationType.Message;
-        }
-        notifyListeners();
-      },
-    );
-    _firebaseMessaging.requestNotificationPermissions(
-        const IosNotificationSettings(
-            sound: true, badge: true, alert: true, provisional: true));
-    _firebaseMessaging.onIosSettingsRegistered
-        .listen((IosNotificationSettings settings) {
-      print("Settings registered: $settings");
-    });
-    _firebaseMessaging.getToken().then((String token) {
-      assert(token != null);
-      fcmToken = token;
-      print(token);
-    });
+    if (!getIt.isRegistered<PushNotificationService>()) {
+      getIt.registerSingleton<PushNotificationService>(
+          PushNotificationService(FirebaseMessaging()));
+    }
+  }
+
+  @override
+  void dispose() {
+    getIt.unregister<PushNotificationService>();
+    super.dispose();
   }
 }
