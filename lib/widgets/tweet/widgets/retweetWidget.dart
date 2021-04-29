@@ -4,6 +4,7 @@ import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
+import 'package:flutter_twitter_clone/ui/page/feed/feedPostDetail.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/url_text/customUrlText.dart';
@@ -120,8 +121,8 @@ class RetweetWidget extends StatelessWidget {
               borderRadius: BorderRadius.all(Radius.circular(15)),
               onPressed: () {
                 feedstate.getpostDetailFromDatabase(null, model: snapshot.data);
-                Navigator.of(context)
-                    .pushNamed('/FeedPostDetail/' + snapshot.data.key);
+                Navigator.push(
+                    context, FeedPostDetail.getRoute(snapshot.data.key));
               },
               child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(15)),

@@ -102,7 +102,8 @@ class FeedState extends AppState {
       _tweetDetailModelList.remove(removeTweet);
       tweetReplyMap.removeWhere((key, value) => key == tweetKey);
       cprint(
-          "Last Tweet removed from stack. Remaining Tweet: ${_tweetDetailModelList.length}");
+          "Last index Tweet removed from list. Remaining Tweet: ${_tweetDetailModelList.length}");
+      notifyListeners();
     }
   }
 

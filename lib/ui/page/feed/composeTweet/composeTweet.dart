@@ -291,15 +291,17 @@ class _ComposeRetweet
             ],
           ),
         ),
-        UrlText(
-          text: model.description,
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 14,
-            fontWeight: FontWeight.w400,
+        if (model.description != null)
+          UrlText(
+            text: model.description,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+            ),
+            urlStyle:
+                TextStyle(color: Colors.blue, fontWeight: FontWeight.w400),
           ),
-          urlStyle: TextStyle(color: Colors.blue, fontWeight: FontWeight.w400),
-        ),
       ],
     );
   }

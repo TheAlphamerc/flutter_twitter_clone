@@ -7,6 +7,7 @@ import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/state/notificationState.dart';
+import 'package:flutter_twitter_clone/ui/page/feed/feedPostDetail.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/profilePage.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
@@ -209,7 +210,8 @@ class NotificationTile extends StatelessWidget {
             onTap: () {
               var state = Provider.of<FeedState>(context, listen: false);
               state.getpostDetailFromDatabase(null, model: model);
-              Navigator.of(context).pushNamed('/FeedPostDetail/' + model.key);
+
+              Navigator.push(context, FeedPostDetail.getRoute(model.key));
             },
             title: _userList(context, model.likeList),
             subtitle: Padding(

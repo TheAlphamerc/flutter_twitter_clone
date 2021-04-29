@@ -5,6 +5,7 @@ import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
+import 'package:flutter_twitter_clone/ui/page/feed/feedPostDetail.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/profilePage.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/url_text/customUrlText.dart';
@@ -50,7 +51,7 @@ class Tweet extends StatelessWidget {
       feedstate.clearAllDetailAndReplyTweetStack();
     }
     feedstate.getpostDetailFromDatabase(null, model: model);
-    Navigator.of(context).pushNamed('/FeedPostDetail/' + model.key);
+    Navigator.push(context, FeedPostDetail.getRoute(model.key));
   }
 
   @override

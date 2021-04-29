@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_twitter_clone/helper/customRoute.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
@@ -13,6 +14,14 @@ import 'package:provider/provider.dart';
 class FeedPostDetail extends StatefulWidget {
   FeedPostDetail({Key key, this.postId}) : super(key: key);
   final String postId;
+
+  static Route<Null> getRoute(String postId) {
+    return SlideLeftRoute<Null>(
+      builder: (BuildContext context) => FeedPostDetail(
+        postId: postId,
+      ),
+    );
+  }
 
   _FeedPostDetailState createState() => _FeedPostDetailState();
 }

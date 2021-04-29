@@ -46,8 +46,7 @@ class _SplashPageState extends State<SplashPage> {
         redirectFromDeepLink(deepLink);
       }
     }, onError: (OnLinkErrorException e) async {
-      print('onLinkError');
-      print(e.message);
+      cprint(e.message, errorIn: "onLinkError");
     });
 
     final PendingDynamicLinkData data =
@@ -61,7 +60,7 @@ class _SplashPageState extends State<SplashPage> {
 
   /// Redirect user to specfic screen when app is launched by tapping on deep link.
   void redirectFromDeepLink(Uri deepLink) {
-    print("Found Url from share: ${deepLink.path}");
+    cprint("Found Url from share: ${deepLink.path}");
     var type = deepLink.path.split("/")[1];
     var id = deepLink.path.split("/")[2];
     if (type == "profilePage") {
@@ -69,7 +68,7 @@ class _SplashPageState extends State<SplashPage> {
     } else if (type == "tweet") {
       var feedstate = Provider.of<FeedState>(context, listen: false);
       feedstate.getpostDetailFromDatabase(id);
-      Navigator.of(context).pushNamed('/FeedPostDetail/' + id);
+      Navigator.push(context, FeedPostDetail.getRoute(id));
     }
   }
 
@@ -78,7 +77,7 @@ class _SplashPageState extends State<SplashPage> {
   void timer() async {
     final isAppUpdated = await _checkAppVersion();
     if (isAppUpdated) {
-      print("App is updated");
+      cprint("App is updated");
       Future.delayed(Duration(seconds: 1)).then((_) {
         var state = Provider.of<AuthState>(context, listen: false);
         // state.authStatus = AuthStatus.NOT_DETERMINED;
