@@ -126,7 +126,7 @@ class UserTile extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.symmetric(
                   horizontal: isFollow ? 15 : 20,
-                  vertical: 3,
+                  vertical: 6,
                 ),
                 decoration: BoxDecoration(
                   color:
@@ -138,7 +138,7 @@ class UserTile extends StatelessWidget {
                   isFollow ? 'Following' : 'Follow',
                   style: TextStyle(
                     color: isFollow ? TwitterColor.white : Colors.blue,
-                    fontSize: 17,
+                    fontSize: 12,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

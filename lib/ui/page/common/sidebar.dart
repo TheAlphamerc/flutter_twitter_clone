@@ -19,7 +19,7 @@ class SidebarMenu extends StatefulWidget {
 
 class _SidebarMenuState extends State<SidebarMenu> {
   Widget _menuHeader() {
-    final state = Provider.of<AuthState>(context);
+    final state = context.watch<AuthState>();
     if (state.userModel == null) {
       return customInkWell(
         context: context,
@@ -101,10 +101,10 @@ class _SidebarMenuState extends State<SidebarMenu> {
                   SizedBox(
                     width: 17,
                   ),
-                  _tappbleText(context, '${state.userModel.getFollower()}',
+                  _tappbleText(context, '${state.userModel.getFollower}',
                       ' Followers', 'FollowerListPage'),
                   SizedBox(width: 10),
-                  _tappbleText(context, '${state.userModel.getFollowing()}',
+                  _tappbleText(context, '${state.userModel.getFollowing}',
                       ' Following', 'FollowingListPage'),
                 ],
               ),

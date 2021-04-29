@@ -1,29 +1,36 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_twitter_clone/helper/shared_prefrence_helper.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
-import 'package:flutter_twitter_clone/state/appState.dart';
-import 'package:flutter_twitter_clone/state/authState.dart';
-import 'package:flutter_twitter_clone/ui/page/common/locator.dart';
 import 'package:firebase_database/firebase_database.dart' as dabase;
 
 class ProfileState extends ChangeNotifier {
-  final String profileId;
-
   ProfileState(this.profileId) {
     databaseInit();
+    userId = FirebaseAuth.instance.currentUser.uid;
+    _getloggedInUserProfile(userId);
+    _getProfileUser(profileId);
   }
-  UserModel _userModel;
 
-  String get userId => profileId;
+  /// This is the id of user who is logegd into the app.
+  String userId;
+
+  /// Profile data of logged in user.
+  UserModel _userModel;
   UserModel get userModel => _userModel;
+
   dabase.Query _profileQuery;
   StreamSubscription<Event> profileSubscription;
 
-  UserModel get profileUserModel => _userModel;
+  /// This is the id of user whose profile is open.
+  final String profileId;
+
+  /// Profile data of user whose profile is open.
+  UserModel _profileUserModel;
+  UserModel get profileUserModel => _profileUserModel;
 
   bool _isBusy = true;
   bool get isbusy => _isBusy;
@@ -43,16 +50,29 @@ class ProfileState extends ChangeNotifier {
     }
   }
 
-  Future<bool> isMyProfile() async {
-    var user = await getIt<SharedPreferenceHelper>().getUserProfile();
-    return user.userId == userId;
+  bool get isMyProfile => profileId == userId;
+
+  /// Fetch profile of logged in  user
+  void _getloggedInUserProfile(String userId) async {
+    kDatabase
+        .child("profile")
+        .child(userId)
+        .once()
+        .then((DataSnapshot snapshot) {
+      if (snapshot.value != null) {
+        var map = snapshot.value;
+        if (map != null) {
+          _userModel = UserModel.fromJson(map);
+        }
+      }
+    });
   }
 
-  getProfileUser({String userProfileId}) {
+  /// Fetch profile data of user whoose profile is opened
+  void _getProfileUser(String userProfileId) {
+    assert(userProfileId != null);
     try {
       loading = true;
-      // isbusy = true;
-      // userProfileId = userProfileId == null ? user.uid : userProfileId;
       kDatabase
           .child("profile")
           .child(userProfileId)
@@ -61,23 +81,11 @@ class ProfileState extends ChangeNotifier {
         if (snapshot.value != null) {
           var map = snapshot.value;
           if (map != null) {
-            _userModel = UserModel.fromJson(map);
-            // if (userProfileId == user.uid) {
-            //   _userModel.isVerified = user.emailVerified;
-            //   if (!user.emailVerified) {
-            //     // Check if logged in user verified his email address or not
-            //     reloadUser();
-            //   }
-            //   if (_userModel.fcmToken == null) {
-            //     updateFCMToken();
-            //   }
-            // }
-
+            _profileUserModel = UserModel.fromJson(map);
             Utility.logEvent('get_profile');
           }
         }
         loading = false;
-        // isbusy = false;
       });
     } catch (error) {
       loading = false;
@@ -91,7 +99,7 @@ class ProfileState extends ChangeNotifier {
   ///
   /// If `removeFollower` is false then add user to follower list
   followUser({bool removeFollower = false}) {
-    /// `userModel` is user who is looged-in app.
+    /// `userModel` is user who is logged-in app.
     /// `profileUserModel` is user whoose profile is open in app.
     try {
       if (removeFollower) {
@@ -143,8 +151,8 @@ class ProfileState extends ChangeNotifier {
   void _onProfileChanged(Event event) {
     if (event.snapshot != null) {
       final updatedUser = UserModel.fromJson(event.snapshot.value);
-      if (updatedUser.userId == userId) {
-        _userModel = updatedUser;
+      if (updatedUser.userId == profileId) {
+        _profileUserModel = updatedUser;
       }
       notifyListeners();
     }

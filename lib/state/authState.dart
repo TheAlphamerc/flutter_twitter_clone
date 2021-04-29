@@ -27,22 +27,12 @@ class AuthState extends AppState {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
   dabase.Query _profileQuery;
-  List<UserModel> _profileUserModelList;
+  // List<UserModel> _profileUserModelList;
   UserModel _userModel;
 
   UserModel get userModel => _userModel;
 
-  UserModel get profileUserModel {
-    if (_profileUserModelList != null && _profileUserModelList.length > 0) {
-      return _profileUserModelList.last;
-    } else {
-      return null;
-    }
-  }
-
-  void removeLastUser() {
-    _profileUserModelList.removeLast();
-  }
+  UserModel get profileUserModel => _userModel;
 
   /// Logout from device
   void logoutCallback() {
@@ -50,7 +40,6 @@ class AuthState extends AppState {
     userId = '';
     _userModel = null;
     user = null;
-    _profileUserModelList = null;
     if (isSignInWithGoogle) {
       _googleSignIn.signOut();
       Utility.logEvent('google_logout');
@@ -209,9 +198,6 @@ class AuthState extends AppState {
 
     kDatabase.child('profile').child(user.userId).set(user.toJson());
     _userModel = user;
-    if (_profileUserModelList != null) {
-      _profileUserModelList.last = _userModel;
-    }
     loading = false;
   }
 
@@ -365,9 +351,6 @@ class AuthState extends AppState {
   getProfileUser({String userProfileId}) {
     try {
       loading = true;
-      if (_profileUserModelList == null) {
-        _profileUserModelList = [];
-      }
 
       userProfileId = userProfileId == null ? user.uid : userProfileId;
       kDatabase
@@ -378,9 +361,8 @@ class AuthState extends AppState {
         if (snapshot.value != null) {
           var map = snapshot.value;
           if (map != null) {
-            _profileUserModelList.add(UserModel.fromJson(map));
             if (userProfileId == user.uid) {
-              _userModel = _profileUserModelList.last;
+              _userModel = UserModel.fromJson(map);
               _userModel.isVerified = user.emailVerified;
               if (!user.emailVerified) {
                 // Check if logged in user verified his email address or not
@@ -424,9 +406,7 @@ class AuthState extends AppState {
   void _onProfileChanged(Event event) {
     if (event.snapshot != null) {
       final updatedUser = UserModel.fromJson(event.snapshot.value);
-      if (updatedUser.userId == user.uid) {
-        _userModel = updatedUser;
-      }
+      _userModel = updatedUser;
       cprint('UserModel Updated');
       notifyListeners();
     }

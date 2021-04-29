@@ -51,10 +51,8 @@ class _ProfilePageState extends State<ProfilePage>
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       var authstate = Provider.of<ProfileState>(context, listen: false);
-      authstate.getProfileUser(userProfileId: widget.profileId);
-      authstate.isMyProfile().then((value) {
-        isMyProfile = value;
-      });
+
+      isMyProfile = authstate.isMyProfile;
     });
     _tabController = TabController(length: 3, vsync: this);
     super.initState();
@@ -285,12 +283,12 @@ class _ProfilePageState extends State<ProfilePage>
     return SliverToBoxAdapter(child: SizedBox.shrink());
   }
 
-  isFollower() {
+  bool isFollower() {
     var authstate = Provider.of<ProfileState>(context, listen: false);
     if (authstate.profileUserModel.followersList != null &&
         authstate.profileUserModel.followersList.isNotEmpty) {
       return (authstate.profileUserModel.followersList
-          .any((x) => x == authstate.userModel.userId));
+          .any((x) => x == authstate.userId));
     } else {
       return false;
     }
@@ -323,7 +321,7 @@ class _ProfilePageState extends State<ProfilePage>
     var state = Provider.of<FeedState>(context);
     var authstate = Provider.of<ProfileState>(context);
     List<FeedModel> list;
-    String id = widget.profileId ?? authstate.userId;
+    String id = widget.profileId;
 
     /// Filter user's tweet among all tweets available in home page tweets list
     if (state.feedlist != null && state.feedlist.length > 0) {
@@ -602,7 +600,7 @@ class UserNameRowWidget extends StatelessWidget {
                 width: 10,
                 height: 30,
               ),
-              _tappbleText(context, '${user.getFollower()}', ' Followers', () {
+              _tappbleText(context, '${user.getFollower}', ' Followers', () {
                 var state = context.read<ProfileState>();
                 Navigator.push(
                     context,
@@ -611,7 +609,7 @@ class UserNameRowWidget extends StatelessWidget {
                         userList: state.profileUserModel.followersList));
               }),
               SizedBox(width: 40),
-              _tappbleText(context, '${user.getFollowing()}', ' Following', () {
+              _tappbleText(context, '${user.getFollowing}', ' Following', () {
                 var state = context.read<ProfileState>();
                 Navigator.push(
                     context,

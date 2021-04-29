@@ -147,11 +147,11 @@ class UserModel {
     );
   }
 
-  String getFollower() {
+  String get getFollower {
     return '${this.followers ?? 0}';
   }
 
-  String getFollowing() {
+  String get getFollowing {
     return '${this.following ?? 0}';
   }
 }
