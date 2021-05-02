@@ -4,6 +4,8 @@ import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/profile_state.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/profilePage.dart';
+import 'package:flutter_twitter_clone/ui/page/profile/qrCode/scanner.dart';
+import 'package:flutter_twitter_clone/ui/page/profile/widgets/circular_image.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/url_text/customUrlText.dart';
@@ -21,21 +23,17 @@ class _SidebarMenuState extends State<SidebarMenu> {
   Widget _menuHeader() {
     final state = context.watch<AuthState>();
     if (state.userModel == null) {
-      return customInkWell(
-        context: context,
-        onPressed: () {
-          //  Navigator.of(context).pushNamed('/signIn');
-        },
-        child: ConstrainedBox(
-          constraints: BoxConstraints(minWidth: 200, minHeight: 100),
-          child: Center(
-            child: Text(
-              'Login to continue',
-              style: TextStyles.onPrimaryTitleText,
-            ),
+      return ConstrainedBox(
+        constraints: BoxConstraints(minWidth: 200, minHeight: 100),
+        child: Center(
+          child: Text(
+            'Login to continue',
+            style: TextStyles.onPrimaryTitleText,
           ),
         ),
-      );
+      ).ripple(() {
+        //  Navigator.of(context).pushNamed('/signIn');
+      });
     } else {
       return Center(
         child: Column(
@@ -188,12 +186,20 @@ class _SidebarMenuState extends State<SidebarMenu> {
                   size: 25,
                   iconColor: TwitterColor.dodgetBlue),
               Spacer(),
-              Image.asset(
-                "assets/images/qr.png",
-                height: 25,
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      ScanScreen.getRoute(
+                          context.read<AuthState>().profileUserModel));
+                },
+                child: Image.asset(
+                  "assets/images/qr.png",
+                  height: 25,
+                ),
               ),
               SizedBox(
-                width: 10,
+                width: 0,
                 height: 45,
               ),
             ],

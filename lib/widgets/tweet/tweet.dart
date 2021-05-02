@@ -7,6 +7,7 @@ import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/ui/page/feed/feedPostDetail.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/profilePage.dart';
+import 'package:flutter_twitter_clone/ui/page/profile/widgets/circular_image.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/url_text/customUrlText.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
@@ -179,12 +180,12 @@ class _TweetBody extends StatelessWidget {
               Navigator.push(
                   context, ProfilePage.getRoute(profileId: model.userId));
             },
-            child: customImage(context, model.user.profilePic),
+            child: CircularImage(path: model.user.profilePic),
           ),
         ),
         SizedBox(width: 20),
         Container(
-          width: fullWidth(context) - 80,
+          width: context.width - 80,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -197,7 +198,7 @@ class _TweetBody extends StatelessWidget {
                       children: <Widget>[
                         ConstrainedBox(
                           constraints: BoxConstraints(
-                              minWidth: 0, maxWidth: fullWidth(context) * .5),
+                              minWidth: 0, maxWidth: context.width * .5),
                           child: TitleText(model.user.displayName,
                               fontSize: 16,
                               fontWeight: FontWeight.w800,
@@ -270,11 +271,11 @@ class _TweetDetailBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double descriptionFontSize = type == TweetType.Tweet
-        ? getDimention(context, 15)
+        ? context.getDimention(context, 15)
         : type == TweetType.Detail
-            ? getDimention(context, 18)
+            ? context.getDimention(context, 18)
             : type == TweetType.ParentTweet
-                ? getDimention(context, 14)
+                ? context.getDimention(context, 14)
                 : 10;
 
     FontWeight descriptionFontWeight =
@@ -294,7 +295,7 @@ class _TweetDetailBody extends StatelessWidget {
                 trailing: trailing)
             : SizedBox.shrink(),
         Container(
-          width: fullWidth(context),
+          width: context.width,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -305,13 +306,13 @@ class _TweetDetailBody extends StatelessWidget {
                     Navigator.push(
                         context, ProfilePage.getRoute(profileId: model.userId));
                   },
-                  child: customImage(context, model.user.profilePic),
+                  child: CircularImage(path: model.user.profilePic),
                 ),
                 title: Row(
                   children: <Widget>[
                     ConstrainedBox(
                       constraints: BoxConstraints(
-                          minWidth: 0, maxWidth: fullWidth(context) * .5),
+                          minWidth: 0, maxWidth: context.width * .5),
                       child: TitleText(model.user.displayName,
                           fontSize: 16,
                           fontWeight: FontWeight.w800,

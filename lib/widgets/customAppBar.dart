@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
+import 'package:flutter_twitter_clone/ui/page/profile/widgets/circular_image.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:provider/provider.dart';
 
@@ -69,27 +70,25 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       submitButtonText != null
           ? Padding(
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-              child: customInkWell(
-                context: context,
-                radius: BorderRadius.circular(40),
-                onPressed: () {
+              child: Container(
+                alignment: Alignment.center,
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                decoration: BoxDecoration(
+                  color: !isSubmitDisable
+                      ? Theme.of(context).primaryColor
+                      : Theme.of(context).primaryColor.withAlpha(150),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  submitButtonText,
+                  style:
+                      TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                ),
+              ).ripple(
+                () {
                   if (onActionPressed != null) onActionPressed();
                 },
-                child: Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                  decoration: BoxDecoration(
-                    color: !isSubmitDisable
-                        ? Theme.of(context).primaryColor
-                        : Theme.of(context).primaryColor.withAlpha(150),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    submitButtonText,
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.onPrimary),
-                  ),
-                ),
+                borderRadius: BorderRadius.circular(40),
               ),
             )
           : icon == null
@@ -111,14 +110,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     var authState = Provider.of<AuthState>(context);
     return Padding(
       padding: EdgeInsets.all(10),
-      child: customInkWell(
-        context: context,
-        onPressed: () {
-          scaffoldKey.currentState.openDrawer();
-        },
-        child:
-            customImage(context, authState.userModel?.profilePic, height: 30),
-      ),
+      child: CircularImage(
+        path: authState.userModel?.profilePic,
+        height: 30,
+      ).ripple(() {
+        scaffoldKey.currentState.openDrawer();
+      }),
     );
   }
 

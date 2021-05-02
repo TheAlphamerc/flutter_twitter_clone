@@ -124,4 +124,18 @@ class FeedModel {
     }
     return isValid;
   }
+
+  /// get tweet key to retweet.
+  ///
+  /// If tweet [TweetType] is [TweetType.Retweet] and its description is null
+  /// then its retweeted child tweet will be shared.
+  String get getTweetKeyToRetweet {
+    if (this.description == null &&
+        this.imagePath == null &&
+        this.childRetwetkey != null) {
+      return this.childRetwetkey;
+    } else {
+      return this.key;
+    }
+  }
 }

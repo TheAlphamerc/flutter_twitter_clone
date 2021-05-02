@@ -5,6 +5,7 @@ import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/ui/page/feed/feedPostDetail.dart';
+import 'package:flutter_twitter_clone/ui/page/profile/widgets/circular_image.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/url_text/customUrlText.dart';
@@ -29,7 +30,7 @@ class RetweetWidget extends StatelessWidget {
       children: <Widget>[
         Container(
           padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-          width: fullWidth(context) - 12,
+          width: context.width - 12,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
@@ -37,12 +38,12 @@ class RetweetWidget extends StatelessWidget {
               Container(
                 width: 25,
                 height: 25,
-                child: customImage(context, model.user.profilePic),
+                child: CircularImage(path: model.user.profilePic),
               ),
               SizedBox(width: 10),
               ConstrainedBox(
-                constraints: BoxConstraints(
-                    minWidth: 0, maxWidth: fullWidth(context) * .5),
+                constraints:
+                    BoxConstraints(minWidth: 0, maxWidth: context.width * .5),
                 child: TitleText(
                   model.user.displayName,
                   fontSize: 16,

@@ -20,7 +20,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
   Widget _body(BuildContext context) {
     var state = Provider.of<AuthState>(context, listen: false);
     return Container(
-      height: fullHeight(context),
+      height: context.height,
       padding: EdgeInsets.symmetric(horizontal: 10),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

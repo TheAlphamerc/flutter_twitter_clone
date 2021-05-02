@@ -116,7 +116,7 @@ class _SignInState extends State<SignIn> {
 
   Widget _emailLoginButton(BuildContext context) {
     return Container(
-      width: fullWidth(context),
+      width: context.width,
       margin: EdgeInsets.symmetric(vertical: 35),
       child: FlatButton(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),

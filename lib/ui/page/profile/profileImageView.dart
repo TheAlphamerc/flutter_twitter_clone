@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/profilePage.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
+import 'package:flutter_twitter_clone/ui/page/profile/widgets/circular_image.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:provider/provider.dart';
@@ -49,8 +50,8 @@ class ProfileImageView extends StatelessWidget {
         child: InteractiveViewer(
           child: Container(
             alignment: Alignment.center,
-            width: fullWidth(context),
-            // height: fullWidth(context),
+            width: context.width,
+            // height: context.width,
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: customAdvanceNetworkImage(

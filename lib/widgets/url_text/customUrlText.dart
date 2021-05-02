@@ -69,7 +69,7 @@ class UrlText extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 0),
           child: IntrinsicWidth(
-            stepWidth: fullWidth(context),
+            stepWidth: context.width,
             child: CustomLinkMediaInfo(text: text),
           ),
         )

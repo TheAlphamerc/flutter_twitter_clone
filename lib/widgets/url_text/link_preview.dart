@@ -37,16 +37,14 @@ class LinkPreview extends StatelessWidget {
       builder: (info) {
         if (info == null) return const SizedBox();
         if (info is WebImageInfo) {
-          return customInkWell(
-            context: context,
-            radius: BorderRadius.circular(10),
-            onPressed: () {
+          return CachedNetworkImage(
+            imageUrl: info.image,
+            fit: BoxFit.contain,
+          ).ripple(
+            () {
               Utility.launchURL(url);
             },
-            child: CachedNetworkImage(
-              imageUrl: info.image,
-              fit: BoxFit.contain,
-            ),
+            borderRadius: BorderRadius.circular(10),
           );
         }
         final WebInfo webInfo = info;
@@ -54,63 +52,61 @@ class LinkPreview extends StatelessWidget {
         if (!WebAnalyzer.isNotEmpty(webInfo.title)) return const SizedBox();
         return Padding(
           padding: const EdgeInsets.only(top: 8),
-          child: customInkWell(
-            context: context,
-            radius: BorderRadius.circular(8),
-            onPressed: () {
-              Utility.launchURL(url);
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: AppColor.extraLightGrey),
-                color: webInfo.image != null
-                    ? Theme.of(context).colorScheme.onPrimary
-                    : const Color(0xFFFAFAFA),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  if (webInfo.image != null && webInfo.image.isNotEmpty)
-                    ClipRRect(
-                      borderRadius:
-                          BorderRadius.vertical(top: Radius.circular(10)),
-                      child: Container(
-                        height: 140,
-                        width: double.infinity,
-                        child: CachedNetworkImage(
-                          imageUrl: webInfo.image,
-                          fit: BoxFit.cover,
-                        ),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: AppColor.extraLightGrey),
+              color: webInfo.image != null
+                  ? Theme.of(context).colorScheme.onPrimary
+                  : const Color(0xFFFAFAFA),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                if (webInfo.image != null && webInfo.image.isNotEmpty)
+                  ClipRRect(
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(10)),
+                    child: Container(
+                      height: 140,
+                      width: double.infinity,
+                      child: CachedNetworkImage(
+                        imageUrl: webInfo.image,
+                        fit: BoxFit.cover,
                       ),
-                    ),
-                  const SizedBox(height: 4),
-                  if (WebAnalyzer.isNotEmpty(webInfo.title))
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
-                      child: Text(
-                        webInfo.title.trim(),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyles.titleStyle.copyWith(fontSize: 14),
-                      ),
-                    ),
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 5, left: 8, right: 8),
-                    child: Text(
-                      url,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyles.subtitleStyle.copyWith(
-                          fontSize:
-                              WebAnalyzer.isNotEmpty(webInfo.title) ? 14 : 16),
                     ),
                   ),
-                ],
-              ),
+                const SizedBox(height: 4),
+                if (WebAnalyzer.isNotEmpty(webInfo.title))
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    child: Text(
+                      webInfo.title.trim(),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyles.titleStyle.copyWith(fontSize: 14),
+                    ),
+                  ),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 5, left: 8, right: 8),
+                  child: Text(
+                    url,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyles.subtitleStyle.copyWith(
+                        fontSize:
+                            WebAnalyzer.isNotEmpty(webInfo.title) ? 14 : 16),
+                  ),
+                ),
+              ],
             ),
+          ).ripple(
+            () {
+              Utility.launchURL(url);
+            },
+            borderRadius: BorderRadius.circular(8),
           ),
         );
       },

@@ -210,6 +210,24 @@ class Utility {
     return true;
   }
 
+  static customSnackBar(GlobalKey<ScaffoldState> _scaffoldKey, String msg,
+      {double height = 30, Color backgroundColor = Colors.black}) {
+    if (_scaffoldKey == null || _scaffoldKey.currentState == null) {
+      return;
+    }
+    _scaffoldKey.currentState.hideCurrentSnackBar();
+    final snackBar = SnackBar(
+      backgroundColor: backgroundColor,
+      content: Text(
+        msg,
+        style: TextStyle(
+          color: Colors.white,
+        ),
+      ),
+    );
+    _scaffoldKey.currentState.showSnackBar(snackBar);
+  }
+
   static bool validateEmal(String email) {
     String p =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';

@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:ui' as ui;
 import 'dart:typed_data';
 import 'package:flutter_twitter_clone/ui/page/profile/profilePage.dart';
+import 'package:flutter_twitter_clone/ui/page/profile/widgets/circular_image.dart';
 
 import 'dot_indicator.dart';
 import 'package:flutter/material.dart';
@@ -264,11 +265,7 @@ class _QrCodeState extends State<QrCode> {
                   ),
                 ),
               ),
-              customImage(
-                context,
-                widget.user.profilePic,
-                height: 50,
-              ),
+              CircularImage(path: widget.user.profilePic, height: 50),
             ],
           ),
         ),

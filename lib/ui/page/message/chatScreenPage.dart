@@ -5,6 +5,7 @@ import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/chats/chatState.dart';
+import 'package:flutter_twitter_clone/ui/page/profile/widgets/circular_image.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/url_text/customUrlText.dart';
@@ -99,9 +100,9 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                 alignment:
                     myMessage ? Alignment.centerRight : Alignment.centerLeft,
                 margin: EdgeInsets.only(
-                  right: myMessage ? 10 : (fullWidth(context) / 4),
+                  right: myMessage ? 10 : (context.width / 4),
                   top: 20,
-                  left: myMessage ? (fullWidth(context) / 4) : 10,
+                  left: myMessage ? (context.width / 4) : 10,
                 ),
                 child: Stack(
                   children: <Widget>[

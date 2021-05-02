@@ -2,7 +2,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
+import 'package:flutter_twitter_clone/ui/page/profile/widgets/circular_image.dart';
+import 'package:flutter_twitter_clone/widgets/cache_image.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class EditProfilePage extends StatefulWidget {
@@ -122,8 +125,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
             _banner != null
                 ? Image.file(_banner,
                     fit: BoxFit.fill, width: MediaQuery.of(context).size.width)
-                : customNetworkImage(
-                    authstate.userModel.bannerImage ??
+                : CacheImage(
+                    path: authstate.userModel.bannerImage ??
                         'https://pbs.twimg.com/profile_banners/457684585/1510495215/1500x500',
                     fit: BoxFit.fill),
             Center(
@@ -178,7 +181,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   void _submitButton() {
     if (_name.text.length > 27) {
-      customSnackBar(_scaffoldKey, 'Name length cannot exceed 27 character');
+      Utility.customSnackBar(
+          _scaffoldKey, 'Name length cannot exceed 27 character');
       return;
     }
     var state = Provider.of<AuthState>(context, listen: false);
@@ -223,6 +227,70 @@ class _EditProfilePageState extends State<EditProfilePage> {
       setState(() {
         _banner = file;
       });
+    });
+  }
+
+  openImagePicker(BuildContext context, Function(File) onImageSelected) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: 100,
+          padding: EdgeInsets.all(10),
+          child: Column(
+            children: <Widget>[
+              Text(
+                'Pick an image',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 10),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: FlatButton(
+                      color: Theme.of(context).primaryColor,
+                      child: Text(
+                        'Use Camera',
+                        style:
+                            TextStyle(color: Theme.of(context).backgroundColor),
+                      ),
+                      onPressed: () {
+                        getImage(context, ImageSource.camera, onImageSelected);
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    child: FlatButton(
+                      color: Theme.of(context).primaryColor,
+                      child: Text(
+                        'Use Gallery',
+                        style:
+                            TextStyle(color: Theme.of(context).backgroundColor),
+                      ),
+                      onPressed: () {
+                        getImage(context, ImageSource.gallery, onImageSelected);
+                      },
+                    ),
+                  )
+                ],
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  getImage(BuildContext context, ImageSource source,
+      Function(File) onImageSelected) {
+    ImagePicker()
+        .getImage(source: source, imageQuality: 50)
+        .then((PickedFile file) {
+      onImageSelected(File(file.path));
+      Navigator.pop(context);
     });
   }
 

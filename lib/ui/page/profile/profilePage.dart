@@ -7,11 +7,13 @@ import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
+import 'package:flutter_twitter_clone/ui/page/profile/widgets/circular_image.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/widgets/tabPainter.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/chats/chatState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
+import 'package:flutter_twitter_clone/widgets/cache_image.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customLoader.dart';
 import 'package:flutter_twitter_clone/widgets/url_text/customUrlText.dart';
@@ -89,7 +91,13 @@ class _ProfilePageState extends State<ProfilePage>
                   return choices.map((Choice choice) {
                     return PopupMenuItem<Choice>(
                       value: choice,
-                      child: Text(choice.title),
+                      child: Text(
+                        choice.title,
+                        style: TextStyles.textStyle14.copyWith(
+                            color: choice.isEnable
+                                ? AppColor.secondary
+                                : AppColor.lightGrey),
+                      ),
                     );
                   }).toList();
                 },
@@ -118,8 +126,8 @@ class _ProfilePageState extends State<ProfilePage>
                   Container(
                     height: 180,
                     padding: EdgeInsets.only(top: 28),
-                    child: customNetworkImage(
-                      authstate.profileUserModel.bannerImage != null
+                    child: CacheImage(
+                      path: authstate.profileUserModel.bannerImage != null
                           ? authstate.profileUserModel.bannerImage
                           : 'https://pbs.twimg.com/profile_banners/457684585/1510495215/1500x500',
                       fit: BoxFit.fill,
@@ -140,9 +148,8 @@ class _ProfilePageState extends State<ProfilePage>
                               border: Border.all(color: Colors.white, width: 5),
                               shape: BoxShape.circle),
                           child: RippleButton(
-                            child: customImage(
-                              context,
-                              authstate.profileUserModel.profilePic,
+                            child: CircularImage(
+                              path: authstate.profileUserModel.profilePic,
                               height: 80,
                             ),
                             borderRadius: BorderRadius.circular(50),
@@ -418,10 +425,10 @@ class _ProfilePageState extends State<ProfilePage>
     /// if [authState.isbusy] is true then an loading indicator will be displayed on screen.
     return authstate.isbusy
         ? Container(
-            height: fullHeight(context) - 180,
+            height: context.height - 180,
             child: CustomScreenLoader(
               height: double.infinity,
-              width: fullWidth(context),
+              width: context.width,
               backgroundColor: Colors.white,
             ),
           )
@@ -626,40 +633,17 @@ class UserNameRowWidget extends StatelessWidget {
 }
 
 class Choice {
-  const Choice({this.title, this.icon});
-
+  const Choice({this.title, this.icon, this.isEnable = false});
+  final bool isEnable;
   final IconData icon;
   final String title;
 }
 
 const List<Choice> choices = const <Choice>[
-  const Choice(title: 'Share', icon: Icons.directions_car),
+  const Choice(title: 'Share', icon: Icons.directions_car, isEnable: true),
+  const Choice(
+      title: 'QR code', icon: Icons.directions_railway, isEnable: true),
   const Choice(title: 'Draft', icon: Icons.directions_bike),
   const Choice(title: 'View Lists', icon: Icons.directions_boat),
   const Choice(title: 'View Moments', icon: Icons.directions_bus),
-  const Choice(title: 'QR code', icon: Icons.directions_railway),
 ];
-
-class ChoiceCard extends StatelessWidget {
-  const ChoiceCard({Key key, this.choice}) : super(key: key);
-
-  final Choice choice;
-
-  @override
-  Widget build(BuildContext context) {
-    final TextStyle textStyle = Theme.of(context).textTheme.display1;
-    return Card(
-      color: Colors.white,
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Icon(choice.icon, size: 128.0, color: textStyle.color),
-            Text(choice.title, style: textStyle),
-          ],
-        ),
-      ),
-    );
-  }
-}

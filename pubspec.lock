@@ -105,7 +105,7 @@ packages:
       name: cached_network_image
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.3.3"
+    version: "2.5.1"
   characters:
     dependency: transitive
     description:

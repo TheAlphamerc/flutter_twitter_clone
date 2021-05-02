@@ -95,79 +95,77 @@ class CustomLinkMediaInfo extends StatelessWidget {
             (l) => SizedBox.shrink(),
             (model) => Padding(
               padding: const EdgeInsets.only(top: 8.0),
-              child: customInkWell(
-                radius: BorderRadius.circular(10),
-                context: context,
-                onPressed: () {
-                  Utility.launchURL(uri);
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: model.thumbnailUrl != null
-                        ? Colors.transparent
-                        : const Color(0xFFF0F1F2),
-                    border: Border.all(color: theme.dividerColor),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (model.thumbnailUrl != null)
-                        ClipRRect(
-                          borderRadius:
-                              BorderRadius.vertical(top: Radius.circular(10)),
-                          child: Container(
-                            height: 140,
-                            width: MediaQuery.of(context).size.width,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: CachedNetworkImageProvider(
-                                  model.thumbnailUrl,
-                                ),
-                                fit: BoxFit.cover,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: model.thumbnailUrl != null
+                      ? Colors.transparent
+                      : const Color(0xFFF0F1F2),
+                  border: Border.all(color: theme.dividerColor),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (model.thumbnailUrl != null)
+                      ClipRRect(
+                        borderRadius:
+                            BorderRadius.vertical(top: Radius.circular(10)),
+                        child: Container(
+                          height: 140,
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: CachedNetworkImageProvider(
+                                model.thumbnailUrl,
                               ),
+                              fit: BoxFit.cover,
                             ),
                           ),
                         ),
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: model.thumbnailUrl != null
-                              ? Theme.of(context).colorScheme.onPrimary
-                              : const Color(0xFFF0F1F2),
-                        ),
-                        padding: EdgeInsets.only(
-                            bottom: 5, left: 8, right: 8, top: 4),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (model.title != null)
-                              Text(
-                                model.title,
+                      ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: model.thumbnailUrl != null
+                            ? Theme.of(context).colorScheme.onPrimary
+                            : const Color(0xFFF0F1F2),
+                      ),
+                      padding:
+                          EdgeInsets.only(bottom: 5, left: 8, right: 8, top: 4),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (model.title != null)
+                            Text(
+                              model.title,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style:
+                                  TextStyles.titleStyle.copyWith(fontSize: 14),
+                            ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                  child: Text(
+                                model.providerUrl,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyles.titleStyle
-                                    .copyWith(fontSize: 14),
-                              ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                    child: Text(
-                                  model.providerUrl,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyles.subtitleStyle
-                                      .copyWith(fontSize: 12),
-                                ))
-                              ],
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
+                                style: TextStyles.subtitleStyle
+                                    .copyWith(fontSize: 12),
+                              ))
+                            ],
+                          )
+                        ],
+                      ),
+                    )
+                  ],
                 ),
+              ).ripple(
+                () {
+                  Utility.launchURL(uri);
+                },
+                borderRadius: BorderRadius.circular(10),
               ),
             ),
           );

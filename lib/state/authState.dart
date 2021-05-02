@@ -80,7 +80,7 @@ class AuthState extends AppState {
       loading = false;
       cprint(error, errorIn: 'signIn');
       kAnalytics.logLogin(loginMethod: 'email_login');
-      customSnackBar(scaffoldKey, error.message);
+      Utility.customSnackBar(scaffoldKey, error.message);
       // logoutCallback();
       return null;
     }
@@ -177,7 +177,7 @@ class AuthState extends AppState {
     } catch (error) {
       loading = false;
       cprint(error, errorIn: 'signUp');
-      customSnackBar(scaffoldKey, error.message);
+      Utility.customSnackBar(scaffoldKey, error.message);
       return null;
     }
   }
@@ -246,7 +246,7 @@ class AuthState extends AppState {
     user.sendEmailVerification().then((_) {
       Utility.logEvent('email_verifcation_sent',
           parameter: {userModel.displayName: user.email});
-      customSnackBar(
+      Utility.customSnackBar(
         scaffoldKey,
         'An email verification link is send to your email.',
       );
@@ -254,7 +254,7 @@ class AuthState extends AppState {
       cprint(error.message, errorIn: 'sendEmailVerification');
       Utility.logEvent('email_verifcation_block',
           parameter: {userModel.displayName: user.email});
-      customSnackBar(
+      Utility.customSnackBar(
         scaffoldKey,
         error.message,
       );
@@ -272,7 +272,7 @@ class AuthState extends AppState {
       {GlobalKey<ScaffoldState> scaffoldKey}) async {
     try {
       await _firebaseAuth.sendPasswordResetEmail(email: email).then((value) {
-        customSnackBar(scaffoldKey,
+        Utility.customSnackBar(scaffoldKey,
             'A reset password link is sent yo your mail.You can reset your password from there');
         Utility.logEvent('forgot+password');
       }).catchError((error) {
@@ -280,7 +280,7 @@ class AuthState extends AppState {
         return false;
       });
     } catch (error) {
-      customSnackBar(scaffoldKey, error.message);
+      Utility.customSnackBar(scaffoldKey, error.message);
       return Future.value(false);
     }
   }

@@ -1,3 +1,16 @@
+## [1.0.7] Comming soon
+* Added pinch to zoom on profile and Tweet.
+* Retweet post wuthout adding adding comment.
+* User can update profile banner.
+* Share tweet link to other social media apps.
+* Share user profile link to other social media apps.
+* Enable copy tweet link to clipboard.
+* Share tweet link on other social media apps.
+* Capture tweet as image and share on other social media apps with tweet link and description.
+* Added user profile qr code generator and scanner.
+* New comment will be displayed on top.
+* Added link preview in tweet.
+* Bug fixed and performance improvements.
 ## [1.0.6] - 17 Jul 2020
 
 * In user profile page three tabs are added to filter tweet and commnet tweet and tweet with media.

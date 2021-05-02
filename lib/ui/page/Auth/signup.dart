@@ -48,7 +48,7 @@ class _SignupState extends State<Signup> {
 
   Widget _body(BuildContext context) {
     return Container(
-      height: fullHeight(context) - 88,
+      height: context.height - 88,
       padding: EdgeInsets.symmetric(horizontal: 30),
       child: Form(
         key: _formKey,
@@ -148,11 +148,12 @@ class _SignupState extends State<Signup> {
 
   void _submitForm() {
     if (_emailController.text.isEmpty) {
-      customSnackBar(_scaffoldKey, 'Please enter name');
+      Utility.customSnackBar(_scaffoldKey, 'Please enter name');
       return;
     }
     if (_emailController.text.length > 27) {
-      customSnackBar(_scaffoldKey, 'Name length cannot exceed 27 character');
+      Utility.customSnackBar(
+          _scaffoldKey, 'Name length cannot exceed 27 character');
       return;
     }
     if (_emailController.text == null ||
@@ -160,10 +161,10 @@ class _SignupState extends State<Signup> {
         _passwordController.text == null ||
         _passwordController.text.isEmpty ||
         _confirmController.text == null) {
-      customSnackBar(_scaffoldKey, 'Please fill form carefully');
+      Utility.customSnackBar(_scaffoldKey, 'Please fill form carefully');
       return;
     } else if (_passwordController.text != _confirmController.text) {
-      customSnackBar(
+      Utility.customSnackBar(
           _scaffoldKey, 'Password and confirm password did not match');
       return;
     }

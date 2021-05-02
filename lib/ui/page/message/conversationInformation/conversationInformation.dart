@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/profilePage.dart';
+import 'package:flutter_twitter_clone/ui/page/profile/widgets/circular_image.dart';
 import 'package:flutter_twitter_clone/ui/page/settings/widgets/headerWidget.dart';
 import 'package:flutter_twitter_clone/ui/page/settings/widgets/settingsRowWidget.dart';
 import 'package:flutter_twitter_clone/state/chats/chatState.dart';
@@ -30,7 +31,7 @@ class ConversationInformation extends StatelessWidget {
                         context, ProfilePage.getRoute(profileId: user.userId));
                   },
                   borderRadius: BorderRadius.circular(40),
-                  child: customImage(context, user.profilePic, height: 80),
+                  child: CircularImage(path: user.profilePic, height: 80),
                 )),
           ),
           Row(

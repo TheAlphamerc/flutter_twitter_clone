@@ -35,6 +35,11 @@ class ShareWidget extends StatefulWidget {
 class _MyHomePageState extends State<ShareWidget> {
   GlobalKey _globalKey = new GlobalKey();
   ValueNotifier<bool> isLoading = ValueNotifier<bool>(false);
+  @override
+  void dispose() {
+    isLoading.dispose();
+    super.dispose();
+  }
 
   Future _capturePng() async {
     try {
@@ -50,7 +55,7 @@ class _MyHomePageState extends State<ShareWidget> {
       var shareUrl = await Utility.createLinkToShare(context, widget.id,
           socialMetaTagParameters: widget.socialMetaTagParameters);
       var message =
-          "*${widget.socialMetaTagParameters.title}*\n${widget.socialMetaTagParameters.description}\n$shareUrl";
+          "*${widget.socialMetaTagParameters.title}*\n${widget.socialMetaTagParameters.description ?? " "}\n$shareUrl";
       Utility.shareFile([path], text: message);
       isLoading.value = false;
     } catch (e) {

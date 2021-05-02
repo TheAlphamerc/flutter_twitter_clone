@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
-import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
+import 'package:flutter_twitter_clone/widgets/cache_image.dart';
+import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:provider/provider.dart';
 
 class TweetImage extends StatelessWidget {
@@ -30,7 +31,7 @@ class TweetImage extends StatelessWidget {
                   Radius.circular(isRetweetImage ? 0 : 20),
                 ),
                 onTap: () {
-                  if(type == TweetType.ParentTweet){
+                  if (type == TweetType.ParentTweet) {
                     return;
                   }
                   var state = Provider.of<FeedState>(context, listen: false);
@@ -43,16 +44,16 @@ class TweetImage extends StatelessWidget {
                     Radius.circular(isRetweetImage ? 0 : 20),
                   ),
                   child: Container(
-                    width: fullWidth(context) *
-                            (type == TweetType.Detail ? .95 : .8) -
-                        8,
+                    width:
+                        context.width * (type == TweetType.Detail ? .95 : .8) -
+                            8,
                     decoration: BoxDecoration(
                       color: Theme.of(context).backgroundColor,
                     ),
                     child: AspectRatio(
                       aspectRatio: 4 / 3,
-                      child: customNetworkImage(model.imagePath,
-                          fit: BoxFit.cover),
+                      child:
+                          CacheImage(path: model.imagePath, fit: BoxFit.cover),
                     ),
                   ),
                 ),

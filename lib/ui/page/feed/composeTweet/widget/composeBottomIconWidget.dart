@@ -50,7 +50,7 @@ class _ComposeBottomIconWidgetState extends State<ComposeBottomIconWidget> {
 
   Widget _bottomIconWidget() {
     return Container(
-      width: fullWidth(context),
+      width: context.width,
       height: 50,
       decoration: BoxDecoration(
           border:

@@ -3,6 +3,7 @@ import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/profilePage.dart';
+import 'package:flutter_twitter_clone/ui/page/profile/widgets/circular_image.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/url_text/customUrlText.dart';
@@ -93,13 +94,13 @@ class UserTile extends StatelessWidget {
                     context, ProfilePage.getRoute(profileId: user.userId));
               },
               borderRadius: BorderRadius.all(Radius.circular(60)),
-              child: customImage(context, user.profilePic, height: 55),
+              child: CircularImage(path: user.profilePic, height: 55),
             ),
             title: Row(
               children: <Widget>[
                 ConstrainedBox(
-                  constraints: BoxConstraints(
-                      minWidth: 0, maxWidth: fullWidth(context) * .4),
+                  constraints:
+                      BoxConstraints(minWidth: 0, maxWidth: context.width * .4),
                   child: TitleText(user.displayName,
                       fontSize: 16,
                       fontWeight: FontWeight.w800,

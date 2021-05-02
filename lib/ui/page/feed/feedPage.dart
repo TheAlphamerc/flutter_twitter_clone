@@ -4,6 +4,7 @@ import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
+import 'package:flutter_twitter_clone/ui/page/profile/widgets/circular_image.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customLoader.dart';
@@ -42,8 +43,8 @@ class FeedPage extends StatelessWidget {
       backgroundColor: TwitterColor.mystic,
       body: SafeArea(
         child: Container(
-          height: fullHeight(context),
-          width: fullWidth(context),
+          height: context.height,
+          width: context.width,
           child: RefreshIndicator(
             key: refreshIndicatorKey,
             onRefresh: () async {
@@ -74,15 +75,13 @@ class _FeedPageBody extends StatelessWidget {
     var authState = Provider.of<AuthState>(context);
     return Padding(
       padding: EdgeInsets.all(10),
-      child: customInkWell(
-        context: context,
-        onPressed: () {
-          /// Open up sidebaar drawer on user avatar tap
-          scaffoldKey.currentState.openDrawer();
-        },
-        child:
-            customImage(context, authState.userModel?.profilePic, height: 30),
-      ),
+      child: CircularImage(
+        path: authState.userModel?.profilePic,
+        height: 50,
+      ).ripple(() {
+        /// Open up sidebaar drawer on user avatar tap
+        scaffoldKey.currentState.openDrawer();
+      }, borderRadius: BorderRadius.circular(40)),
     );
   }
 
@@ -98,10 +97,10 @@ class _FeedPageBody extends StatelessWidget {
             state.isBusy && list == null
                 ? SliverToBoxAdapter(
                     child: Container(
-                      height: fullHeight(context) - 135,
+                      height: context.height - 135,
                       child: CustomScreenLoader(
                         height: double.infinity,
-                        width: fullWidth(context),
+                        width: context.width,
                         backgroundColor: Colors.white,
                       ),
                     ),

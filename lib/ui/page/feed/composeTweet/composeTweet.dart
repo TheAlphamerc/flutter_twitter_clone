@@ -12,6 +12,7 @@ import 'package:flutter_twitter_clone/ui/page/feed/composeTweet/widget/widgetVie
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/state/searchState.dart';
+import 'package:flutter_twitter_clone/ui/page/profile/widgets/circular_image.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
@@ -241,7 +242,7 @@ class _ComposeRetweet
 
         SizedBox(width: 20),
         Container(
-          width: fullWidth(context) - 12,
+          width: context.width - 12,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -252,12 +253,12 @@ class _ComposeRetweet
                   Container(
                     width: 25,
                     height: 25,
-                    child: customImage(context, model.user.profilePic),
+                    child: CircularImage(path: model.user.profilePic),
                   ),
                   SizedBox(width: 10),
                   ConstrainedBox(
                     constraints: BoxConstraints(
-                        minWidth: 0, maxWidth: fullWidth(context) * .5),
+                        minWidth: 0, maxWidth: context.width * .5),
                     child: TitleText(model.user.displayName,
                         fontSize: 16,
                         fontWeight: FontWeight.w800,
@@ -310,7 +311,7 @@ class _ComposeRetweet
   Widget build(BuildContext context) {
     var authState = Provider.of<AuthState>(context);
     return Container(
-      height: fullHeight(context),
+      height: context.height,
       child: Column(
         children: <Widget>[
           Row(
@@ -319,7 +320,7 @@ class _ComposeRetweet
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child:
-                    customImage(context, authState.user?.photoURL, height: 40),
+                    CircularImage(path: authState.user?.photoURL, height: 40),
               ),
               Expanded(
                 child: _TextField(
@@ -399,7 +400,7 @@ class _ComposeTweet
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Container(
-                    width: fullWidth(context) - 72,
+                    width: context.width - 72,
                     child: UrlText(
                       text: viewState.model.description ?? '',
                       style: TextStyle(
@@ -430,12 +431,12 @@ class _ComposeTweet
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                customImage(context, viewState.model.user.profilePic,
-                    height: 40),
+                CircularImage(
+                    path: viewState.model.user.profilePic, height: 40),
                 SizedBox(width: 10),
                 ConstrainedBox(
-                  constraints: BoxConstraints(
-                      minWidth: 0, maxWidth: fullWidth(context) * .5),
+                  constraints:
+                      BoxConstraints(minWidth: 0, maxWidth: context.width * .5),
                   child: TitleText(viewState.model.user.displayName,
                       fontSize: 16,
                       fontWeight: FontWeight.w800,
@@ -474,7 +475,7 @@ class _ComposeTweet
   Widget build(BuildContext context) {
     var authState = Provider.of<AuthState>(context, listen: false);
     return Container(
-      height: fullHeight(context),
+      height: context.height,
       padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -483,7 +484,7 @@ class _ComposeTweet
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              customImage(context, authState.user?.photoURL, height: 40),
+              CircularImage(path: authState.user?.photoURL, height: 40),
               SizedBox(
                 width: 10,
               ),
@@ -604,12 +605,12 @@ class _UserTile extends StatelessWidget {
       onTap: () {
         onUserSelected(user);
       },
-      leading: customImage(context, user.profilePic, height: 35),
+      leading: CircularImage(path: user.profilePic, height: 35),
       title: Row(
         children: <Widget>[
           ConstrainedBox(
             constraints:
-                BoxConstraints(minWidth: 0, maxWidth: fullWidth(context) * .5),
+                BoxConstraints(minWidth: 0, maxWidth: context.width * .5),
             child: TitleText(user.displayName,
                 fontSize: 16,
                 fontWeight: FontWeight.w800,

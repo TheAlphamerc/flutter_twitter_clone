@@ -6,7 +6,8 @@ import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
-import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
+import 'package:flutter_twitter_clone/ui/theme/theme.dart';
+import 'package:flutter_twitter_clone/widgets/cache_image.dart';
 import 'package:flutter_twitter_clone/widgets/tweet/widgets/tweetIconsRow.dart';
 import 'package:provider/provider.dart';
 
@@ -35,7 +36,7 @@ class _ImageViewPgeState extends State<ImageViewPge> {
           child: Container(
             color: Colors.brown.shade700,
             constraints: BoxConstraints(
-              maxHeight: fullHeight(context),
+              maxHeight: context.height,
             ),
             child: InkWell(
               onTap: () {
@@ -141,8 +142,8 @@ class _ImageViewPgeState extends State<ImageViewPge> {
             alignment: Alignment.center,
             child: Container(
                 child: InteractiveViewer(
-              child: customNetworkImage(
-                _image,
+              child: CacheImage(
+                path: _image,
                 fit: BoxFit.fitWidth,
               ),
             )),

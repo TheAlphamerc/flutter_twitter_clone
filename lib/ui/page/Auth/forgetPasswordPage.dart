@@ -34,7 +34,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
 
   Widget _body(BuildContext context) {
     return Container(
-        height: fullHeight(context),
+        height: context.height,
         padding: EdgeInsets.symmetric(horizontal: 30),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -112,14 +112,14 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
 
   void _submit() {
     if (_emailController.text == null || _emailController.text.isEmpty) {
-      customSnackBar(_scaffoldKey, 'Email field cannot be empty');
+      Utility.customSnackBar(_scaffoldKey, 'Email field cannot be empty');
       return;
     }
     var isValidEmail = Utility.validateEmal(
       _emailController.text,
     );
     if (!isValidEmail) {
-      customSnackBar(_scaffoldKey, 'Please enter valid email address');
+      Utility.customSnackBar(_scaffoldKey, 'Please enter valid email address');
       return;
     }
 

@@ -16,24 +16,23 @@ import 'package:provider/provider.dart';
 class TweetBottomSheet {
   Widget tweetOptionIcon(BuildContext context,
       {FeedModel model, TweetType type, GlobalKey<ScaffoldState> scaffoldKey}) {
-    return customInkWell(
-        radius: BorderRadius.circular(20),
-        context: context,
-        onPressed: () {
-          _openbottomSheet(context,
-              type: type, model: model, scaffoldKey: scaffoldKey);
-        },
-        child: Container(
-          width: 25,
-          height: 25,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-          ),
-          child: customIcon(context,
-              icon: AppIcon.arrowDown,
-              istwitterIcon: true,
-              iconColor: AppColor.lightGrey),
-        ));
+    return Container(
+      width: 25,
+      height: 25,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+      ),
+      child: customIcon(context,
+          icon: AppIcon.arrowDown,
+          istwitterIcon: true,
+          iconColor: AppColor.lightGrey),
+    ).ripple(
+      () {
+        _openbottomSheet(context,
+            type: type, model: model, scaffoldKey: scaffoldKey);
+      },
+      borderRadius: BorderRadius.circular(20),
+    );
   }
 
   void _openbottomSheet(BuildContext context,
@@ -48,11 +47,11 @@ class TweetBottomSheet {
       builder: (context) {
         return Container(
             padding: EdgeInsets.only(top: 5, bottom: 0),
-            height: fullHeight(context) *
+            height: context.height *
                 (type == TweetType.Tweet
                     ? (isMyTweet ? .25 : .44)
                     : (isMyTweet ? .38 : .52)),
-            width: fullWidth(context),
+            width: context.width,
             decoration: BoxDecoration(
               color: Theme.of(context).bottomSheetTheme.backgroundColor,
               borderRadius: BorderRadius.only(
@@ -83,7 +82,7 @@ class TweetBottomSheet {
     return Column(
       children: <Widget>[
         Container(
-          width: fullWidth(context) * .1,
+          width: context.width * .1,
           height: 5,
           decoration: BoxDecoration(
             color: Theme.of(context).dividerColor,
@@ -181,7 +180,7 @@ class TweetBottomSheet {
     return Column(
       children: <Widget>[
         Container(
-          width: fullWidth(context) * .1,
+          width: context.width * .1,
           height: 5,
           decoration: BoxDecoration(
             color: Theme.of(context).dividerColor,
@@ -270,44 +269,40 @@ class TweetBottomSheet {
   Widget _widgetBottomSheetRow(BuildContext context, IconData icon,
       {String text, Function onPressed, bool isEnable = false}) {
     return Expanded(
-      child: customInkWell(
-        context: context,
-        onPressed: () {
-          if (onPressed != null)
-            onPressed();
-          else {
-            Navigator.pop(context);
-          }
-        },
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
-            children: <Widget>[
-              customIcon(
-                context,
-                icon: icon,
-                istwitterIcon: true,
-                size: 25,
-                paddingIcon: 8,
-                iconColor:
-                    onPressed != null ? AppColor.darkGrey : AppColor.lightGrey,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        child: Row(
+          children: <Widget>[
+            customIcon(
+              context,
+              icon: icon,
+              istwitterIcon: true,
+              size: 25,
+              paddingIcon: 8,
+              iconColor:
+                  onPressed != null ? AppColor.darkGrey : AppColor.lightGrey,
+            ),
+            SizedBox(
+              width: 15,
+            ),
+            customText(
+              text,
+              context: context,
+              style: TextStyle(
+                color: isEnable ? AppColor.secondary : AppColor.lightGrey,
+                fontSize: 18,
+                fontWeight: FontWeight.w400,
               ),
-              SizedBox(
-                width: 15,
-              ),
-              customText(
-                text,
-                context: context,
-                style: TextStyle(
-                  color: isEnable ? AppColor.secondary : AppColor.lightGrey,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w400,
-                ),
-              )
-            ],
-          ),
+            )
+          ],
         ),
-      ),
+      ).ripple(() {
+        if (onPressed != null)
+          onPressed();
+        else {
+          Navigator.pop(context);
+        }
+      }),
     );
   }
 
@@ -336,7 +331,7 @@ class TweetBottomSheet {
         return Container(
             padding: EdgeInsets.only(top: 5, bottom: 0),
             height: 130,
-            width: fullWidth(context),
+            width: context.width,
             decoration: BoxDecoration(
               color: Theme.of(context).bottomSheetTheme.backgroundColor,
               borderRadius: BorderRadius.only(
@@ -353,7 +348,7 @@ class TweetBottomSheet {
     return Column(
       children: <Widget>[
         Container(
-          width: fullWidth(context) * .1,
+          width: context.width * .1,
           height: 5,
           decoration: BoxDecoration(
             color: Theme.of(context).dividerColor,
@@ -379,7 +374,7 @@ class TweetBottomSheet {
                 userName: authState.userModel.userName);
             // Prepare current Tweet model to reply
             FeedModel post = new FeedModel(
-                childRetwetkey: model.key,
+                childRetwetkey: model.getTweetKeyToRetweet,
                 createdAt: DateTime.now().toUtc().toString(),
                 user: myUser,
                 userId: myUser.userId);
@@ -416,7 +411,7 @@ class TweetBottomSheet {
         return Container(
             padding: EdgeInsets.only(top: 5, bottom: 0),
             height: 130,
-            width: fullWidth(context),
+            width: context.width,
             decoration: BoxDecoration(
               color: Theme.of(context).bottomSheetTheme.backgroundColor,
               borderRadius: BorderRadius.only(
@@ -439,7 +434,7 @@ class TweetBottomSheet {
     return Column(
       children: <Widget>[
         Container(
-          width: fullWidth(context) * .1,
+          width: context.width * .1,
           height: 5,
           decoration: BoxDecoration(
             color: Theme.of(context).dividerColor,

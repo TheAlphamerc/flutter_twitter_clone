@@ -224,6 +224,17 @@ class TweetIconsRow extends StatelessWidget {
     );
   }
 
+  Widget customSwitcherWidget(
+      {@required child, Duration duraton = const Duration(milliseconds: 500)}) {
+    return AnimatedSwitcher(
+      duration: duraton,
+      transitionBuilder: (Widget child, Animation<double> animation) {
+        return ScaleTransition(child: child, scale: animation);
+      },
+      child: child,
+    );
+  }
+
   void addLikeToTweet(BuildContext context) {
     var state = Provider.of<FeedState>(context, listen: false);
     var authState = Provider.of<AuthState>(context, listen: false);

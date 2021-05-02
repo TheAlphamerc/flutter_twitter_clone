@@ -4,6 +4,7 @@ import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/state/chats/chatState.dart';
 import 'package:flutter_twitter_clone/state/searchState.dart';
+import 'package:flutter_twitter_clone/ui/page/profile/widgets/circular_image.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
@@ -36,12 +37,12 @@ class _NewMessagePageState extends State<NewMessagePage> {
         chatState.setChatUser = user;
         Navigator.pushNamed(context, '/ChatScreenPage');
       },
-      leading: customImage(context, user.profilePic, height: 40),
+      leading: CircularImage(path: user.profilePic, height: 40),
       title: Row(
         children: <Widget>[
           ConstrainedBox(
             constraints:
-                BoxConstraints(minWidth: 0, maxWidth: fullWidth(context) - 104),
+                BoxConstraints(minWidth: 0, maxWidth: context.width - 104),
             child: TitleText(user.displayName,
                 fontSize: 16,
                 fontWeight: FontWeight.w800,

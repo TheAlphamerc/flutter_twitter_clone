@@ -57,7 +57,7 @@ class _UpdateAppState extends State<UpdateApp> with WidgetsBindingObserver {
             ),
             SizedBox(height: 30),
             Container(
-              width: fullWidth(context),
+              width: context.width,
               margin: EdgeInsets.symmetric(vertical: 35),
               child: FlatButton(
                 shape: RoundedRectangleBorder(

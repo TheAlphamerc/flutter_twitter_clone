@@ -120,7 +120,7 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
                       : _tweetDetail(state.tweetDetailModel?.last),
                   Container(
                     height: 6,
-                    width: fullWidth(context),
+                    width: context.width,
                     color: TwitterColor.mystic,
                   )
                 ],

@@ -41,7 +41,7 @@ class UsersListPage extends StatelessWidget {
           }
           return !(userList != null && userList.isNotEmpty)
               ? Container(
-                  width: fullWidth(context),
+                  width: context.width,
                   padding: EdgeInsets.only(top: 0, left: 30, right: 30),
                   child: NotifyText(
                     title: emptyScreenText,

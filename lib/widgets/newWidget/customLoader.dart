@@ -1,8 +1,7 @@
 import 'dart:io';
-
+import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 
 class CustomLoader {
   static CustomLoader _customLoader;
@@ -26,8 +25,8 @@ class CustomLoader {
     _overlayEntry = OverlayEntry(
       builder: (context) {
         return Container(
-            height: fullHeight(context),
-            width: fullWidth(context),
+            height: context.height,
+            width: context.width,
             child: buildLoader(context));
       },
     );
@@ -49,8 +48,8 @@ class CustomLoader {
   }
 
   buildLoader(BuildContext context, {Color backgroundColor}) {
-    if(backgroundColor == null){
-     backgroundColor = const Color(0xffa8a8a8).withOpacity(.5);
+    if (backgroundColor == null) {
+      backgroundColor = const Color(0xffa8a8a8).withOpacity(.5);
     }
     var height = 150.0;
     return CustomScreenLoader(
@@ -65,7 +64,12 @@ class CustomScreenLoader extends StatelessWidget {
   final Color backgroundColor;
   final double height;
   final double width;
-  const CustomScreenLoader({Key key, this.backgroundColor =const Color(0xfff8f8f8), this.height = 30, this.width = 30}) : super(key: key);
+  const CustomScreenLoader(
+      {Key key,
+      this.backgroundColor = const Color(0xfff8f8f8),
+      this.height = 30,
+      this.width = 30})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +88,9 @@ class CustomScreenLoader extends StatelessWidget {
             alignment: Alignment.center,
             children: <Widget>[
               Platform.isIOS
-                  ? CupertinoActivityIndicator(radius: 35,)
+                  ? CupertinoActivityIndicator(
+                      radius: 35,
+                    )
                   : CircularProgressIndicator(
                       strokeWidth: 2,
                     ),

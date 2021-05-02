@@ -1,7 +1,6 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
+import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 
 class ComposeTweetImage extends StatelessWidget {
   final File image;
@@ -21,7 +20,7 @@ class ComposeTweetImage extends StatelessWidget {
                     alignment: Alignment.topRight,
                     child: Container(
                       height: 220,
-                      width: fullWidth(context) * .8,
+                      width: context.width * .8,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                         image: DecorationImage(

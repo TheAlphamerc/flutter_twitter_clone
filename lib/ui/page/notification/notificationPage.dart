@@ -9,6 +9,7 @@ import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/state/notificationState.dart';
 import 'package:flutter_twitter_clone/ui/page/feed/feedPostDetail.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/profilePage.dart';
+import 'package:flutter_twitter_clone/ui/page/profile/widgets/circular_image.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
@@ -183,7 +184,7 @@ class NotificationTile extends StatelessWidget {
                 Navigator.push(context,
                     ProfilePage.getRoute(profileId: snapshot.data?.userId));
               },
-              child: customImage(context, snapshot.data.profilePic, height: 30),
+              child: CircularImage(path: snapshot.data.profilePic, height: 30),
             ),
           );
         } else {
