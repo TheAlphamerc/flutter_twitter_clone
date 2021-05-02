@@ -33,6 +33,7 @@ class LinkPreview extends StatelessWidget {
     }
     return FlutterLinkPreview(
       url: uri,
+      cache: Duration(days: 30),
       builder: (info) {
         if (info == null) return const SizedBox();
         if (info is WebImageInfo) {
@@ -51,60 +52,64 @@ class LinkPreview extends StatelessWidget {
         final WebInfo webInfo = info;
 
         if (!WebAnalyzer.isNotEmpty(webInfo.title)) return const SizedBox();
-        return customInkWell(
-          context: context,
-          radius: BorderRadius.circular(10),
-          onPressed: () {
-            Utility.launchURL(url);
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: AppColor.extraLightGrey),
-              color: webInfo.image != null
-                  ? Theme.of(context).colorScheme.onPrimary
-                  : const Color(0xFFF0F1F2),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                if (webInfo.image != null && webInfo.image.isNotEmpty) ...[
-                  ClipRRect(
-                    borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(10)),
-                    child: Container(
-                      height: 140,
-                      width: double.infinity,
-                      child: CachedNetworkImage(
-                        imageUrl: webInfo.image,
-                        fit: BoxFit.cover,
+        return Padding(
+          padding: const EdgeInsets.only(top: 8),
+          child: customInkWell(
+            context: context,
+            radius: BorderRadius.circular(8),
+            onPressed: () {
+              Utility.launchURL(url);
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: AppColor.extraLightGrey),
+                color: webInfo.image != null
+                    ? Theme.of(context).colorScheme.onPrimary
+                    : const Color(0xFFFAFAFA),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  if (webInfo.image != null && webInfo.image.isNotEmpty)
+                    ClipRRect(
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(10)),
+                      child: Container(
+                        height: 140,
+                        width: double.infinity,
+                        child: CachedNetworkImage(
+                          imageUrl: webInfo.image,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
-                  ),
                   const SizedBox(height: 4),
-                ],
-                if (WebAnalyzer.isNotEmpty(webInfo.title)) ...[
+                  if (WebAnalyzer.isNotEmpty(webInfo.title))
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
+                      child: Text(
+                        webInfo.title.trim(),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyles.titleStyle.copyWith(fontSize: 14),
+                      ),
+                    ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    padding: EdgeInsets.only(bottom: 5, left: 8, right: 8),
                     child: Text(
-                      webInfo.title,
+                      url,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyles.titleStyle,
+                      style: TextStyles.subtitleStyle.copyWith(
+                          fontSize:
+                              WebAnalyzer.isNotEmpty(webInfo.title) ? 14 : 16),
                     ),
                   ),
                 ],
-                Padding(
-                  padding: EdgeInsets.only(bottom: 5, left: 8, right: 8),
-                  child: Text(
-                    url,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyles.subtitleStyle,
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         );

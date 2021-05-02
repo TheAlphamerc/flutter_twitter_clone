@@ -128,30 +128,30 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                         ),
                       ),
                     ),
-                    Positioned(
-                      top: 0,
-                      bottom: 0,
-                      right: 0,
-                      left: 0,
-                      child: InkWell(
-                        borderRadius: getBorder(myMessage),
-                        onLongPress: () {
-                          var text = ClipboardData(text: chat.message);
-                          Clipboard.setData(text);
-                          _scaffoldKey.currentState.hideCurrentSnackBar();
-                          _scaffoldKey.currentState.showSnackBar(
-                            SnackBar(
-                              backgroundColor: TwitterColor.white,
-                              content: Text(
-                                'Message copied',
-                                style: TextStyle(color: Colors.black),
-                              ),
-                            ),
-                          );
-                        },
-                        child: SizedBox(),
-                      ),
-                    ),
+                    // Positioned(
+                    //   top: 0,
+                    //   bottom: 0,
+                    //   right: 0,
+                    //   left: 0,
+                    //   child: InkWell(
+                    //     borderRadius: getBorder(myMessage),
+                    //     onLongPress: () {
+                    //       var text = ClipboardData(text: chat.message);
+                    //       Clipboard.setData(text);
+                    //       _scaffoldKey.currentState.hideCurrentSnackBar();
+                    //       _scaffoldKey.currentState.showSnackBar(
+                    //         SnackBar(
+                    //           backgroundColor: TwitterColor.white,
+                    //           content: Text(
+                    //             'Message copied',
+                    //             style: TextStyle(color: Colors.black),
+                    //           ),
+                    //         ),
+                    //       );
+                    //     },
+                    //     child: SizedBox(),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

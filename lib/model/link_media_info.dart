@@ -1,6 +1,8 @@
 import 'dart:convert';
 
-class LinkMediaInfo {
+import 'package:equatable/equatable.dart';
+
+class LinkMediaInfo extends Equatable {
   final String title;
   final String html;
   final int height;
@@ -75,4 +77,15 @@ class LinkMediaInfo {
         "html": html == null ? null : html,
         "version": version == null ? null : version,
       };
+
+  @override
+  List<Object> get props => [
+        this.type,
+        this.url,
+        this.providerName,
+        this.width,
+        this.title,
+        this.thumbnailHeight,
+        this.height
+      ];
 }
