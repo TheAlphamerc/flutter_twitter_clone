@@ -71,7 +71,7 @@ class SearchState extends AppState {
     }
     // return if userList is empty or null
     if (_userlist == null && _userlist.isEmpty) {
-      print("Empty userList");
+      cprint("User list is empty");
       return;
     }
     // sortBy userlist on the basis of username
@@ -95,31 +95,26 @@ class SearchState extends AppState {
     switch (sortBy) {
       case SortUser.Alphabetically:
         _userFilterlist.sort((x, y) => x.displayName.compareTo(y.displayName));
-        notifyListeners();
-        return "alphabetically";
+        return "Alphabetically";
 
       case SortUser.MaxFollower:
         _userFilterlist.sort((x, y) => y.followers.compareTo(x.followers));
-        notifyListeners();
-        return "UserModel with max follower";
+        return "Popular";
 
       case SortUser.Newest:
         _userFilterlist.sort((x, y) =>
             DateTime.parse(y.createdAt).compareTo(DateTime.parse(x.createdAt)));
-        notifyListeners();
-        return "Newest user first";
+        return "Newest user";
 
       case SortUser.Oldest:
         _userFilterlist.sort((x, y) =>
             DateTime.parse(x.createdAt).compareTo(DateTime.parse(y.createdAt)));
-        notifyListeners();
-        return "Oldest user first";
+        return "Oldest user";
 
       case SortUser.Verified:
         _userFilterlist.sort((x, y) =>
             y.isVerified.toString().compareTo(x.isVerified.toString()));
-        notifyListeners();
-        return "Verified user first";
+        return "Verified user";
 
       default:
         return "Unknown";

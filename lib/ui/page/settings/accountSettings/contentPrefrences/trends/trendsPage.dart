@@ -9,8 +9,6 @@ import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 import 'package:provider/provider.dart';
 
 class TrendsPage extends StatelessWidget {
-  String sortBy = "";
-
   TrendsPage({Key key}) : super(key: key);
 
   void openBottomSheet(
@@ -54,23 +52,22 @@ class TrendsPage extends StatelessWidget {
             child: TitleText('Sort user list'),
           ),
           Divider(height: 0),
-          _row(context, "Verified user first", SortUser.Verified),
+          _row(context, "Verified user", SortUser.Verified),
           Divider(height: 0),
-          _row(context, "alphabetically", SortUser.Alphabetically),
+          _row(context, "Alphabetically", SortUser.Alphabetically),
           Divider(height: 0),
-          _row(context, "Newest user first", SortUser.Newest),
+          _row(context, "Newest user", SortUser.Newest),
           Divider(height: 0),
-          _row(context, "Oldest user first", SortUser.Oldest),
+          _row(context, "Oldest user", SortUser.Oldest),
           Divider(height: 0),
-          _row(context, "UserModelModel with max follower",
-              SortUser.MaxFollower),
+          _row(context, "Popular User", SortUser.MaxFollower),
         ],
       ),
     );
   }
 
   Widget _row(BuildContext context, String text, SortUser sortBy) {
-    final state = Provider.of<SearchState>(context);
+    final state = Provider.of<SearchState>(context, listen: false);
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
       child: RadioListTile<SortUser>(
@@ -78,7 +75,7 @@ class TrendsPage extends StatelessWidget {
         activeColor: TwitterColor.dodgetBlue,
         groupValue: state.sortBy,
         onChanged: (val) {
-          state.updateUserSortPrefrence = val;
+          context.read<SearchState>().updateUserSortPrefrence = val;
           Navigator.pop(context);
         },
         title: Text(text, style: TextStyles.subtitleStyle),
@@ -89,24 +86,19 @@ class TrendsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final state = Provider.of<SearchState>(context, listen: false);
-      sortBy = state.selectedFilter;
-    });
     return Scaffold(
       backgroundColor: TwitterColor.white,
       appBar: CustomAppBar(
         isBackButton: true,
-        title: customTitleText(
-          'Trends',
-        ),
+        title: customTitleText('Trends'),
       ),
       body: ListView(
         physics: BouncingScrollPhysics(),
         children: <Widget>[
           SettingRowWidget(
             "Search Filter",
-            subtitle: sortBy,
+            subtitle:
+                context.select((SearchState value) => value.selectedFilter),
             onPressed: () {
               openUserSortSettings(context);
             },
