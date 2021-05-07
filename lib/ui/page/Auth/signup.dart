@@ -5,8 +5,8 @@ import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
-import 'package:flutter_twitter_clone/ui/page/Auth/widget/googleLoginButton.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
+import 'package:flutter_twitter_clone/ui/page/Auth/widget/googleLoginButton.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customLoader.dart';
@@ -125,25 +125,6 @@ class _SignupState extends State<Signup> {
         child: Text('Sign up', style: TextStyle(color: Colors.white)),
       ),
     );
-  }
-
-  void _googleLogin() {
-    var state = Provider.of<AuthState>(context, listen: false);
-    if (state.isbusy) {
-      return;
-    }
-    loader.showLoader(context);
-    state.handleGoogleSignIn().then((status) {
-      // print(status)
-      if (state.user != null) {
-        loader.hideLoader();
-        Navigator.pop(context);
-        widget.loginCallback();
-      } else {
-        loader.hideLoader();
-        cprint('Unable to login', errorIn: '_googleLoginButton');
-      }
-    });
   }
 
   void _submitForm() {

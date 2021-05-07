@@ -1,12 +1,11 @@
 // import 'package:fancy_bottom_navigation/internal/tab_item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/state/appState.dart';
-import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/bottomMenuBar/tabItem.dart';
 import 'package:provider/provider.dart';
+
 import '../customWidgets.dart';
 // import 'customBottomNavigationBar.dart';
 
@@ -17,11 +16,8 @@ class BottomMenubar extends StatefulWidget {
 }
 
 class _BottomMenubarState extends State<BottomMenubar> {
-  PageController _pageController;
-  int _selectedIcon = 0;
   @override
   void initState() {
-    _pageController = widget.pageController;
     super.initState();
   }
 
@@ -95,7 +91,6 @@ class _BottomMenubarState extends State<BottomMenubar> {
                     ),
               onPressed: () {
                 setState(() {
-                  _selectedIcon = index;
                   state.setpageIndex = index;
                 });
               },

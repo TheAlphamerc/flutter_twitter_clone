@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:image_picker/image_picker.dart';
@@ -109,10 +108,12 @@ class _ComposeBottomIconWidgetState extends State<ComposeBottomIconWidget> {
   }
 
   void setImage(ImageSource source) {
-    ImagePicker.pickImage(source: source, imageQuality: 20).then((File file) {
+    ImagePicker()
+        .getImage(source: source, imageQuality: 20)
+        .then((PickedFile file) {
       setState(() {
         // _image = file;
-        widget.onImageIconSelcted(file);
+        widget.onImageIconSelcted(File(file.path));
       });
     });
   }

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_link_preview/flutter_link_preview.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
-import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 
 class LinkPreview extends StatelessWidget {
   const LinkPreview({Key key, this.url, this.text}) : super(key: key);

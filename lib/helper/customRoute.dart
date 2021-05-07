@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_twitter_clone/helper/routes.dart';
-import 'package:flutter_twitter_clone/helper/utility.dart';
+
+import 'routes.dart';
 
 class CustomRoute<T> extends MaterialPageRoute<T> {
   CustomRoute({WidgetBuilder builder, RouteSettings settings})
@@ -28,7 +27,7 @@ class SlideLeftRoute<T> extends MaterialPageRoute<T> {
   Widget buildTransitions(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation, Widget child) {
     Routes.sendNavigationEventToFirebase(settings.name);
-    if (settings.name == "SplashPage"){
+    if (settings.name == "SplashPage") {
       return child;
     }
     return SlideTransition(

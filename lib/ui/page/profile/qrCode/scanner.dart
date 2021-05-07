@@ -1,20 +1,20 @@
 import 'dart:io';
 import 'dart:math';
-import 'dart:ui' as ui;
 import 'dart:typed_data';
-import 'package:flutter_twitter_clone/ui/page/profile/profilePage.dart';
-import 'package:flutter_twitter_clone/ui/page/profile/widgets/circular_image.dart';
+import 'dart:ui' as ui;
 
-import 'dot_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:qr_flutter/qr_flutter.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:flutter_twitter_clone/model/user.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
-import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
+import 'package:flutter_twitter_clone/model/user.dart';
+import 'package:flutter_twitter_clone/ui/page/profile/profilePage.dart';
+import 'package:flutter_twitter_clone/ui/page/profile/widgets/circular_image.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+
+import 'dot_indicator.dart';
 
 class ScanScreen extends StatefulWidget {
   final UserModel user;
