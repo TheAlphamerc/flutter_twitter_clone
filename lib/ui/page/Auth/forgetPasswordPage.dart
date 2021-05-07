@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
+import 'package:flutter_twitter_clone/widgets/customFlatButton.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:provider/provider.dart';
 
@@ -65,28 +66,27 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
             fontStyle: FontStyle.normal, fontWeight: FontWeight.normal),
         obscureText: isPassword,
         decoration: InputDecoration(
-            hintText: hint,
-            border: InputBorder.none,
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                borderSide: BorderSide(color: Colors.blue)),
-            contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 10)),
+          hintText: hint,
+          border: InputBorder.none,
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(30.0)),
+              borderSide: BorderSide(color: Colors.blue)),
+          contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+        ),
       ),
     );
   }
 
   Widget _submitButton(BuildContext context) {
     return Container(
-        margin: EdgeInsets.symmetric(vertical: 15),
-        width: MediaQuery.of(context).size.width,
-        child: FlatButton(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-          color: TwitterColor.dodgetBlue,
-          onPressed: _submit,
-          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-          child: Text('Submit', style: TextStyle(color: Colors.white)),
-        ));
+      margin: EdgeInsets.symmetric(vertical: 15),
+      width: MediaQuery.of(context).size.width,
+      child: CustomFlatButton(
+        label: "Submit",
+        onPressed: _submit,
+        borderRadius: 30,
+      ),
+    );
   }
 
   Widget _label() {

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
-import 'package:flutter_twitter_clone/ui/page/Auth/widget/googleLoginButton.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
+import 'package:flutter_twitter_clone/ui/page/Auth/widget/googleLoginButton.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
+import 'package:flutter_twitter_clone/widgets/customFlatButton.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customLoader.dart';
-import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 import 'package:provider/provider.dart';
 
 class SignIn extends StatefulWidget {
@@ -99,13 +99,12 @@ class _SignInState extends State<SignIn> {
   }
 
   Widget _labelButton(String title, {Function onPressed}) {
-    return FlatButton(
+    return TextButton(
       onPressed: () {
         if (onPressed != null) {
           onPressed();
         }
       },
-      splashColor: Colors.grey.shade200,
       child: Text(
         title,
         style: TextStyle(
@@ -116,14 +115,11 @@ class _SignInState extends State<SignIn> {
 
   Widget _emailLoginButton(BuildContext context) {
     return Container(
-      width: context.width,
       margin: EdgeInsets.symmetric(vertical: 35),
-      child: FlatButton(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        color: TwitterColor.dodgetBlue,
+      child: CustomFlatButton(
+        label: "Submit",
         onPressed: _emailLogin,
-        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-        child: TitleText('Submit', color: Colors.white),
+        borderRadius: 30,
       ),
     );
   }

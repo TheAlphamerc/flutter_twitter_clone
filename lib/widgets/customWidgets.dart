@@ -52,7 +52,7 @@ Widget customText(String msg,
   } else {
     if (context != null && style != null) {
       var fontSize =
-          style.fontSize ?? Theme.of(context).textTheme.body1.fontSize;
+          style.fontSize ?? Theme.of(context).textTheme.bodyText1.fontSize;
       style = style.copyWith(
         fontSize: fontSize - (context.width <= 375 ? 2 : 0),
       );

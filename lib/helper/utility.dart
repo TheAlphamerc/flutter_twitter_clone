@@ -27,10 +27,7 @@ void cprint(dynamic data, {String errorIn, String event}) {
       print(
           '****************************** error ******************************');
     } else if (data != null) {
-      developer.log(
-        data,
-        time: DateTime.now(),
-      );
+      developer.log(data, time: DateTime.now());
     }
     if (event != null) {
       Utility.logEvent(event);

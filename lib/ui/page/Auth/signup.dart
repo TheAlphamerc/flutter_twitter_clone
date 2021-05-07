@@ -8,6 +8,7 @@ import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/ui/page/Auth/widget/googleLoginButton.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
+import 'package:flutter_twitter_clone/widgets/customFlatButton.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customLoader.dart';
 import 'package:provider/provider.dart';
@@ -115,14 +116,11 @@ class _SignupState extends State<Signup> {
 
   Widget _submitButton(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 15),
-      width: MediaQuery.of(context).size.width,
-      child: FlatButton(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        color: TwitterColor.dodgetBlue,
+      margin: EdgeInsets.symmetric(vertical: 35),
+      child: CustomFlatButton(
+        label: "Sign up",
         onPressed: _submitForm,
-        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-        child: Text('Sign up', style: TextStyle(color: Colors.white)),
+        borderRadius: 30,
       ),
     );
   }

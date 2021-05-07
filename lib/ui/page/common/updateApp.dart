@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/ui/page/common/splash.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
+import 'package:flutter_twitter_clone/widgets/customFlatButton.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 
 class UpdateApp extends StatefulWidget {
@@ -58,16 +59,13 @@ class _UpdateAppState extends State<UpdateApp> with WidgetsBindingObserver {
             Container(
               width: context.width,
               margin: EdgeInsets.symmetric(vertical: 35),
-              child: FlatButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30)),
-                color: TwitterColor.dodgetBlue,
+              child: CustomFlatButton(
+                label: "Update now",
                 onPressed: () {
                   Utility.launchURL(
                       "https://play.google.com/store/apps/details?id=com.thealphamerc.flutter_twitter_clone");
                 },
-                padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                child: TitleText('Update now', color: Colors.white),
+                borderRadius: 30,
               ),
             )
           ],

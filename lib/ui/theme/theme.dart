@@ -24,7 +24,7 @@ class AppTheme {
           ),
           elevation: 0,
           textTheme: TextTheme(
-            title: TextStyle(
+            headline5: TextStyle(
                 color: Colors.black, fontSize: 26, fontStyle: FontStyle.normal),
           )),
       tabBarTheme: TabBarTheme(

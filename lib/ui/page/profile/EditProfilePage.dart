@@ -4,6 +4,7 @@ import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/widgets/circular_image.dart';
 import 'package:flutter_twitter_clone/widgets/cache_image.dart';
+import 'package:flutter_twitter_clone/widgets/customFlatButton.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -247,13 +248,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
               Row(
                 children: <Widget>[
                   Expanded(
-                    child: FlatButton(
-                      color: Theme.of(context).primaryColor,
-                      child: Text(
-                        'Use Camera',
-                        style:
-                            TextStyle(color: Theme.of(context).backgroundColor),
-                      ),
+                    child: CustomFlatButton(
+                      label: "Use Camera",
+                      borderRadius: 5,
                       onPressed: () {
                         getImage(context, ImageSource.camera, onImageSelected);
                       },
@@ -263,13 +260,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     width: 10,
                   ),
                   Expanded(
-                    child: FlatButton(
-                      color: Theme.of(context).primaryColor,
-                      child: Text(
-                        'Use Gallery',
-                        style:
-                            TextStyle(color: Theme.of(context).backgroundColor),
-                      ),
+                    child: CustomFlatButton(
+                      label: "Use Gallery",
+                      borderRadius: 5,
                       onPressed: () {
                         getImage(context, ImageSource.gallery, onImageSelected);
                       },

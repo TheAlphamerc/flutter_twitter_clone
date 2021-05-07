@@ -23,9 +23,12 @@ class RippleButton extends StatelessWidget {
           right: 0,
           top: 0,
           bottom: 0,
-          child: FlatButton(
-              splashColor: splashColor,
-              shape: RoundedRectangleBorder(borderRadius: borderRadius),
+          child: TextButton(
+              style: ButtonStyle(
+                shape: MaterialStateProperty.all(
+                    RoundedRectangleBorder(borderRadius: borderRadius)),
+                foregroundColor: MaterialStateProperty.all(splashColor),
+              ),
               onPressed: () {
                 if (onPressed != null) {
                   onPressed();
