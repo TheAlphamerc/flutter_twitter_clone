@@ -143,19 +143,22 @@ class CustomLinkMediaInfo extends StatelessWidget {
                               style:
                                   TextStyles.titleStyle.copyWith(fontSize: 14),
                             ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                  child: Text(
-                                model.providerUrl,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyles.subtitleStyle
-                                    .copyWith(fontSize: 12),
-                              ))
-                            ],
-                          )
+                          if (model.providerUrl != null)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                    child: Text(
+                                  Uri.tryParse(model.providerUrl).authority,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyles.subtitleStyle.copyWith(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ))
+                              ],
+                            )
                         ],
                       ),
                     )

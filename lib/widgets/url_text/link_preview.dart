@@ -32,7 +32,9 @@ class LinkPreview extends StatelessWidget {
     }
     return FlutterLinkPreview(
       url: uri,
-      cache: Duration(days: 30),
+      showMultimedia: true,
+      useMultithread: true,
+      // cache: Duration(hours: 1),
       builder: (info) {
         if (info == null) return const SizedBox();
         if (info is WebImageInfo) {
@@ -70,6 +72,12 @@ class LinkPreview extends StatelessWidget {
                     child: Container(
                       height: 140,
                       width: double.infinity,
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                              color: Theme.of(context).dividerColor, width: 1),
+                        ),
+                      ),
                       child: CachedNetworkImage(
                         imageUrl: webInfo.image,
                         fit: BoxFit.cover,
@@ -85,16 +93,20 @@ class LinkPreview extends StatelessWidget {
                       webInfo.title.trim(),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyles.titleStyle.copyWith(fontSize: 14),
+                      style: TextStyles.titleStyle.copyWith(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87),
                     ),
                   ),
                 Padding(
                   padding: EdgeInsets.only(bottom: 5, left: 8, right: 8),
                   child: Text(
-                    url,
+                    Uri.tryParse(url).authority,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyles.subtitleStyle.copyWith(
+                        fontWeight: FontWeight.w400,
                         fontSize:
                             WebAnalyzer.isNotEmpty(webInfo.title) ? 14 : 16),
                   ),
