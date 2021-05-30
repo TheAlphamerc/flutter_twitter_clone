@@ -40,6 +40,8 @@ class AuthState extends AppState {
     userId = '';
     _userModel = null;
     user = null;
+    _profileQuery.onValue.drain();
+    _profileQuery = null;
     if (isSignInWithGoogle) {
       _googleSignIn.signOut();
       Utility.logEvent('google_logout');
