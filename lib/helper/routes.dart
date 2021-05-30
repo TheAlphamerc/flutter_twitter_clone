@@ -111,9 +111,6 @@ class Routes {
       case "EditProfile":
         return CustomRoute<bool>(
             builder: (BuildContext context) => EditProfilePage());
-      case "ProfileImageView":
-        return SlideLeftRoute<bool>(
-            builder: (BuildContext context) => ProfileImageView());
       case "ChatScreenPage":
         return CustomRoute<bool>(
             builder: (BuildContext context) => ChatScreenPage());

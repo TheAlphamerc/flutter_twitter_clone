@@ -1,5 +1,6 @@
 import 'package:flutter_twitter_clone/state/profile_state.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/follow/followerListPage.dart';
+import 'package:flutter_twitter_clone/ui/page/profile/profileImageView.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/qrCode/scanner.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
@@ -154,7 +155,10 @@ class _ProfilePageState extends State<ProfilePage>
                             ),
                             borderRadius: BorderRadius.circular(50),
                             onPressed: () {
-                              Navigator.pushNamed(context, "/ProfileImageView");
+                              Navigator.push(
+                                  context,
+                                  ProfileImageView.getRoute(
+                                      authstate.profileUserModel.profilePic));
                             },
                           ),
                         ),

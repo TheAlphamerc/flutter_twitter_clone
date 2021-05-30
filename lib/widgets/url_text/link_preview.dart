@@ -80,7 +80,7 @@ class LinkPreview extends StatelessWidget {
                       ),
                       child: CachedNetworkImage(
                         imageUrl: webInfo.image,
-                        fit: BoxFit.cover,
+                        fit: BoxFit.contain,
                       ),
                     ),
                   ),

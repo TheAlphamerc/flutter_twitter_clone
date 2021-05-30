@@ -35,8 +35,8 @@ class RetweetWidget extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
               Container(
-                width: 25,
-                height: 25,
+                width: 20,
+                height: 20,
                 child: CircularImage(path: model.user.profilePic),
               ),
               SizedBox(width: 10),
@@ -45,7 +45,7 @@ class RetweetWidget extends StatelessWidget {
                     BoxConstraints(minWidth: 0, maxWidth: context.width * .5),
                 child: TitleText(
                   model.user.displayName,
-                  fontSize: 16,
+                  fontSize: 14,
                   fontWeight: FontWeight.w800,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -82,7 +82,7 @@ class RetweetWidget extends StatelessWidget {
             : Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8),
                 child: UrlText(
-                  text: model.description,
+                  text: model.description.takeOnly(150),
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 14,

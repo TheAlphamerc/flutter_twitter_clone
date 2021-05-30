@@ -65,13 +65,13 @@ class UrlText extends StatelessWidget {
         RichText(
           text: TextSpan(children: getTextSpans()),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 0),
-          child: IntrinsicWidth(
-            stepWidth: context.width,
-            child: CustomLinkMediaInfo(text: text),
-          ),
-        )
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(horizontal: 0),
+        //   child: IntrinsicWidth(
+        //     stepWidth: context.width,
+        //     child: CustomLinkMediaInfo(text: text),
+        //   ),
+        // )
       ],
     );
   }

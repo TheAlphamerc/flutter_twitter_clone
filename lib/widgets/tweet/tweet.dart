@@ -11,6 +11,7 @@ import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 import 'package:flutter_twitter_clone/widgets/tweet/widgets/parentTweet.dart';
 import 'package:flutter_twitter_clone/widgets/tweet/widgets/tweetIconsRow.dart';
 import 'package:flutter_twitter_clone/widgets/url_text/customUrlText.dart';
+import 'package:flutter_twitter_clone/widgets/url_text/custom_link_media_info.dart';
 import 'package:provider/provider.dart';
 
 import '../customWidgets.dart';
@@ -69,7 +70,7 @@ class Tweet extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     border: Border(
-                      left: BorderSide(width: 3.0, color: Colors.grey.shade400),
+                      left: BorderSide(width: 2.0, color: Colors.grey.shade400),
                     ),
                   ),
                 ),
@@ -235,7 +236,7 @@ class _TweetBody extends StatelessWidget {
               model.description == null
                   ? SizedBox()
                   : UrlText(
-                      text: model.description,
+                      text: model.description.removeSpaces,
                       onHashTagPressed: (tag) {
                         cprint(tag);
                       },
@@ -248,6 +249,8 @@ class _TweetBody extends StatelessWidget {
                           fontSize: descriptionFontSize,
                           fontWeight: descriptionFontWeight),
                     ),
+              if (model.imagePath == null && model.description != null)
+                CustomLinkMediaInfo(text: model.description),
             ],
           ),
         ),
@@ -343,7 +346,7 @@ class _TweetDetailBody extends StatelessWidget {
                           ? EdgeInsets.only(left: 80, right: 16)
                           : EdgeInsets.symmetric(horizontal: 16),
                       child: UrlText(
-                        text: model.description,
+                        text: model.description.removeSpaces,
                         onHashTagPressed: (tag) {
                           cprint(tag);
                         },
@@ -358,7 +361,12 @@ class _TweetDetailBody extends StatelessWidget {
                           fontWeight: descriptionFontWeight,
                         ),
                       ),
-                    )
+                    ),
+              if (model.imagePath == null && model.description != null)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: CustomLinkMediaInfo(text: model.description),
+                )
             ],
           ),
         ),
