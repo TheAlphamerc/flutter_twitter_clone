@@ -15,6 +15,7 @@ class LinkPreview extends StatelessWidget {
     if (text == null) {
       return null;
     }
+
     RegExp reg = RegExp(
         r"(https?|http)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]*");
     Iterable<Match> _matches = reg.allMatches(text);
@@ -28,6 +29,9 @@ class LinkPreview extends StatelessWidget {
   Widget build(BuildContext context) {
     var uri = url ?? getUrl();
     if (uri == null) {
+      return SizedBox.shrink();
+    } else if (uri.contains("page.link/")) {
+      /// `flutter_link_preview` package is unable to fetch firebase dynamic link meta data
       return SizedBox.shrink();
     }
     return FlutterLinkPreview(

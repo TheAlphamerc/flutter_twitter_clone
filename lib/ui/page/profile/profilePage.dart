@@ -321,9 +321,12 @@ class _ProfilePageState extends State<ProfilePage>
       context,
       "profilePage/${widget.profileId}/",
       socialMetaTagParameters: SocialMetaTagParameters(
-          description: user.bio ?? "Checkout ${user.displayName}'s profile",
-          title: "${user.displayName} is on Fwitter app",
-          imageUrl: Uri.parse(user.profilePic)),
+        description: !user.bio.contains("Edit profile")
+            ? user.bio
+            : "Checkout ${user.displayName}'s profile on Fwitter app",
+        title: "${user.displayName} is on Fwitter app",
+        imageUrl: Uri.parse(user.profilePic),
+      ),
     );
   }
 

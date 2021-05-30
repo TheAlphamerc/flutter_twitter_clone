@@ -297,8 +297,13 @@ class FeedState extends AppState {
   createReTweet(FeedModel model) {
     try {
       createTweet(model);
-      _tweetToReplyModel.retweetCount += 1;
-      updateTweet(_tweetToReplyModel);
+      if (_tweetToReplyModel != null) {
+        if (_tweetToReplyModel.retweetCount == null) {
+          _tweetToReplyModel.retweetCount = 0;
+        }
+        _tweetToReplyModel.retweetCount += 1;
+        updateTweet(_tweetToReplyModel);
+      }
     } catch (error) {
       cprint(error, errorIn: 'createReTweet');
     }
@@ -337,7 +342,7 @@ class FeedState extends AppState {
       var storageReference = FirebaseStorage.instance
           .ref()
           .child("tweetImage")
-          .child(Path.basename(file.path));
+          .child(Path.basename(DateTime.now().toIso8601String() + file.path));
       await storageReference.putFile(file);
 
       var url = await storageReference.getDownloadURL();

@@ -8,7 +8,6 @@ import 'package:flutter_twitter_clone/ui/page/message/conversationInformation/co
 import 'package:flutter_twitter_clone/ui/page/message/newMessagePage.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/follow/followerListPage.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/follow/followingListPage.dart';
-import 'package:flutter_twitter_clone/ui/page/profile/profileImageView.dart';
 import 'package:flutter_twitter_clone/ui/page/search/SearchPage.dart';
 import 'package:flutter_twitter_clone/ui/page/settings/accountSettings/about/aboutTwitter.dart';
 import 'package:flutter_twitter_clone/ui/page/settings/accountSettings/accessibility/accessibility.dart';
@@ -23,14 +22,15 @@ import 'package:flutter_twitter_clone/ui/page/settings/accountSettings/privacyAn
 import 'package:flutter_twitter_clone/ui/page/settings/accountSettings/proxy/proxyPage.dart';
 import 'package:flutter_twitter_clone/ui/page/settings/settingsAndPrivacyPage.dart';
 import 'package:provider/provider.dart';
-import '../ui/page/Auth/signin.dart';
+
 import '../helper/customRoute.dart';
-import '../ui/page/feed/imageViewPage.dart';
 import '../ui/page/Auth/forgetPasswordPage.dart';
+import '../ui/page/Auth/signin.dart';
 import '../ui/page/Auth/signup.dart';
 import '../ui/page/feed/feedPostDetail.dart';
-import '../ui/page/profile/EditProfilePage.dart';
+import '../ui/page/feed/imageViewPage.dart';
 import '../ui/page/message/chatScreenPage.dart';
+import '../ui/page/profile/EditProfilePage.dart';
 import '../ui/page/profile/profilePage.dart';
 import '../widgets/customWidgets.dart';
 

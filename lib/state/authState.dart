@@ -35,7 +35,7 @@ class AuthState extends AppState {
   UserModel get profileUserModel => _userModel;
 
   /// Logout from device
-  void logoutCallback() {
+  void logoutCallback() async {
     authStatus = AuthStatus.NOT_LOGGED_IN;
     userId = '';
     _userModel = null;
@@ -46,6 +46,7 @@ class AuthState extends AppState {
     }
     _firebaseAuth.signOut();
     notifyListeners();
+    await getIt<SharedPreferenceHelper>().clearPreferenceValues();
   }
 
   /// Alter select auth method, login and sign up page

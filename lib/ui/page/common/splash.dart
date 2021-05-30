@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -9,12 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
-import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/ui/page/Auth/selectAuthMethod.dart';
 import 'package:flutter_twitter_clone/ui/page/common/updateApp.dart';
-import 'package:flutter_twitter_clone/ui/page/feed/feedPostDetail.dart';
 import 'package:flutter_twitter_clone/ui/page/homePage.dart';
-import 'package:flutter_twitter_clone/ui/page/profile/profilePage.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
@@ -31,45 +27,8 @@ class _SplashPageState extends State<SplashPage> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       timer();
-      initDynamicLinks();
     });
     super.initState();
-  }
-
-  /// Initilise the firebase dynamic link sdk
-  void initDynamicLinks() async {
-    FirebaseDynamicLinks.instance.onLink(
-        onSuccess: (PendingDynamicLinkData dynamicLink) async {
-      final Uri deepLink = dynamicLink?.link;
-
-      if (deepLink != null) {
-        redirectFromDeepLink(deepLink);
-      }
-    }, onError: (OnLinkErrorException e) async {
-      cprint(e.message, errorIn: "onLinkError");
-    });
-
-    final PendingDynamicLinkData data =
-        await FirebaseDynamicLinks.instance.getInitialLink();
-    final Uri deepLink = data?.link;
-
-    if (deepLink != null) {
-      redirectFromDeepLink(deepLink);
-    }
-  }
-
-  /// Redirect user to specfic screen when app is launched by tapping on deep link.
-  void redirectFromDeepLink(Uri deepLink) {
-    cprint("Found Url from share: ${deepLink.path}");
-    var type = deepLink.path.split("/")[1];
-    var id = deepLink.path.split("/")[2];
-    if (type == "profilePage") {
-      Navigator.push(context, ProfilePage.getRoute(profileId: id));
-    } else if (type == "tweet") {
-      var feedstate = Provider.of<FeedState>(context, listen: false);
-      feedstate.getpostDetailFromDatabase(id);
-      Navigator.push(context, FeedPostDetail.getRoute(id));
-    }
   }
 
   /// Check if current app is updated app or not
