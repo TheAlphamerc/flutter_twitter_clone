@@ -108,9 +108,6 @@ class Routes {
       case "ImageViewPge":
         return CustomRoute<bool>(
             builder: (BuildContext context) => ImageViewPge());
-      case "EditProfile":
-        return CustomRoute<bool>(
-            builder: (BuildContext context) => EditProfilePage());
       case "ChatScreenPage":
         return CustomRoute<bool>(
             builder: (BuildContext context) => ChatScreenPage());

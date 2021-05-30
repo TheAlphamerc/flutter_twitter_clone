@@ -1,4 +1,5 @@
 import 'package:flutter_twitter_clone/state/profile_state.dart';
+import 'package:flutter_twitter_clone/ui/page/profile/EditProfilePage.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/follow/followerListPage.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/profileImageView.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/qrCode/scanner.dart';
@@ -218,8 +219,8 @@ class _ProfilePageState extends State<ProfilePage>
                                     BorderRadius.all(Radius.circular(60)),
                                 onPressed: () {
                                   if (isMyProfile) {
-                                    Navigator.pushNamed(
-                                        context, '/EditProfile');
+                                    Navigator.push(
+                                        context, EditProfilePage.getRoute());
                                   } else {
                                     authstate.followUser(
                                       removeFollower: isFollower(),

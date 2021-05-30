@@ -1,5 +1,7 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_twitter_clone/helper/customRoute.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/widgets/circular_image.dart';
@@ -11,6 +13,10 @@ import 'package:provider/provider.dart';
 
 class EditProfilePage extends StatefulWidget {
   EditProfilePage({Key key}) : super(key: key);
+  static MaterialPageRoute<T> getRoute<T>() {
+    return CustomRoute<T>(builder: (BuildContext context) => EditProfilePage());
+  }
+
   _EditProfilePageState createState() => _EditProfilePageState();
 }
 
@@ -131,9 +137,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         'https://pbs.twimg.com/profile_banners/457684585/1510495215/1500x500',
                     fit: BoxFit.fill),
             Center(
-              child: IconButton(
-                onPressed: uploadBanner,
-                icon: Icon(Icons.camera_alt, color: Colors.white),
+              child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    color: Colors.black38),
+                child: IconButton(
+                  onPressed: uploadBanner,
+                  icon: Icon(Icons.camera_alt, color: Colors.white),
+                ),
               ),
             ),
           ],
@@ -211,6 +222,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     if (dob != null) {
       model.dob = dob;
     }
+
     state.updateUserProfile(model, image: _image, bannerImage: _banner);
     Navigator.of(context).pop();
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
+import 'package:flutter_twitter_clone/ui/page/profile/follow/followerListPage.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/profilePage.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/qrCode/scanner.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/widgets/circular_image.dart';
@@ -30,6 +31,7 @@ class _SidebarMenuState extends State<SidebarMenu> {
           ),
         ),
       ).ripple(() {
+        _logOut();
         //  Navigator.of(context).pushNamed('/signIn');
       });
     } else {
@@ -115,10 +117,23 @@ class _SidebarMenuState extends State<SidebarMenu> {
       BuildContext context, String count, String text, String navigateTo) {
     return InkWell(
       onTap: () {
-        var authstate = Provider.of<AuthState>(context, listen: false);
-        // authstate.profileFollowingList = [];
+        var authstate = context.read<AuthState>();
+        List<String> usersList;
         authstate.getProfileUser();
-        _navigateTo(navigateTo);
+        Navigator.pop(context);
+        switch (navigateTo) {
+          case "FollowerListPage":
+            usersList = authstate.userModel.followersList;
+            break;
+          case "FollowingListPage":
+            usersList = authstate.userModel.followingList;
+            break;
+          default:
+        }
+        Navigator.push(
+            context,
+            FollowerListPage.getRoute(
+                profile: authstate.userModel, userList: usersList));
       },
       child: Row(
         children: <Widget>[
