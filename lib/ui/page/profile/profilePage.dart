@@ -1,6 +1,7 @@
 import 'package:flutter_twitter_clone/state/profile_state.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/EditProfilePage.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/follow/followerListPage.dart';
+import 'package:flutter_twitter_clone/ui/page/profile/follow/followingListPage.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/profileImageView.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/qrCode/scanner.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -628,7 +629,7 @@ class UserNameRowWidget extends StatelessWidget {
                 var state = context.read<ProfileState>();
                 Navigator.push(
                     context,
-                    FollowerListPage.getRoute(
+                    FollowingListPage.getRoute(
                         profile: state.profileUserModel,
                         userList: state.profileUserModel.followingList));
               }),
