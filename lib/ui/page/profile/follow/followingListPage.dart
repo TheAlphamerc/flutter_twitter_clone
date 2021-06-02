@@ -5,6 +5,22 @@ import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:provider/provider.dart';
 
 class FollowingListPage extends StatelessWidget {
+   FollowingListPage({Key key, this.userList, this.profile}) : super(key: key);
+  final List<String> userList;
+  final UserModel profile;
+
+  static MaterialPageRoute getRoute(
+      {List<String> userList, UserModel profile}) {
+    return MaterialPageRoute(
+      builder: (BuildContext context) {
+        return FollowingListPage(
+          profile: profile,
+          userList: userList,
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var state = Provider.of<AuthState>(context);
