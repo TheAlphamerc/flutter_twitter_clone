@@ -3,7 +3,6 @@ import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
-import 'package:flutter_twitter_clone/ui/page/profile/widgets/circular_image.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customLoader.dart';
@@ -70,19 +69,6 @@ class _FeedPageBody extends StatelessWidget {
 
   const _FeedPageBody({Key key, this.scaffoldKey, this.refreshIndicatorKey})
       : super(key: key);
-  Widget _getUserAvatar(BuildContext context) {
-    var authState = Provider.of<AuthState>(context);
-    return Padding(
-      padding: EdgeInsets.all(10),
-      child: CircularImage(
-        path: authState.userModel?.profilePic,
-        height: 50,
-      ).ripple(() {
-        /// Open up sidebaar drawer on user avatar tap
-        scaffoldKey.currentState.openDrawer();
-      }, borderRadius: BorderRadius.circular(40)),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -137,8 +123,18 @@ class _FeedPageBody extends StatelessWidget {
       child: SliverAppBar(
         floating: true,
         elevation: 0,
-        leading: _getUserAvatar(context),
-        title: customTitleText('Home'),
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                scaffoldKey.currentState.openDrawer();
+              },
+            );
+          },
+        ),
+        title: Image.asset('assets/images/icon-480.png', height: 40),
+        centerTitle: true,
         iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
         backgroundColor: Theme.of(context).appBarTheme.color,
         bottom: PreferredSize(
