@@ -115,12 +115,36 @@ class TweetBottomSheet {
                 AppIcon.delete,
                 text: 'Delete Tweet',
                 onPressed: () {
-                  _deleteTweet(
-                    context,
-                    type,
-                    model.key,
-                    parentkey: model.parentkey,
-                  );
+                  showDialog(
+              context: context,
+              builder: (_) => AlertDialog(
+                title: Text("Delete"),
+                content: Text('Do you want to delete this Tweet?'),
+                actions: [
+                  // ignore: deprecated_member_use
+                  FlatButton(
+                    textColor: Colors.black,
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text('NO'),
+                  ),
+                  // ignore: deprecated_member_use
+                  FlatButton(
+                    textColor: Colors.black,
+                    onPressed: () {
+                      _deleteTweet(
+                        context,
+                        type,
+                        model.key,
+                        parentkey: model.parentkey,
+                      );
+                    },
+                    child: Text('YES'),
+                  ),
+                ],
+              ),
+            );
                 },
                 isEnable: true,
               )
@@ -213,12 +237,36 @@ class TweetBottomSheet {
                 AppIcon.delete,
                 text: 'Delete Tweet',
                 onPressed: () {
-                  _deleteTweet(
-                    context,
-                    type,
-                    model.key,
-                    parentkey: model.parentkey,
-                  );
+                 showDialog(
+              context: context,
+              builder: (_) => AlertDialog(
+                title: Text("Delete"),
+                content: Text('Do you want to delete this Tweet?'),
+                actions: [
+                  // ignore: deprecated_member_use
+                  FlatButton(
+                    textColor: Colors.black,
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text('NO'),
+                  ),
+                  // ignore: deprecated_member_use
+                  FlatButton(
+                    textColor: Colors.black,
+                    onPressed: () {
+                      _deleteTweet(
+                        context,
+                        type,
+                        model.key,
+                        parentkey: model.parentkey,
+                      );
+                    },
+                    child: Text('YES'),
+                  ),
+                ],
+              ),
+            );
                 },
                 isEnable: true,
               )
