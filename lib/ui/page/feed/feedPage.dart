@@ -133,7 +133,7 @@ class _FeedPageBody extends StatelessWidget {
             );
           },
         ),
-        title: Image.asset('assets/images/icon-48.png'),
+        title: Image.asset('assets/images/icon-480.png', height: 40),
         centerTitle: true,
         iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
         backgroundColor: Theme.of(context).appBarTheme.color,
