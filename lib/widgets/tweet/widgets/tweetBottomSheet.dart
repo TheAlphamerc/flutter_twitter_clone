@@ -116,35 +116,44 @@ class TweetBottomSheet {
                 text: 'Delete Tweet',
                 onPressed: () {
                   showDialog(
-              context: context,
-              builder: (_) => AlertDialog(
-                title: Text("Delete"),
-                content: Text('Do you want to delete this Tweet?'),
-                actions: [
-                  // ignore: deprecated_member_use
-                  FlatButton(
-                    textColor: Colors.black,
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text('NO'),
-                  ),
-                  // ignore: deprecated_member_use
-                  FlatButton(
-                    textColor: Colors.black,
-                    onPressed: () {
-                      _deleteTweet(
-                        context,
-                        type,
-                        model.key,
-                        parentkey: model.parentkey,
-                      );
-                    },
-                    child: Text('YES'),
-                  ),
-                ],
-              ),
-            );
+                    context: context,
+                    builder: (_) => AlertDialog(
+                      title: Text("Delete"),
+                      content: Text('Do you want to delete this Tweet?'),
+                      actions: [
+                        // ignore: deprecated_member_use
+                        FlatButton(
+                          textColor: Colors.black,
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                          child: Text('Cancel'),
+                        ),
+                        // ignore: deprecated_member_use
+                        TextButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                              TwitterColor.dodgetBlue,
+                            ),
+                            foregroundColor: MaterialStateProperty.all(
+                              TwitterColor.white,
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            _deleteTweet(
+                              context,
+                              type,
+                              model.key,
+                              parentkey: model.parentkey,
+                            );
+                          },
+                          child: Text('Confirm'),
+                        ),
+                      ],
+                    ),
+                  );
                 },
                 isEnable: true,
               )
@@ -237,36 +246,45 @@ class TweetBottomSheet {
                 AppIcon.delete,
                 text: 'Delete Tweet',
                 onPressed: () {
-                 showDialog(
-              context: context,
-              builder: (_) => AlertDialog(
-                title: Text("Delete"),
-                content: Text('Do you want to delete this Tweet?'),
-                actions: [
-                  // ignore: deprecated_member_use
-                  FlatButton(
-                    textColor: Colors.black,
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text('NO'),
-                  ),
-                  // ignore: deprecated_member_use
-                  FlatButton(
-                    textColor: Colors.black,
-                    onPressed: () {
-                      _deleteTweet(
-                        context,
-                        type,
-                        model.key,
-                        parentkey: model.parentkey,
-                      );
-                    },
-                    child: Text('YES'),
-                  ),
-                ],
-              ),
-            );
+                  showDialog(
+                    context: context,
+                    builder: (_) => AlertDialog(
+                      title: Text("Delete"),
+                      content: Text('Do you want to delete this Tweet?'),
+                      actions: [
+                        // ignore: deprecated_member_use
+                        FlatButton(
+                          textColor: Colors.black,
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                          child: Text('Cancel'),
+                        ),
+                        // ignore: deprecated_member_use
+                        TextButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                              TwitterColor.dodgetBlue,
+                            ),
+                            foregroundColor: MaterialStateProperty.all(
+                              TwitterColor.white,
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            _deleteTweet(
+                              context,
+                              type,
+                              model.key,
+                              parentkey: model.parentkey,
+                            );
+                          },
+                          child: Text('Confirm'),
+                        ),
+                      ],
+                    ),
+                  );
                 },
                 isEnable: true,
               )
