@@ -223,8 +223,7 @@ class _ProfilePageState extends State<ProfilePage>
                                         context, EditProfilePage.getRoute());
                                   } else {
                                     authstate.followUser(
-                                      removeFollower: isFollower(),
-                                    );
+                                        removeFollower: isFollower());
                                   }
                                 },
                                 child: Container(

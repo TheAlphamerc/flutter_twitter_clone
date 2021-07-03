@@ -31,6 +31,7 @@ class NotificationState extends AppState {
       if (query != null) {
         query.onValue.drain();
         query = null;
+        _notificationList = null;
       }
       query = kDatabase.child("notification").child(userId);
       query.onChildAdded.listen(_onNotificationAdded);
@@ -47,6 +48,9 @@ class NotificationState extends AppState {
   /// get [Notification list] from firebase realtime database
   void getDataFromDatabase(String userId) {
     try {
+      if (_notificationList != null) {
+        return;
+      }
       loading = true;
       _notificationList = [];
       kDatabase
@@ -55,11 +59,11 @@ class NotificationState extends AppState {
           .once()
           .then((DataSnapshot snapshot) {
         if (snapshot.value != null) {
-          var map = snapshot.value;
+          var map = snapshot.value as Map<dynamic, dynamic>;
           if (map != null) {
             map.forEach((tweetKey, value) {
-              var model = NotificationModel.fromJson(
-                  tweetKey, value["updatedAt"], snapshot.value["type"]);
+              var map = value as Map<dynamic, dynamic>;
+              var model = NotificationModel.fromJson(tweetKey, map);
               _notificationList.add(model);
             });
             _notificationList.sort((x, y) {
@@ -86,7 +90,7 @@ class NotificationState extends AppState {
     FeedModel _tweetDetail;
     var snapshot = await kDatabase.child('tweet').child(tweetId).once();
     if (snapshot.value != null) {
-      var map = snapshot.value;
+      var map = snapshot.value as Map<dynamic, dynamic>;
       _tweetDetail = FeedModel.fromJson(map);
       _tweetDetail.key = snapshot.key;
       return _tweetDetail;
@@ -103,7 +107,7 @@ class NotificationState extends AppState {
     }
     var snapshot = await kDatabase.child('profile').child(userId).once();
     if (snapshot.value != null) {
-      var map = snapshot.value;
+      var map = snapshot.value as Map<dynamic, dynamic>;
       user = UserModel.fromJson(map);
       user.key = snapshot.key;
       userList.add(user);
@@ -121,8 +125,8 @@ class NotificationState extends AppState {
   /// Trigger when somneone like your tweet
   void _onNotificationAdded(Event event) {
     if (event.snapshot.value != null) {
-      var model = NotificationModel.fromJson(event.snapshot.key,
-          event.snapshot.value["updatedAt"], event.snapshot.value["type"]);
+      var map = event.snapshot.value as Map<dynamic, dynamic>;
+      var model = NotificationModel.fromJson(event.snapshot.key, map);
       if (_notificationList == null) {
         _notificationList = <NotificationModel>[];
       }
@@ -136,12 +140,12 @@ class NotificationState extends AppState {
   /// Trigger when someone changed his like preference
   void _onNotificationChanged(Event event) {
     if (event.snapshot.value != null) {
-      var model = NotificationModel.fromJson(event.snapshot.key,
-          event.snapshot.value["updatedAt"], event.snapshot.value["type"]);
+      var map = event.snapshot.value as Map<dynamic, dynamic>;
+      var model = NotificationModel.fromJson(event.snapshot.key, map);
       //update notification list
-      _notificationList
-          .firstWhere((x) => x.tweetKey == model.tweetKey)
-          .tweetKey = model.tweetKey;
+      // _notificationList
+      //     .firstWhere((x) => x.tweetKey == model.tweetKey)
+      //     .tweetKey = model.tweetKey;
       notifyListeners();
       print("Notification changed");
     }
@@ -150,8 +154,8 @@ class NotificationState extends AppState {
   /// Trigger when someone undo his like on tweet
   void _onNotificationRemoved(Event event) {
     if (event.snapshot.value != null) {
-      var model = NotificationModel.fromJson(event.snapshot.key,
-          event.snapshot.value["updatedAt"], event.snapshot.value["type"]);
+      var map = event.snapshot.value as Map<dynamic, dynamic>;
+      var model = NotificationModel.fromJson(event.snapshot.key, map);
       // remove notification from list
       _notificationList.removeWhere((x) => x.tweetKey == model.tweetKey);
       notifyListeners();

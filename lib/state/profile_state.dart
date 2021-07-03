@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:firebase_database/firebase_database.dart' as dabase;
@@ -123,6 +124,7 @@ class ProfileState extends ChangeNotifier {
         if (userModel.followingList == null) {
           userModel.followingList = [];
         }
+        addFollowNotification();
         userModel.followingList.add(profileUserModel.userId);
       }
       // update profile user's user follower count
@@ -140,10 +142,30 @@ class ProfileState extends ChangeNotifier {
           .child('followingList')
           .set(userModel.followingList);
       cprint('user added to following list', event: 'add_follow');
+
       notifyListeners();
     } catch (error) {
       cprint(error, errorIn: 'followUser');
     }
+  }
+
+  void addFollowNotification() {
+    // Sends notification to user who created tweet
+    // UserModel owner can see notification on notification page
+    kDatabase.child('notification').child(profileId).child(userId).set({
+      'type': NotificationType.Follow.toString(),
+      'createdAt': DateTime.now().toUtc().toString(),
+      'data': UserModel(
+              displayName: userModel.displayName,
+              profilePic: userModel.profilePic,
+              isVerified: userModel.isVerified,
+              userId: userModel.userId,
+              bio: userModel.bio == "Edit profile to update bio"
+                  ? ""
+                  : userModel.bio,
+              userName: userModel.userName)
+          .toJson()
+    });
   }
 
   /// Trigger when logged-in user's profile change or updated
