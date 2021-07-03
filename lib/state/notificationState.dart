@@ -28,12 +28,14 @@ class NotificationState extends AppState {
   /// [Intitilise firebase notification kDatabase]
   Future<bool> databaseInit(String userId) {
     try {
-      if (query == null) {
-        query = kDatabase.child("notification").child(userId);
-        query.onChildAdded.listen(_onNotificationAdded);
-        query.onChildChanged.listen(_onNotificationChanged);
-        query.onChildRemoved.listen(_onNotificationRemoved);
+      if (query != null) {
+        query.onValue.drain();
+        query = null;
       }
+      query = kDatabase.child("notification").child(userId);
+      query.onChildAdded.listen(_onNotificationAdded);
+      query.onChildChanged.listen(_onNotificationChanged);
+      query.onChildRemoved.listen(_onNotificationRemoved);
 
       return Future.value(true);
     } catch (error) {
