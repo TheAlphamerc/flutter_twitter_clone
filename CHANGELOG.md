@@ -1,6 +1,7 @@
-## [1.0.7] Comming soon
+## [1.0.7] Coming soon
+* Display inapp notification on user follow
 * Added pinch to zoom on profile and Tweet.
-* Retweet post wuthout adding adding comment.
+* Retweet post without adding adding comment.
 * User can update profile banner.
 * Share tweet link to other social media apps.
 * Share user profile link to other social media apps.
@@ -13,7 +14,7 @@
 * Bug fixed and performance improvements.
 ## [1.0.6] - 17 Jul 2020
 
-* In user profile page three tabs are added to filter tweet and commnet tweet and tweet with media.
+* In user profile page three tabs are added to filter tweet and comment tweet and tweet with media.
 * User profile pic view added to view user profile picture.
 * User can tag other users in tweet, comment and in retweet.
 * A notification will send to you if someone tag you in a tweet.
