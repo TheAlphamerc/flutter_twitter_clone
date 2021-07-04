@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_twitter_clone/model/user.dart';
 
 class NotificationModel {
+  String id;
   String tweetKey;
   String updatedAt;
   String createdAt;
@@ -10,9 +11,15 @@ class NotificationModel {
   Map<String, dynamic> data;
 
   NotificationModel(
-      {this.tweetKey, this.type, this.createdAt, this.updatedAt, this.data});
+      {this.id,
+      this.tweetKey,
+      this.type,
+      this.createdAt,
+      this.updatedAt,
+      this.data});
 
   NotificationModel.fromJson(String tweetId, Map<dynamic, dynamic> map) {
+    this.id = tweetId;
     final data = json.decode(json.encode(map["data"])) as Map<String, dynamic>;
     tweetKey = tweetId;
     this.updatedAt = map["updatedAt"];

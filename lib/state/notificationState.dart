@@ -23,6 +23,16 @@ class NotificationState extends AppState {
 
   List<NotificationModel> _notificationList;
 
+  addNotificationList(NotificationModel model) {
+    if (_notificationList == null) {
+      _notificationList = <NotificationModel>[];
+    }
+
+    if (!_notificationList.any((element) => element.id == model.id)) {
+      _notificationList.add(model);
+    }
+  }
+
   List<NotificationModel> get notificationList => _notificationList;
 
   /// [Intitilise firebase notification kDatabase]
@@ -52,7 +62,6 @@ class NotificationState extends AppState {
         return;
       }
       loading = true;
-      _notificationList = [];
       kDatabase
           .child('notification')
           .child(userId)
@@ -64,7 +73,7 @@ class NotificationState extends AppState {
             map.forEach((tweetKey, value) {
               var map = value as Map<dynamic, dynamic>;
               var model = NotificationModel.fromJson(tweetKey, map);
-              _notificationList.add(model);
+              addNotificationList(model);
             });
             _notificationList.sort((x, y) {
               if (x.updatedAt != null && y.updatedAt != null) {
@@ -127,10 +136,8 @@ class NotificationState extends AppState {
     if (event.snapshot.value != null) {
       var map = event.snapshot.value as Map<dynamic, dynamic>;
       var model = NotificationModel.fromJson(event.snapshot.key, map);
-      if (_notificationList == null) {
-        _notificationList = <NotificationModel>[];
-      }
-      _notificationList.add(model);
+
+      addNotificationList(model);
       // added notification to list
       print("Notification added");
       notifyListeners();
@@ -140,12 +147,6 @@ class NotificationState extends AppState {
   /// Trigger when someone changed his like preference
   void _onNotificationChanged(Event event) {
     if (event.snapshot.value != null) {
-      var map = event.snapshot.value as Map<dynamic, dynamic>;
-      var model = NotificationModel.fromJson(event.snapshot.key, map);
-      //update notification list
-      // _notificationList
-      //     .firstWhere((x) => x.tweetKey == model.tweetKey)
-      //     .tweetKey = model.tweetKey;
       notifyListeners();
       print("Notification changed");
     }
