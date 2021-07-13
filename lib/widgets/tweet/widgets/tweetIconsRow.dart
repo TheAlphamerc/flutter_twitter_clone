@@ -4,8 +4,8 @@ import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
-import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/ui/page/common/usersListPage.dart';
+import 'package:flutter_twitter_clone/ui/page/feed/composeTweet/composeTweet.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/tweet/widgets/tweetBottomSheet.dart';
@@ -18,17 +18,24 @@ class TweetIconsRow extends StatelessWidget {
   final double size;
   final bool isTweetDetail;
   final TweetType type;
-  final GlobalKey<ScaffoldState> scaffoldKey;
-  const TweetIconsRow(
-      {Key key,
-      this.model,
-      this.iconColor,
-      this.iconEnableColor,
-      this.size,
-      this.isTweetDetail = false,
-      this.type,
-      this.scaffoldKey})
-      : super(key: key);
+  final Future<FeedModel> Function(String) fetchTweet;
+  final void Function(FeedModel) onRetweet;
+
+  final void Function(FeedModel) onTweetUpdate;
+  final Function(TweetAction action, FeedModel model) onTweetAction;
+  const TweetIconsRow({
+    Key key,
+    this.model,
+    this.iconColor,
+    this.iconEnableColor,
+    this.size,
+    this.isTweetDetail = false,
+    this.type,
+    @required this.fetchTweet,
+    @required this.onTweetAction,
+    @required this.onRetweet,
+    @required this.onTweetUpdate,
+  }) : super(key: key);
 
   Widget _likeCommentsIcons(BuildContext context, FeedModel model) {
     var authState = Provider.of<AuthState>(context, listen: false);
@@ -49,9 +56,15 @@ class TweetIconsRow extends StatelessWidget {
             iconColor: iconColor,
             size: size ?? 20,
             onPressed: () {
-              var state = Provider.of<FeedState>(context, listen: false);
-              state.setTweetToReply = model;
-              Navigator.of(context).pushNamed('/ComposeTweetPage');
+              // var state = Provider.of<FeedState>(context, listen: false);
+              // state.setTweetToReply = model;
+              onTweetAction(TweetAction.ComposeReply, model);
+              Navigator.of(context).push(
+                ComposeTweetPage.getRoute(
+                  isReplyTweet: true,
+                  tweetToReplyModel: model,
+                ),
+              );
             },
           ),
           _iconWidget(context,
@@ -60,7 +73,11 @@ class TweetIconsRow extends StatelessWidget {
               iconColor: iconColor,
               size: size ?? 20, onPressed: () {
             TweetBottomSheet().openRetweetbottomSheet(context,
-                type: type, model: model, scaffoldKey: scaffoldKey);
+                type: type,
+                model: model,
+                fetchTweet: fetchTweet,
+                onRetweet: onRetweet,
+                onTweetUpdate: onTweetUpdate);
           }),
           _iconWidget(
             context,
@@ -234,9 +251,10 @@ class TweetIconsRow extends StatelessWidget {
   }
 
   void addLikeToTweet(BuildContext context) {
-    var state = Provider.of<FeedState>(context, listen: false);
-    var authState = Provider.of<AuthState>(context, listen: false);
-    state.addLikeToTweet(model, authState.userId);
+    // var state = Provider.of<FeedState>(context, listen: false);
+    // var authState = Provider.of<AuthState>(context, listen: false);
+    // state.addLikeToTweet(model, authState.userId);
+    onTweetAction(TweetAction.Like, model);
   }
 
   void onLikeTextPressed(BuildContext context) {
@@ -254,7 +272,12 @@ class TweetIconsRow extends StatelessWidget {
   }
 
   void shareTweet(BuildContext context) async {
-    TweetBottomSheet().openShareTweetBottomSheet(context, model, type);
+    TweetBottomSheet().openShareTweetBottomSheet(
+      context,
+      model,
+      type,
+      fetchTweet,
+    );
   }
 
   @override

@@ -2,19 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
-import 'package:flutter_twitter_clone/widgets/cache_image.dart';
+import 'package:flutter_twitter_clone/ui/page/feed/imageViewPage.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
+import 'package:flutter_twitter_clone/widgets/cache_image.dart';
 import 'package:provider/provider.dart';
 
 class TweetImage extends StatelessWidget {
-  const TweetImage(
-      {Key key, this.model, this.type, this.isRetweetImage = false})
-      : super(key: key);
+  const TweetImage({
+    Key key,
+    this.model,
+    this.type,
+    this.isRetweetImage = false,
+  }) : super(key: key);
 
   final FeedModel model;
   final TweetType type;
   final bool isRetweetImage;
-
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
@@ -34,10 +37,7 @@ class TweetImage extends StatelessWidget {
                   if (type == TweetType.ParentTweet) {
                     return;
                   }
-                  var state = Provider.of<FeedState>(context, listen: false);
-                  state.getpostDetailFromDatabase(model.key);
-                  state.setTweetToReply = model;
-                  Navigator.pushNamed(context, '/ImageViewPge');
+                  Navigator.push(context, ImageViewPage.getRoute(model: model));
                 },
                 child: ClipRRect(
                   borderRadius: BorderRadius.all(

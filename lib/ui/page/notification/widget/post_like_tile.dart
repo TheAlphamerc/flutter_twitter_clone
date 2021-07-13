@@ -109,7 +109,7 @@ class PostLikeTile extends StatelessWidget {
           child: ListTile(
             onTap: () {
               var state = Provider.of<FeedState>(context, listen: false);
-              state.getpostDetailFromDatabase(null, model: model);
+              // state.getpostDetailFromDatabase(null, model: model);
 
               Navigator.push(context, FeedPostDetail.getRoute(model.key));
             },

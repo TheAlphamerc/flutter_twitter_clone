@@ -152,7 +152,7 @@ class _SplashPageState extends State<SplashPage> {
           ? _body()
           : state.authStatus == AuthStatus.NOT_LOGGED_IN
               ? WelcomePage()
-              : HomePage(),
+              : HomePage.getWidget(),
     );
   }
 }

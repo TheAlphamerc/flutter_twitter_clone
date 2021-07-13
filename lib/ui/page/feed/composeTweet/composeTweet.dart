@@ -1,37 +1,65 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
+import 'package:flutter_twitter_clone/helper/customRoute.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
+import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/ui/page/feed/composeTweet/state/composeTweetState.dart';
 import 'package:flutter_twitter_clone/ui/page/feed/composeTweet/widget/composeBottomIconWidget.dart';
 import 'package:flutter_twitter_clone/ui/page/feed/composeTweet/widget/composeTweetImage.dart';
 import 'package:flutter_twitter_clone/ui/page/feed/composeTweet/widget/widgetView.dart';
-import 'package:flutter_twitter_clone/state/authState.dart';
-import 'package:flutter_twitter_clone/state/feedState.dart';
-import 'package:flutter_twitter_clone/state/searchState.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/widgets/circular_image.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
-import 'package:flutter_twitter_clone/widgets/url_text/customUrlText.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
+import 'package:flutter_twitter_clone/widgets/url_text/customUrlText.dart';
 import 'package:provider/provider.dart';
 
 class ComposeTweetPage extends StatefulWidget {
-  ComposeTweetPage({Key key, this.isRetweet, this.isTweet = true})
+  ComposeTweetPage({Key key, this.isRetweet, this.isTweet, this.isReplyTweet})
       : super(key: key);
 
   final bool isRetweet;
   final bool isTweet;
+  final bool isReplyTweet;
   _ComposeTweetReplyPageState createState() => _ComposeTweetReplyPageState();
+
+  static Route<T> getRoute<T>({
+    bool isRetweet = false,
+    bool isTweet = false,
+    bool isReplyTweet = false,
+    FeedModel tweetToReplyModel,
+  }) {
+    assert(isRetweet || isTweet || isReplyTweet,
+        "Specify the type of tweet you want to compose");
+    assert(!isRetweet || !isTweet || !isReplyTweet,
+        "Can't create Tweet, Retwet and ReplyTweet same at a time");
+
+    assert(!isRetweet || tweetToReplyModel != null,
+        "tweetToReplyModel can't be null when isRetweet is true ");
+
+    return CustomRoute<T>(
+      builder: (BuildContext context) =>
+          ChangeNotifierProvider<ComposeTweetState>(
+        create: (_) => ComposeTweetState(tweetToReplyModel: tweetToReplyModel),
+        child: ComposeTweetPage(
+          isRetweet: isRetweet,
+          isTweet: isTweet,
+          isReplyTweet: isReplyTweet,
+        ),
+      ),
+    );
+  }
 }
 
 class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
   bool isScrollingDown = false;
-  FeedModel model;
+  FeedModel get model => context.read<ComposeTweetState>().tweetToReplyModel;
   ScrollController scrollcontroller;
 
   File _image;
@@ -46,8 +74,8 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
 
   @override
   void initState() {
-    var feedState = Provider.of<FeedState>(context, listen: false);
-    model = feedState.tweetToReplyModel;
+    // var feedState = Provider.of<FeedState>(context, listen: false);
+    // model = feedState.tweetToReplyModel;
     scrollcontroller = ScrollController();
     _textEditingController = TextEditingController();
     scrollcontroller..addListener(_scrollListener);
@@ -88,10 +116,10 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
         _textEditingController.text.length > 280) {
       return;
     }
-    var state = Provider.of<FeedState>(context, listen: false);
+    var state = Provider.of<ComposeTweetState>(context, listen: false);
     kScreenloader.showLoader(context);
 
-    FeedModel tweetModel = createTweetModel();
+    FeedModel tweetModel = buildTweetModel();
 
     /// If tweet contain image
     /// First image is uploaded on firebase storage
@@ -104,17 +132,17 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
 
           /// If type of tweet is new tweet
           if (widget.isTweet) {
-            state.createTweet(tweetModel);
+            state.composeTweet(tweetModel);
           }
 
           /// If type of tweet is  retweet
           else if (widget.isRetweet) {
-            state.createReTweet(tweetModel);
+            state.composeReTweet(tweetModel);
           }
 
           /// If type of tweet is new comment tweet
           else {
-            state.addcommentToPost(tweetModel);
+            state.addcommentToTweet(tweetModel);
           }
         }
       });
@@ -124,41 +152,43 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
     else {
       /// If type of tweet is new tweet
       if (widget.isTweet) {
-        state.createTweet(tweetModel);
+        state.composeTweet(tweetModel);
       }
 
       /// If type of tweet is  retweet
       else if (widget.isRetweet) {
-        state.createReTweet(tweetModel);
+        state.composeReTweet(tweetModel);
       }
 
       /// If type of tweet is new comment tweet
       else {
-        state.addcommentToPost(tweetModel);
+        state.addcommentToTweet(tweetModel);
       }
     }
+    kScreenloader.hideLoader();
+    Navigator.pop(context);
 
     /// Checks for username in tweet description
     /// If foud sends notification to all tagged user
     /// If no user found or not compost tweet screen is closed and redirect back to home page.
-    await Provider.of<ComposeTweetState>(context, listen: false)
-        .sendNotification(
-            tweetModel, Provider.of<SearchState>(context, listen: false))
-        .then((_) {
-      /// Hide running loader on screen
-      kScreenloader.hideLoader();
+    // await Provider.of<ComposeTweetState>(context, listen: false)
+    //     .sendNotification(
+    //         tweetModel, Provider.of<SearchState>(context, listen: false))
+    //     .then((_) {
+    //   /// Hide running loader on screen
+    // kScreenloader.hideLoader();
 
-      /// Navigate back to home page
-      Navigator.pop(context);
-    });
+    //   /// Navigate back to home page
+    //   Navigator.pop(context);
+    // });
   }
 
   /// Return Tweet model which is either a new Tweet , retweet model or comment model
   /// If tweet is new tweet then `parentkey` and `childRetwetkey` should be null
   /// IF tweet is a comment then it should have `parentkey`
   /// IF tweet is a retweet then it should have `childRetwetkey`
-  FeedModel createTweetModel() {
-    var state = Provider.of<FeedState>(context, listen: false);
+  FeedModel buildTweetModel() {
+    var state = Provider.of<ComposeTweetState>(context, listen: false);
     var authState = Provider.of<AuthState>(context, listen: false);
     var myUser = authState.userModel;
     var profilePic = myUser.profilePic ?? Constants.dummyProfilePic;
@@ -202,7 +232,7 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
                 : 'Reply',
         isSubmitDisable:
             !Provider.of<ComposeTweetState>(context).enableSubmitButton ||
-                Provider.of<FeedState>(context).isBusy,
+                Provider.of<ComposeTweetState>(context).isbusy,
         isbootomLine: Provider.of<ComposeTweetState>(context).isScrollingDown,
       ),
       backgroundColor: Theme.of(context).backgroundColor,
@@ -358,10 +388,10 @@ class _ComposeRetweet
                     ),
                   ],
                 ),
-                _UserList(
-                  list: Provider.of<SearchState>(context).userlist,
-                  textEditingController: viewState._textEditingController,
-                )
+                // _UserList(
+                //   list: Provider.of<SearchState>(context).userlist,
+                //   textEditingController: viewState._textEditingController,
+                // )
               ],
             ),
           ),
@@ -480,7 +510,9 @@ class _ComposeTweet
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          viewState.widget.isTweet ? SizedBox.shrink() : _tweerCard(context),
+          !viewState.widget.isReplyTweet
+              ? SizedBox.shrink()
+              : _tweerCard(context),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -503,10 +535,10 @@ class _ComposeTweet
                   image: viewState._image,
                   onCrossIconPressed: viewState._onCrossIconPressed,
                 ),
-                _UserList(
-                  list: Provider.of<SearchState>(context).userlist,
-                  textEditingController: viewState._textEditingController,
-                )
+                // _UserList(
+                //   list: Provider.of<SearchState>(context).userlist,
+                //   textEditingController: viewState._textEditingController,
+                // )
               ],
             ),
           ),
@@ -529,7 +561,7 @@ class _TextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final searchState = Provider.of<SearchState>(context, listen: false);
+    // final searchState = Provider.of<SearchState>(context, listen: false);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -537,7 +569,7 @@ class _TextField extends StatelessWidget {
           controller: textEditingController,
           onChanged: (text) {
             Provider.of<ComposeTweetState>(context, listen: false)
-                .onDescriptionChanged(text, searchState);
+                .onDescriptionChanged(text, null);
           },
           maxLines: null,
           decoration: InputDecoration(

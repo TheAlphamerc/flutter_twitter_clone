@@ -28,6 +28,19 @@ import 'search/SearchPage.dart';
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
   _HomePageState createState() => _HomePageState();
+
+  static Widget getWidget() {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<FeedState>(create: (_) => FeedState()),
+        ChangeNotifierProvider<ChatState>(create: (_) => ChatState()),
+        ChangeNotifierProvider<SearchState>(create: (_) => SearchState()),
+        ChangeNotifierProvider<NotificationState>(
+            create: (_) => NotificationState()),
+      ],
+      child: HomePage(),
+    );
+  }
 }
 
 class _HomePageState extends State<HomePage> {

@@ -28,3 +28,5 @@ enum NotificationType {
   Mention,
   Like
 }
+
+enum TweetAction { Like, Delete, Retweet, OpenProfile, ComposeReply }

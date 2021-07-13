@@ -2,9 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/customRoute.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
+import 'package:flutter_twitter_clone/helper/shared_prefrence_helper.dart';
+import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
+import 'package:flutter_twitter_clone/state/tweetDetailState.dart';
+import 'package:flutter_twitter_clone/ui/page/common/locator.dart';
+import 'package:flutter_twitter_clone/ui/page/feed/composeTweet/composeTweet.dart';
+import 'package:flutter_twitter_clone/ui/page/feed/imageViewPage.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/tweet/tweet.dart';
@@ -15,10 +21,15 @@ class FeedPostDetail extends StatefulWidget {
   FeedPostDetail({Key key, this.postId}) : super(key: key);
   final String postId;
 
-  static Route<Null> getRoute(String postId) {
-    return SlideLeftRoute<Null>(
-      builder: (BuildContext context) => FeedPostDetail(
-        postId: postId,
+  static Route<T> getRoute<T>(String postId) {
+    return SlideLeftRoute<T>(
+      builder: (BuildContext context) => Provider(
+        create: (_) => TweetDetailState(),
+        builder: (BuildContext context, Widget child) => child,
+        child: ChangeNotifierProvider(
+          create: (_) => TweetDetailState(postId: postId),
+          child: FeedPostDetail(postId: postId),
+        ),
       ),
     );
   }
@@ -32,7 +43,7 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
   @override
   void initState() {
     postId = widget.postId;
-    // var state = Provider.of<FeedState>(context, listen: false);
+    // var state = Provider.of<TweetDetailState>(context, listen: false);
     // state.getpostDetailFromDatabase(postId);
     super.initState();
   }
@@ -40,9 +51,14 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
   Widget _floatingActionButton() {
     return FloatingActionButton(
       onPressed: () {
-        var state = Provider.of<FeedState>(context, listen: false);
-        state.setTweetToReply = state.tweetDetailModel?.last;
-        Navigator.of(context).pushNamed('/ComposeTweetPage/' + postId);
+        Navigator.of(context).push(
+          ComposeTweetPage.getRoute(
+              isReplyTweet: true,
+              tweetToReplyModel: context.read<TweetDetailState>().tweet),
+        );
+        // var state = Provider.of<TweetDetailState>(context, listen: false);
+        // state.setTweetToReply = state.tweet;
+        // Navigator.of(context).pushNamed('/ComposeTweetPage/' + postId);
       },
       child: Icon(Icons.add),
     );
@@ -53,31 +69,92 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
       model: model,
       type: TweetType.Reply,
       trailing: TweetBottomSheet().tweetOptionIcon(context,
-          scaffoldKey: scaffoldKey, model: model, type: TweetType.Reply),
+          scaffoldKey: scaffoldKey,
+          model: model,
+          type: TweetType.Reply,
+          onTweeDelete: null),
+      onTweetAction: (action, model) {
+        switch (action) {
+          case TweetAction.Like:
+            {
+              var user = getIt<SharedPreferenceHelper>().user;
+              context.read<TweetDetailState>().handleTweetLike(model, user.key);
+            }
+            break;
+          default:
+            cprint("Handle $action");
+        }
+      },
+      fetchTweet: (key) {
+        return context.read<TweetDetailState>().getpostDetailFromDatabase(key);
+      },
+      onTweetUpdate: (model) {
+        context.read<TweetDetailState>().updateTweet(model);
+      },
+      onRetweet: (model) {
+        context.read<TweetDetailState>().createPost(model);
+      },
     );
   }
 
   Widget _tweetDetail(FeedModel model) {
+    if (model == null) {
+      return SizedBox.shrink();
+    }
     return Tweet(
       model: model,
       type: TweetType.Detail,
-      trailing: TweetBottomSheet().tweetOptionIcon(context,
-          scaffoldKey: scaffoldKey, model: model, type: TweetType.Detail),
+      trailing: TweetBottomSheet().tweetOptionIcon(
+        context,
+        scaffoldKey: scaffoldKey,
+        model: model,
+        type: TweetType.Detail,
+        onTweeDelete: (String tweetId, TweetType type, {String parentkey}) {
+          context
+              .read<TweetDetailState>()
+              .deleteTweet(tweetId, type, parentkey: parentkey);
+        },
+      ),
+      onTweetAction: (action, model) {
+        switch (action) {
+          case TweetAction.Like:
+            {
+              var user = getIt<SharedPreferenceHelper>().user;
+              context.read<TweetDetailState>().handleTweetLike(model, user.key);
+            }
+            break;
+          default:
+            cprint("Handle $action");
+        }
+      },
+      fetchTweet: (key) {
+        return context.read<TweetDetailState>().getpostDetailFromDatabase(key);
+      },
+      onTweetUpdate: (model) {
+        context.read<TweetDetailState>().updateTweet(model);
+      },
+      onRetweet: (model) {
+        context.read<TweetDetailState>().createPost(model);
+      },
     );
   }
 
   void addLikeToComment(String commentId) {
-    var state = Provider.of<FeedState>(context, listen: false);
+    var state = Provider.of<TweetDetailState>(context, listen: false);
     var authState = Provider.of<AuthState>(context, listen: false);
-    state.addLikeToTweet(state.tweetDetailModel.last, authState.userId);
+    state.addLikeToTweet(state.tweet, authState.userId);
   }
 
   void openImage() async {
-    Navigator.pushNamed(context, '/ImageViewPge');
+    var model = context.read<TweetDetailState>().tweet;
+    Navigator.push(
+      context,
+      ImageViewPage.getRoute(model: model),
+    );
   }
 
   void deleteTweet(TweetType type, String tweetId, {String parentkey}) {
-    var state = Provider.of<FeedState>(context, listen: false);
+    var state = Provider.of<TweetDetailState>(context, listen: false);
     state.deleteTweet(tweetId, type, parentkey: parentkey);
     Navigator.of(context).pop();
     if (type == TweetType.Detail) Navigator.of(context).pop();
@@ -85,11 +162,11 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
 
   @override
   Widget build(BuildContext context) {
-    var state = Provider.of<FeedState>(context);
+    var state = context.watch<TweetDetailState>();
     return WillPopScope(
       onWillPop: () async {
-        Provider.of<FeedState>(context, listen: false)
-            .removeLastTweetDetail(postId);
+        // Provider.of<TweetDetailState>(context, listen: false)
+        //     .removeLastTweetDetail(postId);
         return Future.value(true);
       },
       child: Scaffold(
@@ -114,10 +191,7 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
             SliverList(
               delegate: SliverChildListDelegate(
                 [
-                  state.tweetDetailModel == null ||
-                          state.tweetDetailModel.length == 0
-                      ? Container()
-                      : _tweetDetail(state.tweetDetailModel?.last),
+                  _tweetDetail(state.tweet),
                   Container(
                     height: 6,
                     width: context.width,
@@ -128,9 +202,8 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
             ),
             SliverList(
               delegate: SliverChildListDelegate(
-                state.tweetReplyMap == null ||
-                        state.tweetReplyMap.length == 0 ||
-                        state.tweetReplyMap[postId] == null
+                state.commentlist == null || state.commentlist.length == 0
+                    // state.commentlist[postId] == null
                     ? [
                         Container(
                           child: Center(
@@ -138,9 +211,7 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
                               ),
                         )
                       ]
-                    : state.tweetReplyMap[postId]
-                        .map((x) => _commentRow(x))
-                        .toList(),
+                    : state.commentlist.map((x) => _commentRow(x)).toList(),
               ),
             )
           ],

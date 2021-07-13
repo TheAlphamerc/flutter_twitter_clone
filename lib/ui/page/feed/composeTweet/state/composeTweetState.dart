@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
+import 'package:flutter_twitter_clone/state/base/tweetBaseState.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,10 @@ import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/state/searchState.dart';
 
-class ComposeTweetState extends ChangeNotifier {
+class ComposeTweetState extends TweetBaseState {
+  final FeedModel tweetToReplyModel;
+  ComposeTweetState({this.tweetToReplyModel});
+
   bool showUserList = false;
   bool enableSubmitButton = false;
   bool hideUserList = false;
@@ -17,6 +21,7 @@ class ComposeTweetState extends ChangeNotifier {
   final usernameRegex = r'(@\w*[a-zA-Z1-9]$)';
 
   bool _isScrollingDown = false;
+
   bool get isScrollingDown => _isScrollingDown;
   set setIsScrolllingDown(bool value) {
     _isScrollingDown = value;
@@ -76,10 +81,10 @@ class ComposeTweetState extends ChangeNotifier {
       /// If last character is `@` then reset search user list
       if (last == "@") {
         /// Reset user list
-        searchState.filterByUsername("");
+        // searchState.filterByUsername("");
       } else {
         /// Filter user list according to name
-        searchState.filterByUsername(name);
+        // searchState.filterByUsername(name);
       }
     } else {
       /// Hide userlist if no matched username found
@@ -202,5 +207,31 @@ class ComposeTweetState extends ChangeNotifier {
       body: body,
     );
     cprint(response.body.toString());
+  }
+
+  void composeTweet(FeedModel model) {
+    createPost(model);
+    notifyListeners();
+  }
+
+  void composeReTweet(FeedModel model) {
+    createPost(model);
+    notifyListeners();
+  }
+
+  void addcommentToTweet(FeedModel model) {
+    // notifyListeners();
+    try {
+      loading = true;
+
+      var key = createPost(model);
+
+      tweetToReplyModel.replyTweetKeyList.add(key);
+      updateTweet(tweetToReplyModel);
+      notifyListeners();
+    } catch (error) {
+      cprint(error, errorIn: 'addcommentToPost');
+    }
+    loading = false;
   }
 }

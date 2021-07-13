@@ -8,6 +8,10 @@ class SharedPreferenceHelper {
   static final SharedPreferenceHelper _singleton =
       SharedPreferenceHelper._internal();
 
+  UserModel _user;
+
+  UserModel get user => _user;
+
   factory SharedPreferenceHelper() {
     return _singleton;
   }
@@ -23,6 +27,7 @@ class SharedPreferenceHelper {
   }
 
   Future<void> saveUserProfile(UserModel user) async {
+    _user = user;
     return (await SharedPreferences.getInstance()).setString(
         UserPreferenceKey.UserProfile.toString(), json.encode(user.toJson()));
   }

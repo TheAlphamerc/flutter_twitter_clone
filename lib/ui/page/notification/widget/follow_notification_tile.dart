@@ -22,7 +22,8 @@ class FollowNotificationTile extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  customIcon(context, icon: AppIcon.profile, isEnable: true),
+                  customIcon(context,
+                      icon: AppIcon.profileFill, isEnable: true),
                   SizedBox(width: 10),
                   Text(
                     model.user.displayName,
@@ -92,7 +93,6 @@ class _UserCard extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: 10),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 9),
                 child: customText(
@@ -101,7 +101,7 @@ class _UserCard extends StatelessWidget {
                 ),
               ),
               if (getBio(user.bio).isNotEmpty) ...[
-                // SizedBox(height: 4),
+                SizedBox(height: 4),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   child: customText(

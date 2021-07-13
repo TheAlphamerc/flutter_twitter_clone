@@ -38,11 +38,6 @@ class NotificationState extends AppState {
   /// [Intitilise firebase notification kDatabase]
   Future<bool> databaseInit(String userId) {
     try {
-      if (query != null) {
-        query.onValue.drain();
-        query = null;
-        _notificationList = null;
-      }
       query = kDatabase.child("notification").child(userId);
       query.onChildAdded.listen(_onNotificationAdded);
       query.onChildChanged.listen(_onNotificationChanged);
@@ -175,6 +170,9 @@ class NotificationState extends AppState {
   @override
   void dispose() {
     getIt.unregister<PushNotificationService>();
+    query.onValue.drain();
+    query = null;
+    _notificationList = null;
     super.dispose();
   }
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
-import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/ui/page/feed/feedPostDetail.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/profilePage.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/widgets/circular_image.dart';
@@ -12,7 +11,6 @@ import 'package:flutter_twitter_clone/widgets/tweet/widgets/parentTweet.dart';
 import 'package:flutter_twitter_clone/widgets/tweet/widgets/tweetIconsRow.dart';
 import 'package:flutter_twitter_clone/widgets/url_text/customUrlText.dart';
 import 'package:flutter_twitter_clone/widgets/url_text/custom_link_media_info.dart';
-import 'package:provider/provider.dart';
 
 import '../customWidgets.dart';
 import 'widgets/retweetWidget.dart';
@@ -24,14 +22,22 @@ class Tweet extends StatelessWidget {
   final TweetType type;
   final bool isDisplayOnProfile;
   final GlobalKey<ScaffoldState> scaffoldKey;
-  const Tweet({
-    Key key,
-    this.model,
-    this.trailing,
-    this.type = TweetType.Tweet,
-    this.isDisplayOnProfile = false,
-    this.scaffoldKey,
-  }) : super(key: key);
+  final Future<FeedModel> Function(String key) fetchTweet;
+  final void Function(FeedModel) onRetweet;
+  final void Function(FeedModel) onTweetUpdate;
+  final Function(TweetAction action, FeedModel model) onTweetAction;
+  const Tweet(
+      {Key key,
+      this.model,
+      this.trailing,
+      this.type = TweetType.Tweet,
+      this.isDisplayOnProfile = false,
+      this.scaffoldKey,
+      @required this.fetchTweet,
+      @required this.onTweetAction,
+      @required this.onRetweet,
+      @required this.onTweetUpdate})
+      : super(key: key);
 
   void onLongPressedTweet(BuildContext context) {
     if (type == TweetType.Detail || type == TweetType.ParentTweet) {
@@ -43,14 +49,14 @@ class Tweet extends StatelessWidget {
   }
 
   void onTapTweet(BuildContext context) {
-    var feedstate = Provider.of<FeedState>(context, listen: false);
+    // var feedstate = Provider.of<FeedState>(context, listen: false);
     if (type == TweetType.Detail || type == TweetType.ParentTweet) {
       return;
     }
     if (type == TweetType.Tweet && !isDisplayOnProfile) {
-      feedstate.clearAllDetailAndReplyTweetStack();
+      // feedstate.clearAllDetailAndReplyTweetStack();
     }
-    feedstate.getpostDetailFromDatabase(null, model: model);
+    // feedstate.getpostDetailFromDatabase(null, model: model);
     Navigator.push(context, FeedPostDetail.getRoute(model.key));
   }
 
@@ -103,14 +109,15 @@ class Tweet extends StatelessWidget {
                         model: model,
                         trailing: trailing,
                         type: type,
+                        onTweetAction: onTweetAction,
+                        fetchTweet: fetchTweet,
+                        onRetweet: onRetweet,
+                        onTweetUpdate: onTweetUpdate,
                       ),
               ),
               Padding(
                 padding: EdgeInsets.only(right: 16),
-                child: TweetImage(
-                  model: model,
-                  type: type,
-                ),
+                child: TweetImage(model: model, type: type),
               ),
               model.childRetwetkey == null
                   ? SizedBox.shrink()
@@ -119,6 +126,7 @@ class Tweet extends StatelessWidget {
                       type: type,
                       isImageAvailable:
                           model.imagePath != null && model.imagePath.isNotEmpty,
+                      fetchTweet: fetchTweet,
                     ),
               Padding(
                 padding:
@@ -130,6 +138,10 @@ class Tweet extends StatelessWidget {
                   iconColor: Theme.of(context).textTheme.caption.color,
                   iconEnableColor: TwitterColor.ceriseRed,
                   size: 20,
+                  onTweetAction: onTweetAction,
+                  fetchTweet: fetchTweet,
+                  onRetweet: onRetweet,
+                  onTweetUpdate: onTweetUpdate,
                 ),
               ),
               type == TweetType.ParentTweet
@@ -265,9 +277,21 @@ class _TweetDetailBody extends StatelessWidget {
   final Widget trailing;
   final TweetType type;
   final bool isDisplayOnProfile;
-  const _TweetDetailBody(
-      {Key key, this.model, this.trailing, this.type, this.isDisplayOnProfile})
-      : super(key: key);
+  final void Function(FeedModel) onRetweet;
+  final void Function(FeedModel) onTweetUpdate;
+  final Future<FeedModel> Function(String key) fetchTweet;
+  final Function(TweetAction action, FeedModel model) onTweetAction;
+  const _TweetDetailBody({
+    Key key,
+    this.model,
+    this.trailing,
+    this.type,
+    this.isDisplayOnProfile,
+    @required this.fetchTweet,
+    @required this.onTweetAction,
+    @required this.onRetweet,
+    @required this.onTweetUpdate,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -293,7 +317,12 @@ class _TweetDetailBody extends StatelessWidget {
             ? ParentTweetWidget(
                 childRetwetkey: model.parentkey,
                 isImageAvailable: false,
-                trailing: trailing)
+                trailing: trailing,
+                onTweetAction: onTweetAction,
+                fetchTweet: fetchTweet,
+                onRetweet: onRetweet,
+                onTweetUpdate: onTweetUpdate,
+              )
             : SizedBox.shrink(),
         Container(
           width: context.width,

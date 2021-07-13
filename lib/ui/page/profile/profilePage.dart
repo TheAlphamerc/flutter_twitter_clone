@@ -332,14 +332,14 @@ class _ProfilePageState extends State<ProfilePage>
 
   @override
   build(BuildContext context) {
-    var state = Provider.of<FeedState>(context);
+    // var state = Provider.of<FeedState>(context);
     var authstate = Provider.of<ProfileState>(context);
     List<FeedModel> list;
     String id = widget.profileId;
 
     /// Filter user's tweet among all tweets available in home page tweets list
-    if (state.feedlist != null && state.feedlist.length > 0) {
-      list = state.feedlist.where((x) => x.userId == id).toList();
+    if (authstate.feedlist != null && authstate.feedlist.length > 0) {
+      list = authstate.feedlist.where((x) => x.userId == id).toList();
     }
     return WillPopScope(
       onWillPop: _onWillPop,
@@ -463,12 +463,41 @@ class _ProfilePageState extends State<ProfilePage>
                   child: Tweet(
                     model: list[index],
                     isDisplayOnProfile: true,
-                    trailing: TweetBottomSheet().tweetOptionIcon(
-                      context,
-                      model: list[index],
-                      type: TweetType.Tweet,
-                      scaffoldKey: scaffoldKey,
-                    ),
+                    trailing: TweetBottomSheet().tweetOptionIcon(context,
+                        model: list[index],
+                        type: TweetType.Tweet,
+                        scaffoldKey: scaffoldKey, onTweeDelete:
+                            (String tweetId, TweetType type,
+                                {String parentkey}) {
+                      context
+                          .read<ProfileState>()
+                          .deleteTweet(tweetId, type, parentkey: parentkey);
+                    }),
+                    onTweetUpdate: (model) {
+                      context.read<ProfileState>().updateTweet(model);
+                    },
+                    onRetweet: (model) {
+                      cprint("Re Tweet");
+                      context.read<ProfileState>().createPost(model);
+                    },
+
+                    /// TODO: Handle Action
+                    onTweetAction: (action, model) {
+                      switch (action) {
+                        case TweetAction.Like:
+                          {
+                            context.read<ProfileState>().tweetLikeToggle(model);
+                          }
+
+                          break;
+                        default:
+                      }
+                    },
+                    fetchTweet: (String key) {
+                      return context
+                          .read<ProfileState>()
+                          .getpostDetailFromDatabase(key);
+                    },
                   ),
                 ),
               );

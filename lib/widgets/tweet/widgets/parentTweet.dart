@@ -13,31 +13,45 @@ class ParentTweetWidget extends StatelessWidget {
       this.childRetwetkey,
       this.type,
       this.isImageAvailable,
-      this.trailing})
+      this.trailing,
+      @required this.onTweetAction,
+      @required this.fetchTweet,
+      @required this.onRetweet,
+      @required this.onTweetUpdate})
       : super(key: key);
 
   final String childRetwetkey;
   final TweetType type;
   final Widget trailing;
   final bool isImageAvailable;
+  final Future<FeedModel> Function(String key) fetchTweet;
+  final void Function(FeedModel) onRetweet;
+  final void Function(FeedModel) onTweetUpdate;
+  final Function(TweetAction action, FeedModel model) onTweetAction;
 
   void onTweetPressed(BuildContext context, FeedModel model) {
     var feedstate = Provider.of<FeedState>(context, listen: false);
-    feedstate.getpostDetailFromDatabase(null, model: model);
+    // feedstate.getpostDetailFromDatabase(null, model: model);
     Navigator.push(context, FeedPostDetail.getRoute(model.key));
   }
 
   @override
   Widget build(BuildContext context) {
-    var feedstate = Provider.of<FeedState>(context, listen: false);
     return FutureBuilder(
-      future: feedstate.fetchTweet(childRetwetkey),
+      future: fetchTweet(childRetwetkey),
       builder: (context, AsyncSnapshot<FeedModel> snapshot) {
         if (snapshot.hasData) {
           return Tweet(
-              model: snapshot.data,
-              type: TweetType.ParentTweet,
-              trailing: trailing);
+            model: snapshot.data,
+            type: TweetType.ParentTweet,
+            trailing: trailing,
+            onTweetAction: onTweetAction,
+            fetchTweet: (key) {
+              return fetchTweet(childRetwetkey);
+            },
+            onRetweet: onRetweet,
+            onTweetUpdate: onTweetUpdate,
+          );
         }
         if ((snapshot.connectionState == ConnectionState.done ||
                 snapshot.connectionState == ConnectionState.waiting) &&

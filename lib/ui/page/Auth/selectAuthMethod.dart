@@ -107,7 +107,7 @@ class _WelcomePageState extends State<WelcomePage> {
       body: state.authStatus == AuthStatus.NOT_LOGGED_IN ||
               state.authStatus == AuthStatus.NOT_DETERMINED
           ? _body()
-          : HomePage(),
+          : HomePage.getWidget(),
     );
   }
 }

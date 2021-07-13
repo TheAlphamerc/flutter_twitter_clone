@@ -5,10 +5,12 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
+import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:firebase_database/firebase_database.dart' as dabase;
+import 'package:flutter_twitter_clone/state/base/tweetBaseState.dart';
 
-class ProfileState extends ChangeNotifier {
+class ProfileState extends TweetBaseState {
   ProfileState(this.profileId) {
     databaseInit();
     userId = FirebaseAuth.instance.currentUser.uid;
@@ -48,6 +50,50 @@ class ProfileState extends ChangeNotifier {
       }
     } catch (error) {
       cprint(error, errorIn: 'databaseInit');
+    }
+    getDataFromDatabase();
+  }
+
+  List<FeedModel> _feedlist;
+  List<FeedModel> get feedlist => _feedlist;
+  bool isBusy = true;
+  void getDataFromDatabase() {
+    try {
+      isBusy = true;
+      _feedlist = null;
+      notifyListeners();
+      kDatabase
+          .child('tweet')
+          .orderByChild("userId")
+          .equalTo(profileId)
+          .once()
+          .then((DataSnapshot snapshot) {
+        _feedlist = <FeedModel>[];
+        if (snapshot.value != null) {
+          var map = snapshot.value;
+          if (map != null) {
+            map.forEach((key, value) {
+              var model = FeedModel.fromJson(value);
+              model.key = key;
+              if (model.isValidTweet) {
+                _feedlist.add(model);
+              }
+            });
+
+            /// Sort Tweet by time
+            /// It helps to display newest Tweet first.
+            _feedlist.sort((x, y) => DateTime.parse(x.createdAt)
+                .compareTo(DateTime.parse(y.createdAt)));
+          }
+        } else {
+          _feedlist = null;
+        }
+        isBusy = false;
+        notifyListeners();
+      });
+    } catch (error) {
+      isBusy = false;
+      cprint(error, errorIn: 'getDataFromDatabase');
     }
   }
 
@@ -166,6 +212,11 @@ class ProfileState extends ChangeNotifier {
               userName: userModel.userName)
           .toJson()
     });
+  }
+
+  tweetLikeToggle(FeedModel tweet) {
+    addLikeToTweet(tweet, profileId);
+    notifyListeners();
   }
 
   /// Trigger when logged-in user's profile change or updated

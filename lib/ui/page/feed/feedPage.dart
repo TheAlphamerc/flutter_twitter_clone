@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
+import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
+import 'package:flutter_twitter_clone/ui/page/feed/composeTweet/composeTweet.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customLoader.dart';
@@ -22,7 +24,7 @@ class FeedPage extends StatelessWidget {
   Widget _floatingActionButton(BuildContext context) {
     return FloatingActionButton(
       onPressed: () {
-        Navigator.of(context).pushNamed('/CreateFeedPage/tweet');
+        Navigator.of(context).push(ComposeTweetPage.getRoute(isTweet: true));
       },
       child: customIcon(
         context,
@@ -107,10 +109,51 @@ class _FeedPageBody extends StatelessWidget {
                                 child: Tweet(
                                   model: model,
                                   trailing: TweetBottomSheet().tweetOptionIcon(
-                                      context,
-                                      model: model,
-                                      type: TweetType.Tweet,
-                                      scaffoldKey: scaffoldKey),
+                                    context,
+                                    model: model,
+                                    type: TweetType.Tweet,
+                                    scaffoldKey: scaffoldKey,
+                                    onTweeDelete:
+                                        (String tweetId, TweetType type,
+                                            {String parentkey}) {
+                                      context.read<FeedState>().deleteTweet(
+                                          tweetId, type,
+                                          parentkey: parentkey);
+                                    },
+                                  ),
+                                  fetchTweet: (key) {
+                                    return context
+                                        .read<FeedState>()
+                                        .getpostDetailFromDatabase(key);
+                                  },
+                                  onTweetUpdate: (model) {
+                                    context
+                                        .read<FeedState>()
+                                        .updateTweet(model);
+                                  },
+                                  onRetweet: (model) {
+                                    cprint("Re Tweet");
+                                    context
+                                        .read<FeedState>()
+                                        .createReTweet(model);
+                                  },
+
+                                  /// TODO: Handle Actions
+                                  onTweetAction: (action, model) {
+                                    var userId =
+                                        context.read<AuthState>().userId;
+                                    switch (action) {
+                                      case TweetAction.Like:
+                                        {
+                                          context
+                                              .read<FeedState>()
+                                              .addLikeToTweet(model, userId);
+                                        }
+
+                                        break;
+                                      default:
+                                    }
+                                  },
                                 ),
                               );
                             },

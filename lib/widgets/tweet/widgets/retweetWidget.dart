@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
-import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/ui/page/feed/feedPostDetail.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/widgets/circular_image.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
@@ -12,16 +11,20 @@ import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 import 'package:flutter_twitter_clone/widgets/tweet/widgets/tweetImage.dart';
 import 'package:flutter_twitter_clone/widgets/tweet/widgets/unavailableTweet.dart';
 import 'package:flutter_twitter_clone/widgets/url_text/customUrlText.dart';
-import 'package:provider/provider.dart';
 
 class RetweetWidget extends StatelessWidget {
-  const RetweetWidget(
-      {Key key, this.childRetwetkey, this.type, this.isImageAvailable = false})
-      : super(key: key);
+  const RetweetWidget({
+    Key key,
+    this.childRetwetkey,
+    this.type,
+    this.isImageAvailable = false,
+    @required this.fetchTweet,
+  }) : super(key: key);
 
   final String childRetwetkey;
   final bool isImageAvailable;
   final TweetType type;
+  final Future<FeedModel> Function(String) fetchTweet;
 
   Widget _tweet(BuildContext context, FeedModel model) {
     return Column(
@@ -100,9 +103,8 @@ class RetweetWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var feedstate = Provider.of<FeedState>(context, listen: false);
     return FutureBuilder(
-      future: feedstate.fetchTweet(childRetwetkey),
+      future: fetchTweet(childRetwetkey),
       builder: (context, AsyncSnapshot<FeedModel> snapshot) {
         if (snapshot.hasData) {
           return Container(
@@ -120,7 +122,7 @@ class RetweetWidget extends StatelessWidget {
             child: RippleButton(
               borderRadius: BorderRadius.all(Radius.circular(15)),
               onPressed: () {
-                feedstate.getpostDetailFromDatabase(null, model: snapshot.data);
+                // feedstate.getpostDetailFromDatabase(null, model: snapshot.data);
                 Navigator.push(
                     context, FeedPostDetail.getRoute(snapshot.data.key));
               },

@@ -52,4 +52,6 @@ class AppIcon {
   static const IconData calender = IconData(0xf203, fontFamily: _kFontFam);
   static const IconData locationPin = IconData(0xf031, fontFamily: _kFontFam);
   static const IconData edit = IconData(0xf112, fontFamily: _kFontFam);
+
+  static const IconData profileFill = IconData(0xf002, fontFamily: _kFontFam);
 }

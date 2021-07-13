@@ -6,6 +6,7 @@ import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
+import 'package:flutter_twitter_clone/ui/page/feed/composeTweet/composeTweet.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/share_widget.dart';
@@ -13,8 +14,15 @@ import 'package:flutter_twitter_clone/widgets/tweet/tweet.dart';
 import 'package:provider/provider.dart';
 
 class TweetBottomSheet {
-  Widget tweetOptionIcon(BuildContext context,
-      {FeedModel model, TweetType type, GlobalKey<ScaffoldState> scaffoldKey}) {
+  Widget tweetOptionIcon(
+    BuildContext context, {
+    FeedModel model,
+    TweetType type,
+    GlobalKey<ScaffoldState> scaffoldKey,
+    @required
+        void Function(String tweetId, TweetType type, {String parentkey})
+            onTweeDelete,
+  }) {
     return Container(
       width: 25,
       height: 25,
@@ -28,16 +36,24 @@ class TweetBottomSheet {
     ).ripple(
       () {
         _openbottomSheet(context,
-            type: type, model: model, scaffoldKey: scaffoldKey);
+            type: type,
+            model: model,
+            scaffoldKey: scaffoldKey,
+            onTweeDelete: onTweeDelete);
       },
       borderRadius: BorderRadius.circular(20),
     );
   }
 
-  void _openbottomSheet(BuildContext context,
-      {TweetType type,
-      FeedModel model,
-      GlobalKey<ScaffoldState> scaffoldKey}) async {
+  void _openbottomSheet(
+    BuildContext context, {
+    TweetType type,
+    FeedModel model,
+    GlobalKey<ScaffoldState> scaffoldKey,
+    @required
+        void Function(String tweetId, TweetType type, {String parentkey})
+            onTweeDelete,
+  }) async {
     var authState = Provider.of<AuthState>(context, listen: false);
     bool isMyTweet = authState.userId == model.userId;
     await showModalBottomSheet(
@@ -59,25 +75,34 @@ class TweetBottomSheet {
               ),
             ),
             child: type == TweetType.Tweet
-                ? _tweetOptions(context,
+                ? _tweetOptions(
+                    context,
                     scaffoldKey: scaffoldKey,
                     isMyTweet: isMyTweet,
                     model: model,
-                    type: type)
+                    type: type,
+                    onTweeDelete: onTweeDelete,
+                  )
                 : _tweetDetailOptions(context,
                     scaffoldKey: scaffoldKey,
                     isMyTweet: isMyTweet,
                     model: model,
-                    type: type));
+                    type: type,
+                    onTweeDelete: onTweeDelete));
       },
     );
   }
 
-  Widget _tweetDetailOptions(BuildContext context,
-      {bool isMyTweet,
-      FeedModel model,
-      TweetType type,
-      GlobalKey<ScaffoldState> scaffoldKey}) {
+  Widget _tweetDetailOptions(
+    BuildContext context, {
+    bool isMyTweet,
+    FeedModel model,
+    TweetType type,
+    GlobalKey<ScaffoldState> scaffoldKey,
+    @required
+        Function(String tweetId, TweetType type, {String parentkey})
+            onTweeDelete,
+  }) {
     return Column(
       children: <Widget>[
         Container(
@@ -147,6 +172,7 @@ class TweetBottomSheet {
                               type,
                               model.key,
                               parentkey: model.parentkey,
+                              onTweeDelete: onTweeDelete,
                             );
                           },
                           child: Text('Confirm'),
@@ -204,11 +230,16 @@ class TweetBottomSheet {
     );
   }
 
-  Widget _tweetOptions(BuildContext context,
-      {bool isMyTweet,
-      FeedModel model,
-      TweetType type,
-      GlobalKey<ScaffoldState> scaffoldKey}) {
+  Widget _tweetOptions(
+    BuildContext context, {
+    bool isMyTweet,
+    FeedModel model,
+    TweetType type,
+    GlobalKey<ScaffoldState> scaffoldKey,
+    @required
+        void Function(String tweetId, TweetType type, {String parentkey})
+            onTweeDelete,
+  }) {
     return Column(
       children: <Widget>[
         Container(
@@ -278,6 +309,7 @@ class TweetBottomSheet {
                               type,
                               model.key,
                               parentkey: model.parentkey,
+                              onTweeDelete: onTweeDelete,
                             );
                           },
                           child: Text('Confirm'),
@@ -372,45 +404,71 @@ class TweetBottomSheet {
     );
   }
 
-  void _deleteTweet(BuildContext context, TweetType type, String tweetId,
-      {String parentkey}) {
-    var state = Provider.of<FeedState>(context, listen: false);
-    state.deleteTweet(tweetId, type, parentkey: parentkey);
+  void _deleteTweet(
+    BuildContext context,
+    TweetType type,
+    String tweetId, {
+    String parentkey,
+    @required
+        Function(String tweetId, TweetType type, {String parentkey})
+            onTweeDelete,
+  }) {
+    // var state = Provider.of<FeedState>(context, listen: false);
+    onTweeDelete(tweetId, type, parentkey: parentkey);
     // CLose bottom sheet
     Navigator.of(context).pop();
     if (type == TweetType.Detail) {
       // Close Tweet detail page
       Navigator.of(context).pop();
       // Remove last tweet from tweet detail stack page
-      state.removeLastTweetDetail(tweetId);
+      // state.removeLastTweetDetail(tweetId);
     }
   }
 
-  void openRetweetbottomSheet(BuildContext context,
-      {TweetType type,
-      FeedModel model,
-      GlobalKey<ScaffoldState> scaffoldKey}) async {
+  void openRetweetbottomSheet(
+    BuildContext context, {
+    TweetType type,
+    FeedModel model,
+    @required Future<FeedModel> Function(String key) fetchTweet,
+    @required void Function(FeedModel model) onRetweet,
+    @required void Function(FeedModel model) onTweetUpdate,
+  }) async {
     await showModalBottomSheet(
       backgroundColor: Colors.transparent,
       context: context,
       builder: (context) {
         return Container(
-            padding: EdgeInsets.only(top: 5, bottom: 0),
-            height: 130,
-            width: context.width,
-            decoration: BoxDecoration(
-              color: Theme.of(context).bottomSheetTheme.backgroundColor,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-              ),
+          padding: EdgeInsets.only(top: 5, bottom: 0),
+          height: 130,
+          width: context.width,
+          decoration: BoxDecoration(
+            color: Theme.of(context).bottomSheetTheme.backgroundColor,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
             ),
-            child: _retweet(context, model, type));
+          ),
+          child: _retweet(
+            context,
+            model,
+            type,
+            onRetweet: onRetweet,
+            fetchTweet: fetchTweet,
+            onTweetUpdate: onTweetUpdate,
+          ),
+        );
       },
     );
   }
 
-  Widget _retweet(BuildContext context, FeedModel model, TweetType type) {
+  Widget _retweet(
+    BuildContext context,
+    FeedModel model,
+    TweetType type, {
+    Future<FeedModel> Function(String key) fetchTweet,
+    Function(FeedModel model) onRetweet,
+    Function(FeedModel model) onTweetUpdate,
+  }) {
     return Column(
       children: <Widget>[
         Container(
@@ -429,7 +487,7 @@ class TweetBottomSheet {
           isEnable: true,
           text: 'Retweet',
           onPressed: () async {
-            var state = Provider.of<FeedState>(context, listen: false);
+            // var state = Provider.of<FeedState>(context, listen: false);
             var authState = Provider.of<AuthState>(context, listen: false);
             var myUser = authState.userModel;
             myUser = UserModel(
@@ -444,15 +502,17 @@ class TweetBottomSheet {
                 createdAt: DateTime.now().toUtc().toString(),
                 user: myUser,
                 userId: myUser.userId);
-            state.createTweet(post);
+            // state.createTweet(post);
+            onRetweet(post);
 
             Navigator.pop(context);
-            var sharedPost = await state.fetchTweet(post.childRetwetkey);
+            var sharedPost = await fetchTweet(post.childRetwetkey);
             if (sharedPost.retweetCount == null) {
               sharedPost.retweetCount = 0;
             }
             sharedPost.retweetCount += 1;
-            state.updateTweet(sharedPost);
+            onTweetUpdate(sharedPost);
+            // state.updateTweet(sharedPost);
           },
         ),
         _widgetBottomSheetRow(
@@ -461,22 +521,21 @@ class TweetBottomSheet {
           text: 'Retweet with comment',
           isEnable: true,
           onPressed: () {
-            var state = Provider.of<FeedState>(context, listen: false);
-            // Prepare current Tweet model to reply
-            state.setTweetToReply = model;
             Navigator.pop(context);
 
-            /// `/ComposeTweetPage/retweet` route is used to identify that tweet is going to be retweet.
-            /// To simple reply on any `Tweet` use `ComposeTweetPage` route.
-            Navigator.of(context).pushNamed('/ComposeTweetPage/retweet');
+            /// To simple reply on any `Tweet` set `isRetweet` to true.
+            Navigator.of(context).push(
+              ComposeTweetPage.getRoute(
+                  isRetweet: true, tweetToReplyModel: model),
+            );
           },
         )
       ],
     );
   }
 
-  void openShareTweetBottomSheet(
-      BuildContext context, FeedModel model, TweetType type) async {
+  void openShareTweetBottomSheet(BuildContext context, FeedModel model,
+      TweetType type, Future<FeedModel> Function(String key) fetchTweet) async {
     await showModalBottomSheet(
       backgroundColor: Colors.transparent,
       context: context,
@@ -492,12 +551,17 @@ class TweetBottomSheet {
                 topRight: Radius.circular(20),
               ),
             ),
-            child: _shareTweet(context, model, type));
+            child: _shareTweet(context, model, type, fetchTweet));
       },
     );
   }
 
-  Widget _shareTweet(BuildContext context, FeedModel model, TweetType type) {
+  Widget _shareTweet(
+    BuildContext context,
+    FeedModel model,
+    TweetType type,
+    Future<FeedModel> Function(String key) fetchTweet,
+  ) {
     var socialMetaTagParameters = SocialMetaTagParameters(
         description: model.description ?? "",
         title: "${model.user.displayName} posted a tweet on Fwitter.",
@@ -549,6 +613,10 @@ class TweetBottomSheet {
                   child: Tweet(
                     model: model,
                     type: type,
+                    onTweetAction: null,
+                    fetchTweet: fetchTweet,
+                    onRetweet: null,
+                    onTweetUpdate: null,
                   ),
                   id: "tweet/${model.key}",
                   socialMetaTagParameters: socialMetaTagParameters),
