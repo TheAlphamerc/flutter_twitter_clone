@@ -162,6 +162,8 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
     var authState = Provider.of<AuthState>(context, listen: false);
     var myUser = authState.userModel;
     var profilePic = myUser.profilePic ?? Constants.dummyProfilePic;
+
+    /// User who are creting reply tweet
     var commentedUser = UserModel(
         displayName: myUser.displayName ?? myUser.email.split('@')[0],
         profilePic: profilePic,

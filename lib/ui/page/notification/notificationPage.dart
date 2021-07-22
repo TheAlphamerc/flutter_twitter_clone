@@ -88,7 +88,7 @@ class NotificationPageBody extends StatelessWidget {
   Widget build(BuildContext context) {
     var state = Provider.of<NotificationState>(context);
     var list = state.notificationList;
-    if (state?.isbusy ?? true && (list == null || list.isEmpty)) {
+    if (state.isbusy) {
       return SizedBox(
         height: 3,
         child: LinearProgressIndicator(),

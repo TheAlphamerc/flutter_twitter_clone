@@ -49,7 +49,7 @@ class _UserCard extends StatelessWidget {
     if (bio == "Edit profile to update bio") {
       return "No bio available";
     } else {
-      return bio;
+      return bio.takeOnly(100);
     }
   }
 

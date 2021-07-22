@@ -231,7 +231,7 @@ class _QrCodeState extends State<QrCode> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Theme.of(context).dividerColor.withOpacity(.6),
+      color: Theme.of(context).dividerColor.withOpacity(.2),
       alignment: Alignment.center,
       child: InkWell(
         onTap: () {

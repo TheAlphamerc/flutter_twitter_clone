@@ -124,7 +124,7 @@ class FeedState extends AppState {
       if (_feedQuery == null) {
         _feedQuery = kDatabase.child("tweet");
         _feedQuery.onChildAdded.listen(_onTweetAdded);
-        _feedQuery.onValue.listen(_onTweetChanged);
+        _feedQuery.onChildChanged.listen(_onTweetChanged);
         _feedQuery.onChildRemoved.listen(_onTweetRemoved);
       }
 
@@ -279,24 +279,31 @@ class FeedState extends AppState {
   }
 
   /// create [New Tweet]
-  createTweet(FeedModel model) {
+  /// returns Tweet key
+  Future<String> createTweet(FeedModel model) async {
     ///  Create tweet in [Firebase kDatabase]
     isBusy = true;
     notifyListeners();
+    String tweetKey;
     try {
-      kDatabase.child('tweet').push().set(model.toJson());
+      DatabaseReference dbReference = kDatabase.child('tweet');
+
+      await dbReference.push().set(model.toJson());
+      tweetKey = dbReference.key;
     } catch (error) {
       cprint(error, errorIn: 'createTweet');
     }
     isBusy = false;
     notifyListeners();
+    return tweetKey;
   }
 
   ///  It will create tweet in [Firebase kDatabase] just like other normal tweet.
   ///  update retweet count for retweet model
-  createReTweet(FeedModel model) {
+  Future<String> createReTweet(FeedModel model) async {
+    String tweetKey;
     try {
-      createTweet(model);
+      tweetKey = await createTweet(model);
       if (_tweetToReplyModel != null) {
         if (_tweetToReplyModel.retweetCount == null) {
           _tweetToReplyModel.retweetCount = 0;
@@ -307,6 +314,7 @@ class FeedState extends AppState {
     } catch (error) {
       cprint(error, errorIn: 'createReTweet');
     }
+    return tweetKey;
   }
 
   /// [Delete tweet] in Firebase kDatabase
@@ -422,18 +430,19 @@ class FeedState extends AppState {
 
   /// Add [new comment tweet] to any tweet
   /// Comment is a Tweet itself
-  addcommentToPost(FeedModel replyTweet) {
+  Future<String> addcommentToPost(FeedModel replyTweet) async {
     try {
       isBusy = true;
       notifyListeners();
+      String tweetKey;
       if (_tweetToReplyModel != null) {
         FeedModel tweet =
             _feedlist.firstWhere((x) => x.key == _tweetToReplyModel.key);
         var json = replyTweet.toJson();
-        kDatabase.child('tweet').push().set(json).then((value) {
-          tweet.replyTweetKeyList.add(_feedlist.last.key);
-          updateTweet(tweet);
-        });
+        DatabaseReference ref = kDatabase.child('tweet').push();
+        await ref.set(json);
+        tweet.replyTweetKeyList.add(ref.key);
+        updateTweet(tweet);
       }
     } catch (error) {
       cprint(error, errorIn: 'addcommentToPost');
