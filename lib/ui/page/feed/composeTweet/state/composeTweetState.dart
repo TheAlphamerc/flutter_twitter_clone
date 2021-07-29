@@ -117,9 +117,9 @@ class ComposeTweetState extends ChangeNotifier {
       if (serverToken != null && serverToken.isNotEmpty) {
         return Future.value(null);
       }
-      final RemoteConfig remoteConfig = await RemoteConfig.instance;
-      await remoteConfig.fetch(expiration: const Duration(hours: 5));
-      await remoteConfig.activateFetched();
+      final RemoteConfig remoteConfig = RemoteConfig.instance;
+      // await remoteConfig.fetch(expiration: const Duration(hours: 5));
+      // await remoteConfig.activateFetched();
       var data = remoteConfig.getString('FcmServerKey');
       if (data != null) {
         serverToken = jsonDecode(data)["key"];
@@ -188,13 +188,13 @@ class ComposeTweetState extends ChangeNotifier {
         "receiverId": user.userId,
         "title": "title",
         "body": "",
-        "tweetId": ""
+        "tweetId": model.key
       },
       'to': user.fcmToken
     });
 
     var response = await http.post(
-      'https://fcm.googleapis.com/fcm/send',
+      Uri.tryParse('https://fcm.googleapis.com/fcm/send'),
       headers: <String, String>{
         'Content-Type': 'application/json',
         'Authorization': 'key=$serverToken',

@@ -101,10 +101,10 @@ class _HomePageState extends State<HomePage> {
     /// Redirect to chat screen
     /// `model.data.senderId` is a user id who sends you a message
     /// `model.data.receiverId` is a your user id.
-    if (model.data.type == NotificationType.Message.toString() &&
-        model.data.receiverId == authstate.user.uid) {
+    if (model.type == NotificationType.Message.toString() &&
+        model.receiverId == authstate.user.uid) {
       /// Get sender profile detail from firebase
-      state.getuserDetail(model.data.senderId).then((user) {
+      state.getuserDetail(model.senderId).then((user) {
         final chatState = Provider.of<ChatState>(context, listen: false);
         chatState.setChatUser = user;
         Navigator.pushNamed(context, '/ChatScreenPage');
@@ -112,13 +112,16 @@ class _HomePageState extends State<HomePage> {
     }
 
     /// Checks for user tag tweet notification
+    /// Redirect user to tweet detail if
+    /// Tweet contains
     /// If you are mentioned in tweet then it redirect to user profile who mentioed you in a tweet
     /// You can check that tweet on his profile timeline
     /// `model.data.senderId` is user id who tagged you in a tweet
-    else if (model.data.type == NotificationType.Mention.toString() &&
-        model.data.receiverId == authstate.user.uid) {
-      Navigator.push(
-          context, ProfilePage.getRoute(profileId: model.data.senderId));
+    else if (model.type == NotificationType.Mention.toString() &&
+        model.receiverId == authstate.user.uid) {
+      var feedstate = Provider.of<FeedState>(context, listen: false);
+      feedstate.getpostDetailFromDatabase(model.tweetId);
+      Navigator.push(context, FeedPostDetail.getRoute(model.tweetId));
     }
   }
 

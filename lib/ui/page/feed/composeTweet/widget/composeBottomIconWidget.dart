@@ -109,8 +109,8 @@ class _ComposeBottomIconWidgetState extends State<ComposeBottomIconWidget> {
 
   void setImage(ImageSource source) {
     ImagePicker()
-        .getImage(source: source, imageQuality: 20)
-        .then((PickedFile file) {
+        .pickImage(source: source, imageQuality: 20)
+        .then((XFile file) {
       setState(() {
         // _image = file;
         widget.onImageIconSelcted(File(file.path));

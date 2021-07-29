@@ -11,7 +11,7 @@ import 'package:flutter_twitter_clone/state/appState.dart';
 
 class ChatState extends AppState {
   bool setIsChatScreenOpen;
-  final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
+  final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
   List<ChatMessage> _messageList;
   List<ChatMessage> _chatUserList;
@@ -83,8 +83,8 @@ class ChatState extends AppState {
   /// For package detail check:-  https://pub.dev/packages/firebase_remote_config#-readme-tab-
   void getFCMServerKey() async {
     final RemoteConfig remoteConfig = await RemoteConfig.instance;
-    await remoteConfig.fetch(expiration: const Duration(days: 5));
-    await remoteConfig.activateFetched();
+    await remoteConfig.fetchAndActivate();
+    // await remoteConfig.
     var data = remoteConfig.getString('FcmServerKey');
     if (data != null && data.isNotEmpty) {
       serverToken = jsonDecode(data)["key"];
@@ -284,10 +284,10 @@ class ChatState extends AppState {
   /// Push notification will be sent to other user when you send him a message in chat.
   /// To send push notification make sure you have FCM `serverToken`
   void sendAndRetrieveMessage(ChatMessage model) async {
-    await firebaseMessaging.requestNotificationPermissions(
-      const IosNotificationSettings(
-          sound: true, badge: true, alert: true, provisional: false),
-    );
+    // await firebaseMessaging.requestNotificationPermissions(
+    //   const IosNotificationSettings(
+    //       sound: true, badge: true, alert: true, provisional: false),
+    // );
     if (chatUser.fcmToken == null) {
       return;
     }
@@ -310,16 +310,20 @@ class ChatState extends AppState {
       },
       'to': chatUser.fcmToken
     });
-    var response = await http.post('https://fcm.googleapis.com/fcm/send',
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Authorization': 'key=$serverToken',
-        },
-        body: body);
+    var response =
+        await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+            headers: <String, String>{
+              'Content-Type': 'application/json',
+              'Authorization': 'key=$serverToken',
+            },
+            body: body);
     if (response.reasonPhrase.contains("INVALID_KEY")) {
-      cprint("You are using Invalid FCM key");
+      cprint(
+        "You are using Invalid FCM key",
+        errorIn: "sendAndRetrieveMessage",
+      );
       return;
     }
-    print(response.body.toString());
+    cprint(response.body.toString());
   }
 }

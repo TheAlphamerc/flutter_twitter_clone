@@ -16,7 +16,8 @@ import '../widgets/newWidget/customLoader.dart';
 final kAnalytics = FirebaseAnalytics();
 final DatabaseReference kDatabase = FirebaseDatabase.instance.reference();
 final kScreenloader = CustomLoader();
-void cprint(dynamic data, {String errorIn, String event}) {
+void cprint(dynamic data,
+    {String errorIn, String event, String label = 'Log'}) {
   /// Print logs only in development mode
   if (kDebugMode) {
     if (errorIn != null) {
@@ -27,7 +28,7 @@ void cprint(dynamic data, {String errorIn, String event}) {
       print(
           '****************************** error ******************************');
     } else if (data != null) {
-      developer.log(data, time: DateTime.now());
+      developer.log(data, time: DateTime.now(), name: label);
     }
     if (event != null) {
       Utility.logEvent(event);

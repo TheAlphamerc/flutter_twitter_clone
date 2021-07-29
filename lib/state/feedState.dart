@@ -286,9 +286,10 @@ class FeedState extends AppState {
     notifyListeners();
     String tweetKey;
     try {
-      DatabaseReference dbReference = kDatabase.child('tweet');
+      DatabaseReference dbReference = kDatabase.child('tweet').push();
 
-      await dbReference.push().set(model.toJson());
+      await dbReference.set(model.toJson());
+
       tweetKey = dbReference.key;
     } catch (error) {
       cprint(error, errorIn: 'createTweet');

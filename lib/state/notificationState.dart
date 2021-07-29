@@ -168,7 +168,7 @@ class NotificationState extends AppState {
   void initfirebaseService() {
     if (!getIt.isRegistered<PushNotificationService>()) {
       getIt.registerSingleton<PushNotificationService>(
-          PushNotificationService(FirebaseMessaging()));
+          PushNotificationService(FirebaseMessaging.instance));
     }
   }
 

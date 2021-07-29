@@ -33,7 +33,7 @@ class CustomLinkMediaInfo extends StatelessWidget {
       String url) async {
     try {
       var response = await http.Client()
-          .get("https://noembed.com/embed?url=" + url)
+          .get(Uri.tryParse("https://noembed.com/embed?url=" + url))
           .then((result) => result.body)
           .then(json.decode)
           .then((json) => LinkMediaInfo.fromJson(json));

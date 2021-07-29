@@ -1,7 +1,15 @@
+import 'dart:async';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/push_notification_model.dart';
 import 'package:rxdart/rxdart.dart';
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
+  cprint("Handling a background message: ${message.messageId}");
+}
 
 class PushNotificationService {
   final FirebaseMessaging _firebaseMessaging;
@@ -15,23 +23,54 @@ class PushNotificationService {
   Stream<PushNotificationModel> get pushNotificationResponseStream =>
       _pushNotificationSubject.stream;
 
+  StreamSubscription<RemoteMessage> _backgroundMessageSubscription;
+
   void initializeMessages() {
-    _firebaseMessaging.requestNotificationPermissions(
-        const IosNotificationSettings(sound: true, badge: true, alert: true));
+    // _firebaseMessaging.requestNotificationPermissions(
+    //     const IosNotificationSettings(sound: true, badge: true, alert: true));
     configure();
   }
 
-  /// Configure the firebase messaging handler
-  void configure() {
-    _firebaseMessaging.configure(
-        onMessage: (Map<String, dynamic> message) async {
-      myBackgroundMessageHandler(message, onMessage: true);
-    }, onLaunch: (Map<String, dynamic> message) async {
-      myBackgroundMessageHandler(message, onLaunch: true);
-    }, onResume: (Map<String, dynamic> message) async {
-      myBackgroundMessageHandler(message, onResume: true);
-    });
+  /// Configured from Home page
+  void configure() async {
     _pushNotificationSubject = PublishSubject<PushNotificationModel>();
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      cprint('Got a message whilst in the foreground!');
+
+      try {
+        // var data = json.decode(message.data.toString()) as Map<String, dynamic>;
+        myBackgroundMessageHandler(message.data, onMessage: true);
+      } catch (e) {
+        cprint(e, errorIn: "On Message");
+      }
+    });
+
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+    /// Get message when the app is in the Terminated form
+    FirebaseMessaging.instance.getInitialMessage().then((event) {
+      if (event != null && event.data != null) {
+        try {
+          myBackgroundMessageHandler(event.data, onLaunch: true);
+        } catch (e) {
+          cprint(e, errorIn: "On getInitialMessage");
+        }
+      }
+    });
+
+    /// Returns a [Stream] that is called when a user presses a notification message displayed via FCM.
+    _backgroundMessageSubscription =
+        FirebaseMessaging.onMessageOpenedApp.listen((event) {
+      if (event != null && event.data != null) {
+        if (event != null && event.data != null) {
+          try {
+            myBackgroundMessageHandler(event.data, onLaunch: true);
+          } catch (e) {
+            cprint(e, errorIn: "On onMessageOpenedApp");
+          }
+        }
+      }
+    });
   }
 
   /// Return FCM token
@@ -41,15 +80,13 @@ class PushNotificationService {
   }
 
   /// Callback triger everytime a push notification is received
-  Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message,
+  void myBackgroundMessageHandler(Map<String, dynamic> message,
       {bool onBackGround = false,
       bool onLaunch = false,
       bool onMessage = false,
       bool onResume = false}) async {
     try {
-      if (!onMessage &&
-          message["data"] != null &&
-          message["notification"] != null) {
+      if (!onMessage) {
         PushNotificationModel model = PushNotificationModel.fromJson(message);
         _pushNotificationSubject.add(model);
       }

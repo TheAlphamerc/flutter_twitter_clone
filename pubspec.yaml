@@ -14,7 +14,7 @@ description: A new Flutter project.
 version: 1.0.6+11
 
 environment:
-  sdk: ">=2.10.0 <3.0.0"
+  sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -25,42 +25,42 @@ dependencies:
   cupertino_icons: ^0.1.2
   dartz: ^0.9.2
   get_it: ^5.0.6
-  freezed: ^0.12.7
+  
   freezed_annotation: ^0.12.0
   flutter_link_preview: ^1.5.6
-  cached_network_image: ^2.5.0
+  cached_network_image: ^3.1.0
   provider: ^4.3.2+2
-  firebase_auth: ^0.20.0+1
+  firebase_auth: ^2.0.0
   firebase_database:
   firebase_analytics:
   cloud_firestore:
   firebase_storage: 
   equatable: ^2.0.0
-  uuid: ^2.0.0
-  http: ^0.12.2 
-  image_picker: ^0.6.2
+  http: ^0.13.3 
+  image_picker: ^0.8.2
   package_info: ^0.4.1
   shared_preferences: ^0.5.1+2
-  firebase_messaging: ^6.0.13
+  firebase_messaging: ^10.0.3
   google_sign_in: "^4.5.1" 
-  intl: ^0.16.1
+  intl: ^0.17.0
   url_launcher:
-  share: ^0.6.3
-  google_fonts: ^0.3.9
-  firebase_remote_config: ^0.6.0
-  firebase_dynamic_links: ^0.7.0+1
+  share: ^2.0.4
+  google_fonts: ^2.1.0
+  firebase_remote_config: ^0.10.0+2
+  firebase_dynamic_links: ^2.0.6
   qr_code_scanner: ^0.3.5
   qr_flutter: ^3.2.0
-  rxdart: ^0.25.0
+  rxdart: ^0.27.1
 
 dev_dependencies:
   test:
   flutter_test: 
     sdk: flutter
-  flutter_launcher_icons: "^0.7.3"
-  build_runner: ^1.10.11
-  json_annotation: ^3.1.1
-  json_serializable: ^3.5.1
+  # freezed: ^0.12.6
+  flutter_launcher_icons: ^0.9.0
+  # build_runner: ^1.10.11
+  # json_annotation: ^3.1.1
+  # json_serializable: ^3.5.1
 
 flutter_icons:
   ios: true

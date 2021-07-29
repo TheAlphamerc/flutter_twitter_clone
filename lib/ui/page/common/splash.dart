@@ -91,8 +91,8 @@ class _SplashPageState extends State<SplashPage> {
   /// For package detail check:-  https://pub.dev/packages/firebase_remote_config#-readme-tab-
   Future<String> _getAppVersionFromFirebaseConfig() async {
     final RemoteConfig remoteConfig = await RemoteConfig.instance;
-    await remoteConfig.fetch(expiration: const Duration(minutes: 1));
-    await remoteConfig.activateFetched();
+    await remoteConfig.fetchAndActivate();
+    // await remoteConfig.activateFetched();
     var data = remoteConfig.getString('appVersion');
     if (data != null && data.isNotEmpty) {
       return jsonDecode(data)["key"];

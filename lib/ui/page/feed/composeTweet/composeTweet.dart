@@ -92,29 +92,30 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
     kScreenloader.showLoader(context);
 
     FeedModel tweetModel = createTweetModel();
+    String tweetId;
 
     /// If tweet contain image
     /// First image is uploaded on firebase storage
     /// After sucessfull image upload to firebase storage it returns image path
     /// Add this image path to tweet model and save to firebase database
     if (_image != null) {
-      await state.uploadFile(_image).then((imagePath) {
+      await state.uploadFile(_image).then((imagePath) async {
         if (imagePath != null) {
           tweetModel.imagePath = imagePath;
 
           /// If type of tweet is new tweet
           if (widget.isTweet) {
-            state.createTweet(tweetModel);
+            tweetId = await state.createTweet(tweetModel);
           }
 
           /// If type of tweet is  retweet
           else if (widget.isRetweet) {
-            state.createReTweet(tweetModel);
+            tweetId = await state.createReTweet(tweetModel);
           }
 
           /// If type of tweet is new comment tweet
           else {
-            state.addcommentToPost(tweetModel);
+            tweetId = await state.addcommentToPost(tweetModel);
           }
         }
       });
@@ -124,19 +125,20 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
     else {
       /// If type of tweet is new tweet
       if (widget.isTweet) {
-        state.createTweet(tweetModel);
+        tweetId = await state.createTweet(tweetModel);
       }
 
       /// If type of tweet is  retweet
       else if (widget.isRetweet) {
-        state.createReTweet(tweetModel);
+        tweetId = await state.createReTweet(tweetModel);
       }
 
       /// If type of tweet is new comment tweet
       else {
-        state.addcommentToPost(tweetModel);
+        tweetId = await state.addcommentToPost(tweetModel);
       }
     }
+    tweetModel.key = tweetId;
 
     /// Checks for username in tweet description
     /// If foud sends notification to all tagged user

@@ -292,8 +292,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
   getImage(BuildContext context, ImageSource source,
       Function(File) onImageSelected) {
     ImagePicker()
-        .getImage(source: source, imageQuality: 50)
-        .then((PickedFile file) {
+        .pickImage(source: source, imageQuality: 50)
+        .then((XFile file) {
       onImageSelected(File(file.path));
       Navigator.pop(context);
     });

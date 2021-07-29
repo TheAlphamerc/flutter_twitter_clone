@@ -2,32 +2,6 @@ import 'dart:convert';
 
 class PushNotificationModel {
   PushNotificationModel({
-    this.notification,
-    this.data,
-  });
-
-  final Notification notification;
-  final Data data;
-
-  factory PushNotificationModel.fromRawJson(String str) =>
-      PushNotificationModel.fromJson(json.decode(str));
-
-  String toRawJson() => json.encode(toJson());
-
-  factory PushNotificationModel.fromJson(Map<dynamic, dynamic> json) =>
-      PushNotificationModel(
-        notification: Notification.fromJson(json["notification"]),
-        data: Data.fromJson(json["data"]),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "notification": notification.toJson(),
-        "data": data.toJson(),
-      };
-}
-
-class Data {
-  Data({
     this.id,
     this.type,
     this.receiverId,
@@ -45,11 +19,13 @@ class Data {
   final String body;
   final String tweetId;
 
-  factory Data.fromRawJson(String str) => Data.fromJson(json.decode(str));
+  factory PushNotificationModel.fromRawJson(String str) =>
+      PushNotificationModel.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory Data.fromJson(Map<dynamic, dynamic> json) => Data(
+  factory PushNotificationModel.fromJson(Map<dynamic, dynamic> json) =>
+      PushNotificationModel(
         id: json["id"],
         type: json["type"],
         receiverId: json["receiverId"],

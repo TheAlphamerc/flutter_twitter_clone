@@ -22,7 +22,7 @@ class AuthState extends AppState {
   bool isSignInWithGoogle = false;
   User user;
   String userId;
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
