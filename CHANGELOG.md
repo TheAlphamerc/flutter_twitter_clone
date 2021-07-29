@@ -1,5 +1,6 @@
 ## [1.0.7] Coming soon
-* Display inapp notification on user follow
+* Open tweet detail when clicked on push notification if user tag available
+* Display in-app notification on user follow
 * Added pinch to zoom on profile and Tweet.
 * Retweet post without adding adding comment.
 * User can update profile banner.
