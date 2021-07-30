@@ -45,6 +45,7 @@ class AuthState extends AppState {
     if (isSignInWithGoogle) {
       _googleSignIn.signOut();
       Utility.logEvent('google_logout');
+      isSignInWithGoogle = false;
     }
     _firebaseAuth.signOut();
     notifyListeners();

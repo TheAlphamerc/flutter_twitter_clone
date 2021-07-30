@@ -75,15 +75,8 @@ class NotificationState extends AppState {
               var model = NotificationModel.fromJson(tweetKey, map);
               addNotificationList(model);
             });
-            _notificationList.sort((x, y) {
-              if (x.updatedAt != null && y.updatedAt != null) {
-                return DateTime.parse(y.updatedAt)
-                    .compareTo(DateTime.parse(x.updatedAt));
-              } else if (x.updatedAt != null) {
-                return 1;
-              } else
-                return 0;
-            });
+            _notificationList
+                .sort((x, y) => y.timeStamp.compareTo(x.timeStamp));
           }
         }
         loading = false;

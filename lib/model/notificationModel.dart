@@ -35,4 +35,6 @@ class NotificationModel {
 
 extension NotificationModelHelper on NotificationModel {
   UserModel get user => UserModel.fromJson(this.data);
+
+  DateTime get timeStamp => DateTime.tryParse(this.updatedAt ?? this.createdAt);
 }
