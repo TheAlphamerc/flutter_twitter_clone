@@ -4,10 +4,12 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/firebase_database.dart' as dabase;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
+import 'package:flutter_twitter_clone/helper/shared_prefrence_helper.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/state/appState.dart';
+import 'package:flutter_twitter_clone/ui/page/common/locator.dart';
 import 'package:path/path.dart' as Path;
 // import 'authState.dart';
 
@@ -450,6 +452,15 @@ class FeedState extends AppState {
     }
     isBusy = false;
     notifyListeners();
+  }
+
+  /// Add Tweet in bookmark
+  Future addBookmark(String tweetId) async {
+    final pref = getIt<SharedPreferenceHelper>();
+    var userId = await pref.getUserProfile().then((value) => value.userId);
+    DatabaseReference dbReference =
+        kDatabase.child('bookmark').child(userId).child(tweetId);
+    await dbReference.set({"tweetId": tweetId});
   }
 
   /// Trigger when any tweet changes or update

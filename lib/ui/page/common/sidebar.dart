@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
+import 'package:flutter_twitter_clone/ui/page/bookmark/bookmarkPage.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/follow/followerListPage.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/profilePage.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/qrCode/scanner.dart';
@@ -255,7 +256,14 @@ class _SidebarMenuState extends State<SidebarMenu> {
                         context, ProfilePage.getRoute(profileId: state.userId));
                   }),
                   _menuListRowButton('Lists', icon: AppIcon.lists),
-                  _menuListRowButton('Bookmark', icon: AppIcon.bookmark),
+                  _menuListRowButton(
+                    'Bookmark',
+                    icon: AppIcon.bookmark,
+                    isEnable: true,
+                    onPressed: () {
+                      Navigator.push(context, BookmarkPage.getRoute());
+                    },
+                  ),
                   _menuListRowButton('Moments', icon: AppIcon.moments),
                   _menuListRowButton('Fwitter ads', icon: AppIcon.twitterAds),
                   Divider(),

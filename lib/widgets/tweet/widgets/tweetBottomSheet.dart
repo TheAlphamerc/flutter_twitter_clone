@@ -483,7 +483,7 @@ class TweetBottomSheet {
       builder: (context) {
         return Container(
             padding: EdgeInsets.only(top: 5, bottom: 0),
-            height: 130,
+            height: 180,
             width: context.width,
             decoration: BoxDecoration(
               color: Theme.of(context).bottomSheetTheme.backgroundColor,
@@ -515,6 +515,22 @@ class TweetBottomSheet {
             ),
           ),
         ),
+        SizedBox(height: 8),
+        _widgetBottomSheetRow(
+          context,
+          AppIcon.bookmark,
+          isEnable: true,
+          text: 'Bookmark',
+          onPressed: () async {
+            var state = Provider.of<FeedState>(context, listen: false);
+            await state.addBookmark(model.key);
+            Navigator.pop(context);
+            ScaffoldMessenger.maybeOf(context).showSnackBar(
+              SnackBar(content: Text("Bookmark saved!!")),
+            );
+          },
+        ),
+        SizedBox(height: 8),
         _widgetBottomSheetRow(
           context,
           AppIcon.link,
@@ -531,6 +547,7 @@ class TweetBottomSheet {
             Utility.share(uri.toString(), subject: "Tweet");
           },
         ),
+        SizedBox(height: 8),
         _widgetBottomSheetRow(
           context,
           AppIcon.image,
@@ -554,7 +571,8 @@ class TweetBottomSheet {
                   socialMetaTagParameters: socialMetaTagParameters),
             );
           },
-        )
+        ),
+        SizedBox(height: 12),
       ],
     );
   }
