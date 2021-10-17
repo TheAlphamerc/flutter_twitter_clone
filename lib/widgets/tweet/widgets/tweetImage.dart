@@ -8,22 +8,22 @@ import 'package:provider/provider.dart';
 
 class TweetImage extends StatelessWidget {
   const TweetImage(
-      {Key key, this.model, this.type, this.isRetweetImage = false})
+      {Key? key, required this.model, this.type, this.isRetweetImage = false})
       : super(key: key);
 
   final FeedModel model;
-  final TweetType type;
+  final TweetType? type;
   final bool isRetweetImage;
-
   @override
   Widget build(BuildContext context) {
+    if (model.imagePath != null) assert(type != null);
     return AnimatedContainer(
-      duration: Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
       alignment: Alignment.centerRight,
       child: model.imagePath == null
-          ? SizedBox.shrink()
+          ? const SizedBox.shrink()
           : Padding(
-              padding: EdgeInsets.only(
+              padding: const EdgeInsets.only(
                 top: 8,
               ),
               child: InkWell(

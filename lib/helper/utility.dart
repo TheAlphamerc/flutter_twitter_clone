@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 import 'dart:developer' as developer;
 
@@ -17,7 +19,7 @@ final kAnalytics = FirebaseAnalytics();
 final DatabaseReference kDatabase = FirebaseDatabase.instance.reference();
 final kScreenloader = CustomLoader();
 void cprint(dynamic data,
-    {String errorIn, String event, String label = 'Log'}) {
+    {String? errorIn, String? event, String label = 'Log'}) {
   /// Print logs only in development mode
   if (kDebugMode) {
     if (errorIn != null) {
@@ -31,13 +33,13 @@ void cprint(dynamic data,
       developer.log(data, time: DateTime.now(), name: label);
     }
     if (event != null) {
-      Utility.logEvent(event);
+      Utility.logEvent(event, parameter: {});
     }
   }
 }
 
 class Utility {
-  static String getPostTime2(String date) {
+  static String getPostTime2(String? date) {
     if (date == null || date.isEmpty) {
       return '';
     }
@@ -47,7 +49,7 @@ class Utility {
     return dat;
   }
 
-  static String getdob(String date) {
+  static String getdob(String? date) {
     if (date == null || date.isEmpty) {
       return '';
     }
@@ -56,7 +58,7 @@ class Utility {
     return dat;
   }
 
-  static String getJoiningDate(String date) {
+  static String getJoiningDate(String? date) {
     if (date == null || date.isEmpty) {
       return '';
     }
@@ -65,7 +67,7 @@ class Utility {
     return 'Joined $dat';
   }
 
-  static String getChatTime(String date) {
+  static String getChatTime(String? date) {
     if (date == null || date.isEmpty) {
       return '';
     }
@@ -121,7 +123,7 @@ class Utility {
         ' min';
   }
 
-  static String getSocialLinks(String url) {
+  static String? getSocialLinks(String? url) {
     if (url != null && url.isNotEmpty) {
       url = url.contains("https://www") || url.contains("http://www")
           ? url
@@ -144,7 +146,8 @@ class Utility {
     }
   }
 
-  static void logEvent(String event, {Map<String, dynamic> parameter}) {
+  static void logEvent(String event,
+      {required Map<String, dynamic> parameter}) {
     kReleaseMode
         ? kAnalytics.logEvent(name: event, parameters: parameter)
         : print("[EVENT]: $event");
@@ -155,7 +158,7 @@ class Utility {
     print("[$time][Log]: $log, $param");
   }
 
-  static void share(String message, {String subject}) {
+  static void share(String message, {String? subject}) {
     Share.share(message, subject: subject);
   }
 
@@ -165,17 +168,17 @@ class Utility {
     Iterable<Match> _matches = reg.allMatches(text);
     List<String> resultMatches = <String>[];
     for (Match match in _matches) {
-      if (match.group(0).isNotEmpty) {
+      if (match.group(0)!.isNotEmpty) {
         var tag = match.group(0);
-        resultMatches.add(tag);
+        resultMatches.add(tag!);
       }
     }
     return resultMatches;
   }
 
   static String getUserName({
-    String id,
-    String name,
+    required String id,
+    required String name,
   }) {
     String userName = '';
     if (name.length > 15) {
@@ -188,7 +191,7 @@ class Utility {
   }
 
   static bool validateCredentials(
-      GlobalKey<ScaffoldState> _scaffoldKey, String email, String password) {
+      GlobalKey<ScaffoldState> _scaffoldKey, String? email, String? password) {
     if (email == null || email.isEmpty) {
       customSnackBar(_scaffoldKey, 'Please enter email id');
       return false;
@@ -208,41 +211,41 @@ class Utility {
     return true;
   }
 
-  static customSnackBar(GlobalKey<ScaffoldState> _scaffoldKey, String msg,
+  static customSnackBar(GlobalKey<ScaffoldState>? _scaffoldKey, String msg,
       {double height = 30, Color backgroundColor = Colors.black}) {
     if (_scaffoldKey == null || _scaffoldKey.currentState == null) {
       return;
     }
-    _scaffoldKey.currentState.hideCurrentSnackBar();
+    _scaffoldKey.currentState!.hideCurrentSnackBar();
     final snackBar = SnackBar(
       backgroundColor: backgroundColor,
       content: Text(
         msg,
-        style: TextStyle(
+        style: const TextStyle(
           color: Colors.white,
         ),
       ),
     );
-    _scaffoldKey.currentState.showSnackBar(snackBar);
+    _scaffoldKey.currentState!.showSnackBar(snackBar);
   }
 
   static bool validateEmal(String email) {
     String p =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
 
-    RegExp regExp = new RegExp(p);
+    RegExp regExp = RegExp(p);
 
     var status = regExp.hasMatch(email);
     return status;
   }
 
   static Future<Uri> createLinkToShare(BuildContext context, String id,
-      {SocialMetaTagParameters socialMetaTagParameters}) async {
+      {required SocialMetaTagParameters socialMetaTagParameters}) async {
     final DynamicLinkParameters parameters = DynamicLinkParameters(
         uriPrefix: 'https://fwitterdev.page.link',
         link: Uri.parse('https://twitter.com/$id'),
         androidParameters: AndroidParameters(
-          packageName: 'com.thealphamerc.flutter_twitter_clone_dev',
+          packageName: 'com.thealphamerc.third_state_dev',
           minimumVersion: 0,
         ),
         dynamicLinkParametersOptions: DynamicLinkParametersOptions(
@@ -256,7 +259,7 @@ class Utility {
   }
 
   static createLinkAndShare(BuildContext context, String id,
-      {SocialMetaTagParameters socialMetaTagParameters}) async {
+      {required SocialMetaTagParameters socialMetaTagParameters}) async {
     var url = await createLinkToShare(context, id,
         socialMetaTagParameters: socialMetaTagParameters);
 
@@ -272,12 +275,10 @@ class Utility {
   }
 
   static void copyToClipBoard({
-    GlobalKey<ScaffoldState> scaffoldKey,
-    String text,
-    String message,
+    required GlobalKey<ScaffoldState> scaffoldKey,
+    required String text,
+    required String message,
   }) {
-    assert(message != null);
-    assert(text != null);
     var data = ClipboardData(text: text);
     Clipboard.setData(data);
     customSnackBar(scaffoldKey, message);

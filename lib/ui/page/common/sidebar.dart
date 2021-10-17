@@ -12,10 +12,11 @@ import 'package:flutter_twitter_clone/widgets/url_text/customUrlText.dart';
 import 'package:provider/provider.dart';
 
 class SidebarMenu extends StatefulWidget {
-  const SidebarMenu({Key key, this.scaffoldKey}) : super(key: key);
+  const SidebarMenu({Key? key, this.scaffoldKey}) : super(key: key);
 
-  final GlobalKey<ScaffoldState> scaffoldKey;
+  final GlobalKey<ScaffoldState>? scaffoldKey;
 
+  @override
   _SidebarMenuState createState() => _SidebarMenuState();
 }
 
@@ -24,7 +25,7 @@ class _SidebarMenuState extends State<SidebarMenu> {
     final state = context.watch<AuthState>();
     if (state.userModel == null) {
       return ConstrainedBox(
-        constraints: BoxConstraints(minWidth: 200, minHeight: 100),
+        constraints: const BoxConstraints(minWidth: 200, minHeight: 100),
         child: Center(
           child: Text(
             'Login to continue',
@@ -44,13 +45,13 @@ class _SidebarMenuState extends State<SidebarMenu> {
             Container(
               height: 56,
               width: 56,
-              margin: EdgeInsets.only(left: 17, top: 10),
+              margin: const EdgeInsets.only(left: 17, top: 10),
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.white, width: 2),
                 borderRadius: BorderRadius.circular(28),
                 image: DecorationImage(
                   image: customAdvanceNetworkImage(
-                    state.userModel.profilePic ?? Constants.dummyProfilePic,
+                    state.userModel!.profilePic ?? Constants.dummyProfilePic,
                   ),
                   fit: BoxFit.cover,
                 ),
@@ -59,32 +60,32 @@ class _SidebarMenuState extends State<SidebarMenu> {
             ListTile(
               onTap: () {
                 Navigator.push(context,
-                    ProfilePage.getRoute(profileId: state.userModel.userId));
+                    ProfilePage.getRoute(profileId: state.userModel!.userId!));
               },
               title: Row(
                 children: <Widget>[
                   UrlText(
-                    text: state.userModel.displayName ?? "",
+                    text: state.userModel!.displayName ?? "",
                     style: TextStyles.onPrimaryTitleText
                         .copyWith(color: Colors.black, fontSize: 20),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 3,
                   ),
-                  state.userModel.isVerified ?? false
+                  state.userModel!.isVerified ?? false
                       ? customIcon(context,
                           icon: AppIcon.blueTick,
                           istwitterIcon: true,
                           iconColor: AppColor.primary,
                           size: 18,
                           paddingIcon: 3)
-                      : SizedBox(
+                      : const SizedBox(
                           width: 0,
                         ),
                 ],
               ),
               subtitle: customText(
-                state.userModel.userName,
+                state.userModel!.userName,
                 style: TextStyles.onPrimarySubTitleText
                     .copyWith(color: Colors.black54, fontSize: 15),
               ),
@@ -97,13 +98,13 @@ class _SidebarMenuState extends State<SidebarMenu> {
               alignment: Alignment.center,
               child: Row(
                 children: <Widget>[
-                  SizedBox(
+                  const SizedBox(
                     width: 17,
                   ),
-                  _tappbleText(context, '${state.userModel.getFollower}',
+                  _tappbleText(context, state.userModel!.getFollower,
                       ' Followers', 'FollowerListPage'),
-                  SizedBox(width: 10),
-                  _tappbleText(context, '${state.userModel.getFollowing}',
+                  const SizedBox(width: 10),
+                  _tappbleText(context, state.userModel!.getFollowing,
                       ' Following', 'FollowingListPage'),
                 ],
               ),
@@ -119,32 +120,31 @@ class _SidebarMenuState extends State<SidebarMenu> {
     return InkWell(
       onTap: () {
         var authstate = context.read<AuthState>();
-        List<String> usersList;
+        late List<String> usersList;
         authstate.getProfileUser();
         Navigator.pop(context);
         switch (navigateTo) {
           case "FollowerListPage":
-            usersList = authstate.userModel.followersList;
+            usersList = authstate.userModel!.followersList!;
             break;
           case "FollowingListPage":
-            usersList = authstate.userModel.followingList;
+            usersList = authstate.userModel!.followingList!;
             break;
-          default:
         }
         Navigator.push(
             context,
             FollowerListPage.getRoute(
-                profile: authstate.userModel, userList: usersList));
+                profile: authstate.userModel!, userList: usersList));
       },
       child: Row(
         children: <Widget>[
           customText(
             '$count ',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
           ),
           customText(
-            '$text',
-            style: TextStyle(color: AppColor.darkGrey, fontSize: 17),
+            text,
+            style: const TextStyle(color: AppColor.darkGrey, fontSize: 17),
           ),
         ],
       ),
@@ -152,7 +152,7 @@ class _SidebarMenuState extends State<SidebarMenu> {
   }
 
   ListTile _menuListRowButton(String title,
-      {Function onPressed, IconData icon, bool isEnable = false}) {
+      {Function? onPressed, IconData? icon, bool isEnable = false}) {
     return ListTile(
       onTap: () {
         if (onPressed != null) {
@@ -162,7 +162,7 @@ class _SidebarMenuState extends State<SidebarMenu> {
       leading: icon == null
           ? null
           : Padding(
-              padding: EdgeInsets.only(top: 5),
+              padding: const EdgeInsets.only(top: 5),
               child: customIcon(
                 context,
                 icon: icon,
@@ -187,10 +187,10 @@ class _SidebarMenuState extends State<SidebarMenu> {
       left: 0,
       child: Column(
         children: <Widget>[
-          Divider(height: 0),
+          const Divider(height: 0),
           Row(
             children: <Widget>[
-              SizedBox(
+              const SizedBox(
                 width: 10,
                 height: 45,
               ),
@@ -199,20 +199,20 @@ class _SidebarMenuState extends State<SidebarMenu> {
                   istwitterIcon: true,
                   size: 25,
                   iconColor: TwitterColor.dodgetBlue),
-              Spacer(),
+              const Spacer(),
               TextButton(
                 onPressed: () {
                   Navigator.push(
                       context,
                       ScanScreen.getRoute(
-                          context.read<AuthState>().profileUserModel));
+                          context.read<AuthState>().profileUserModel!));
                 },
                 child: Image.asset(
                   "assets/images/qr.png",
                   height: 25,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 0,
                 height: 45,
               ),
@@ -241,14 +241,14 @@ class _SidebarMenuState extends State<SidebarMenu> {
         child: Stack(
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.only(bottom: 45),
+              padding: const EdgeInsets.only(bottom: 45),
               child: ListView(
-                physics: BouncingScrollPhysics(),
+                physics: const BouncingScrollPhysics(),
                 children: <Widget>[
                   Container(
                     child: _menuHeader(),
                   ),
-                  Divider(),
+                  const Divider(),
                   _menuListRowButton('Profile',
                       icon: AppIcon.profile, isEnable: true, onPressed: () {
                     var state = context.read<AuthState>();
@@ -266,13 +266,13 @@ class _SidebarMenuState extends State<SidebarMenu> {
                   ),
                   _menuListRowButton('Moments', icon: AppIcon.moments),
                   _menuListRowButton('Fwitter ads', icon: AppIcon.twitterAds),
-                  Divider(),
+                  const Divider(),
                   _menuListRowButton('Settings and privacy', isEnable: true,
                       onPressed: () {
                     _navigateTo('SettingsAndPrivacyPage');
                   }),
                   _menuListRowButton('Help Center'),
-                  Divider(),
+                  const Divider(),
                   _menuListRowButton('Logout',
                       icon: null, onPressed: _logOut, isEnable: true),
                 ],

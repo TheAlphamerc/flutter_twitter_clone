@@ -8,7 +8,7 @@ import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:provider/provider.dart';
 
 class NotificationPage extends StatelessWidget {
-  const NotificationPage({Key key}) : super(key: key);
+  const NotificationPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class NotificationPage extends StatelessWidget {
         subtitle: user.userName,
       ),
       body: ListView(
-        children: <Widget>[
+        children: const <Widget>[
           HeaderWidget('Filters'),
           SettingRowWidget(
             "Quality filter",

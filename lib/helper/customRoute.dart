@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'routes.dart';
 
 class CustomRoute<T> extends MaterialPageRoute<T> {
-  CustomRoute({WidgetBuilder builder, RouteSettings settings})
+  CustomRoute({required WidgetBuilder builder, RouteSettings? settings})
       : super(builder: builder, settings: settings);
 
   @override
@@ -21,7 +21,7 @@ class CustomRoute<T> extends MaterialPageRoute<T> {
 }
 
 class SlideLeftRoute<T> extends MaterialPageRoute<T> {
-  SlideLeftRoute({WidgetBuilder builder, RouteSettings settings})
+  SlideLeftRoute({required WidgetBuilder builder, RouteSettings? settings})
       : super(builder: builder, settings: settings);
   @override
   Widget buildTransitions(BuildContext context, Animation<double> animation,
@@ -31,7 +31,7 @@ class SlideLeftRoute<T> extends MaterialPageRoute<T> {
       return child;
     }
     return SlideTransition(
-      position: new Tween<Offset>(
+      position: Tween<Offset>(
         begin: const Offset(1.0, 0.0),
         end: Offset.zero,
       ).animate(

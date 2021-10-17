@@ -6,7 +6,7 @@ import 'package:flutter_twitter_clone/ui/page/profile/widgets/circular_image.dar
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 
 class ProfileImageView extends StatelessWidget {
-  const ProfileImageView({Key key, this.avatar}) : super(key: key);
+  const ProfileImageView({Key? key, required this.avatar}) : super(key: key);
   final String avatar;
   static Route<T> getRoute<T>(String avatar) {
     return SlideLeftRoute<T>(
@@ -15,14 +15,13 @@ class ProfileImageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const List<Choice> choices = const <Choice>[
-      const Choice(
-          title: 'Share image link', icon: Icons.share, isEnable: true),
-      const Choice(
+    const List<Choice> choices = <Choice>[
+      Choice(title: 'Share image link', icon: Icons.share, isEnable: true),
+      Choice(
           title: 'Open in browser',
           icon: Icons.open_in_browser,
           isEnable: true),
-      const Choice(title: 'Save', icon: Icons.save),
+      Choice(title: 'Save', icon: Icons.save),
     ];
     // var authstate = Provider.of<AuthState>(context, listen: false);
     return Scaffold(

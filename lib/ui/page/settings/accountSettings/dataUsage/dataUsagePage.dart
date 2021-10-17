@@ -7,7 +7,7 @@ import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 
 class DataUsagePage extends StatelessWidget {
-  const DataUsagePage({Key key}) : super(key: key);
+  const DataUsagePage({Key? key}) : super(key: key);
 
   void openBottomSheet(
     BuildContext context,
@@ -22,7 +22,7 @@ class DataUsagePage extends StatelessWidget {
           height: height,
           decoration: BoxDecoration(
             color: TwitterColor.white,
-            borderRadius: BorderRadius.only(
+            borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(15),
               topRight: Radius.circular(15),
             ),
@@ -39,7 +39,7 @@ class DataUsagePage extends StatelessWidget {
       250,
       Column(
         children: <Widget>[
-          SizedBox(height: 5),
+          const SizedBox(height: 5),
           Container(
             width: 40,
             height: 5,
@@ -48,15 +48,15 @@ class DataUsagePage extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
             ),
           ),
-          Padding(
+          const Padding(
             padding: EdgeInsets.symmetric(vertical: 15),
             child: TitleText('Data preference'),
           ),
-          Divider(height: 0),
+          const Divider(height: 0),
           _row("Mobile data & Wi-Fi"),
-          Divider(height: 0),
+          const Divider(height: 0),
           _row("Wi-Fi only"),
-          Divider(height: 0),
+          const Divider(height: 0),
           _row("Never"),
         ],
       ),
@@ -69,7 +69,7 @@ class DataUsagePage extends StatelessWidget {
       190,
       Column(
         children: <Widget>[
-          SizedBox(height: 5),
+          const SizedBox(height: 5),
           Container(
             width: 40,
             height: 5,
@@ -78,13 +78,13 @@ class DataUsagePage extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
             ),
           ),
-          Padding(
+          const Padding(
             padding: EdgeInsets.symmetric(vertical: 10),
             child: TitleText('Dark mode appearance'),
           ),
-          Divider(height: 0),
+          const Divider(height: 0),
           _row("Dim"),
-          Divider(height: 0),
+          const Divider(height: 0),
           _row("Light out"),
         ],
       ),
@@ -93,7 +93,7 @@ class DataUsagePage extends StatelessWidget {
 
   Widget _row(String text) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
+      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 5),
       child: RadioListTile(
         value: false,
         groupValue: true,
@@ -115,19 +115,20 @@ class DataUsagePage extends StatelessWidget {
         ),
       ),
       body: ListView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         children: <Widget>[
-          HeaderWidget('Data Saver'),
-          SettingRowWidget(
+          const HeaderWidget('Data Saver'),
+          const SettingRowWidget(
             "Data saver",
             showCheckBox: true,
             vPadding: 15,
             showDivider: false,
             subtitle:
                 'When enabled, video won\'t autoplay and lower-quality images load. This automatically reduces your data usage for all Fwitter accounts on this device.',
+            visibleSwitch: null,
           ),
-          Divider(height: 0),
-          HeaderWidget('Images'),
+          const Divider(height: 0),
+          const HeaderWidget('Images'),
           SettingRowWidget(
             "High quality images",
             subtitle:
@@ -137,8 +138,10 @@ class DataUsagePage extends StatelessWidget {
               openDarkModeSettings(context);
             },
             showDivider: false,
+            visibleSwitch: null,
+            showCheckBox: null,
           ),
-          HeaderWidget(
+          const HeaderWidget(
             'Video',
             secondHeader: true,
           ),
@@ -150,6 +153,8 @@ class DataUsagePage extends StatelessWidget {
             onPressed: () {
               openDarkModeSettings(context);
             },
+            visibleSwitch: null,
+            showCheckBox: null,
           ),
           SettingRowWidget(
             "Video autoplay",
@@ -159,24 +164,31 @@ class DataUsagePage extends StatelessWidget {
             onPressed: () {
               openDarkModeSettings(context);
             },
+            showCheckBox: null,
+            visibleSwitch: null,
           ),
-          HeaderWidget(
+          const HeaderWidget(
             'Data sync',
             secondHeader: true,
           ),
-          SettingRowWidget(
+          const SettingRowWidget(
             "Sync data",
             showCheckBox: true,
+            visibleSwitch: null,
           ),
-          SettingRowWidget(
+          const SettingRowWidget(
             "Sync interval",
             subtitle: 'Daily',
+            showCheckBox: null,
+            visibleSwitch: null,
           ),
-          SettingRowWidget(
+          const SettingRowWidget(
             null,
             subtitle:
                 'Allow Fwitter to sync data in the background to enhance your experience.',
             vPadding: 10,
+            showCheckBox: null,
+            visibleSwitch: null,
           ),
         ],
       ),

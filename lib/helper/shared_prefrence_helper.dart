@@ -12,23 +12,22 @@ class SharedPreferenceHelper {
     return _singleton;
   }
 
-  Future<String> getUserName() async {
+  Future<String?> getUserName() async {
     return (await SharedPreferences.getInstance())
         .getString(UserPreferenceKey.UserName.toString());
   }
 
   Future clearPreferenceValues() async {
-    await (SharedPreferences.getInstance())
-      ..clear();
+    (await SharedPreferences.getInstance()).clear();
   }
 
-  Future<void> saveUserProfile(UserModel user) async {
+  Future<bool> saveUserProfile(UserModel user) async {
     return (await SharedPreferences.getInstance()).setString(
         UserPreferenceKey.UserProfile.toString(), json.encode(user.toJson()));
   }
 
-  Future<UserModel> getUserProfile() async {
-    final jsonString = (await SharedPreferences.getInstance())
+  Future<UserModel?> getUserProfile() async {
+    final String? jsonString = (await SharedPreferences.getInstance())
         .getString(UserPreferenceKey.UserProfile.toString());
     if (jsonString == null) return null;
     return UserModel.fromJson(json.decode(jsonString));
@@ -39,8 +38,9 @@ class SharedPreferenceHelper {
         .setString(key, json.encode(model.toJson()));
   }
 
-  Future<LinkMediaInfo> getLinkMediaInfo(String key) async {
-    final jsonString = (await SharedPreferences.getInstance()).getString(key);
+  Future<LinkMediaInfo?> getLinkMediaInfo(String key) async {
+    final String? jsonString =
+        (await SharedPreferences.getInstance()).getString(key);
     if (jsonString == null) {
       return null;
     }

@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 import 'widgets/settingsRowWidget.dart';
 
 class SettingsAndPrivacyPage extends StatelessWidget {
-  const SettingsAndPrivacyPage({Key key}) : super(key: key);
+  const SettingsAndPrivacyPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,30 +26,32 @@ class SettingsAndPrivacyPage extends StatelessWidget {
       body: ListView(
         children: <Widget>[
           HeaderWidget(user.userName),
-          SettingRowWidget(
+          const SettingRowWidget(
             "Account",
             navigateTo: 'AccountSettingsPage',
           ),
-          Divider(height: 0),
-          SettingRowWidget("Privacy and Policy",
+          const Divider(height: 0),
+          const SettingRowWidget("Privacy and Policy",
               navigateTo: 'PrivacyAndSaftyPage'),
-          SettingRowWidget("Notification", navigateTo: 'NotificationPage'),
-          SettingRowWidget("Content prefrences",
+          const SettingRowWidget("Notification",
+              navigateTo: 'NotificationPage'),
+          const SettingRowWidget("Content prefrences",
               navigateTo: 'ContentPrefrencePage'),
-          HeaderWidget(
+          const HeaderWidget(
             'General',
             secondHeader: true,
           ),
-          SettingRowWidget("Display and Sound",
+          const SettingRowWidget("Display and Sound",
               navigateTo: 'DisplayAndSoundPage'),
-          SettingRowWidget("Data usage", navigateTo: 'DataUsagePage'),
-          SettingRowWidget("Accessibility", navigateTo: 'AccessibilityPage'),
-          SettingRowWidget("Proxy", navigateTo: "ProxyPage"),
-          SettingRowWidget(
+          const SettingRowWidget("Data usage", navigateTo: 'DataUsagePage'),
+          const SettingRowWidget("Accessibility",
+              navigateTo: 'AccessibilityPage'),
+          const SettingRowWidget("Proxy", navigateTo: "ProxyPage"),
+          const SettingRowWidget(
             "About Fwitter",
             navigateTo: "AboutPage",
           ),
-          SettingRowWidget(
+          const SettingRowWidget(
             null,
             showDivider: false,
             vPadding: 10,

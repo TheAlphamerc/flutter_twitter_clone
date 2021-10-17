@@ -10,20 +10,24 @@ import 'package:flutter_twitter_clone/widgets/url_text/customUrlText.dart';
 import 'package:provider/provider.dart';
 
 class ChatScreenPage extends StatefulWidget {
-  ChatScreenPage({Key key, this.userProfileId}) : super(key: key);
+  const ChatScreenPage({
+    Key? key,
+    /*this.userProfileId*/
+  }) : super(key: key);
 
-  final String userProfileId;
+  // final String userProfileId;
 
+  @override
   _ChatScreenPageState createState() => _ChatScreenPageState();
 }
 
 class _ChatScreenPageState extends State<ChatScreenPage> {
-  final messageController = new TextEditingController();
-  String senderId;
-  String userImage;
-  ChatState state;
-  ScrollController _controller;
-  GlobalKey<ScaffoldState> _scaffoldKey;
+  final messageController = TextEditingController();
+  String? senderId;
+  late String userImage;
+  late ChatState state;
+  late ScrollController _controller;
+  late GlobalKey<ScaffoldState> _scaffoldKey;
 
   @override
   void dispose() {
@@ -39,15 +43,15 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
     final state = Provider.of<AuthState>(context, listen: false);
     chatState.setIsChatScreenOpen = true;
     senderId = state.userId;
-    chatState.databaseInit(chatState.chatUser.userId, state.userId);
+    chatState.databaseInit(chatState.chatUser!.userId!, state.userId);
     chatState.getchatDetailAsync();
     super.initState();
   }
 
   Widget _chatScreenBody() {
     final state = Provider.of<ChatState>(context);
-    if (state.messageList == null || state.messageList.length == 0) {
-      return Center(
+    if (state.messageList == null || state.messageList!.isEmpty) {
+      return const Center(
         child: Text(
           'No message found',
           style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
@@ -58,9 +62,9 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
       controller: _controller,
       shrinkWrap: true,
       reverse: true,
-      physics: BouncingScrollPhysics(),
-      itemCount: state.messageList.length,
-      itemBuilder: (context, index) => chatMessage(state.messageList[index]),
+      physics: const BouncingScrollPhysics(),
+      itemCount: state.messageList!.length,
+      itemBuilder: (context, index) => chatMessage(state.messageList![index]),
     );
   }
 
@@ -68,10 +72,11 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
     if (senderId == null) {
       return Container();
     }
-    if (message.senderId == senderId)
+    if (message.senderId == senderId) {
       return _message(message, true);
-    else
+    } else {
       return _message(message, false);
+    }
   }
 
   Widget _message(ChatMessage chat, bool myMessage) {
@@ -84,11 +89,11 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
         Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
-            SizedBox(
+            const SizedBox(
               width: 15,
             ),
             myMessage
-                ? SizedBox()
+                ? const SizedBox()
                 : CircleAvatar(
                     backgroundColor: Colors.transparent,
                     backgroundImage: customAdvanceNetworkImage(userImage),
@@ -105,7 +110,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                 child: Stack(
                   children: <Widget>[
                     Container(
-                      padding: EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         borderRadius: getBorder(myMessage),
                         color: myMessage
@@ -113,7 +118,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                             : TwitterColor.mystic,
                       ),
                       child: UrlText(
-                        text: chat.message,
+                        text: chat.message!,
                         style: TextStyle(
                           fontSize: 16,
                           color: myMessage ? TwitterColor.white : Colors.black,
@@ -158,10 +163,10 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
           ],
         ),
         Padding(
-          padding: EdgeInsets.only(right: 10, left: 10),
+          padding: const EdgeInsets.only(right: 10, left: 10),
           child: Text(
             Utility.getChatTime(chat.createdAt),
-            style: Theme.of(context).textTheme.caption.copyWith(fontSize: 12),
+            style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 12),
           ),
         )
       ],
@@ -170,10 +175,12 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
 
   BorderRadius getBorder(bool myMessage) {
     return BorderRadius.only(
-      topLeft: Radius.circular(20),
-      topRight: Radius.circular(20),
-      bottomRight: myMessage ? Radius.circular(0) : Radius.circular(20),
-      bottomLeft: myMessage ? Radius.circular(20) : Radius.circular(0),
+      topLeft: const Radius.circular(20),
+      topRight: const Radius.circular(20),
+      bottomRight:
+          myMessage ? const Radius.circular(0) : const Radius.circular(20),
+      bottomLeft:
+          myMessage ? const Radius.circular(20) : const Radius.circular(0),
     );
   }
 
@@ -183,7 +190,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          Divider(
+          const Divider(
             thickness: 0,
             height: 1,
           ),
@@ -194,11 +201,11 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
             controller: messageController,
             decoration: InputDecoration(
               contentPadding:
-                  EdgeInsets.symmetric(horizontal: 10, vertical: 13),
+                  const EdgeInsets.symmetric(horizontal: 10, vertical: 13),
               alignLabelWithHint: true,
               hintText: 'Start with a message...',
-              suffixIcon:
-                  IconButton(icon: Icon(Icons.send), onPressed: submitMessage),
+              suffixIcon: IconButton(
+                  icon: const Icon(Icons.send), onPressed: submitMessage),
               // fillColor: Colors.black12, filled: true
             ),
           ),
@@ -221,33 +228,35 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
     message = ChatMessage(
         message: messageController.text,
         createdAt: DateTime.now().toUtc().toString(),
-        senderId: authstate.userModel.userId,
-        receiverId: state.chatUser.userId,
+        senderId: authstate.userModel!.userId!,
+        receiverId: state.chatUser!.userId!,
         seen: false,
         timeStamp: DateTime.now().toUtc().millisecondsSinceEpoch.toString(),
-        senderName: authstate.user.displayName);
-    if (messageController.text == null || messageController.text.isEmpty) {
+        senderName: authstate.user!.displayName!);
+    if (messageController.text.isEmpty) {
       return;
     }
     UserModel myUser = UserModel(
-        displayName: authstate.userModel.displayName,
-        userId: authstate.userModel.userId,
-        userName: authstate.userModel.userName,
-        profilePic: authstate.userModel.profilePic);
+        displayName: authstate.userModel!.displayName,
+        userId: authstate.userModel!.userId,
+        userName: authstate.userModel!.userName,
+        profilePic: authstate.userModel!.profilePic);
     UserModel secondUser = UserModel(
-      displayName: state.chatUser.displayName,
-      userId: state.chatUser.userId,
-      userName: state.chatUser.userName,
-      profilePic: state.chatUser.profilePic,
+      displayName: state.chatUser!.displayName,
+      userId: state.chatUser!.userId,
+      userName: state.chatUser!.userName,
+      profilePic: state.chatUser!.profilePic,
     );
-    state.onMessageSubmitted(message, myUser: myUser, secondUser: secondUser);
-    Future.delayed(Duration(milliseconds: 50)).then((_) {
+    state.onMessageSubmitted(
+      message, /*myUser: myUser, secondUser: secondUser*/
+    );
+    Future.delayed(const Duration(milliseconds: 50)).then((_) {
       messageController.clear();
     });
     try {
       // final state = Provider.of<ChatState>(context,listen: false);
       if (state.messageList != null &&
-          state.messageList.length > 1 &&
+          state.messageList!.length > 1 &&
           _controller.offset > 0) {
         _controller.animateTo(
           0.0,
@@ -263,7 +272,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
   @override
   Widget build(BuildContext context) {
     state = Provider.of<ChatState>(context, listen: false);
-    userImage = state.chatUser.profilePic;
+    userImage = state.chatUser!.profilePic!;
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
@@ -273,23 +282,23 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               UrlText(
-                text: state.chatUser.displayName,
-                style: TextStyle(
+                text: state.chatUser!.displayName!,
+                style: const TextStyle(
                     color: Colors.black87,
                     fontSize: 20,
                     fontWeight: FontWeight.bold),
               ),
               Text(
-                state.chatUser.userName,
-                style: TextStyle(color: AppColor.darkGrey, fontSize: 15),
+                state.chatUser!.userName!,
+                style: const TextStyle(color: AppColor.darkGrey, fontSize: 15),
               )
             ],
           ),
-          iconTheme: IconThemeData(color: Colors.blue),
+          iconTheme: const IconThemeData(color: Colors.blue),
           backgroundColor: Colors.white,
           actions: <Widget>[
             IconButton(
-                icon: Icon(Icons.info, color: AppColor.primary),
+                icon: const Icon(Icons.info, color: AppColor.primary),
                 onPressed: () {
                   Navigator.pushNamed(context, '/ConversationInformation');
                 })
@@ -301,7 +310,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
               Align(
                 alignment: Alignment.topRight,
                 child: Padding(
-                  padding: EdgeInsets.only(bottom: 50),
+                  padding: const EdgeInsets.only(bottom: 50),
                   child: _chatScreenBody(),
                 ),
               ),

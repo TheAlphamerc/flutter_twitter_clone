@@ -7,17 +7,20 @@ import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:provider/provider.dart';
 
 class ForgetPasswordPage extends StatefulWidget {
-  final VoidCallback loginCallback;
+  // final VoidCallback loginCallback;
 
-  const ForgetPasswordPage({Key key, this.loginCallback}) : super(key: key);
+  const ForgetPasswordPage({
+    Key? key,
+    /*this.loginCallback*/
+  }) : super(key: key);
   @override
   State<StatefulWidget> createState() => _ForgetPasswordPageState();
 }
 
 class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
-  FocusNode _focusNode;
-  TextEditingController _emailController;
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  late FocusNode _focusNode;
+  late TextEditingController _emailController;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
     _focusNode = FocusNode();
@@ -36,13 +39,13 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
   Widget _body(BuildContext context) {
     return Container(
         height: context.height,
-        padding: EdgeInsets.symmetric(horizontal: 30),
+        padding: const EdgeInsets.symmetric(horizontal: 30),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             _label(),
-            SizedBox(
+            const SizedBox(
               height: 50,
             ),
             _entryFeild('Enter email', controller: _emailController),
@@ -53,25 +56,26 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
   }
 
   Widget _entryFeild(String hint,
-      {TextEditingController controller, bool isPassword = false}) {
+      {required TextEditingController controller, bool isPassword = false}) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 15),
+      margin: const EdgeInsets.symmetric(vertical: 15),
       decoration: BoxDecoration(
           color: Colors.grey.shade200, borderRadius: BorderRadius.circular(30)),
       child: TextField(
         focusNode: _focusNode,
         controller: controller,
         keyboardType: TextInputType.emailAddress,
-        style: TextStyle(
+        style: const TextStyle(
             fontStyle: FontStyle.normal, fontWeight: FontWeight.normal),
         obscureText: isPassword,
         decoration: InputDecoration(
           hintText: hint,
           border: InputBorder.none,
-          focusedBorder: OutlineInputBorder(
+          focusedBorder: const OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(30.0)),
               borderSide: BorderSide(color: Colors.blue)),
-          contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
         ),
       ),
     );
@@ -79,7 +83,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
 
   Widget _submitButton(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 15),
+      margin: const EdgeInsets.symmetric(vertical: 15),
       width: MediaQuery.of(context).size.width,
       child: CustomFlatButton(
         label: "Submit",
@@ -94,13 +98,13 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
         child: Column(
       children: <Widget>[
         customText('Forget Password',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-        SizedBox(height: 15),
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 15),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: customText(
               'Enter your email address below to receive password reset instruction',
-              style: TextStyle(
+              style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
                   color: Colors.black54),
@@ -111,7 +115,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
   }
 
   void _submit() {
-    if (_emailController.text == null || _emailController.text.isEmpty) {
+    if (_emailController.text.isEmpty) {
       Utility.customSnackBar(_scaffoldKey, 'Email field cannot be empty');
       return;
     }
@@ -134,7 +138,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
       key: _scaffoldKey,
       appBar: AppBar(
         title: customText('Forget Password',
-            context: context, style: TextStyle(fontSize: 20)),
+            context: context, style: const TextStyle(fontSize: 20)),
         centerTitle: true,
       ),
       body: _body(context),

@@ -1,23 +1,23 @@
 class UserModel {
-  String key;
-  String email;
-  String userId;
-  String displayName;
-  String userName;
-  String webSite;
-  String profilePic;
-  String bannerImage;
-  String contact;
-  String bio;
-  String location;
-  String dob;
-  String createdAt;
-  bool isVerified;
-  int followers;
-  int following;
-  String fcmToken;
-  List<String> followersList;
-  List<String> followingList;
+  String? key;
+  String? email;
+  String? userId;
+  String? displayName;
+  String? userName;
+  String? webSite;
+  String? profilePic;
+  String? bannerImage;
+  String? contact;
+  String? bio;
+  String? location;
+  String? dob;
+  String? createdAt;
+  bool? isVerified;
+  int? followers;
+  int? following;
+  String? fcmToken;
+  List<String>? followersList;
+  List<String>? followingList;
 
   UserModel(
       {this.email,
@@ -40,13 +40,11 @@ class UserModel {
       this.followersList,
       this.followingList});
 
-  UserModel.fromJson(Map<dynamic, dynamic> map) {
+  UserModel.fromJson(Map<dynamic, dynamic>? map) {
     if (map == null) {
       return;
     }
-    if (followersList == null) {
-      followersList = [];
-    }
+    followersList ??= [];
     email = map['email'];
     userId = map['userId'];
     displayName = map['displayName'];
@@ -67,17 +65,17 @@ class UserModel {
     if (map['followerList'] != null) {
       followersList = <String>[];
       map['followerList'].forEach((value) {
-        followersList.add(value);
+        followersList!.add(value);
       });
     }
-    followers = followersList != null ? followersList.length : null;
+    followers = followersList != null ? followersList!.length : null;
     if (map['followingList'] != null) {
       followingList = <String>[];
       map['followingList'].forEach((value) {
-        followingList.add(value);
+        followingList!.add(value);
       });
     }
-    following = followingList != null ? followingList.length : null;
+    following = followingList != null ? followingList!.length : null;
   }
   toJson() {
     return {
@@ -92,8 +90,8 @@ class UserModel {
       'bio': bio,
       'location': location,
       'createdAt': createdAt,
-      'followers': followersList != null ? followersList.length : null,
-      'following': followingList != null ? followingList.length : null,
+      'followers': followersList != null ? followersList!.length : null,
+      'following': followingList != null ? followingList!.length : null,
       'userName': userName,
       'webSite': webSite,
       'isVerified': isVerified ?? false,
@@ -104,25 +102,25 @@ class UserModel {
   }
 
   UserModel copyWith({
-    String email,
-    String userId,
-    String displayName,
-    String profilePic,
-    String key,
-    String contact,
+    String? email,
+    String? userId,
+    String? displayName,
+    String? profilePic,
+    String? key,
+    String? contact,
     bio,
-    String dob,
-    String bannerImage,
-    String location,
-    String createdAt,
-    String userName,
-    int followers,
-    int following,
-    String webSite,
-    bool isVerified,
-    String fcmToken,
-    List<String> followingList,
-    List<String> followersList,
+    String? dob,
+    String? bannerImage,
+    String? location,
+    String? createdAt,
+    String? userName,
+    int? followers,
+    int? following,
+    String? webSite,
+    bool? isVerified,
+    String? fcmToken,
+    List<String>? followingList,
+    List<String>? followersList,
   }) {
     return UserModel(
       email: email ?? this.email,
@@ -131,7 +129,7 @@ class UserModel {
       createdAt: createdAt ?? this.createdAt,
       displayName: displayName ?? this.displayName,
       dob: dob ?? this.dob,
-      followers: followersList != null ? followersList.length : null,
+      followers: followersList?.length,
       following: following ?? this.following,
       isVerified: isVerified ?? this.isVerified,
       key: key ?? this.key,
@@ -148,10 +146,10 @@ class UserModel {
   }
 
   String get getFollower {
-    return '${this.followers ?? 0}';
+    return '${followers ?? 0}';
   }
 
   String get getFollowing {
-    return '${this.following ?? 0}';
+    return '${following ?? 0}';
   }
 }

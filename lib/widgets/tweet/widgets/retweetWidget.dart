@@ -16,7 +16,10 @@ import 'package:provider/provider.dart';
 
 class RetweetWidget extends StatelessWidget {
   const RetweetWidget(
-      {Key key, this.childRetwetkey, this.type, this.isImageAvailable = false})
+      {Key? key,
+      required this.childRetwetkey,
+      required this.type,
+      this.isImageAvailable = false})
       : super(key: key);
 
   final String childRetwetkey;
@@ -28,30 +31,30 @@ class RetweetWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
           width: context.width - 12,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
-              Container(
+              SizedBox(
                 width: 20,
                 height: 20,
-                child: CircularImage(path: model.user.profilePic),
+                child: CircularImage(path: model.user!.profilePic),
               ),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               ConstrainedBox(
                 constraints:
                     BoxConstraints(minWidth: 0, maxWidth: context.width * .5),
                 child: TitleText(
-                  model.user.displayName,
+                  model.user!.displayName!,
                   fontSize: 14,
                   fontWeight: FontWeight.w800,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              SizedBox(width: 3),
-              model.user.isVerified
+              const SizedBox(width: 3),
+              model.user!.isVerified!
                   ? customIcon(
                       context,
                       icon: AppIcon.blueTick,
@@ -60,35 +63,35 @@ class RetweetWidget extends StatelessWidget {
                       size: 13,
                       paddingIcon: 3,
                     )
-                  : SizedBox(width: 0),
+                  : const SizedBox(width: 0),
               SizedBox(
-                width: model.user.isVerified ? 5 : 0,
+                width: model.user!.isVerified! ? 5 : 0,
               ),
               Flexible(
                 child: customText(
-                  '${model.user.userName}',
+                  '${model.user!.userName}',
                   style: TextStyles.userNameStyle,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              SizedBox(width: 4),
+              const SizedBox(width: 4),
               customText('· ${Utility.getChatTime(model.createdAt)}',
                   style: TextStyles.userNameStyle),
             ],
           ),
         ),
         model.description == null
-            ? SizedBox()
+            ? const SizedBox()
             : Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: UrlText(
-                  text: model.description.takeOnly(150),
-                  style: TextStyle(
+                  text: model.description!.takeOnly(150),
+                  style: const TextStyle(
                     color: Colors.black,
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
                   ),
-                  urlStyle: TextStyle(
+                  urlStyle: const TextStyle(
                       color: Colors.blue, fontWeight: FontWeight.w400),
                 ),
               ),
@@ -115,18 +118,20 @@ class RetweetWidget extends StatelessWidget {
             alignment: Alignment.topCenter,
             decoration: BoxDecoration(
               border: Border.all(color: AppColor.extraLightGrey, width: .5),
-              borderRadius: BorderRadius.all(Radius.circular(15)),
+              borderRadius: const BorderRadius.all(Radius.circular(15)),
             ),
             child: RippleButton(
-              borderRadius: BorderRadius.all(Radius.circular(15)),
+              borderRadius: const BorderRadius.all(Radius.circular(15)),
               onPressed: () {
-                feedstate.getpostDetailFromDatabase(null, model: snapshot.data);
+                feedstate.getpostDetailFromDatabase(null,
+                    model: snapshot.data!);
                 Navigator.push(
-                    context, FeedPostDetail.getRoute(snapshot.data.key));
+                    context, FeedPostDetail.getRoute(snapshot.data!.key!));
               },
+              splashColor: TwitterColor.dodgetBlue,
               child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(15)),
-                child: _tweet(context, snapshot.data),
+                borderRadius: const BorderRadius.all(Radius.circular(15)),
+                child: _tweet(context, snapshot.data!),
               ),
             ),
           );
@@ -139,7 +144,7 @@ class RetweetWidget extends StatelessWidget {
             type: type,
           );
         } else {
-          return SizedBox.shrink();
+          return const SizedBox.shrink();
         }
       },
     );

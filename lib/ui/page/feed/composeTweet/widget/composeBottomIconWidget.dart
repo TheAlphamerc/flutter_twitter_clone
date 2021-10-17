@@ -8,8 +8,10 @@ import 'package:image_picker/image_picker.dart';
 class ComposeBottomIconWidget extends StatefulWidget {
   final TextEditingController textEditingController;
   final Function(File) onImageIconSelcted;
-  ComposeBottomIconWidget(
-      {Key key, this.textEditingController, this.onImageIconSelcted})
+  const ComposeBottomIconWidget(
+      {Key? key,
+      required this.textEditingController,
+      required this.onImageIconSelcted})
       : super(key: key);
 
   @override
@@ -20,7 +22,7 @@ class ComposeBottomIconWidget extends StatefulWidget {
 class _ComposeBottomIconWidgetState extends State<ComposeBottomIconWidget> {
   bool reachToWarning = false;
   bool reachToOver = false;
-  Color wordCountColor;
+  late Color wordCountColor;
   String tweet = '';
 
   @override
@@ -33,8 +35,7 @@ class _ComposeBottomIconWidgetState extends State<ComposeBottomIconWidget> {
   void updateUI() {
     setState(() {
       tweet = widget.textEditingController.text;
-      if (widget.textEditingController.text != null &&
-          widget.textEditingController.text.isNotEmpty) {
+      if (widget.textEditingController.text.isNotEmpty) {
         if (widget.textEditingController.text.length > 259 &&
             widget.textEditingController.text.length < 280) {
           wordCountColor = Colors.orange;
@@ -77,10 +78,11 @@ class _ComposeBottomIconWidgetState extends State<ComposeBottomIconWidget> {
               child: Align(
             alignment: Alignment.centerRight,
             child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 0, horizontal: 20),
-                child: tweet != null && tweet.length > 289
+                padding:
+                    const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                child: /*tweet != null &&*/ tweet.length > 289
                     ? Padding(
-                        padding: EdgeInsets.only(right: 10),
+                        padding: const EdgeInsets.only(right: 10),
                         child: customText('${280 - tweet.length}',
                             style:
                                 TextStyle(color: Theme.of(context).errorColor)),
@@ -110,16 +112,16 @@ class _ComposeBottomIconWidgetState extends State<ComposeBottomIconWidget> {
   void setImage(ImageSource source) {
     ImagePicker()
         .pickImage(source: source, imageQuality: 20)
-        .then((XFile file) {
+        .then((XFile? file) {
       setState(() {
         // _image = file;
-        widget.onImageIconSelcted(File(file.path));
+        widget.onImageIconSelcted(File(file!.path));
       });
     });
   }
 
   double getTweetLimit() {
-    if (tweet == null || tweet.isEmpty) {
+    if (/*tweet == null || */ tweet.isEmpty) {
       return 0.0;
     }
     if (tweet.length > 280) {

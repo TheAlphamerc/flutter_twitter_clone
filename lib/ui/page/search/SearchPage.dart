@@ -12,9 +12,9 @@ import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 import 'package:provider/provider.dart';
 
 class SearchPage extends StatefulWidget {
-  const SearchPage({Key key, this.scaffoldKey}) : super(key: key);
+  const SearchPage({Key? key, this.scaffoldKey}) : super(key: key);
 
-  final GlobalKey<ScaffoldState> scaffoldKey;
+  final GlobalKey<ScaffoldState>? scaffoldKey;
 
   @override
   State<StatefulWidget> createState() => _SearchPageState();
@@ -23,7 +23,7 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
       final state = Provider.of<SearchState>(context, listen: false);
       state.resetFilterList();
     });
@@ -50,13 +50,13 @@ class _SearchPageState extends State<SearchPage> {
       body: RefreshIndicator(
         onRefresh: () async {
           state.getDataFromDatabase();
-          return Future.value(true);
+          return Future.value();
         },
         child: ListView.separated(
           addAutomaticKeepAlives: false,
-          physics: BouncingScrollPhysics(),
-          itemBuilder: (context, index) => _UserTile(user: list[index]),
-          separatorBuilder: (_, index) => Divider(
+          physics: const BouncingScrollPhysics(),
+          itemBuilder: (context, index) => _UserTile(user: list![index]),
+          separatorBuilder: (_, index) => const Divider(
             height: 0,
           ),
           itemCount: list?.length ?? 0,
@@ -67,29 +67,30 @@ class _SearchPageState extends State<SearchPage> {
 }
 
 class _UserTile extends StatelessWidget {
-  const _UserTile({Key key, this.user}) : super(key: key);
+  const _UserTile({Key? key, required this.user}) : super(key: key);
   final UserModel user;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () {
-        if (kReleaseMode)
-          kAnalytics.logViewSearchResults(searchTerm: user.userName);
-        Navigator.push(context, ProfilePage.getRoute(profileId: user.userId));
+        if (kReleaseMode) {
+          kAnalytics.logViewSearchResults(searchTerm: user.userName!);
+        }
+        Navigator.push(context, ProfilePage.getRoute(profileId: user.userId!));
       },
       leading: CircularImage(path: user.profilePic, height: 40),
       title: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Flexible(
-            child: TitleText(user.displayName,
+            child: TitleText(user.displayName!,
                 fontSize: 16,
                 fontWeight: FontWeight.w800,
                 overflow: TextOverflow.ellipsis),
           ),
-          SizedBox(width: 3),
-          user.isVerified
+          const SizedBox(width: 3),
+          user.isVerified!
               ? customIcon(
                   context,
                   icon: AppIcon.blueTick,
@@ -98,10 +99,10 @@ class _UserTile extends StatelessWidget {
                   size: 13,
                   paddingIcon: 3,
                 )
-              : SizedBox(width: 0),
+              : const SizedBox(width: 0),
         ],
       ),
-      subtitle: Text(user.userName),
+      subtitle: Text(user.userName!),
     );
   }
 }

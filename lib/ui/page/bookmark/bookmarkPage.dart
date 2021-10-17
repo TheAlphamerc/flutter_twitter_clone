@@ -9,7 +9,7 @@ import 'package:flutter_twitter_clone/widgets/tweet/tweet.dart';
 import 'package:provider/provider.dart';
 
 class BookmarkPage extends StatelessWidget {
-  const BookmarkPage({Key key}) : super(key: key);
+  const BookmarkPage({Key? key}) : super(key: key);
 
   static Route<T> getRoute<T>() {
     return MaterialPageRoute(
@@ -18,7 +18,7 @@ class BookmarkPage extends StatelessWidget {
           create: (_) => BookmarkState(),
           child: ChangeNotifierProvider(
             create: (BuildContext context) => BookmarkState(),
-            builder: (_, child) => BookmarkPage(),
+            builder: (_, child) => const BookmarkPage(),
           ),
         );
       },
@@ -33,13 +33,13 @@ class BookmarkPage extends StatelessWidget {
         title: Text("Bookmark", style: TextStyles.titleStyle),
         isBackButton: true,
       ),
-      body: BookmarkPageBody(),
+      body: const BookmarkPageBody(),
     );
   }
 }
 
 class BookmarkPageBody extends StatelessWidget {
-  const BookmarkPageBody({Key key}) : super(key: key);
+  const BookmarkPageBody({Key? key}) : super(key: key);
 
   Widget _tweet(BuildContext context, FeedModel model) {
     return Container(
@@ -47,6 +47,7 @@ class BookmarkPageBody extends StatelessWidget {
       child: Tweet(
         model: model,
         type: TweetType.Tweet,
+        scaffoldKey: GlobalKey<ScaffoldState>(),
       ),
     );
   }
@@ -56,12 +57,12 @@ class BookmarkPageBody extends StatelessWidget {
     var state = Provider.of<BookmarkState>(context);
     var list = state.tweetList;
     if (state.isbusy) {
-      return SizedBox(
+      return const SizedBox(
         height: 3,
         child: LinearProgressIndicator(),
       );
     } else if (list == null || list.isEmpty) {
-      return Padding(
+      return const Padding(
         padding: EdgeInsets.symmetric(horizontal: 30),
         child: EmptyList(
           'No Bookmark available yet',

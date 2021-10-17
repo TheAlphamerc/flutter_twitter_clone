@@ -8,7 +8,7 @@ import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:provider/provider.dart';
 
 class ContentPrefrencePage extends StatelessWidget {
-  const ContentPrefrencePage({Key key}) : super(key: key);
+  const ContentPrefrencePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +20,8 @@ class ContentPrefrencePage extends StatelessWidget {
         subtitle: user.userName,
       ),
       body: ListView(
-        physics: BouncingScrollPhysics(),
-        children: <Widget>[
+        physics: const BouncingScrollPhysics(),
+        children: const <Widget>[
           HeaderWidget('Explore'),
           SettingRowWidget(
             "Trends",

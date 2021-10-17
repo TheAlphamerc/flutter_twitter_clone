@@ -8,7 +8,7 @@ import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:provider/provider.dart';
 
 class AccountSettingsPage extends StatelessWidget {
-  const AccountSettingsPage({Key key}) : super(key: key);
+  const AccountSettingsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,35 +17,35 @@ class AccountSettingsPage extends StatelessWidget {
       backgroundColor: TwitterColor.white,
       appBar: SettingsAppBar(
         title: 'Account',
-        subtitle: user?.userName,
+        subtitle: user.userName,
       ),
       body: ListView(
         children: <Widget>[
-          HeaderWidget('Login and security'),
+          const HeaderWidget('Login and security'),
           SettingRowWidget(
             "Username",
-            subtitle: user?.userName,
+            subtitle: user.userName,
             // navigateTo: 'AccountSettingsPage',
           ),
-          Divider(height: 0),
+          const Divider(height: 0),
           SettingRowWidget(
             "Phone",
-            subtitle: user?.contact,
+            subtitle: user.contact,
           ),
           SettingRowWidget(
             "Email address",
-            subtitle: user?.email,
+            subtitle: user.email,
             navigateTo: 'VerifyEmailPage',
           ),
-          SettingRowWidget("Password"),
-          SettingRowWidget("Security"),
-          HeaderWidget(
+          const SettingRowWidget("Password"),
+          const SettingRowWidget("Security"),
+          const HeaderWidget(
             'Data and Permission',
             secondHeader: true,
           ),
-          SettingRowWidget("Country"),
-          SettingRowWidget("Your Fwitter data"),
-          SettingRowWidget("Apps and sessions"),
+          const SettingRowWidget("Country"),
+          const SettingRowWidget("Your Fwitter data"),
+          const SettingRowWidget("Apps and sessions"),
           SettingRowWidget(
             "Log out",
             textColor: TwitterColor.ceriseRed,

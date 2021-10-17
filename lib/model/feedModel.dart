@@ -1,28 +1,30 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter_twitter_clone/model/user.dart';
 
 class FeedModel {
-  String key;
-  String parentkey;
-  String childRetwetkey;
-  String description;
-  String userId;
-  int likeCount;
-  List<String> likeList;
-  int commentCount;
-  int retweetCount;
-  String createdAt;
-  String imagePath;
-  List<String> tags;
-  List<String> replyTweetKeyList;
-  UserModel user;
+  String? key;
+  String? parentkey;
+  String? childRetwetkey;
+  String? description;
+  late String userId;
+  int? likeCount;
+  List<String>? likeList;
+  int? commentCount;
+  int? retweetCount;
+  late String createdAt;
+  String? imagePath;
+  List<String>? tags;
+  List<String?>? replyTweetKeyList;
+  UserModel? user;
   FeedModel(
       {this.key,
       this.description,
-      this.userId,
+      required this.userId,
       this.likeCount,
       this.commentCount,
       this.retweetCount,
-      this.createdAt,
+      required this.createdAt,
       this.imagePath,
       this.likeList,
       this.tags,
@@ -42,7 +44,7 @@ class FeedModel {
       "likeList": likeList,
       "tags": tags,
       "replyTweetKeyList": replyTweetKeyList,
-      "user": user == null ? null : user.toJson(),
+      "user": user == null ? null : user!.toJson(),
       "parentkey": parentkey,
       "childRetwetkey": childRetwetkey
     };
@@ -67,7 +69,7 @@ class FeedModel {
     if (map['tags'] != null) {
       tags = <String>[];
       map['tags'].forEach((value) {
-        tags.add(value);
+        tags!.add(value);
       });
     }
     if (map["likeList"] != null) {
@@ -80,10 +82,10 @@ class FeedModel {
       if (list is List) {
         map['likeList'].forEach((value) {
           if (value is String) {
-            likeList.add(value);
+            likeList!.add(value);
           }
         });
-        likeCount = likeList.length ?? 0;
+        likeCount = likeList!.length;
       }
 
       /// In old database tweet db schema likeList is saved in the form of map
@@ -91,7 +93,7 @@ class FeedModel {
       /// Once all user migrated to new version like list map support will be removed
       else if (list is Map) {
         list.forEach((key, value) {
-          likeList.add(value["userId"]);
+          likeList!.add(value["userId"]);
         });
         likeCount = list.length;
       }
@@ -103,10 +105,10 @@ class FeedModel {
       map['replyTweetKeyList'].forEach((value) {
         replyTweetKeyList = <String>[];
         map['replyTweetKeyList'].forEach((value) {
-          replyTweetKeyList.add(value);
+          replyTweetKeyList!.add(value);
         });
       });
-      commentCount = replyTweetKeyList.length;
+      commentCount = replyTweetKeyList!.length;
     } else {
       replyTweetKeyList = [];
       commentCount = 0;
@@ -115,9 +117,7 @@ class FeedModel {
 
   bool get isValidTweet {
     bool isValid = false;
-    if (this.user != null &&
-        this.user.userName != null &&
-        this.user.userName.isNotEmpty) {
+    if (user != null && user!.userName != null && user!.userName!.isNotEmpty) {
       isValid = true;
     } else {
       print("Invalid Tweet found. Id:- $key");
@@ -130,12 +130,10 @@ class FeedModel {
   /// If tweet [TweetType] is [TweetType.Retweet] and its description is null
   /// then its retweeted child tweet will be shared.
   String get getTweetKeyToRetweet {
-    if (this.description == null &&
-        this.imagePath == null &&
-        this.childRetwetkey != null) {
-      return this.childRetwetkey;
+    if (description == null && imagePath == null && childRetwetkey != null) {
+      return childRetwetkey!;
     } else {
-      return this.key;
+      return key!;
     }
   }
 }

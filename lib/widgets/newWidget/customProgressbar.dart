@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 /// A progress bar with rounded corners and custom colors.
 class CustomProgressbar extends StatefulWidget {
   const CustomProgressbar(
-      {@required this.progress,
-      Key key,
-      this.color,
+      {required this.progress,
+      Key? key,
+      required this.color,
       this.background = const Color.fromRGBO(0, 0, 0, 0.06),
       this.height = 7,
-      this.borderRadius,
+      required this.borderRadius,
       this.innerPadding = const EdgeInsets.all(0)})
       : super(key: key);
 
@@ -25,8 +25,8 @@ class CustomProgressbar extends StatefulWidget {
 
 class _CustomProgressbarState extends State<CustomProgressbar>
     with SingleTickerProviderStateMixin {
-  AnimationController _animationController;
-  Animation<double> _progressTween;
+  late AnimationController _animationController;
+  late Animation<double> _progressTween;
 
   @override
   void initState() {
@@ -57,7 +57,7 @@ class _CustomProgressbarState extends State<CustomProgressbar>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: widget.height,
       child: Stack(
         children: [
@@ -70,19 +70,16 @@ class _CustomProgressbarState extends State<CustomProgressbar>
           ),
           AnimatedBuilder(
             animation: _animationController,
-            builder: (BuildContext context,Widget child) => FractionallySizedBox(
-                  widthFactor: _progressTween.value,
-                  child: Padding(
-                    padding: widget.innerPadding,
-                    child: child
-                  ),
-                ),
-              child: Container(
-                      height: widget.height,
-                      decoration: BoxDecoration(
-                          color: widget.color,
-                          borderRadius: widget.borderRadius),
-                    ),                
+            builder: (BuildContext context, Widget? child) =>
+                FractionallySizedBox(
+              widthFactor: _progressTween.value,
+              child: Padding(padding: widget.innerPadding, child: child),
+            ),
+            child: Container(
+              height: widget.height,
+              decoration: BoxDecoration(
+                  color: widget.color, borderRadius: widget.borderRadius),
+            ),
           )
         ],
       ),

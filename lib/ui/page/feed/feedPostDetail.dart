@@ -12,22 +12,23 @@ import 'package:flutter_twitter_clone/widgets/tweet/widgets/tweetBottomSheet.dar
 import 'package:provider/provider.dart';
 
 class FeedPostDetail extends StatefulWidget {
-  FeedPostDetail({Key key, this.postId}) : super(key: key);
+  const FeedPostDetail({Key? key, required this.postId}) : super(key: key);
   final String postId;
 
-  static Route<Null> getRoute(String postId) {
-    return SlideLeftRoute<Null>(
+  static Route<void> getRoute(String postId) {
+    return SlideLeftRoute<void>(
       builder: (BuildContext context) => FeedPostDetail(
         postId: postId,
       ),
     );
   }
 
+  @override
   _FeedPostDetailState createState() => _FeedPostDetailState();
 }
 
 class _FeedPostDetailState extends State<FeedPostDetail> {
-  String postId;
+  late String postId;
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
@@ -41,10 +42,10 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
     return FloatingActionButton(
       onPressed: () {
         var state = Provider.of<FeedState>(context, listen: false);
-        state.setTweetToReply = state.tweetDetailModel?.last;
+        state.setTweetToReply = state.tweetDetailModel!.last;
         Navigator.of(context).pushNamed('/ComposeTweetPage/' + postId);
       },
-      child: Icon(Icons.add),
+      child: const Icon(Icons.add),
     );
   }
 
@@ -54,6 +55,7 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
       type: TweetType.Reply,
       trailing: TweetBottomSheet().tweetOptionIcon(context,
           scaffoldKey: scaffoldKey, model: model, type: TweetType.Reply),
+      scaffoldKey: scaffoldKey,
     );
   }
 
@@ -63,20 +65,22 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
       type: TweetType.Detail,
       trailing: TweetBottomSheet().tweetOptionIcon(context,
           scaffoldKey: scaffoldKey, model: model, type: TweetType.Detail),
+      scaffoldKey: scaffoldKey,
     );
   }
 
   void addLikeToComment(String commentId) {
     var state = Provider.of<FeedState>(context, listen: false);
     var authState = Provider.of<AuthState>(context, listen: false);
-    state.addLikeToTweet(state.tweetDetailModel.last, authState.userId);
+    state.addLikeToTweet(state.tweetDetailModel!.last, authState.userId);
   }
 
   void openImage() async {
     Navigator.pushNamed(context, '/ImageViewPge');
   }
 
-  void deleteTweet(TweetType type, String tweetId, {String parentkey}) {
+  void deleteTweet(TweetType type, String tweetId,
+      {required String parentkey}) {
     var state = Provider.of<FeedState>(context, listen: false);
     state.deleteTweet(tweetId, type, parentkey: parentkey);
     Navigator.of(context).pop();
@@ -100,24 +104,26 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
           slivers: <Widget>[
             SliverAppBar(
               pinned: true,
-              title: customTitleText('Thread'),
+              title: customTitleText(
+                'Thread',
+              ),
               iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
-              backgroundColor: Theme.of(context).appBarTheme.color,
+              backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
               bottom: PreferredSize(
                 child: Container(
                   color: Colors.grey.shade200,
                   height: 1.0,
                 ),
-                preferredSize: Size.fromHeight(0.0),
+                preferredSize: const Size.fromHeight(0.0),
               ),
             ),
             SliverList(
               delegate: SliverChildListDelegate(
                 [
                   state.tweetDetailModel == null ||
-                          state.tweetDetailModel.length == 0
+                          state.tweetDetailModel!.isEmpty
                       ? Container()
-                      : _tweetDetail(state.tweetDetailModel?.last),
+                      : _tweetDetail(state.tweetDetailModel!.last),
                   Container(
                     height: 6,
                     width: context.width,
@@ -129,16 +135,15 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
             SliverList(
               delegate: SliverChildListDelegate(
                 state.tweetReplyMap == null ||
-                        state.tweetReplyMap.length == 0 ||
-                        state.tweetReplyMap[postId] == null
+                        state.tweetReplyMap!.isEmpty ||
+                        state.tweetReplyMap![postId] == null
                     ? [
-                        Container(
-                          child: Center(
-                              //  child: Text('No comments'),
-                              ),
-                        )
+                        //!Removed container
+                        const Center(
+                            //  child: Text('No comments'),
+                            )
                       ]
-                    : state.tweetReplyMap[postId]
+                    : state.tweetReplyMap![postId]!
                         .map((x) => _commentRow(x))
                         .toList(),
               ),

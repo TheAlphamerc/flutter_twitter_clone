@@ -12,15 +12,16 @@ const double ALPHA_ON = 1;
 const int ANIM_DURATION = 300;
 
 class TabItem extends StatelessWidget {
-  TabItem(
-      {@required this.uniqueKey,
-      @required this.selected,
-      @required this.iconData,
-      @required this.title,
-      @required this.callbackFunction,
-      @required this.textColor,
-      @required this.iconColor,
-      this.isCustomIcon,
+  const TabItem(
+      {Key? key,
+      required this.uniqueKey,
+      required this.selected,
+      required this.iconData,
+      required this.title,
+      required this.callbackFunction,
+      required this.textColor,
+      required this.iconColor,
+      required this.isCustomIcon,
       this.customIconCode});
 
   final UniqueKey uniqueKey;
@@ -31,7 +32,7 @@ class TabItem extends StatelessWidget {
   final Color textColor;
   final Color iconColor;
   final bool isCustomIcon;
-  final IconData customIconCode;
+  final IconData? customIconCode;
 
   final double iconYAlign = ICON_ON;
   final double textYAlign = TEXT_OFF;
@@ -39,15 +40,16 @@ class TabItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (isCustomIcon) assert(customIconCode != null);
     return Expanded(
       child: Stack(
         fit: StackFit.expand,
         children: [
-          Container(
+          SizedBox(
             height: double.infinity,
             width: double.infinity,
             child: AnimatedAlign(
-                duration: Duration(milliseconds: ANIM_DURATION),
+                duration: const Duration(milliseconds: ANIM_DURATION),
                 alignment: Alignment(0, (selected) ? TEXT_ON : TEXT_OFF),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -62,23 +64,23 @@ class TabItem extends StatelessWidget {
                   ),
                 )),
           ),
-          Container(
+          SizedBox(
             height: double.infinity,
             width: double.infinity,
             child: AnimatedAlign(
-              duration: Duration(milliseconds: ANIM_DURATION),
+              duration: const Duration(milliseconds: ANIM_DURATION),
               curve: Curves.easeIn,
               alignment: Alignment(0, (selected) ? ICON_OFF : ICON_ON),
               child: AnimatedOpacity(
-                duration: Duration(milliseconds: ANIM_DURATION),
+                duration: const Duration(milliseconds: ANIM_DURATION),
                 opacity: (selected) ? ALPHA_OFF : ALPHA_ON,
                 child: IconButton(
                   highlightColor: Colors.transparent,
                   splashColor: Colors.transparent,
-                  padding: EdgeInsets.all(0),
-                  alignment: Alignment(0, 0),
+                  padding: const EdgeInsets.all(0),
+                  alignment: const Alignment(0, 0),
                   icon: isCustomIcon
-                      ? customIcon(context, icon: customIconCode)
+                      ? customIcon(context, icon: customIconCode!)
                       : Icon(
                           iconData,
                           color: iconColor,

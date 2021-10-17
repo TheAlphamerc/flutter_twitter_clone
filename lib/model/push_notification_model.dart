@@ -2,13 +2,13 @@ import 'dart:convert';
 
 class PushNotificationModel {
   PushNotificationModel({
-    this.id,
-    this.type,
-    this.receiverId,
-    this.senderId,
-    this.title,
-    this.body,
-    this.tweetId,
+    required this.id,
+    required this.type,
+    required this.receiverId,
+    required this.senderId,
+    required this.title,
+    required this.body,
+    required this.tweetId,
   });
 
   final String id;
@@ -48,8 +48,8 @@ class PushNotificationModel {
 
 class Notification {
   Notification({
-    this.body,
-    this.title,
+    required this.body,
+    required this.title,
   });
 
   final String body;

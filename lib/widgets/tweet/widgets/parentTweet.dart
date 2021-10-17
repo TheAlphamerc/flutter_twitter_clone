@@ -8,23 +8,23 @@ import 'package:flutter_twitter_clone/widgets/tweet/widgets/unavailableTweet.dar
 import 'package:provider/provider.dart';
 
 class ParentTweetWidget extends StatelessWidget {
-  ParentTweetWidget(
-      {Key key,
-      this.childRetwetkey,
-      this.type,
-      this.isImageAvailable,
+  const ParentTweetWidget(
+      {Key? key,
+      required this.childRetwetkey,
+      required this.type,
+      // this.isImageAvailable,
       this.trailing})
       : super(key: key);
 
   final String childRetwetkey;
   final TweetType type;
-  final Widget trailing;
-  final bool isImageAvailable;
+  final Widget? trailing;
+  // final bool isImageAvailable;
 
   void onTweetPressed(BuildContext context, FeedModel model) {
     var feedstate = Provider.of<FeedState>(context, listen: false);
     feedstate.getpostDetailFromDatabase(null, model: model);
-    Navigator.push(context, FeedPostDetail.getRoute(model.key));
+    Navigator.push(context, FeedPostDetail.getRoute(model.key!));
   }
 
   @override
@@ -35,9 +35,11 @@ class ParentTweetWidget extends StatelessWidget {
       builder: (context, AsyncSnapshot<FeedModel> snapshot) {
         if (snapshot.hasData) {
           return Tweet(
-              model: snapshot.data,
-              type: TweetType.ParentTweet,
-              trailing: trailing);
+            model: snapshot.data!,
+            type: TweetType.ParentTweet,
+            trailing: trailing,
+            scaffoldKey: GlobalKey<ScaffoldState>(),
+          );
         }
         if ((snapshot.connectionState == ConnectionState.done ||
                 snapshot.connectionState == ConnectionState.waiting) &&
@@ -47,7 +49,7 @@ class ParentTweetWidget extends StatelessWidget {
             type: type,
           );
         } else {
-          return SizedBox.shrink();
+          return const SizedBox.shrink();
         }
       },
     );

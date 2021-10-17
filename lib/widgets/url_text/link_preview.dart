@@ -5,20 +5,20 @@ import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 
 class LinkPreview extends StatelessWidget {
-  const LinkPreview({Key key, this.url, this.text}) : super(key: key);
-  final String url;
-  final String text;
+  const LinkPreview({Key? key, this.url, this.text}) : super(key: key);
+  final String? url;
+  final String? text;
 
   /// Extract the url from text
   /// If text contains multiple weburl then only first url will be returned to fetch the url meta
-  String getUrl() {
+  String? getUrl() {
     if (text == null) {
       return null;
     }
 
     RegExp reg = RegExp(
         r"(https?|http)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]*");
-    Iterable<Match> _matches = reg.allMatches(text);
+    Iterable<Match> _matches = reg.allMatches(text!);
     if (_matches.isNotEmpty) {
       return _matches.first.group(0);
     }
@@ -29,17 +29,17 @@ class LinkPreview extends StatelessWidget {
   Widget build(BuildContext context) {
     var uri = url ?? getUrl();
     if (uri == null) {
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     } else if (uri.contains("page.link/")) {
       /// `flutter_link_preview` package is unable to fetch firebase dynamic link meta data
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     }
     return FlutterLinkPreview(
       url: uri,
       showMultimedia: true,
       useMultithread: true,
       // cache: Duration(hours: 1),
-      builder: (info) {
+      builder: (InfoBase? info) {
         if (info == null) return const SizedBox();
         if (info is WebImageInfo) {
           return CachedNetworkImage(
@@ -47,12 +47,12 @@ class LinkPreview extends StatelessWidget {
             fit: BoxFit.contain,
           ).ripple(
             () {
-              Utility.launchURL(url);
+              Utility.launchURL(url!);
             },
             borderRadius: BorderRadius.circular(10),
           );
         }
-        final WebInfo webInfo = info;
+        final WebInfo webInfo = info as WebInfo; //FIXME
 
         if (!WebAnalyzer.isNotEmpty(webInfo.title)) return const SizedBox();
         return Padding(
@@ -72,7 +72,7 @@ class LinkPreview extends StatelessWidget {
                 if (webInfo.image != null && webInfo.image.isNotEmpty)
                   ClipRRect(
                     borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(10)),
+                        const BorderRadius.vertical(top: Radius.circular(10)),
                     child: Container(
                       height: 140,
                       width: double.infinity,
@@ -104,9 +104,9 @@ class LinkPreview extends StatelessWidget {
                     ),
                   ),
                 Padding(
-                  padding: EdgeInsets.only(bottom: 5, left: 8, right: 8),
+                  padding: const EdgeInsets.only(bottom: 5, left: 8, right: 8),
                   child: Text(
-                    Uri.tryParse(url).authority,
+                    Uri.tryParse(url!)!.authority,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyles.subtitleStyle.copyWith(
@@ -119,7 +119,7 @@ class LinkPreview extends StatelessWidget {
             ),
           ).ripple(
             () {
-              Utility.launchURL(url);
+              Utility.launchURL(url!);
             },
             borderRadius: BorderRadius.circular(8),
           ),

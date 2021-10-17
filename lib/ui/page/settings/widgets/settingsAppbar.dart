@@ -3,9 +3,11 @@ import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 
 class SettingsAppBar extends StatelessWidget implements PreferredSizeWidget {
-  SettingsAppBar({Key key, this.title, this.subtitle}) : super(key: key);
-  final String title, subtitle;
-  final Size appBarHeight = Size.fromHeight(60.0);
+  const SettingsAppBar({Key? key, required this.title, this.subtitle})
+      : super(key: key);
+  final String? subtitle;
+  final String title;
+  final Size appBarHeight = const Size.fromHeight(60.0);
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -13,17 +15,17 @@ class SettingsAppBar extends StatelessWidget implements PreferredSizeWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          SizedBox(height: 5),
+          const SizedBox(height: 5),
           customTitleText(
             title,
           ),
           Text(
             subtitle ?? '',
-            style: TextStyle(color: AppColor.darkGrey, fontSize: 18),
+            style: const TextStyle(color: AppColor.darkGrey, fontSize: 18),
           )
         ],
       ),
-      iconTheme: IconThemeData(color: Colors.blue),
+      iconTheme: const IconThemeData(color: Colors.blue),
       backgroundColor: Colors.white,
     );
   }

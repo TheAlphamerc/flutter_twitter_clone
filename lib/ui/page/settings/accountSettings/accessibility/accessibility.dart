@@ -7,7 +7,7 @@ import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 
 class AccessibilityPage extends StatelessWidget {
-  const AccessibilityPage({Key key}) : super(key: key);
+  const AccessibilityPage({Key? key}) : super(key: key);
 
   void openBottomSheet(
     BuildContext context,
@@ -22,7 +22,7 @@ class AccessibilityPage extends StatelessWidget {
           height: height,
           decoration: BoxDecoration(
             color: TwitterColor.white,
-            borderRadius: BorderRadius.only(
+            borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(15),
               topRight: Radius.circular(15),
             ),
@@ -39,7 +39,7 @@ class AccessibilityPage extends StatelessWidget {
       250,
       Column(
         children: <Widget>[
-          SizedBox(height: 5),
+          const SizedBox(height: 5),
           Container(
             width: 40,
             height: 5,
@@ -48,15 +48,15 @@ class AccessibilityPage extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
             ),
           ),
-          Padding(
+          const Padding(
             padding: EdgeInsets.symmetric(vertical: 15),
             child: TitleText('Data preference'),
           ),
-          Divider(height: 0),
+          const Divider(height: 0),
           _row("Mobile data & Wi-Fi"),
-          Divider(height: 0),
+          const Divider(height: 0),
           _row("Wi-Fi only"),
-          Divider(height: 0),
+          const Divider(height: 0),
           _row("Never"),
         ],
       ),
@@ -69,7 +69,7 @@ class AccessibilityPage extends StatelessWidget {
       190,
       Column(
         children: <Widget>[
-          SizedBox(height: 5),
+          const SizedBox(height: 5),
           Container(
             width: 40,
             height: 5,
@@ -78,13 +78,13 @@ class AccessibilityPage extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
             ),
           ),
-          Padding(
+          const Padding(
             padding: EdgeInsets.symmetric(vertical: 10),
             child: TitleText('Dark mode appearance'),
           ),
-          Divider(height: 0),
+          const Divider(height: 0),
           _row("Dim"),
-          Divider(height: 0),
+          const Divider(height: 0),
           _row("Light out"),
         ],
       ),
@@ -93,7 +93,7 @@ class AccessibilityPage extends StatelessWidget {
 
   Widget _row(String text) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
+      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 5),
       child: RadioListTile(
         value: false,
         groupValue: true,
@@ -115,15 +115,15 @@ class AccessibilityPage extends StatelessWidget {
         ),
       ),
       body: ListView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         children: <Widget>[
-          HeaderWidget('Screen Reader'),
-          SettingRowWidget(
+          const HeaderWidget('Screen Reader'),
+          const SettingRowWidget(
             "Pronounce # as \"hashtag\"",
             showCheckBox: true,
           ),
-          Divider(height: 0),
-          HeaderWidget('Vision'),
+          const Divider(height: 0),
+          const HeaderWidget('Vision'),
           SettingRowWidget(
             "Compose image descriptions",
             subtitle:
@@ -135,7 +135,7 @@ class AccessibilityPage extends StatelessWidget {
             },
             showDivider: false,
           ),
-          HeaderWidget(
+          const HeaderWidget(
             'Motion',
             secondHeader: true,
           ),

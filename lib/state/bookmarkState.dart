@@ -12,26 +12,24 @@ class BookmarkState extends AppState {
   BookmarkState() {
     getDataFromDatabase();
   }
-  List<FeedModel> _tweetList;
-  List<BookmarkModel> _bookmarkList;
+  List<FeedModel>? _tweetList;
+  List<BookmarkModel>? _bookmarkList;
 
   addBookmarkTweetToList(BookmarkModel model) {
-    if (_bookmarkList == null) {
-      _bookmarkList = <BookmarkModel>[];
-    }
+    _bookmarkList ??= <BookmarkModel>[];
 
-    if (!_bookmarkList.any((element) => element.key == model.key)) {
-      _bookmarkList.add(model);
+    if (!_bookmarkList!.any((element) => element.key == model.key)) {
+      _bookmarkList!.add(model);
     }
   }
 
-  List<FeedModel> get tweetList => _tweetList;
+  List<FeedModel>? get tweetList => _tweetList;
 
   /// get [Notification list] from firebase realtime database
   void getDataFromDatabase() async {
     String userId = await getIt<SharedPreferenceHelper>()
         .getUserProfile()
-        .then((value) => value.userId);
+        .then((value) => value!.userId!);
     try {
       if (_tweetList != null) {
         return;
@@ -43,7 +41,7 @@ class BookmarkState extends AppState {
           .once()
           .then((DataSnapshot snapshot) async {
         if (snapshot.value != null) {
-          var map = snapshot.value as Map<dynamic, dynamic>;
+          var map = snapshot.value as Map<dynamic, dynamic>?;
           if (map != null) {
             map.forEach((bookmarkKey, value) {
               var map = value as Map<dynamic, dynamic>;
@@ -54,13 +52,11 @@ class BookmarkState extends AppState {
           }
 
           if (_bookmarkList != null) {
-            for (var bookmark in _bookmarkList) {
+            for (var bookmark in _bookmarkList!) {
               var tweet = await getTweetDetail(bookmark.tweetId);
               if (tweet != null) {
-                if (_tweetList == null) {
-                  _tweetList = <FeedModel>[];
-                }
-                _tweetList.add(tweet);
+                _tweetList ??= <FeedModel>[];
+                _tweetList!.add(tweet);
               }
             }
           }
@@ -74,13 +70,13 @@ class BookmarkState extends AppState {
   }
 
   /// get `Tweet` present in notification
-  Future<FeedModel> getTweetDetail(String tweetId) async {
+  Future<FeedModel?> getTweetDetail(String tweetId) async {
     FeedModel _tweetDetail;
     var snapshot = await kDatabase.child('tweet').child(tweetId).once();
     if (snapshot.value != null) {
       var map = snapshot.value as Map<dynamic, dynamic>;
       _tweetDetail = FeedModel.fromJson(map);
-      _tweetDetail.key = snapshot.key;
+      _tweetDetail.key = snapshot.key!;
       return _tweetDetail;
     } else {
       return null;

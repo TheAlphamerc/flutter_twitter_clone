@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 
 class RippleButton extends StatelessWidget {
   final Widget child;
-  final Function onPressed;
+  final Function? onPressed;
   final BorderRadius borderRadius;
   final Color splashColor;
-  RippleButton(
-      {Key key,
-      this.child,
+  const RippleButton(
+      {Key? key,
+      required this.child,
       this.onPressed,
       this.borderRadius = const BorderRadius.all(Radius.circular(0)),
-      this.splashColor})
+      required this.splashColor})
       : super(key: key);
 
   @override
@@ -31,7 +31,7 @@ class RippleButton extends StatelessWidget {
               ),
               onPressed: () {
                 if (onPressed != null) {
-                  onPressed();
+                  onPressed!();
                 }
               },
               child: Container()),

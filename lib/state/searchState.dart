@@ -7,14 +7,14 @@ import 'appState.dart';
 class SearchState extends AppState {
   bool isBusy = false;
   SortUser sortBy = SortUser.MaxFollower;
-  List<UserModel> _userFilterlist;
-  List<UserModel> _userlist;
+  List<UserModel>? _userFilterlist;
+  List<UserModel>? _userlist;
 
-  List<UserModel> get userlist {
+  List<UserModel>? get userlist {
     if (_userFilterlist == null) {
       return null;
     } else {
-      return List.from(_userFilterlist);
+      return List.from(_userFilterlist!);
     }
   }
 
@@ -32,11 +32,11 @@ class SearchState extends AppState {
               map.forEach((key, value) {
                 var model = UserModel.fromJson(value);
                 model.key = key;
-                _userlist.add(model);
-                _userFilterlist.add(model);
+                _userlist!.add(model);
+                _userFilterlist!.add(model);
               });
-              _userFilterlist
-                  .sort((x, y) => y.followers.compareTo(x.followers));
+              _userFilterlist!
+                  .sort((x, y) => y.followers!.compareTo(x.followers!));
             }
           } else {
             _userlist = null;
@@ -54,32 +54,33 @@ class SearchState extends AppState {
   /// If user has use search filter and change screen and came back to search screen It will reset user list.
   /// This function call when search page open.
   void resetFilterList() {
-    if (_userlist != null && _userlist.length != _userFilterlist.length) {
-      _userFilterlist = List.from(_userlist);
-      _userFilterlist.sort((x, y) => y.followers.compareTo(x.followers));
+    if (_userlist != null && _userlist!.length != _userFilterlist!.length) {
+      _userFilterlist = List.from(_userlist!);
+      _userFilterlist!.sort((x, y) => y.followers!.compareTo(x.followers!));
       notifyListeners();
     }
   }
 
   /// This function call when search fiels text change.
   /// UserModel list on  search field get filter by `name` string
-  void filterByUsername(String name) {
-    if (name.isEmpty &&
+  void filterByUsername(String? name) {
+    if (name != null &&
+        name.isEmpty &&
         _userlist != null &&
-        _userlist.length != _userFilterlist.length) {
-      _userFilterlist = List.from(_userlist);
+        _userlist!.length != _userFilterlist!.length) {
+      _userFilterlist = List.from(_userlist!);
     }
     // return if userList is empty or null
-    if (_userlist == null && _userlist.isEmpty) {
+    if (_userlist == null && _userlist!.isEmpty) {
       cprint("User list is empty");
       return;
     }
     // sortBy userlist on the basis of username
     else if (name != null) {
-      _userFilterlist = _userlist
+      _userFilterlist = _userlist!
           .where((x) =>
               x.userName != null &&
-              x.userName.toLowerCase().contains(name.toLowerCase()))
+              x.userName!.toLowerCase().contains(name.toLowerCase()))
           .toList();
     }
     notifyListeners();
@@ -94,25 +95,26 @@ class SearchState extends AppState {
   String get selectedFilter {
     switch (sortBy) {
       case SortUser.Alphabetically:
-        _userFilterlist.sort((x, y) => x.displayName.compareTo(y.displayName));
+        _userFilterlist!
+            .sort((x, y) => x.displayName!.compareTo(y.displayName!));
         return "Alphabetically";
 
       case SortUser.MaxFollower:
-        _userFilterlist.sort((x, y) => y.followers.compareTo(x.followers));
+        _userFilterlist!.sort((x, y) => y.followers!.compareTo(x.followers!));
         return "Popular";
 
       case SortUser.Newest:
-        _userFilterlist.sort((x, y) =>
-            DateTime.parse(y.createdAt).compareTo(DateTime.parse(x.createdAt)));
+        _userFilterlist!.sort((x, y) => DateTime.parse(y.createdAt!)
+            .compareTo(DateTime.parse(x.createdAt!)));
         return "Newest user";
 
       case SortUser.Oldest:
-        _userFilterlist.sort((x, y) =>
-            DateTime.parse(x.createdAt).compareTo(DateTime.parse(y.createdAt)));
+        _userFilterlist!.sort((x, y) => DateTime.parse(x.createdAt!)
+            .compareTo(DateTime.parse(y.createdAt!)));
         return "Oldest user";
 
       case SortUser.Verified:
-        _userFilterlist.sort((x, y) =>
+        _userFilterlist!.sort((x, y) =>
             y.isVerified.toString().compareTo(x.isVerified.toString()));
         return "Verified user";
 
@@ -125,7 +127,7 @@ class SearchState extends AppState {
   /// Method is used on
   List<UserModel> userList = [];
   List<UserModel> getuserDetail(List<String> userIds) {
-    final list = _userlist.where((x) {
+    final list = _userlist!.where((x) {
       if (userIds.contains(x.key)) {
         return true;
       } else {

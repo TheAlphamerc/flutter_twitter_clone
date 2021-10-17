@@ -7,7 +7,7 @@ import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 
 class DisplayAndSoundPage extends StatelessWidget {
-  const DisplayAndSoundPage({Key key}) : super(key: key);
+  const DisplayAndSoundPage({Key? key}) : super(key: key);
 
   void openBottomSheet(
     BuildContext context,
@@ -22,7 +22,7 @@ class DisplayAndSoundPage extends StatelessWidget {
           height: height,
           decoration: BoxDecoration(
             color: TwitterColor.white,
-            borderRadius: BorderRadius.only(
+            borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(15),
               topRight: Radius.circular(15),
             ),
@@ -39,7 +39,7 @@ class DisplayAndSoundPage extends StatelessWidget {
       250,
       Column(
         children: <Widget>[
-          SizedBox(height: 5),
+          const SizedBox(height: 5),
           Container(
             width: 40,
             height: 5,
@@ -48,15 +48,15 @@ class DisplayAndSoundPage extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
             ),
           ),
-          Padding(
+          const Padding(
             padding: EdgeInsets.symmetric(vertical: 10),
             child: TitleText('Dark Mode'),
           ),
-          Divider(height: 0),
+          const Divider(height: 0),
           _row("On"),
-          Divider(height: 0),
+          const Divider(height: 0),
           _row("Off"),
-          Divider(height: 0),
+          const Divider(height: 0),
           _row("Automatic at sunset"),
         ],
       ),
@@ -69,7 +69,7 @@ class DisplayAndSoundPage extends StatelessWidget {
       190,
       Column(
         children: <Widget>[
-          SizedBox(height: 5),
+          const SizedBox(height: 5),
           Container(
             width: 40,
             height: 5,
@@ -78,13 +78,13 @@ class DisplayAndSoundPage extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
             ),
           ),
-          Padding(
+          const Padding(
             padding: EdgeInsets.symmetric(vertical: 10),
             child: TitleText('Dark mode appearance'),
           ),
-          Divider(height: 0),
+          const Divider(height: 0),
           _row("Dim"),
-          Divider(height: 0),
+          const Divider(height: 0),
           _row("Light out"),
         ],
       ),
@@ -93,7 +93,7 @@ class DisplayAndSoundPage extends StatelessWidget {
 
   Widget _row(String text) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
+      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 5),
       child: RadioListTile(
         value: false,
         groupValue: true,
@@ -115,15 +115,15 @@ class DisplayAndSoundPage extends StatelessWidget {
         ),
       ),
       body: ListView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         children: <Widget>[
-          HeaderWidget('Media'),
-          SettingRowWidget(
+          const HeaderWidget('Media'),
+          const SettingRowWidget(
             "Media Previews",
             showCheckBox: false,
           ),
-          Divider(height: 0),
-          HeaderWidget('Display'),
+          const Divider(height: 0),
+          const HeaderWidget('Display'),
           SettingRowWidget(
             "Dark Mode",
             subtitle: 'Off',
@@ -140,27 +140,27 @@ class DisplayAndSoundPage extends StatelessWidget {
             },
             showDivider: false,
           ),
-          SettingRowWidget(
+          const SettingRowWidget(
             "Emoji",
             subtitle:
                 'Use the Fwitter set instead of your device\'s default set',
             showDivider: false,
             showCheckBox: false,
           ),
-          HeaderWidget(
+          const HeaderWidget(
             'Sound',
             secondHeader: true,
           ),
-          SettingRowWidget(
+          const SettingRowWidget(
             "Sound effects",
             // vPadding: 15,
             showCheckBox: false,
           ),
-          HeaderWidget(
+          const HeaderWidget(
             'Web browser',
             secondHeader: false,
           ),
-          SettingRowWidget(
+          const SettingRowWidget(
             "Use in-app browser",
             subtitle: 'Open external links with Fwitter browser',
             showCheckBox: false,

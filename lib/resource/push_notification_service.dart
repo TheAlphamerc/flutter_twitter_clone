@@ -18,12 +18,12 @@ class PushNotificationService {
     initializeMessages();
   }
 
-  PublishSubject<PushNotificationModel> _pushNotificationSubject;
+  late PublishSubject<PushNotificationModel> _pushNotificationSubject;
 
   Stream<PushNotificationModel> get pushNotificationResponseStream =>
       _pushNotificationSubject.stream;
 
-  StreamSubscription<RemoteMessage> _backgroundMessageSubscription;
+  late StreamSubscription<RemoteMessage> _backgroundMessageSubscription;
 
   void initializeMessages() {
     // _firebaseMessaging.requestNotificationPermissions(
@@ -49,7 +49,7 @@ class PushNotificationService {
 
     /// Get message when the app is in the Terminated form
     FirebaseMessaging.instance.getInitialMessage().then((event) {
-      if (event != null && event.data != null) {
+      if (event != null) {
         try {
           myBackgroundMessageHandler(event.data, onLaunch: true);
         } catch (e) {
@@ -60,21 +60,19 @@ class PushNotificationService {
 
     /// Returns a [Stream] that is called when a user presses a notification message displayed via FCM.
     _backgroundMessageSubscription =
-        FirebaseMessaging.onMessageOpenedApp.listen((event) {
-      if (event != null && event.data != null) {
-        if (event != null && event.data != null) {
-          try {
-            myBackgroundMessageHandler(event.data, onLaunch: true);
-          } catch (e) {
-            cprint(e, errorIn: "On onMessageOpenedApp");
-          }
+        FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage? event) {
+      if (event != null) {
+        try {
+          myBackgroundMessageHandler(event.data, onLaunch: true);
+        } catch (e) {
+          cprint(e, errorIn: "On onMessageOpenedApp");
         }
       }
     });
   }
 
   /// Return FCM token
-  Future<String> getDeviceToken() async {
+  Future<String?> getDeviceToken() async {
     final token = await _firebaseMessaging.getToken();
     return token;
   }

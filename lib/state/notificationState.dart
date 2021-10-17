@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 
 import 'package:firebase_database/firebase_database.dart';
@@ -13,40 +15,38 @@ import '../ui/page/common/locator.dart';
 import 'appState.dart';
 
 class NotificationState extends AppState {
-  String fcmToken;
-  FeedModel notificationTweetModel;
+  // String fcmToken;
+  // FeedModel notificationTweetModel;
 
   // FcmNotificationModel notification;
-  String notificationSenderId;
-  dabase.Query query;
+  // String notificationSenderId;
+  dabase.Query? query;
   List<UserModel> userList = [];
 
-  List<NotificationModel> _notificationList;
+  List<NotificationModel>? _notificationList;
 
   addNotificationList(NotificationModel model) {
-    if (_notificationList == null) {
-      _notificationList = <NotificationModel>[];
-    }
+    _notificationList ??= <NotificationModel>[];
 
-    if (!_notificationList.any((element) => element.id == model.id)) {
-      _notificationList.add(model);
+    if (!_notificationList!.any((element) => element.id == model.id)) {
+      _notificationList!.add(model);
     }
   }
 
-  List<NotificationModel> get notificationList => _notificationList;
+  List<NotificationModel>? get notificationList => _notificationList;
 
   /// [Intitilise firebase notification kDatabase]
   Future<bool> databaseInit(String userId) {
     try {
       if (query != null) {
-        query.onValue.drain();
+        query!.onValue.drain();
         query = null;
         _notificationList = null;
       }
       query = kDatabase.child("notification").child(userId);
-      query.onChildAdded.listen(_onNotificationAdded);
-      query.onChildChanged.listen(_onNotificationChanged);
-      query.onChildRemoved.listen(_onNotificationRemoved);
+      query!.onChildAdded.listen(_onNotificationAdded);
+      query!.onChildChanged.listen(_onNotificationChanged);
+      query!.onChildRemoved.listen(_onNotificationRemoved);
 
       return Future.value(true);
     } catch (error) {
@@ -68,15 +68,15 @@ class NotificationState extends AppState {
           .once()
           .then((DataSnapshot snapshot) {
         if (snapshot.value != null) {
-          var map = snapshot.value as Map<dynamic, dynamic>;
+          var map = snapshot.value as Map<dynamic, dynamic>?;
           if (map != null) {
             map.forEach((tweetKey, value) {
               var map = value as Map<dynamic, dynamic>;
               var model = NotificationModel.fromJson(tweetKey, map);
               addNotificationList(model);
             });
-            _notificationList
-                .sort((x, y) => y.timeStamp.compareTo(x.timeStamp));
+            _notificationList!
+                .sort((x, y) => y.timeStamp!.compareTo(x.timeStamp!));
           }
         }
         loading = false;
@@ -88,13 +88,13 @@ class NotificationState extends AppState {
   }
 
   /// get `Tweet` present in notification
-  Future<FeedModel> getTweetDetail(String tweetId) async {
+  Future<FeedModel?> getTweetDetail(String tweetId) async {
     FeedModel _tweetDetail;
     var snapshot = await kDatabase.child('tweet').child(tweetId).once();
     if (snapshot.value != null) {
       var map = snapshot.value as Map<dynamic, dynamic>;
       _tweetDetail = FeedModel.fromJson(map);
-      _tweetDetail.key = snapshot.key;
+      _tweetDetail.key = snapshot.key!;
       return _tweetDetail;
     } else {
       return null;
@@ -102,16 +102,16 @@ class NotificationState extends AppState {
   }
 
   /// get user who liked your tweet
-  Future<UserModel> getuserDetail(String userId) async {
+  Future<UserModel?> getuserDetail(String userId) async {
     UserModel user;
-    if (userList.length > 0 && userList.any((x) => x.userId == userId)) {
+    if (userList.isNotEmpty && userList.any((x) => x.userId == userId)) {
       return Future.value(userList.firstWhere((x) => x.userId == userId));
     }
     var snapshot = await kDatabase.child('profile').child(userId).once();
     if (snapshot.value != null) {
       var map = snapshot.value as Map<dynamic, dynamic>;
       user = UserModel.fromJson(map);
-      user.key = snapshot.key;
+      user.key = snapshot.key!;
       userList.add(user);
       return user;
     } else {
@@ -128,7 +128,7 @@ class NotificationState extends AppState {
   void _onNotificationAdded(Event event) {
     if (event.snapshot.value != null) {
       var map = event.snapshot.value as Map<dynamic, dynamic>;
-      var model = NotificationModel.fromJson(event.snapshot.key, map);
+      var model = NotificationModel.fromJson(event.snapshot.key!, map);
 
       addNotificationList(model);
       // added notification to list
@@ -149,9 +149,9 @@ class NotificationState extends AppState {
   void _onNotificationRemoved(Event event) {
     if (event.snapshot.value != null) {
       var map = event.snapshot.value as Map<dynamic, dynamic>;
-      var model = NotificationModel.fromJson(event.snapshot.key, map);
+      var model = NotificationModel.fromJson(event.snapshot.key!, map);
       // remove notification from list
-      _notificationList.removeWhere((x) => x.tweetKey == model.tweetKey);
+      _notificationList!.removeWhere((x) => x.tweetKey == model.tweetKey);
       notifyListeners();
       print("Notification Removed");
     }

@@ -12,12 +12,13 @@ import 'package:flutter_twitter_clone/widgets/tweet/widgets/tweetBottomSheet.dar
 import 'package:provider/provider.dart';
 
 class FeedPage extends StatelessWidget {
-  const FeedPage({Key key, this.scaffoldKey, this.refreshIndicatorKey})
+  const FeedPage(
+      {Key? key, required this.scaffoldKey, this.refreshIndicatorKey})
       : super(key: key);
 
   final GlobalKey<ScaffoldState> scaffoldKey;
 
-  final GlobalKey<RefreshIndicatorState> refreshIndicatorKey;
+  final GlobalKey<RefreshIndicatorState>? refreshIndicatorKey;
 
   Widget _floatingActionButton(BuildContext context) {
     return FloatingActionButton(
@@ -40,7 +41,7 @@ class FeedPage extends StatelessWidget {
       floatingActionButton: _floatingActionButton(context),
       backgroundColor: TwitterColor.mystic,
       body: SafeArea(
-        child: Container(
+        child: SizedBox(
           height: context.height,
           width: context.width,
           child: RefreshIndicator(
@@ -65,9 +66,10 @@ class FeedPage extends StatelessWidget {
 class _FeedPageBody extends StatelessWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
 
-  final GlobalKey<RefreshIndicatorState> refreshIndicatorKey;
+  final GlobalKey<RefreshIndicatorState>? refreshIndicatorKey;
 
-  const _FeedPageBody({Key key, this.scaffoldKey, this.refreshIndicatorKey})
+  const _FeedPageBody(
+      {Key? key, required this.scaffoldKey, this.refreshIndicatorKey})
       : super(key: key);
 
   @override
@@ -75,13 +77,13 @@ class _FeedPageBody extends StatelessWidget {
     var authstate = Provider.of<AuthState>(context, listen: false);
     return Consumer<FeedState>(
       builder: (context, state, child) {
-        final List<FeedModel> list = state.getTweetList(authstate.userModel);
+        final List<FeedModel>? list = state.getTweetList(authstate.userModel);
         return CustomScrollView(
           slivers: <Widget>[
             child,
             state.isBusy && list == null
                 ? SliverToBoxAdapter(
-                    child: Container(
+                    child: SizedBox(
                       height: context.height - 135,
                       child: CustomScreenLoader(
                         height: double.infinity,
@@ -91,7 +93,7 @@ class _FeedPageBody extends StatelessWidget {
                     ),
                   )
                 : !state.isBusy && list == null
-                    ? SliverToBoxAdapter(
+                    ? const SliverToBoxAdapter(
                         child: EmptyList(
                           'No Tweet added yet',
                           subTitle:
@@ -100,7 +102,7 @@ class _FeedPageBody extends StatelessWidget {
                       )
                     : SliverList(
                         delegate: SliverChildListDelegate(
-                          list.map(
+                          list!.map(
                             (model) {
                               return Container(
                                 color: Colors.white,
@@ -111,6 +113,7 @@ class _FeedPageBody extends StatelessWidget {
                                       model: model,
                                       type: TweetType.Tweet,
                                       scaffoldKey: scaffoldKey),
+                                  scaffoldKey: scaffoldKey,
                                 ),
                               );
                             },
@@ -128,7 +131,7 @@ class _FeedPageBody extends StatelessWidget {
             return IconButton(
               icon: const Icon(Icons.menu),
               onPressed: () {
-                scaffoldKey.currentState.openDrawer();
+                scaffoldKey.currentState!.openDrawer();
               },
             );
           },
@@ -142,7 +145,7 @@ class _FeedPageBody extends StatelessWidget {
             color: Colors.grey.shade200,
             height: 1.0,
           ),
-          preferredSize: Size.fromHeight(0.0),
+          preferredSize: const Size.fromHeight(0.0),
         ),
       ),
     );

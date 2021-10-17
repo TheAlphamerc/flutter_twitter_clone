@@ -3,9 +3,9 @@ class BookmarkModel {
   String tweetId;
   String createdAt;
   BookmarkModel({
-    this.key,
-    this.tweetId,
-    this.createdAt,
+    required this.key,
+    required this.tweetId,
+    required this.createdAt,
   });
 
   factory BookmarkModel.fromJson(Map<dynamic, dynamic> json) => BookmarkModel(
