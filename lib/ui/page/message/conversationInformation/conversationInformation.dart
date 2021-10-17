@@ -31,7 +31,6 @@ class ConversationInformation extends StatelessWidget {
                         context, ProfilePage.getRoute(profileId: user.userId!));
                   },
                   borderRadius: BorderRadius.circular(40),
-                  splashColor: TwitterColor.bondiBlue,
                   child: CircularImage(path: user.profilePic, height: 80),
                 )),
           ),

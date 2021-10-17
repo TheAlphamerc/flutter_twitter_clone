@@ -128,7 +128,6 @@ class RetweetWidget extends StatelessWidget {
                 Navigator.push(
                     context, FeedPostDetail.getRoute(snapshot.data!.key!));
               },
-              splashColor: TwitterColor.dodgetBlue,
               child: ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(15)),
                 child: _tweet(context, snapshot.data!),

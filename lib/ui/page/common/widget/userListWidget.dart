@@ -93,7 +93,6 @@ class UserTile extends StatelessWidget {
                     context, ProfilePage.getRoute(profileId: user.userId!));
               },
               borderRadius: const BorderRadius.all(Radius.circular(60)),
-              splashColor: TwitterColor.bondiBlue,
               child: CircularImage(path: user.profilePic, height: 55),
             ),
             title: Row(

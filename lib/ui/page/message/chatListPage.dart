@@ -92,7 +92,6 @@ class _ChatListPageState extends State<ChatListPage> {
                 context, ProfilePage.getRoute(profileId: model.userId!));
           },
           borderRadius: BorderRadius.circular(28),
-          splashColor: TwitterColor.bondiBlue,
           child: Container(
             height: 56,
             width: 56,

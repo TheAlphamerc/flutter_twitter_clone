@@ -161,7 +161,6 @@ class _ProfilePageState extends State<ProfilePage>
                                   ProfileImageView.getRoute(
                                       authstate.profileUserModel.profilePic!));
                             },
-                            splashColor: Colors.white,
                           ),
                         ),
                         Container(

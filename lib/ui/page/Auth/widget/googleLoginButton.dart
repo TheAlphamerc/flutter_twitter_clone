@@ -39,7 +39,6 @@ class GoogleLoginButton extends StatelessWidget {
         _googleLogin(context);
       },
       borderRadius: BorderRadius.circular(10),
-      splashColor: TwitterColor.bondiBlue,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         decoration: BoxDecoration(

@@ -4,13 +4,13 @@ class RippleButton extends StatelessWidget {
   final Widget child;
   final Function? onPressed;
   final BorderRadius borderRadius;
-  final Color splashColor;
+  final Color? splashColor;
   const RippleButton(
       {Key? key,
       required this.child,
       this.onPressed,
       this.borderRadius = const BorderRadius.all(Radius.circular(0)),
-      required this.splashColor})
+      this.splashColor})
       : super(key: key);
 
   @override
