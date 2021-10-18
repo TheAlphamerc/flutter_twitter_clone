@@ -74,6 +74,20 @@ class FeedState extends AppState {
     return list;
   }
 
+  //TODO
+  // Map<String, PreviewData>? _linkDataPreviews = {};
+  // Map<String, PreviewData>? get linkDataPreviews => _linkDataPreviews;
+  // void addPreviewData(String url, PreviewData previewData) {
+  //   _linkDataPreviews.addAll({url: previewData});
+  //   notifyListeners();
+  // }
+  Map<String, dynamic> _linkDataPreviews = {};
+  Map<String, dynamic> get linkDataPreviews => _linkDataPreviews;
+  void addPreviewData(String url, dynamic previewData) {
+    _linkDataPreviews.addAll({url: previewData});
+    notifyListeners();
+  }
+
   /// set tweet for detail tweet page
   /// Setter call when tweet is tapped to view detail
   /// Add Tweet detail is added in _tweetDetailModelList
@@ -321,8 +335,7 @@ class FeedState extends AppState {
   /// [Delete tweet] in Firebase kDatabase
   /// Remove Tweet if present in home page Tweet list
   /// Remove Tweet if present in Tweet detail page or in comment
-  deleteTweet(String tweetId, TweetType type,
-      {required String parentkey} //FIXME
+  deleteTweet(String tweetId, TweetType type, {String? parentkey} //FIXME
       ) {
     try {
       /// Delete tweet if it is in nested tweet detail page
