@@ -84,7 +84,7 @@ class AuthState extends AppState {
       loading = false;
       cprint(error, errorIn: 'signIn');
       kAnalytics.logLogin(loginMethod: 'email_login');
-      Utility.customSnackBar(scaffoldKey, error as String);
+      Utility.customSnackBar(scaffoldKey, error.toString());
       // logoutCallback();
       return null;
     }
@@ -184,7 +184,7 @@ class AuthState extends AppState {
     } catch (error) {
       loading = false;
       cprint(error, errorIn: 'signUp');
-      Utility.customSnackBar(scaffoldKey, error as String);
+      Utility.customSnackBar(scaffoldKey, error.toString());
       return null;
     }
   }
@@ -286,7 +286,7 @@ class AuthState extends AppState {
         cprint(error.message);
       });
     } catch (error) {
-      Utility.customSnackBar(scaffoldKey, error as String);
+      Utility.customSnackBar(scaffoldKey, error.toString());
       return Future.value(false);
     }
   }

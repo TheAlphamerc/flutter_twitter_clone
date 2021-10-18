@@ -33,7 +33,7 @@ class ComposeTweetPage extends StatefulWidget {
 
 class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
   bool isScrollingDown = false;
-  late FeedModel model;
+  late FeedModel? model;
   late ScrollController scrollcontroller;
 
   File? _image;
@@ -49,7 +49,7 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
   @override
   void initState() {
     var feedState = Provider.of<FeedState>(context, listen: false);
-    model = feedState.tweetToReplyModel!;
+    model = feedState.tweetToReplyModel;
     scrollcontroller = ScrollController();
     _textEditingController = TextEditingController();
     scrollcontroller.addListener(_scrollListener);
@@ -187,7 +187,7 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
         childRetwetkey: widget.isTweet
             ? null
             : widget.isRetweet
-                ? model.key
+                ? model!.key
                 : null,
         userId: myUser.userId!);
     return reply;
@@ -362,7 +362,7 @@ class _ComposeRetweet
                               color: AppColor.extraLightGrey, width: .5),
                           borderRadius:
                               const BorderRadius.all(Radius.circular(15))),
-                      child: _tweet(context, viewState.model),
+                      child: _tweet(context, viewState.model!),
                     ),
                   ],
                 ),
@@ -410,7 +410,7 @@ class _ComposeTweet
                   SizedBox(
                     width: context.width - 72,
                     child: UrlText(
-                      text: viewState.model.description ?? '',
+                      text: viewState.model!.description ?? '',
                       style: const TextStyle(
                         color: Colors.black,
                         fontSize: 16,
@@ -426,7 +426,7 @@ class _ComposeTweet
                   const SizedBox(height: 30),
                   UrlText(
                     text:
-                        'Replying to ${viewState.model.user!.userName ?? viewState.model.user!.displayName}',
+                        'Replying to ${viewState.model!.user!.userName ?? viewState.model!.user!.displayName}',
                     style: TextStyle(
                       color: TwitterColor.paleSky,
                       fontSize: 13,
@@ -440,18 +440,18 @@ class _ComposeTweet
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 CircularImage(
-                    path: viewState.model.user!.profilePic, height: 40),
+                    path: viewState.model!.user!.profilePic, height: 40),
                 const SizedBox(width: 10),
                 ConstrainedBox(
                   constraints:
                       BoxConstraints(minWidth: 0, maxWidth: context.width * .5),
-                  child: TitleText(viewState.model.user!.displayName!,
+                  child: TitleText(viewState.model!.user!.displayName!,
                       fontSize: 16,
                       fontWeight: FontWeight.w800,
                       overflow: TextOverflow.ellipsis),
                 ),
                 const SizedBox(width: 3),
-                viewState.model.user!.isVerified!
+                viewState.model!.user!.isVerified!
                     ? customIcon(
                         context,
                         icon: AppIcon.blueTick,
@@ -461,14 +461,14 @@ class _ComposeTweet
                         paddingIcon: 3,
                       )
                     : const SizedBox(width: 0),
-                SizedBox(width: viewState.model.user!.isVerified! ? 5 : 0),
-                customText('${viewState.model.user!.userName}',
+                SizedBox(width: viewState.model!.user!.isVerified! ? 5 : 0),
+                customText('${viewState.model!.user!.userName}',
                     style: TextStyles.userNameStyle.copyWith(fontSize: 15)),
                 const SizedBox(width: 5),
                 Padding(
                   padding: const EdgeInsets.only(top: 3),
                   child: customText(
-                      '- ${Utility.getChatTime(viewState.model.createdAt)}',
+                      '- ${Utility.getChatTime(viewState.model!.createdAt)}',
                       style: TextStyles.userNameStyle.copyWith(fontSize: 12)),
                 )
               ],

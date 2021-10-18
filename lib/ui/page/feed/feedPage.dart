@@ -80,7 +80,7 @@ class _FeedPageBody extends StatelessWidget {
         final List<FeedModel>? list = state.getTweetList(authstate.userModel);
         return CustomScrollView(
           slivers: <Widget>[
-            child,
+            child!,
             state.isBusy && list == null
                 ? SliverToBoxAdapter(
                     child: SizedBox(
