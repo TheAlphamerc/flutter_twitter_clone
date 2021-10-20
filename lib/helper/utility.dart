@@ -283,4 +283,8 @@ class Utility {
     Clipboard.setData(data);
     customSnackBar(scaffoldKey, message);
   }
+
+  static Locale getLocale(BuildContext context) {
+    return Localizations.localeOf(context);
+  }
 }

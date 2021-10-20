@@ -42,26 +42,31 @@ class LinkPreviewer extends StatelessWidget {
       fontSize: 0,
     );
 
-    return LinkPreview(
-      enableAnimation: false,
-      onPreviewDataFetched: (data) {
-        state.addPreviewData(uri, data);
-      },
-      imageBuilder: (image) {
-        return ClipRRect(
-          borderRadius: BorderRadius.circular(10.0),
-          child: CachedNetworkImage(
-            imageUrl: image,
-          ),
-        ).ripple(() {
-          Utility.launchURL(uri);
-        });
-      },
-      linkStyle: style,
-      previewData:
-          state.linkDataPreviews[uri], // Pass the preview data from the state
-      text: uri,
-      width: MediaQuery.of(context).size.width,
-    );
+    try {
+      return LinkPreview(
+        enableAnimation: false,
+        onPreviewDataFetched: (data) {
+          state.addPreviewData(uri, data);
+        },
+        imageBuilder: (image) {
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(10.0),
+            child: CachedNetworkImage(
+              imageUrl: image,
+            ),
+          ).ripple(() {
+            Utility.launchURL(uri);
+          });
+        },
+        linkStyle: style,
+        previewData:
+            state.linkDataPreviews[uri], // Pass the preview data from the state
+        text: uri,
+        width: MediaQuery.of(context).size.width,
+      );
+    } catch (e) {
+      cprint(e);
+      return SizedBox.shrink();
+    }
   }
 }

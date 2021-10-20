@@ -11,6 +11,8 @@ import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/state/appState.dart';
 import 'package:flutter_twitter_clone/ui/page/common/locator.dart';
 import 'package:path/path.dart' as path;
+import 'package:translator/translator.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' show PreviewData;
 // import 'authState.dart';
 
 class FeedState extends AppState {
@@ -74,17 +76,17 @@ class FeedState extends AppState {
     return list;
   }
 
-  //TODO
-  // Map<String, PreviewData>? _linkDataPreviews = {};
-  // Map<String, PreviewData>? get linkDataPreviews => _linkDataPreviews;
-  // void addPreviewData(String url, PreviewData previewData) {
-  //   _linkDataPreviews.addAll({url: previewData});
-  //   notifyListeners();
-  // }
-  Map<String, dynamic> _linkDataPreviews = {};
-  Map<String, dynamic> get linkDataPreviews => _linkDataPreviews;
-  void addPreviewData(String url, dynamic previewData) {
+  Map<String, PreviewData> _linkDataPreviews = {};
+  Map<String, PreviewData> get linkDataPreviews => _linkDataPreviews;
+  void addPreviewData(String url, PreviewData previewData) {
     _linkDataPreviews.addAll({url: previewData});
+    notifyListeners();
+  }
+
+  Map<String, Translation?> _tweetsTranslations = {};
+  Map<String, Translation?> get tweetsTranslations => _tweetsTranslations;
+  void addTweetTranslation(String tweet, Translation? translation) {
+    _tweetsTranslations.addAll({tweet: translation});
     notifyListeners();
   }
 

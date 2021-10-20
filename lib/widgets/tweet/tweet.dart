@@ -10,6 +10,7 @@ import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 import 'package:flutter_twitter_clone/widgets/tweet/widgets/parentTweet.dart';
 import 'package:flutter_twitter_clone/widgets/tweet/widgets/tweetIconsRow.dart';
+import 'package:flutter_twitter_clone/widgets/tweet/widgets/tweetTranslation.dart';
 import 'package:flutter_twitter_clone/widgets/url_text/customUrlText.dart';
 import 'package:flutter_twitter_clone/widgets/url_text/custom_link_media_info.dart';
 import 'package:provider/provider.dart';
@@ -168,6 +169,14 @@ class _TweetBody extends StatelessWidget {
         type == TweetType.Tweet || type == TweetType.Tweet
             ? FontWeight.w400
             : FontWeight.w400;
+    TextStyle textStyle = TextStyle(
+        color: Colors.black,
+        fontSize: descriptionFontSize,
+        fontWeight: descriptionFontWeight);
+    TextStyle urlStyle = TextStyle(
+        color: Colors.blue,
+        fontSize: descriptionFontSize,
+        fontWeight: descriptionFontWeight);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -240,19 +249,24 @@ class _TweetBody extends StatelessWidget {
               ),
               model.description == null
                   ? const SizedBox()
-                  : UrlText(
-                      text: model.description!.removeSpaces,
-                      onHashTagPressed: (tag) {
-                        cprint(tag);
-                      },
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: descriptionFontSize,
-                          fontWeight: descriptionFontWeight),
-                      urlStyle: TextStyle(
-                          color: Colors.blue,
-                          fontSize: descriptionFontSize,
-                          fontWeight: descriptionFontWeight),
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        UrlText(
+                          text: model.description!.removeSpaces,
+                          onHashTagPressed: (tag) {
+                            cprint(tag);
+                          },
+                          style: textStyle,
+                          urlStyle: urlStyle,
+                        ),
+                        TweetTranslation(
+                          tweetKey: model.key!,
+                          description: model.description!,
+                          textStyle: textStyle,
+                          urlStyle: urlStyle,
+                        ),
+                      ],
                     ),
               if (model.imagePath == null && model.description != null)
                 CustomLinkMediaInfo(text: model.description!),
@@ -292,7 +306,14 @@ class _TweetDetailBody extends StatelessWidget {
         type == TweetType.Tweet || type == TweetType.Tweet
             ? FontWeight.w300
             : FontWeight.w400;
-
+    TextStyle textStyle = TextStyle(
+        color: Colors.black,
+        fontSize: descriptionFontSize,
+        fontWeight: descriptionFontWeight);
+    TextStyle urlStyle = TextStyle(
+        color: Colors.blue,
+        fontSize: descriptionFontSize,
+        fontWeight: descriptionFontWeight);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -356,21 +377,22 @@ class _TweetDetailBody extends StatelessWidget {
                       padding: type == TweetType.ParentTweet
                           ? const EdgeInsets.only(left: 80, right: 16)
                           : const EdgeInsets.symmetric(horizontal: 16),
-                      child: UrlText(
-                        text: model.description!.removeSpaces,
-                        onHashTagPressed: (tag) {
-                          cprint(tag);
-                        },
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: descriptionFontSize,
-                          fontWeight: descriptionFontWeight,
-                        ),
-                        urlStyle: TextStyle(
-                          color: Colors.blue,
-                          fontSize: descriptionFontSize,
-                          fontWeight: descriptionFontWeight,
-                        ),
+                      child: Column(
+                        children: [
+                          UrlText(
+                              text: model.description!.removeSpaces,
+                              onHashTagPressed: (tag) {
+                                cprint(tag);
+                              },
+                              style: textStyle,
+                              urlStyle: urlStyle),
+                          TweetTranslation(
+                            tweetKey: model.key!,
+                            description: model.description!,
+                            textStyle: textStyle,
+                            urlStyle: urlStyle,
+                          ),
+                        ],
                       ),
                     ),
               if (model.imagePath == null && model.description != null)
