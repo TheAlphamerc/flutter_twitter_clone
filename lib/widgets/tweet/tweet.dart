@@ -261,6 +261,7 @@ class _TweetBody extends StatelessWidget {
                           urlStyle: urlStyle,
                         ),
                         TweetTranslation(
+                          languageCode: model.lanCode,
                           tweetKey: model.key!,
                           description: model.description!,
                           textStyle: textStyle,
@@ -387,6 +388,7 @@ class _TweetDetailBody extends StatelessWidget {
                               style: textStyle,
                               urlStyle: urlStyle),
                           TweetTranslation(
+                            languageCode: model.lanCode,
                             tweetKey: model.key!,
                             description: model.description!,
                             textStyle: textStyle,

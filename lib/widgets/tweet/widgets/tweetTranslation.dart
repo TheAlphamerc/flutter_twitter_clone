@@ -12,20 +12,26 @@ class TweetTranslation extends StatelessWidget {
   final String tweetKey;
   final TextStyle? textStyle;
   final TextStyle? urlStyle;
+  final String? languageCode;
   const TweetTranslation(
       {Key? key,
       required this.tweetKey,
       required this.description,
+      required this.languageCode,
       this.textStyle,
       this.urlStyle})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    String lan = Utility.getLocale(context).toLanguageTag();
+    String localeLanguageTag = Utility.getLocale(context).toLanguageTag();
+    String localeLanguageCode = localeLanguageTag.split('-')[0];
     var state = Provider.of<FeedState>(context, listen: false);
 
     try {
+      if (/*languageCode == null ||*/ languageCode == localeLanguageCode)
+        return SizedBox.shrink();
+
       if (state.tweetsTranslations.containsKey(tweetKey)) {
         if (state.tweetsTranslations[tweetKey] != null) {
           return _translation(state.tweetsTranslations[tweetKey]!, context,
@@ -35,8 +41,8 @@ class TweetTranslation extends StatelessWidget {
         }
       } else {
         return FutureBuilder<Translation>(
-          future: GoogleTranslator()
-              .translate(description.removeSpaces, to: lan.split('-')[0]),
+          future: GoogleTranslator().translate(description.removeSpaces,
+              from: languageCode ?? 'auto', to: localeLanguageCode),
           builder: (BuildContext context, AsyncSnapshot<Translation> snapshot) {
             if (snapshot.hasData) {
               if (snapshot.data!.text == snapshot.data!.source.trim()) {
@@ -103,29 +109,3 @@ Widget _translation(Translation translation, BuildContext context,
     ],
   );
 }
-
-// Padding(
-//                   padding: const EdgeInsets.symmetric(vertical: 10.0),
-//                   child: Row(
-//                     children: [
-//                       Expanded(
-//                           child: const Divider(
-//                         thickness: 1,
-//                       )),
-//                       Text(
-//                         "Translated from ${snapshot.data!.sourceLanguage} by ",
-//                         style: TextStyle(
-//                             color: AppColor.lightGrey,
-//                             fontWeight: FontWeight.bold),
-//                       ),
-//                       customIcon(context,
-//                           icon: Icons.g_translate,
-//                           paddingIcon: 0,
-//                           iconColor: AppColor.lightGrey),
-//                       Expanded(
-//                           child: const Divider(
-//                         thickness: 1,
-//                       )),
-//                     ],
-//                   ),
-//                 ),

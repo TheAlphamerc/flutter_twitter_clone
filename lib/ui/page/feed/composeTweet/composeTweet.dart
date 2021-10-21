@@ -19,6 +19,7 @@ import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/url_text/customUrlText.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 import 'package:provider/provider.dart';
+import 'package:translator/translator.dart';
 
 class ComposeTweetPage extends StatefulWidget {
   const ComposeTweetPage(
@@ -92,7 +93,7 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
     var state = Provider.of<FeedState>(context, listen: false);
     kScreenloader.showLoader(context);
 
-    FeedModel tweetModel = createTweetModel();
+    FeedModel tweetModel = await createTweetModel();
     late String tweetId;
 
     /// If tweet contain image
@@ -160,7 +161,7 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
   /// If tweet is new tweet then `parentkey` and `childRetwetkey` should be null
   /// IF tweet is a comment then it should have `parentkey`
   /// IF tweet is a retweet then it should have `childRetwetkey`
-  FeedModel createTweetModel() {
+  Future<FeedModel> createTweetModel() async {
     var state = Provider.of<FeedState>(context, listen: false);
     var authState = Provider.of<AuthState>(context, listen: false);
     var myUser = authState.userModel;
@@ -176,6 +177,10 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
     var tags = Utility.getHashTags(_textEditingController.text);
     FeedModel reply = FeedModel(
         description: _textEditingController.text,
+        lanCode:
+            (await GoogleTranslator().translate(_textEditingController.text))
+                .sourceLanguage
+                .code,
         user: commentedUser,
         createdAt: DateTime.now().toUtc().toString(),
         tags: tags,
