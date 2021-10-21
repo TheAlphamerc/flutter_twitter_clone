@@ -50,9 +50,9 @@ dependencies:
   qr_code_scanner: ^0.5.2
   qr_flutter: ^4.0.0
   rxdart: ^0.27.2
-  flutter_link_previewer: ^2.5.2
   translator: ^0.1.7
   flutter_chat_types: ^3.1.4
+  link_preview_generator: ^1.2.0
 
 dev_dependencies:
   test: ^1.17.10

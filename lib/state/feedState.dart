@@ -10,9 +10,11 @@ import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/state/appState.dart';
 import 'package:flutter_twitter_clone/ui/page/common/locator.dart';
+import 'package:link_preview_generator/link_preview_generator.dart'
+    show WebInfo;
 import 'package:path/path.dart' as path;
 import 'package:translator/translator.dart';
-import 'package:flutter_chat_types/flutter_chat_types.dart' show PreviewData;
+// import 'package:flutter_chat_types/flutter_chat_types.dart' show PreviewData;
 // import 'authState.dart';
 
 class FeedState extends AppState {
@@ -76,11 +78,10 @@ class FeedState extends AppState {
     return list;
   }
 
-  Map<String, PreviewData> _linkDataPreviews = {};
-  Map<String, PreviewData> get linkDataPreviews => _linkDataPreviews;
-  void addPreviewData(String url, PreviewData previewData) {
-    _linkDataPreviews.addAll({url: previewData});
-    notifyListeners();
+  Map<String, WebInfo> _linkWebInfos = {};
+  Map<String, WebInfo> get linkWebInfos => _linkWebInfos;
+  void addWebInfo(String url, WebInfo webInfo) {
+    _linkWebInfos.addAll({url: webInfo});
   }
 
   Map<String, Translation?> _tweetsTranslations = {};
