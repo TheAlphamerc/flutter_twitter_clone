@@ -245,7 +245,7 @@ class Utility {
         uriPrefix: 'https://fwitterdev.page.link',
         link: Uri.parse('https://twitter.com/$id'),
         androidParameters: AndroidParameters(
-          packageName: 'com.thealphamerc.third_state_dev',
+          packageName: 'com.thealphamerc.fwitter_dev',
           minimumVersion: 0,
         ),
         dynamicLinkParametersOptions: DynamicLinkParametersOptions(

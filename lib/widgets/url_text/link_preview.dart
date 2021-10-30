@@ -38,9 +38,6 @@ class LinkPreviewer extends StatelessWidget {
     var uri = url ?? getUrl();
     if (uri == null) {
       return const SizedBox.shrink();
-    } else if (uri.contains("page.link/")) {
-      /// `flutter_link_preview` package is unable to fetch firebase dynamic link meta data
-      return const SizedBox.shrink();
     }
     if (state.linkWebInfos.containsKey(uri))
       return _buildLinkPreview(
