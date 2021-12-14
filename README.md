@@ -250,10 +250,10 @@ and send a [pull request](https://github.com/TheAlphamerc/flutter_twitter_clone/
 
 
 ## Contributors
-[![](https://sourcerer.io/fame/TheAlphamerc/TheAlphamerc/flutter_twitter_clone/images/0)](https://sourcerer.io/fame/TheAlphamerc/TheAlphamerc/flutter_twitter_clone/links/0)[![](https://sourcerer.io/fame/TheAlphamerc/TheAlphamerc/flutter_twitter_clone/images/1)](https://sourcerer.io/fame/TheAlphamerc/TheAlphamerc/flutter_twitter_clone/links/1)[![](https://sourcerer.io/fame/TheAlphamerc/TheAlphamerc/flutter_twitter_clone/images/2)](https://sourcerer.io/fame/TheAlphamerc/TheAlphamerc/flutter_twitter_clone/links/2)
-
-## Sponsors
-* [Abdulbasit](https://github.com/AbdulbasitSaid)
+* [TheAlphamerc](https://github.com/TheAlphamerc/TheAlphamerc)
+* [Liel Beigel](https://github.com/lielb100)
+* [Riccardo Montagnin](https://github.com/RiccardoM)
+* [Suriyan](https://github.com/imsuriyan)
 ## Visitors Count
 
 <img align="left" src = "https://profile-counter.glitch.me/flutter_twitter_clone/count.svg" alt ="Loading">
