@@ -14,21 +14,21 @@ import 'package:flutter_twitter_clone/widgets/newWidget/customLoader.dart';
 import 'package:provider/provider.dart';
 
 class Signup extends StatefulWidget {
-  final VoidCallback loginCallback;
+  final VoidCallback? loginCallback;
 
-  const Signup({Key key, this.loginCallback}) : super(key: key);
+  const Signup({Key? key, this.loginCallback}) : super(key: key);
   @override
   State<StatefulWidget> createState() => _SignupState();
 }
 
 class _SignupState extends State<Signup> {
-  TextEditingController _nameController;
-  TextEditingController _emailController;
-  TextEditingController _passwordController;
-  TextEditingController _confirmController;
-  CustomLoader loader;
-  final _formKey = new GlobalKey<FormState>();
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  late TextEditingController _nameController;
+  late TextEditingController _emailController;
+  late TextEditingController _passwordController;
+  late TextEditingController _confirmController;
+  late CustomLoader loader;
+  final _formKey = GlobalKey<FormState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
     loader = CustomLoader();
@@ -39,6 +39,7 @@ class _SignupState extends State<Signup> {
     super.initState();
   }
 
+  @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
@@ -50,7 +51,7 @@ class _SignupState extends State<Signup> {
   Widget _body(BuildContext context) {
     return Container(
       height: context.height - 88,
-      padding: EdgeInsets.symmetric(horizontal: 30),
+      padding: const EdgeInsets.symmetric(horizontal: 30),
       child: Form(
         key: _formKey,
         child: Column(
@@ -67,14 +68,14 @@ class _SignupState extends State<Signup> {
                 controller: _confirmController, isPassword: true),
             _submitButton(context),
 
-            Divider(height: 30),
-            SizedBox(height: 30),
+            const Divider(height: 30),
+            const SizedBox(height: 30),
             // _googleLoginButton(context),
             GoogleLoginButton(
               loginCallback: widget.loginCallback,
               loader: loader,
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
           ],
         ),
       ),
@@ -82,11 +83,11 @@ class _SignupState extends State<Signup> {
   }
 
   Widget _entryFeild(String hint,
-      {TextEditingController controller,
+      {required TextEditingController controller,
       bool isPassword = false,
       bool isEmail = false}) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 15),
+      margin: const EdgeInsets.symmetric(vertical: 15),
       decoration: BoxDecoration(
         color: Colors.grey.shade200,
         borderRadius: BorderRadius.circular(30),
@@ -94,7 +95,7 @@ class _SignupState extends State<Signup> {
       child: TextField(
         controller: controller,
         keyboardType: isEmail ? TextInputType.emailAddress : TextInputType.text,
-        style: TextStyle(
+        style: const TextStyle(
           fontStyle: FontStyle.normal,
           fontWeight: FontWeight.normal,
         ),
@@ -102,13 +103,14 @@ class _SignupState extends State<Signup> {
         decoration: InputDecoration(
           hintText: hint,
           border: InputBorder.none,
-          focusedBorder: OutlineInputBorder(
+          focusedBorder: const OutlineInputBorder(
             borderRadius: BorderRadius.all(
               Radius.circular(30.0),
             ),
             borderSide: BorderSide(color: Colors.blue),
           ),
-          contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
         ),
       ),
     );
@@ -116,7 +118,7 @@ class _SignupState extends State<Signup> {
 
   Widget _submitButton(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 35),
+      margin: const EdgeInsets.symmetric(vertical: 35),
       child: CustomFlatButton(
         label: "Sign up",
         onPressed: _submitForm,
@@ -135,11 +137,7 @@ class _SignupState extends State<Signup> {
           _scaffoldKey, 'Name length cannot exceed 27 character');
       return;
     }
-    if (_emailController.text == null ||
-        _emailController.text.isEmpty ||
-        _passwordController.text == null ||
-        _passwordController.text.isEmpty ||
-        _confirmController.text == null) {
+    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
       Utility.customSnackBar(_scaffoldKey, 'Please fill form carefully');
       return;
     } else if (_passwordController.text != _confirmController.text) {
@@ -150,7 +148,7 @@ class _SignupState extends State<Signup> {
 
     loader.showLoader(context);
     var state = Provider.of<AuthState>(context, listen: false);
-    Random random = new Random();
+    Random random = Random();
     int randomNumber = random.nextInt(8);
 
     UserModel user = UserModel(
@@ -177,7 +175,7 @@ class _SignupState extends State<Signup> {
         loader.hideLoader();
         if (state.authStatus == AuthStatus.LOGGED_IN) {
           Navigator.pop(context);
-          widget.loginCallback();
+          if (widget.loginCallback != null) widget.loginCallback!();
         }
       },
     );
@@ -191,7 +189,7 @@ class _SignupState extends State<Signup> {
         title: customText(
           'Sign Up',
           context: context,
-          style: TextStyle(fontSize: 20),
+          style: const TextStyle(fontSize: 20),
         ),
         centerTitle: true,
       ),

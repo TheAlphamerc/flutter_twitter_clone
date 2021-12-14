@@ -8,7 +8,7 @@ import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:provider/provider.dart';
 
 class PrivacyAndSaftyPage extends StatelessWidget {
-  const PrivacyAndSaftyPage({Key key}) : super(key: key);
+  const PrivacyAndSaftyPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +20,8 @@ class PrivacyAndSaftyPage extends StatelessWidget {
         subtitle: user.userName,
       ),
       body: ListView(
-        physics: BouncingScrollPhysics(),
-        children: <Widget>[
+        physics: const BouncingScrollPhysics(),
+        children: const <Widget>[
           HeaderWidget('Tweets'),
           SettingRowWidget(
             "Protect your tweet",

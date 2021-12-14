@@ -13,7 +13,7 @@ class ComposeTweetState extends ChangeNotifier {
   bool enableSubmitButton = false;
   bool hideUserList = false;
   String description = "";
-  String serverToken;
+  String? serverToken;
   final usernameRegex = r'(@\w*[a-zA-Z1-9]$)';
 
   bool _isScrollingDown = false;
@@ -28,7 +28,7 @@ class ComposeTweetState extends ChangeNotifier {
   /// First is value of `status` should be true
   /// Second value of  `hideUserList` should be false
   bool get displayUserList {
-    RegExp regExp = new RegExp(usernameRegex);
+    RegExp regExp = RegExp(usernameRegex);
     var status = regExp.hasMatch(description);
     if (status && !hideUserList) {
       return true;
@@ -67,7 +67,7 @@ class ComposeTweetState extends ChangeNotifier {
     /// Ex. `Hello @john do you know @ricky`
     /// In above description reegex is serch for last username ie. `@ricky`.
 
-    RegExp regExp = new RegExp(usernameRegex);
+    RegExp regExp = RegExp(usernameRegex);
     var status = regExp.hasMatch(text);
     if (status) {
       Iterable<Match> _matches = regExp.allMatches(text);
@@ -90,7 +90,7 @@ class ComposeTweetState extends ChangeNotifier {
 
   /// When user select user from userlist it will add username in description
   String getDescription(String username) {
-    RegExp regExp = new RegExp(usernameRegex);
+    RegExp regExp = RegExp(usernameRegex);
     Iterable<Match> _matches = regExp.allMatches(description);
     var name = description.substring(0, _matches.last.start);
     description = '$name $username';
@@ -111,19 +111,17 @@ class ComposeTweetState extends ChangeNotifier {
   ///  } ```
   /// For more detail visit:- https://github.com/TheAlphamerc/flutter_twitter_clone/issues/28#issue-611695533
   /// For package detail check:-  https://pub.dev/packages/firebase_remote_config#-readme-tab-
-  Future<Null> getFCMServerKey() async {
+  Future<void> getFCMServerKey() async {
     /// If FCM server key is already fetched then no need to fetch it again.
     try {
-      if (serverToken != null && serverToken.isNotEmpty) {
+      if (serverToken != null && serverToken!.isNotEmpty) {
         return Future.value(null);
       }
       final RemoteConfig remoteConfig = RemoteConfig.instance;
       // await remoteConfig.fetch(expiration: const Duration(hours: 5));
       // await remoteConfig.activateFetched();
       var data = remoteConfig.getString('FcmServerKey');
-      if (data != null) {
-        serverToken = jsonDecode(data)["key"];
-      }
+      serverToken = jsonDecode(data)["key"];
     } catch (error) {
       cprint("Add FcmServerKey in Firebase Remote config");
     }
@@ -132,8 +130,8 @@ class ComposeTweetState extends ChangeNotifier {
   /// Fecth FCM server key from firebase Remote config
   /// send notification to user once fcmToken is retrieved from firebase
   Future<void> sendNotification(FeedModel model, SearchState state) async {
-    final usernameRegex = r"(@\w*[a-zA-Z1-9])";
-    RegExp regExp = new RegExp(usernameRegex);
+    const usernameRegex = r"(@\w*[a-zA-Z1-9])";
+    RegExp regExp = RegExp(usernameRegex);
     var status = regExp.hasMatch(description);
 
     /// Check if username is availeble in description or not
@@ -150,10 +148,10 @@ class ComposeTweetState extends ChangeNotifier {
         /// Send notification to user one by one
         await Future.forEach(_matches, (Match match) async {
           var name = description.substring(match.start, match.end);
-          if (state.userlist.any((x) => x.userName == name)) {
+          if (state.userlist!.any((x) => x.userName == name)) {
             /// Fetch user model from userlist
             /// UserId, FCMtoken is needed to send notification
-            final user = state.userlist.firstWhere((x) => x.userName == name);
+            final user = state.userlist!.firstWhere((x) => x.userName == name);
             await sendNotificationToUser(model, user);
           } else {
             cprint("Name: $name ,", errorIn: "UserNot found");
@@ -176,7 +174,7 @@ class ComposeTweetState extends ChangeNotifier {
     var body = jsonEncode(<String, dynamic>{
       'notification': <String, dynamic>{
         'body': model.description,
-        'title': "${model.user.displayName} metioned you in a tweet"
+        'title': "${model.user!.displayName} metioned you in a tweet"
       },
       'priority': 'high',
       'data': <String, dynamic>{
@@ -184,7 +182,7 @@ class ComposeTweetState extends ChangeNotifier {
         'id': '1',
         'status': 'done',
         "type": NotificationType.Mention.toString(),
-        "senderId": model.user.userId,
+        "senderId": model.user!.userId,
         "receiverId": user.userId,
         "title": "title",
         "body": "",
@@ -194,7 +192,7 @@ class ComposeTweetState extends ChangeNotifier {
     });
 
     var response = await http.post(
-      Uri.tryParse('https://fcm.googleapis.com/fcm/send'),
+      Uri.tryParse('https://fcm.googleapis.com/fcm/send')!,
       headers: <String, String>{
         'Content-Type': 'application/json',
         'Authorization': 'key=$serverToken',

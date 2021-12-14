@@ -9,18 +9,18 @@ import 'package:flutter_twitter_clone/widgets/newWidget/customLoader.dart';
 import 'package:provider/provider.dart';
 
 class SignIn extends StatefulWidget {
-  final VoidCallback loginCallback;
+  final VoidCallback? loginCallback; //!
 
-  const SignIn({Key key, this.loginCallback}) : super(key: key);
+  const SignIn({Key? key, this.loginCallback}) : super(key: key);
   @override
   State<StatefulWidget> createState() => _SignInState();
 }
 
 class _SignInState extends State<SignIn> {
-  TextEditingController _emailController;
-  TextEditingController _passwordController;
-  CustomLoader loader;
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  late TextEditingController _emailController;
+  late TextEditingController _passwordController;
+  late CustomLoader loader;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
     _emailController = TextEditingController();
@@ -39,31 +39,31 @@ class _SignInState extends State<SignIn> {
   Widget _body(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 30),
+        padding: const EdgeInsets.symmetric(horizontal: 30),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            SizedBox(height: 150),
+            const SizedBox(height: 150),
             _entryFeild('Enter email', controller: _emailController),
             _entryFeild('Enter password',
                 controller: _passwordController, isPassword: true),
             _emailLoginButton(context),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             _labelButton('Forget password?', onPressed: () {
               Navigator.of(context).pushNamed('/ForgetPasswordPage');
             }),
-            Divider(
+            const Divider(
               height: 30,
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             GoogleLoginButton(
-              loginCallback: widget.loginCallback,
+              loginCallback: widget.loginCallback!,
               loader: loader,
             ),
-            SizedBox(height: 100),
+            const SizedBox(height: 100),
           ],
         ),
       ),
@@ -71,9 +71,9 @@ class _SignInState extends State<SignIn> {
   }
 
   Widget _entryFeild(String hint,
-      {TextEditingController controller, bool isPassword = false}) {
+      {required TextEditingController controller, bool isPassword = false}) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 15),
+      margin: const EdgeInsets.symmetric(vertical: 15),
       decoration: BoxDecoration(
         color: Colors.grey.shade200,
         borderRadius: BorderRadius.circular(30),
@@ -81,7 +81,7 @@ class _SignInState extends State<SignIn> {
       child: TextField(
         controller: controller,
         keyboardType: TextInputType.emailAddress,
-        style: TextStyle(
+        style: const TextStyle(
           fontStyle: FontStyle.normal,
           fontWeight: FontWeight.normal,
         ),
@@ -89,16 +89,17 @@ class _SignInState extends State<SignIn> {
         decoration: InputDecoration(
           hintText: hint,
           border: InputBorder.none,
-          focusedBorder: OutlineInputBorder(
+          focusedBorder: const OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(30.0)),
               borderSide: BorderSide(color: Colors.blue)),
-          contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
         ),
       ),
     );
   }
 
-  Widget _labelButton(String title, {Function onPressed}) {
+  Widget _labelButton(String title, {Function? onPressed}) {
     return TextButton(
       onPressed: () {
         if (onPressed != null) {
@@ -115,7 +116,7 @@ class _SignInState extends State<SignIn> {
 
   Widget _emailLoginButton(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 35),
+      margin: const EdgeInsets.symmetric(vertical: 35),
       child: CustomFlatButton(
         label: "Submit",
         onPressed: _emailLogin,
@@ -140,7 +141,7 @@ class _SignInState extends State<SignIn> {
         if (state.user != null) {
           loader.hideLoader();
           Navigator.pop(context);
-          widget.loginCallback();
+          widget.loginCallback!();
         } else {
           cprint('Unable to login', errorIn: '_emailLoginButton');
           loader.hideLoader();
@@ -157,7 +158,7 @@ class _SignInState extends State<SignIn> {
       key: _scaffoldKey,
       appBar: AppBar(
         title: customText('Sign in',
-            context: context, style: TextStyle(fontSize: 20)),
+            context: context, style: const TextStyle(fontSize: 20)),
         centerTitle: true,
       ),
       body: _body(context),

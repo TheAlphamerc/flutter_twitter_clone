@@ -7,7 +7,7 @@ import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 
 class AboutPage extends StatelessWidget {
-  const AboutPage({Key key}) : super(key: key);
+  const AboutPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +20,9 @@ class AboutPage extends StatelessWidget {
         ),
       ),
       body: ListView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         children: <Widget>[
-          HeaderWidget(
+          const HeaderWidget(
             'Help',
             secondHeader: true,
           ),
@@ -35,16 +35,16 @@ class AboutPage extends StatelessWidget {
                   "https://github.com/TheAlphamerc/flutter_twitter_clone/issues");
             },
           ),
-          HeaderWidget('Legal'),
-          SettingRowWidget(
+          const HeaderWidget('Legal'),
+          const SettingRowWidget(
             "Terms of Service",
             showDivider: true,
           ),
-          SettingRowWidget(
+          const SettingRowWidget(
             "Privacy policy",
             showDivider: true,
           ),
-          SettingRowWidget(
+          const SettingRowWidget(
             "Cookie use",
             showDivider: true,
           ),
@@ -60,7 +60,7 @@ class AboutPage extends StatelessWidget {
               );
             },
           ),
-          HeaderWidget('Developer'),
+          const HeaderWidget('Developer'),
           SettingRowWidget("Github", showDivider: true, onPressed: () {
             Utility.launchURL("https://github.com/TheAlphamerc");
           }),

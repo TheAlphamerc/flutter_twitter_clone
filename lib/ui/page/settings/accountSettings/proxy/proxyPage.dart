@@ -5,7 +5,7 @@ import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 
 class ProxyPage extends StatelessWidget {
-  const ProxyPage({Key key}) : super(key: key);
+  const ProxyPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,8 +18,8 @@ class ProxyPage extends StatelessWidget {
         ),
       ),
       body: ListView(
-        physics: BouncingScrollPhysics(),
-        children: <Widget>[
+        physics: const BouncingScrollPhysics(),
+        children: const <Widget>[
           SettingRowWidget(
             "Enable HTTP Proxy",
             showCheckBox: false,

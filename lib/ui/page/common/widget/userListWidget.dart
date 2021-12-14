@@ -11,11 +11,11 @@ import 'package:provider/provider.dart';
 
 class UserListWidget extends StatelessWidget {
   final List<UserModel> list;
-  final String emptyScreenText;
-  final String emptyScreenSubTileText;
-  UserListWidget({
-    Key key,
-    this.list,
+  final String? emptyScreenText;
+  final String? emptyScreenSubTileText;
+  const UserListWidget({
+    Key? key,
+    required this.list,
     this.emptyScreenText,
     this.emptyScreenSubTileText,
   }) : super(key: key);
@@ -23,7 +23,7 @@ class UserListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var state = Provider.of<AuthState>(context, listen: false);
-    String myId = state.userModel.key;
+    String myId = state.userModel!.key!;
     return ListView.separated(
       itemBuilder: (context, index) {
         return UserTile(
@@ -32,7 +32,7 @@ class UserListWidget extends StatelessWidget {
         );
       },
       separatorBuilder: (context, index) {
-        return Divider(
+        return const Divider(
           height: 0,
         );
       },
@@ -43,13 +43,14 @@ class UserListWidget extends StatelessWidget {
 }
 
 class UserTile extends StatelessWidget {
-  const UserTile({Key key, this.user, this.myId}) : super(key: key);
+  const UserTile({Key? key, required this.user, required this.myId})
+      : super(key: key);
   final UserModel user;
   final String myId;
 
   /// Return empty string for default bio
   /// Max length of bio is 100
-  String getBio(String bio) {
+  String? getBio(String? bio) {
     if (bio != null && bio.isNotEmpty && bio != "Edit profile to update bio") {
       if (bio.length > 100) {
         bio = bio.substring(0, 100) + '...';
@@ -65,7 +66,7 @@ class UserTile extends StatelessWidget {
   /// If your id exist in follower list it mean you are following him
   bool isFollowing() {
     if (user.followersList != null &&
-        user.followersList.any((x) => x == myId)) {
+        user.followersList!.any((x) => x == myId)) {
       return true;
     } else {
       return false;
@@ -76,7 +77,7 @@ class UserTile extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isFollow = isFollowing();
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.symmetric(vertical: 10),
       color: TwitterColor.white,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,14 +85,14 @@ class UserTile extends StatelessWidget {
           ListTile(
             onTap: () {
               Navigator.push(
-                  context, ProfilePage.getRoute(profileId: user.userId));
+                  context, ProfilePage.getRoute(profileId: user.userId!));
             },
             leading: RippleButton(
               onPressed: () {
                 Navigator.push(
-                    context, ProfilePage.getRoute(profileId: user.userId));
+                    context, ProfilePage.getRoute(profileId: user.userId!));
               },
-              borderRadius: BorderRadius.all(Radius.circular(60)),
+              borderRadius: const BorderRadius.all(Radius.circular(60)),
               child: CircularImage(path: user.profilePic, height: 55),
             ),
             title: Row(
@@ -99,13 +100,13 @@ class UserTile extends StatelessWidget {
                 ConstrainedBox(
                   constraints:
                       BoxConstraints(minWidth: 0, maxWidth: context.width * .4),
-                  child: TitleText(user.displayName,
+                  child: TitleText(user.displayName!,
                       fontSize: 16,
                       fontWeight: FontWeight.w800,
                       overflow: TextOverflow.ellipsis),
                 ),
-                SizedBox(width: 3),
-                user.isVerified
+                const SizedBox(width: 3),
+                user.isVerified!
                     ? customIcon(
                         context,
                         icon: AppIcon.blueTick,
@@ -114,10 +115,10 @@ class UserTile extends StatelessWidget {
                         size: 13,
                         paddingIcon: 3,
                       )
-                    : SizedBox(width: 0),
+                    : const SizedBox(width: 0),
               ],
             ),
-            subtitle: Text(user.userName),
+            subtitle: Text(user.userName!),
             trailing: RippleButton(
               onPressed: () {},
               splashColor: TwitterColor.dodgetBlue_50.withAlpha(100),
@@ -145,11 +146,11 @@ class UserTile extends StatelessWidget {
             ),
           ),
           getBio(user.bio) == null
-              ? SizedBox.shrink()
+              ? const SizedBox.shrink()
               : Padding(
-                  padding: EdgeInsets.only(left: 90),
+                  padding: const EdgeInsets.only(left: 90),
                   child: Text(
-                    getBio(user.bio),
+                    getBio(user.bio)!,
                   ),
                 )
         ],

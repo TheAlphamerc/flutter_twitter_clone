@@ -11,17 +11,17 @@ import 'package:flutter_twitter_clone/widgets/url_text/link_preview.dart';
 import 'package:http/http.dart' as http;
 
 class CustomLinkMediaInfo extends StatelessWidget {
-  const CustomLinkMediaInfo({Key key, this.url, this.text}) : super(key: key);
-  final String url;
-  final String text;
+  const CustomLinkMediaInfo({Key? key, this.url, this.text}) : super(key: key);
+  final String? url;
+  final String? text;
 
-  String getUrl() {
+  String? getUrl() {
     if (text == null) {
       return null;
     }
     RegExp reg = RegExp(
         r"(https?|http)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]*");
-    Iterable<Match> _matches = reg.allMatches(text);
+    Iterable<Match> _matches = reg.allMatches(text!);
     if (_matches.isNotEmpty) {
       return _matches.first.group(0);
       // return "https://vimeo.com/498010744";
@@ -33,13 +33,13 @@ class CustomLinkMediaInfo extends StatelessWidget {
       String url) async {
     try {
       var response = await http.Client()
-          .get(Uri.tryParse("https://noembed.com/embed?url=" + url))
+          .get(Uri.tryParse("https://noembed.com/embed?url=" + url)!)
           .then((result) => result.body)
           .then(json.decode)
           .then((json) => LinkMediaInfo.fromJson(json));
       return Right(response);
     } catch (error) {
-      return Left(error);
+      return Left(error as Exception);
     }
   }
 
@@ -52,7 +52,7 @@ class CustomLinkMediaInfo extends StatelessWidget {
     if (map == null) {
       var response = await fetchLinkMediaInfoFromApi(url);
 
-      return response.fold((l) => Left("Not found"), (r) async {
+      return response.fold((l) => const Left("Not found"), (r) async {
         await pref.saveLinkMediaInfo(url, r);
         return Right(r);
       });
@@ -61,17 +61,18 @@ class CustomLinkMediaInfo extends StatelessWidget {
     /// If meta is available in local storage then no need to call api
     else {
       if (map.title == null) {
-        return Left("Not found");
+        return const Left("Not found");
       }
       return Right(map);
     }
   }
 
+  @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     var uri = url ?? getUrl();
     if (uri == null) {
-      return SizedBox();
+      return const SizedBox();
     }
 
     /// Only Youtube thumbnail is displayed in `CustomLinkMediaInfo` widget
@@ -79,7 +80,7 @@ class CustomLinkMediaInfo extends StatelessWidget {
     /// `LinkPreview` uses [flutter_link_preview] package to fetch url metadata.
     /// It is seen that `flutter_link_preview` package is unable to fetch youtube metadata
     if (!uri.contains("youtu")) {
-      return LinkPreview(
+      return LinkPreviewer(
         url: uri,
       );
     }
@@ -91,8 +92,8 @@ class CustomLinkMediaInfo extends StatelessWidget {
           (context, AsyncSnapshot<Either<String, LinkMediaInfo>> snapshot) {
         if (snapshot.hasData) {
           var response = snapshot.data;
-          return response.fold(
-            (l) => SizedBox.shrink(),
+          return response!.fold(
+            (l) => const SizedBox.shrink(),
             (model) => Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: Container(
@@ -108,15 +109,15 @@ class CustomLinkMediaInfo extends StatelessWidget {
                   children: [
                     if (model.thumbnailUrl != null)
                       ClipRRect(
-                        borderRadius:
-                            BorderRadius.vertical(top: Radius.circular(10)),
+                        borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(10)),
                         child: Container(
                           height: 140,
                           width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
                             image: DecorationImage(
                               image: CachedNetworkImageProvider(
-                                model.thumbnailUrl,
+                                model.thumbnailUrl!,
                               ),
                               fit: BoxFit.cover,
                             ),
@@ -130,14 +131,14 @@ class CustomLinkMediaInfo extends StatelessWidget {
                             ? Theme.of(context).colorScheme.onPrimary
                             : const Color(0xFFF0F1F2),
                       ),
-                      padding:
-                          EdgeInsets.only(bottom: 5, left: 8, right: 8, top: 4),
+                      padding: const EdgeInsets.only(
+                          bottom: 5, left: 8, right: 8, top: 4),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           if (model.title != null)
                             Text(
-                              model.title,
+                              model.title!,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style:
@@ -149,7 +150,7 @@ class CustomLinkMediaInfo extends StatelessWidget {
                               children: [
                                 Expanded(
                                     child: Text(
-                                  Uri.tryParse(model.providerUrl).authority,
+                                  Uri.tryParse(model.providerUrl!)!.authority,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyles.subtitleStyle.copyWith(
@@ -173,7 +174,7 @@ class CustomLinkMediaInfo extends StatelessWidget {
             ),
           );
         }
-        return SizedBox();
+        return const SizedBox();
       },
     );
   }

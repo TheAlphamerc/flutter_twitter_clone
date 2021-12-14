@@ -10,16 +10,16 @@ import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 import 'package:provider/provider.dart';
 
 class NewMessagePage extends StatefulWidget {
-  const NewMessagePage({Key key, this.scaffoldKey}) : super(key: key);
+  const NewMessagePage({Key? key, this.scaffoldKey}) : super(key: key);
 
-  final GlobalKey<ScaffoldState> scaffoldKey;
+  final GlobalKey<ScaffoldState>? scaffoldKey;
 
   @override
   State<StatefulWidget> createState() => _NewMessagePageState();
 }
 
 class _NewMessagePageState extends State<NewMessagePage> {
-  TextEditingController textController;
+  late TextEditingController textController;
 
   @override
   void initState() {
@@ -40,23 +40,23 @@ class _NewMessagePageState extends State<NewMessagePage> {
           ConstrainedBox(
             constraints:
                 BoxConstraints(minWidth: 0, maxWidth: context.width - 104),
-            child: TitleText(user.displayName,
+            child: TitleText(user.displayName!,
                 fontSize: 16,
                 fontWeight: FontWeight.w800,
                 overflow: TextOverflow.ellipsis),
           ),
-          SizedBox(width: 3),
-          user.isVerified
+          const SizedBox(width: 3),
+          user.isVerified!
               ? customIcon(context,
                   icon: AppIcon.blueTick,
                   istwitterIcon: true,
                   iconColor: AppColor.primary,
                   size: 13,
                   paddingIcon: 3)
-              : SizedBox(width: 0),
+              : const SizedBox(width: 0),
         ],
       ),
-      subtitle: Text(user.userName),
+      subtitle: Text(user.userName!),
     );
   }
 
@@ -89,7 +89,7 @@ class _NewMessagePageState extends State<NewMessagePage> {
                   },
                   decoration: InputDecoration(
                     hintText: "Search for people and groups",
-                    hintStyle: TextStyle(fontSize: 20),
+                    hintStyle: const TextStyle(fontSize: 20),
                     prefixIcon: customIcon(
                       context,
                       icon: AppIcon.search,
@@ -105,14 +105,14 @@ class _NewMessagePageState extends State<NewMessagePage> {
                 ),
                 Expanded(
                   child: ListView.separated(
-                    physics: BouncingScrollPhysics(),
+                    physics: const BouncingScrollPhysics(),
                     itemBuilder: (context, index) => _userTile(
-                      state.userlist[index],
+                      state.userlist![index],
                     ),
-                    separatorBuilder: (_, index) => Divider(
+                    separatorBuilder: (_, index) => const Divider(
                       height: 0,
                     ),
-                    itemCount: state.userlist.length,
+                    itemCount: state.userlist!.length,
                   ),
                 )
               ],

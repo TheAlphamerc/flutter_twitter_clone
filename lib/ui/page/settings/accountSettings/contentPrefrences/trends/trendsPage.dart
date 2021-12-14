@@ -9,7 +9,7 @@ import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 import 'package:provider/provider.dart';
 
 class TrendsPage extends StatelessWidget {
-  TrendsPage({Key key}) : super(key: key);
+  const TrendsPage({Key? key}) : super(key: key);
 
   void openBottomSheet(
       BuildContext context, double height, Widget child) async {
@@ -21,7 +21,7 @@ class TrendsPage extends StatelessWidget {
           height: height,
           decoration: BoxDecoration(
             color: TwitterColor.white,
-            borderRadius: BorderRadius.only(
+            borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(15),
               topRight: Radius.circular(15),
             ),
@@ -38,7 +38,7 @@ class TrendsPage extends StatelessWidget {
       340,
       Column(
         children: <Widget>[
-          SizedBox(height: 5),
+          const SizedBox(height: 5),
           Container(
             width: 40,
             height: 5,
@@ -47,19 +47,19 @@ class TrendsPage extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
             ),
           ),
-          Padding(
+          const Padding(
             padding: EdgeInsets.symmetric(vertical: 10),
             child: TitleText('Sort user list'),
           ),
-          Divider(height: 0),
+          const Divider(height: 0),
           _row(context, "Verified user", SortUser.Verified),
-          Divider(height: 0),
+          const Divider(height: 0),
           _row(context, "Alphabetically", SortUser.Alphabetically),
-          Divider(height: 0),
+          const Divider(height: 0),
           _row(context, "Newest user", SortUser.Newest),
-          Divider(height: 0),
+          const Divider(height: 0),
           _row(context, "Oldest user", SortUser.Oldest),
-          Divider(height: 0),
+          const Divider(height: 0),
           _row(context, "Popular User", SortUser.MaxFollower),
         ],
       ),
@@ -69,13 +69,13 @@ class TrendsPage extends StatelessWidget {
   Widget _row(BuildContext context, String text, SortUser sortBy) {
     final state = Provider.of<SearchState>(context, listen: false);
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
+      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 5),
       child: RadioListTile<SortUser>(
         value: sortBy,
         activeColor: TwitterColor.dodgetBlue,
         groupValue: state.sortBy,
         onChanged: (val) {
-          context.read<SearchState>().updateUserSortPrefrence = val;
+          context.read<SearchState>().updateUserSortPrefrence = val!;
           Navigator.pop(context);
         },
         title: Text(text, style: TextStyles.subtitleStyle),
@@ -93,7 +93,7 @@ class TrendsPage extends StatelessWidget {
         title: customTitleText('Trends'),
       ),
       body: ListView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         children: <Widget>[
           SettingRowWidget(
             "Search Filter",
@@ -104,13 +104,13 @@ class TrendsPage extends StatelessWidget {
             },
             showDivider: false,
           ),
-          SettingRowWidget(
+          const SettingRowWidget(
             "Trends location",
             navigateTo: null,
             subtitle: 'New York',
             showDivider: false,
           ),
-          SettingRowWidget(
+          const SettingRowWidget(
             null,
             subtitle:
                 'You can see what\'s trending in a specfic location by selecting which location appears in your Trending tab.',

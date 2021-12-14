@@ -4,11 +4,17 @@ import 'package:flutter_twitter_clone/helper/utility.dart';
 
 class UrlText extends StatelessWidget {
   final String text;
-  final TextStyle style;
-  final TextStyle urlStyle;
-  final Function(String) onHashTagPressed;
+  final TextStyle? style;
+  final TextStyle? urlStyle;
+  final Function(String)? onHashTagPressed;
 
-  UrlText({this.text, this.style, this.urlStyle, this.onHashTagPressed});
+  const UrlText(
+      {Key? key,
+      required this.text,
+      this.style,
+      this.urlStyle,
+      this.onHashTagPressed})
+      : super(key: key);
 
   List<InlineSpan> getTextSpans() {
     List<InlineSpan> widgets = <InlineSpan>[];
@@ -18,7 +24,7 @@ class UrlText extends StatelessWidget {
     List<_ResultMatch> resultMatches = <_ResultMatch>[];
     int start = 0;
     for (Match match in _matches) {
-      if (match.group(0).isNotEmpty) {
+      if (match.group(0)!.isNotEmpty) {
         if (start != match.start) {
           _ResultMatch result1 = _ResultMatch();
           result1.isUrl = false;
@@ -28,7 +34,7 @@ class UrlText extends StatelessWidget {
 
         _ResultMatch result2 = _ResultMatch();
         result2.isUrl = true;
-        result2.text = match.group(0);
+        result2.text = match.group(0)!;
         resultMatches.add(result2);
         start = match.end;
       }
@@ -44,12 +50,11 @@ class UrlText extends StatelessWidget {
         widgets.add(_LinkTextSpan(
             onHashTagPressed: onHashTagPressed,
             text: result.text,
-            style:
-                urlStyle != null ? urlStyle : TextStyle(color: Colors.blue)));
+            style: urlStyle ?? const TextStyle(color: Colors.blue)));
       } else {
         widgets.add(TextSpan(
             text: result.text,
-            style: style != null ? style : TextStyle(color: Colors.black)));
+            style: style ?? const TextStyle(color: Colors.black)));
       }
     }
     return widgets;
@@ -76,8 +81,9 @@ class UrlText extends StatelessWidget {
 }
 
 class _LinkTextSpan extends TextSpan {
-  final Function(String) onHashTagPressed;
-  _LinkTextSpan({TextStyle style, String text, this.onHashTagPressed})
+  final Function(String)? onHashTagPressed;
+  _LinkTextSpan(
+      {required TextStyle style, required String text, this.onHashTagPressed})
       : super(
             style: style,
             text: text,
@@ -94,6 +100,6 @@ class _LinkTextSpan extends TextSpan {
 }
 
 class _ResultMatch {
-  bool isUrl;
-  String text;
+  late bool isUrl;
+  late String text;
 }

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class WavyHeaderImage extends StatefulWidget {
   final Widget child;
 
-  const WavyHeaderImage({Key key, this.child}) : super(key: key);
+  const WavyHeaderImage({Key? key, required this.child}) : super(key: key);
   @override
   State<StatefulWidget> createState() {
     return _WavyHeaderState();
@@ -24,7 +24,7 @@ class _WavyHeaderState extends State<WavyHeaderImage> {
 class BottomWaveClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
-    var path = new Path();
+    var path = Path();
     path.lineTo(0.0, size.height - 20);
 
     var firstControlPoint = Offset(size.width / 4, size.height);

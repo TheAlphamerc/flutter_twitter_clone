@@ -26,20 +26,21 @@ import 'notification/notificationPage.dart';
 import 'search/SearchPage.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
+  @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  final refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
   int pageIndex = 0;
   // ignore: cancel_subscriptions
-  StreamSubscription<PushNotificationModel> pushNotificationSubscription;
+  late StreamSubscription<PushNotificationModel> pushNotificationSubscription;
   @override
   void initState() {
     initDynamicLinks();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
       var state = Provider.of<AppState>(context, listen: false);
       state.setpageIndex = 0;
       initTweets();
@@ -102,11 +103,11 @@ class _HomePageState extends State<HomePage> {
     /// `model.data.senderId` is a user id who sends you a message
     /// `model.data.receiverId` is a your user id.
     if (model.type == NotificationType.Message.toString() &&
-        model.receiverId == authstate.user.uid) {
+        model.receiverId == authstate.user!.uid) {
       /// Get sender profile detail from firebase
       state.getuserDetail(model.senderId).then((user) {
         final chatState = Provider.of<ChatState>(context, listen: false);
-        chatState.setChatUser = user;
+        chatState.setChatUser = user!;
         Navigator.pushNamed(context, '/ChatScreenPage');
       });
     }
@@ -118,7 +119,7 @@ class _HomePageState extends State<HomePage> {
     /// You can check that tweet on his profile timeline
     /// `model.data.senderId` is user id who tagged you in a tweet
     else if (model.type == NotificationType.Mention.toString() &&
-        model.receiverId == authstate.user.uid) {
+        model.receiverId == authstate.user!.uid) {
       var feedstate = Provider.of<FeedState>(context, listen: false);
       feedstate.getpostDetailFromDatabase(model.tweetId);
       Navigator.push(context, FeedPostDetail.getRoute(model.tweetId));
@@ -143,8 +144,8 @@ class _HomePageState extends State<HomePage> {
   /// Initilise the firebase dynamic link sdk
   void initDynamicLinks() async {
     FirebaseDynamicLinks.instance.onLink(
-        onSuccess: (PendingDynamicLinkData dynamicLink) async {
-      final Uri deepLink = dynamicLink?.link;
+        onSuccess: (PendingDynamicLinkData? dynamicLink) async {
+      final Uri? deepLink = dynamicLink?.link;
 
       if (deepLink != null) {
         redirectFromDeepLink(deepLink);
@@ -153,9 +154,9 @@ class _HomePageState extends State<HomePage> {
       cprint(e.message, errorIn: "onLinkError");
     });
 
-    final PendingDynamicLinkData data =
+    final PendingDynamicLinkData? data =
         await FirebaseDynamicLinks.instance.getInitialLink();
-    final Uri deepLink = data?.link;
+    final Uri? deepLink = data?.link;
 
     if (deepLink != null) {
       redirectFromDeepLink(deepLink);
@@ -191,19 +192,14 @@ class _HomePageState extends State<HomePage> {
           scaffoldKey: _scaffoldKey,
           refreshIndicatorKey: refreshIndicatorKey,
         );
-        break;
       case 1:
         return SearchPage(scaffoldKey: _scaffoldKey);
-        break;
       case 2:
         return NotificationPage(scaffoldKey: _scaffoldKey);
-        break;
       case 3:
         return ChatListPage(scaffoldKey: _scaffoldKey);
-        break;
       default:
         return FeedPage(scaffoldKey: _scaffoldKey);
-        break;
     }
   }
 
@@ -211,8 +207,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      bottomNavigationBar: BottomMenubar(),
-      drawer: SidebarMenu(),
+      bottomNavigationBar: const BottomMenubar(),
+      drawer: const SidebarMenu(),
       body: _body(),
     );
   }

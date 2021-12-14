@@ -4,9 +4,9 @@ import 'package:flutter_twitter_clone/helper/constant.dart';
 
 class CircularImage extends StatelessWidget {
   const CircularImage(
-      {Key key, this.path, this.height = 50, this.isBorder = false})
+      {Key? key, this.path, this.height = 50, this.isBorder = false})
       : super(key: key);
-  final String path;
+  final String? path;
   final double height;
   final bool isBorder;
 
@@ -28,11 +28,9 @@ class CircularImage extends StatelessWidget {
   }
 }
 
-CachedNetworkImageProvider customAdvanceNetworkImage(String path) {
-  if (path == null) {
-    path = Constants.dummyProfilePic;
-  }
+CachedNetworkImageProvider customAdvanceNetworkImage(String? path) {
+  path ??= Constants.dummyProfilePic;
   return CachedNetworkImageProvider(
-    path ?? Constants.dummyProfilePic,
+    path,
   );
 }

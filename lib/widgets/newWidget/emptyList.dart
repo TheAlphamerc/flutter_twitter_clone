@@ -3,7 +3,7 @@ import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 
 class EmptyList extends StatelessWidget {
-  EmptyList(this.title, {this.subTitle});
+  const EmptyList(this.title, {Key? key, required this.subTitle});
 
   final String subTitle;
   final String title;
@@ -23,7 +23,8 @@ class EmptyList extends StatelessWidget {
 class NotifyText extends StatelessWidget {
   final String subTitle;
   final String title;
-  const NotifyText({Key key, this.subTitle, this.title}) : super(key: key);
+  const NotifyText({Key? key, required this.subTitle, required this.title})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +33,7 @@ class NotifyText extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         TitleText(title, fontSize: 20, textAlign: TextAlign.center),
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
         TitleText(

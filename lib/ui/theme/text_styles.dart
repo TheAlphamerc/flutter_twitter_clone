@@ -4,17 +4,17 @@ class TextStyles {
   TextStyles._();
 
   static TextStyle get onPrimaryTitleText {
-    return TextStyle(color: Colors.white, fontWeight: FontWeight.w600);
+    return const TextStyle(color: Colors.white, fontWeight: FontWeight.w600);
   }
 
   static TextStyle get onPrimarySubTitleText {
-    return TextStyle(
+    return const TextStyle(
       color: Colors.white,
     );
   }
 
   static TextStyle get titleStyle {
-    return TextStyle(
+    return const TextStyle(
       color: Colors.black,
       fontSize: 16,
       fontWeight: FontWeight.bold,
@@ -22,17 +22,17 @@ class TextStyles {
   }
 
   static TextStyle get subtitleStyle {
-    return TextStyle(
+    return const TextStyle(
         color: AppColor.darkGrey, fontSize: 14, fontWeight: FontWeight.bold);
   }
 
   static TextStyle get userNameStyle {
-    return TextStyle(
+    return const TextStyle(
         color: AppColor.darkGrey, fontSize: 14, fontWeight: FontWeight.bold);
   }
 
   static TextStyle get textStyle14 {
-    return TextStyle(
+    return const TextStyle(
         color: AppColor.darkGrey, fontSize: 14, fontWeight: FontWeight.bold);
   }
 }

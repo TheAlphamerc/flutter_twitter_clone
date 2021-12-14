@@ -10,15 +10,18 @@ import 'package:path_provider/path_provider.dart';
 
 class ShareWidget extends StatefulWidget {
   const ShareWidget(
-      {Key key, this.child, this.socialMetaTagParameters, this.id})
+      {Key? key,
+      required this.child,
+      required this.socialMetaTagParameters,
+      required this.id})
       : super(key: key);
 
   final SocialMetaTagParameters socialMetaTagParameters;
   final String id;
   static MaterialPageRoute getRoute(
-      {Widget child,
-      SocialMetaTagParameters socialMetaTagParameters,
-      String id}) {
+      {required Widget child,
+      required SocialMetaTagParameters socialMetaTagParameters,
+      required String id}) {
     return MaterialPageRoute(
       builder: (_) => ShareWidget(
           child: child,
@@ -29,11 +32,11 @@ class ShareWidget extends StatefulWidget {
 
   final Widget child;
   @override
-  _MyHomePageState createState() => new _MyHomePageState();
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<ShareWidget> {
-  GlobalKey _globalKey = new GlobalKey();
+  final GlobalKey _globalKey = GlobalKey();
   ValueNotifier<bool> isLoading = ValueNotifier<bool>(false);
   @override
   void dispose() {
@@ -44,13 +47,13 @@ class _MyHomePageState extends State<ShareWidget> {
   Future _capturePng() async {
     try {
       isLoading.value = true;
-      RenderRepaintBoundary boundary =
-          _globalKey.currentContext.findRenderObject();
+      RenderRepaintBoundary boundary = _globalKey.currentContext!
+          .findRenderObject() as RenderRepaintBoundary;
       ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-      ByteData byteData =
+      ByteData? byteData =
           await image.toByteData(format: ui.ImageByteFormat.png);
       var path = await _localPath + "/${DateTime.now().toIso8601String()}.png";
-      await writeToFile(byteData, path);
+      await writeToFile(byteData!, path);
 
       var shareUrl = await Utility.createLinkToShare(context, widget.id,
           socialMetaTagParameters: widget.socialMetaTagParameters);
@@ -65,7 +68,7 @@ class _MyHomePageState extends State<ShareWidget> {
 
   Future<File> writeToFile(ByteData data, String path) {
     final buffer = data.buffer;
-    return new File(path).writeAsBytes(
+    return File(path).writeAsBytes(
         buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
   }
 
@@ -77,19 +80,19 @@ class _MyHomePageState extends State<ShareWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text('Share'),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Share'),
       ),
       body: SingleChildScrollView(
-        child: new Column(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             RepaintBoundary(
                 key: _globalKey,
                 child: Container(
                   color: Theme.of(context).colorScheme.onPrimary,
-                  padding: EdgeInsets.symmetric(vertical: 16),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
                   child: AbsorbPointer(
                     child: widget.child,
                   ),

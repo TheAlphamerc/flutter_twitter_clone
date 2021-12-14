@@ -3,38 +3,38 @@ import 'dart:convert';
 import 'package:flutter_twitter_clone/model/user.dart';
 
 class NotificationModel {
-  String id;
-  String tweetKey;
-  String updatedAt;
-  String createdAt;
-  String type;
-  Map<String, dynamic> data;
+  String? id;
+  String? tweetKey;
+  String? updatedAt;
+  late String createdAt;
+  late String type;
+  late Map<String, dynamic> data;
 
   NotificationModel(
       {this.id,
       this.tweetKey,
-      this.type,
-      this.createdAt,
+      required this.type,
+      required this.createdAt,
       this.updatedAt,
-      this.data});
+      required this.data});
 
   NotificationModel.fromJson(String tweetId, Map<dynamic, dynamic> map) {
-    this.id = tweetId;
+    id = tweetId;
     final data = json.decode(json.encode(map["data"])) as Map<String, dynamic>;
     tweetKey = tweetId;
-    this.updatedAt = map["updatedAt"];
-    this.type = map["type"];
-    this.createdAt = map["createdAt"];
+    updatedAt = map["updatedAt"];
+    type = map["type"];
+    createdAt = map["createdAt"];
     this.data = data;
   }
 
   Map<String, dynamic> toJson() => {
-        "tweetKey": tweetKey == null ? null : tweetKey,
+        "tweetKey": tweetKey,
       };
 }
 
 extension NotificationModelHelper on NotificationModel {
-  UserModel get user => UserModel.fromJson(this.data);
+  UserModel get user => UserModel.fromJson(data);
 
-  DateTime get timeStamp => DateTime.tryParse(this.updatedAt ?? this.createdAt);
+  DateTime? get timeStamp => DateTime.tryParse(updatedAt ?? createdAt);
 }

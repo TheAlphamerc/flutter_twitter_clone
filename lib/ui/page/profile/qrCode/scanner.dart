@@ -19,24 +19,24 @@ import 'dot_indicator.dart';
 class ScanScreen extends StatefulWidget {
   final UserModel user;
 
-  const ScanScreen({Key key, this.user}) : super(key: key);
+  const ScanScreen({Key? key, required this.user}) : super(key: key);
   static MaterialPageRoute getRoute(UserModel user) {
-    return new MaterialPageRoute(
+    return MaterialPageRoute(
         builder: (BuildContext context) => ScanScreen(user: user));
   }
 
   @override
-  _ScanState createState() => new _ScanState();
+  _ScanState createState() => _ScanState();
 }
 
 class _ScanState extends State<ScanScreen> with SingleTickerProviderStateMixin {
   final GlobalKey qrKey = GlobalKey();
-  PageController pageController;
+  late PageController pageController;
   double pageIndex = 0;
-  Barcode result;
+  late Barcode result;
   bool isFound = false;
-  QRViewController controller;
-  GlobalKey globalKey = new GlobalKey();
+  late QRViewController controller;
+  GlobalKey globalKey = GlobalKey();
   @override
   void initState() {
     super.initState();
@@ -55,20 +55,20 @@ class _ScanState extends State<ScanScreen> with SingleTickerProviderStateMixin {
 
   void pageListener() {
     setState(() {
-      pageIndex = pageController.page;
+      pageIndex = pageController.page!;
     });
   }
 
   _capturePng() async {
     try {
       // isLoading.value = true;
-      RenderRepaintBoundary boundary =
-          globalKey.currentContext.findRenderObject();
+      RenderRepaintBoundary boundary = globalKey.currentContext!
+          .findRenderObject() as RenderRepaintBoundary; //FIXME
       ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-      ByteData byteData =
+      ByteData? byteData =
           await image.toByteData(format: ui.ImageByteFormat.png);
       var path = await _localPath + "/${DateTime.now().toIso8601String()}.png";
-      await writeToFile(byteData, path);
+      await writeToFile(byteData!, path);
 
       Utility.shareFile([path], text: "");
       // isLoading.value = false;
@@ -85,7 +85,7 @@ class _ScanState extends State<ScanScreen> with SingleTickerProviderStateMixin {
 
   Future<File> writeToFile(ByteData data, String path) {
     final buffer = data.buffer;
-    return new File(path).writeAsBytes(
+    return File(path).writeAsBytes(
         buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
   }
 
@@ -125,9 +125,9 @@ class _ScanState extends State<ScanScreen> with SingleTickerProviderStateMixin {
                 children: [
                   BackButton(color: Theme.of(context).colorScheme.onPrimary),
                   AnimatedContainer(
-                    duration: Duration(microseconds: 200),
+                    duration: const Duration(microseconds: 200),
                     child: pageIndex == 0
-                        ? SizedBox.shrink()
+                        ? const SizedBox.shrink()
                         : IconButton(
                             onPressed: () async {
                               if (pageIndex == 1) {
@@ -153,7 +153,7 @@ class _ScanState extends State<ScanScreen> with SingleTickerProviderStateMixin {
   Widget _controls() {
     return Align(
       alignment: Alignment.bottomCenter,
-      child: Container(
+      child: SizedBox(
         height: 50,
         child: DotsIndicator(
           controller: pageController,
@@ -162,7 +162,7 @@ class _ScanState extends State<ScanScreen> with SingleTickerProviderStateMixin {
           onPageSelected: (int page) {
             pageController.animateToPage(
               page,
-              duration: Duration(milliseconds: 750),
+              duration: const Duration(milliseconds: 750),
               curve: Curves.ease,
             );
           },
@@ -191,14 +191,15 @@ class _ScanState extends State<ScanScreen> with SingleTickerProviderStateMixin {
 
   @override
   void dispose() {
-    controller?.dispose();
+    controller.dispose();
     pageController.dispose();
     super.dispose();
   }
 }
 
 class QrCode extends StatefulWidget {
-  const QrCode({Key key, this.user, this.globalKey}) : super(key: key);
+  const QrCode({Key? key, required this.user, required this.globalKey})
+      : super(key: key);
   final UserModel user;
   final GlobalKey globalKey;
   @override
@@ -206,21 +207,21 @@ class QrCode extends StatefulWidget {
 }
 
 class _QrCodeState extends State<QrCode> {
-  Color color = Color(0xff07B7A6);
+  Color color = const Color(0xff07B7A6);
   Color get randomColor {
     final colors = <Color>[
-      Color(0xffFF7878),
-      Color(0xffFFA959),
-      Color(0xff83DA2D),
-      Color(0xff1FE2D7),
-      Color(0xffC13E6B),
-      Color(0xffFF7878),
-      Color(0xff07B7A6),
-      Color(0xff1F7ACD),
-      Color(0xffBB78FF),
-      Color(0xffF14CD7),
-      Color(0xffFF5757),
-      Color(0xff28B446),
+      const Color(0xffFF7878),
+      const Color(0xffFFA959),
+      const Color(0xff83DA2D),
+      const Color(0xff1FE2D7),
+      const Color(0xffC13E6B),
+      const Color(0xffFF7878),
+      const Color(0xff07B7A6),
+      const Color(0xff1F7ACD),
+      const Color(0xffBB78FF),
+      const Color(0xffF14CD7),
+      const Color(0xffFF5757),
+      const Color(0xff28B446),
       // Color(0xffffffff)
     ];
 
@@ -253,11 +254,11 @@ class _QrCodeState extends State<QrCode> {
                         width: 4,
                       ),
                       borderRadius: BorderRadius.circular(10)),
-                  padding: EdgeInsets.all(22),
+                  padding: const EdgeInsets.all(22),
                   child: QrImage(
                     data: "fwitter/profile/${widget.user.userId}",
                     embeddedImageStyle:
-                        QrEmbeddedImageStyle(size: Size(60, 60)),
+                        QrEmbeddedImageStyle(size: const Size(60, 60)),
                     version: QrVersions.auto,
                     // foregroundColor: Theme.of(context).colorScheme.onPrimary,
                     backgroundColor: color,

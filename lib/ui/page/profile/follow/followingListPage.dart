@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/ui/page/common/usersListPage.dart';
-import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:provider/provider.dart';
 
 class FollowingListPage extends StatelessWidget {
+  const FollowingListPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     var state = Provider.of<AuthState>(context);
     return UsersListPage(
         pageTitle: 'Following',
-        userIdsList: state.profileUserModel.followingList,
-        appBarIcon: AppIcon.follow,
+        userIdsList: state.profileUserModel!.followingList,
+        //appBarIcon: AppIcon.follow,
         emptyScreenText:
-            '${state?.profileUserModel?.userName ?? state.userModel.userName} isn\'t follow anyone',
+            '${state.profileUserModel?.userName ?? state.userModel!.userName} isn\'t follow anyone',
         emptyScreenSubTileText: 'When they do they\'ll be listed here.');
   }
 }

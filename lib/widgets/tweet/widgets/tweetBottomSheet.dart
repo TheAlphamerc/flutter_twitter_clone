@@ -14,11 +14,13 @@ import 'package:provider/provider.dart';
 
 class TweetBottomSheet {
   Widget tweetOptionIcon(BuildContext context,
-      {FeedModel model, TweetType type, GlobalKey<ScaffoldState> scaffoldKey}) {
+      {required FeedModel model,
+      required TweetType type,
+      required GlobalKey<ScaffoldState> scaffoldKey}) {
     return Container(
       width: 25,
       height: 25,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         shape: BoxShape.circle,
       ),
       child: customIcon(context,
@@ -35,9 +37,9 @@ class TweetBottomSheet {
   }
 
   void _openbottomSheet(BuildContext context,
-      {TweetType type,
-      FeedModel model,
-      GlobalKey<ScaffoldState> scaffoldKey}) async {
+      {required TweetType type,
+      required FeedModel model,
+      required GlobalKey<ScaffoldState> scaffoldKey}) async {
     var authState = Provider.of<AuthState>(context, listen: false);
     bool isMyTweet = authState.userId == model.userId;
     await showModalBottomSheet(
@@ -45,7 +47,7 @@ class TweetBottomSheet {
       context: context,
       builder: (context) {
         return Container(
-            padding: EdgeInsets.only(top: 5, bottom: 0),
+            padding: const EdgeInsets.only(top: 5, bottom: 0),
             height: context.height *
                 (type == TweetType.Tweet
                     ? (isMyTweet ? .25 : .44)
@@ -53,7 +55,7 @@ class TweetBottomSheet {
             width: context.width,
             decoration: BoxDecoration(
               color: Theme.of(context).bottomSheetTheme.backgroundColor,
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(20),
                 topRight: Radius.circular(20),
               ),
@@ -74,10 +76,10 @@ class TweetBottomSheet {
   }
 
   Widget _tweetDetailOptions(BuildContext context,
-      {bool isMyTweet,
-      FeedModel model,
-      TweetType type,
-      GlobalKey<ScaffoldState> scaffoldKey}) {
+      {required bool isMyTweet,
+      required FeedModel model,
+      required TweetType type,
+      required GlobalKey<ScaffoldState> scaffoldKey}) {
     return Column(
       children: <Widget>[
         Container(
@@ -85,7 +87,7 @@ class TweetBottomSheet {
           height: 5,
           decoration: BoxDecoration(
             color: Theme.of(context).dividerColor,
-            borderRadius: BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(10),
             ),
           ),
@@ -98,7 +100,7 @@ class TweetBottomSheet {
             "tweet/${model.key}",
             socialMetaTagParameters: SocialMetaTagParameters(
                 description: model.description ??
-                    "${model.user.displayName} posted a tweet on Fwitter.",
+                    "${model.user!.displayName} posted a tweet on Fwitter.",
                 title: "Tweet on Fwitter app",
                 imageUrl: Uri.parse(
                     "https://play-lh.googleusercontent.com/e66XMuvW5hZ7HnFf8R_lcA3TFgkxm0SuyaMsBs3KENijNHZlogUAjxeu9COqsejV5w=s180-rw")),
@@ -118,8 +120,8 @@ class TweetBottomSheet {
                   showDialog(
                     context: context,
                     builder: (_) => AlertDialog(
-                      title: Text("Delete"),
-                      content: Text('Do you want to delete this Tweet?'),
+                      title: const Text("Delete"),
+                      content: const Text('Do you want to delete this Tweet?'),
                       actions: [
                         // ignore: deprecated_member_use
                         FlatButton(
@@ -128,7 +130,7 @@ class TweetBottomSheet {
                             Navigator.pop(context);
                             Navigator.pop(context);
                           },
-                          child: Text('Cancel'),
+                          child: const Text('Cancel'),
                         ),
                         // ignore: deprecated_member_use
                         TextButton(
@@ -145,11 +147,11 @@ class TweetBottomSheet {
                             _deleteTweet(
                               context,
                               type,
-                              model.key,
+                              model.key!,
                               parentkey: model.parentkey,
                             );
                           },
-                          child: Text('Confirm'),
+                          child: const Text('Confirm'),
                         ),
                       ],
                     ),
@@ -167,14 +169,14 @@ class TweetBottomSheet {
             : _widgetBottomSheetRow(
                 context,
                 AppIcon.unFollow,
-                text: 'Unfollow ${model.user.userName}',
+                text: 'Unfollow ${model.user!.userName}',
               ),
         isMyTweet
             ? Container()
             : _widgetBottomSheetRow(
                 context,
                 AppIcon.mute,
-                text: 'Mute ${model.user.userName}',
+                text: 'Mute ${model.user!.userName}',
               ),
         _widgetBottomSheetRow(
           context,
@@ -191,7 +193,7 @@ class TweetBottomSheet {
             : _widgetBottomSheetRow(
                 context,
                 AppIcon.block,
-                text: 'Block ${model.user.userName}',
+                text: 'Block ${model.user!.userName}',
               ),
         isMyTweet
             ? Container()
@@ -205,10 +207,10 @@ class TweetBottomSheet {
   }
 
   Widget _tweetOptions(BuildContext context,
-      {bool isMyTweet,
-      FeedModel model,
-      TweetType type,
-      GlobalKey<ScaffoldState> scaffoldKey}) {
+      {required bool isMyTweet,
+      required FeedModel model,
+      required TweetType type,
+      required GlobalKey<ScaffoldState> scaffoldKey}) {
     return Column(
       children: <Widget>[
         Container(
@@ -216,7 +218,7 @@ class TweetBottomSheet {
           height: 5,
           decoration: BoxDecoration(
             color: Theme.of(context).dividerColor,
-            borderRadius: BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(10),
             ),
           ),
@@ -228,7 +230,7 @@ class TweetBottomSheet {
             "tweet/${model.key}",
             socialMetaTagParameters: SocialMetaTagParameters(
                 description: model.description ??
-                    "${model.user.displayName} posted a tweet on Fwitter.",
+                    "${model.user!.displayName} posted a tweet on Fwitter.",
                 title: "Tweet on Fwitter app",
                 imageUrl: Uri.parse(
                     "https://play-lh.googleusercontent.com/e66XMuvW5hZ7HnFf8R_lcA3TFgkxm0SuyaMsBs3KENijNHZlogUAjxeu9COqsejV5w=s180-rw")),
@@ -249,8 +251,8 @@ class TweetBottomSheet {
                   showDialog(
                     context: context,
                     builder: (_) => AlertDialog(
-                      title: Text("Delete"),
-                      content: Text('Do you want to delete this Tweet?'),
+                      title: const Text("Delete"),
+                      content: const Text('Do you want to delete this Tweet?'),
                       actions: [
                         // ignore: deprecated_member_use
                         FlatButton(
@@ -259,7 +261,7 @@ class TweetBottomSheet {
                             Navigator.pop(context);
                             Navigator.pop(context);
                           },
-                          child: Text('Cancel'),
+                          child: const Text('Cancel'),
                         ),
                         // ignore: deprecated_member_use
                         TextButton(
@@ -276,11 +278,11 @@ class TweetBottomSheet {
                             _deleteTweet(
                               context,
                               type,
-                              model.key,
+                              model.key!,
                               parentkey: model.parentkey,
                             );
                           },
-                          child: Text('Confirm'),
+                          child: const Text('Confirm'),
                         ),
                       ],
                     ),
@@ -305,21 +307,21 @@ class TweetBottomSheet {
             : _widgetBottomSheetRow(
                 context,
                 AppIcon.unFollow,
-                text: 'Unfollow ${model.user.userName}',
+                text: 'Unfollow ${model.user!.userName}',
               ),
         isMyTweet
             ? Container()
             : _widgetBottomSheetRow(
                 context,
                 AppIcon.mute,
-                text: 'Mute ${model.user.userName}',
+                text: 'Mute ${model.user!.userName}',
               ),
         isMyTweet
             ? Container()
             : _widgetBottomSheetRow(
                 context,
                 AppIcon.block,
-                text: 'Block ${model.user.userName}',
+                text: 'Block ${model.user!.userName}',
               ),
         isMyTweet
             ? Container()
@@ -333,10 +335,10 @@ class TweetBottomSheet {
   }
 
   Widget _widgetBottomSheetRow(BuildContext context, IconData icon,
-      {String text, Function onPressed, bool isEnable = false}) {
+      {required String text, Function? onPressed, bool isEnable = false}) {
     return Expanded(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Row(
           children: <Widget>[
             customIcon(
@@ -348,7 +350,7 @@ class TweetBottomSheet {
               iconColor:
                   onPressed != null ? AppColor.darkGrey : AppColor.lightGrey,
             ),
-            SizedBox(
+            const SizedBox(
               width: 15,
             ),
             customText(
@@ -363,9 +365,9 @@ class TweetBottomSheet {
           ],
         ),
       ).ripple(() {
-        if (onPressed != null)
+        if (onPressed != null) {
           onPressed();
-        else {
+        } else {
           Navigator.pop(context);
         }
       }),
@@ -373,7 +375,7 @@ class TweetBottomSheet {
   }
 
   void _deleteTweet(BuildContext context, TweetType type, String tweetId,
-      {String parentkey}) {
+      {String? parentkey}) {
     var state = Provider.of<FeedState>(context, listen: false);
     state.deleteTweet(tweetId, type, parentkey: parentkey);
     // CLose bottom sheet
@@ -387,20 +389,20 @@ class TweetBottomSheet {
   }
 
   void openRetweetbottomSheet(BuildContext context,
-      {TweetType type,
-      FeedModel model,
-      GlobalKey<ScaffoldState> scaffoldKey}) async {
+      {TweetType? type,
+      required FeedModel model,
+      required GlobalKey<ScaffoldState> scaffoldKey}) async {
     await showModalBottomSheet(
       backgroundColor: Colors.transparent,
       context: context,
       builder: (context) {
         return Container(
-            padding: EdgeInsets.only(top: 5, bottom: 0),
+            padding: const EdgeInsets.only(top: 5, bottom: 0),
             height: 130,
             width: context.width,
             decoration: BoxDecoration(
               color: Theme.of(context).bottomSheetTheme.backgroundColor,
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(20),
                 topRight: Radius.circular(20),
               ),
@@ -410,7 +412,7 @@ class TweetBottomSheet {
     );
   }
 
-  Widget _retweet(BuildContext context, FeedModel model, TweetType type) {
+  Widget _retweet(BuildContext context, FeedModel model, TweetType? type) {
     return Column(
       children: <Widget>[
         Container(
@@ -418,7 +420,7 @@ class TweetBottomSheet {
           height: 5,
           decoration: BoxDecoration(
             color: Theme.of(context).dividerColor,
-            borderRadius: BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(10),
             ),
           ),
@@ -433,25 +435,23 @@ class TweetBottomSheet {
             var authState = Provider.of<AuthState>(context, listen: false);
             var myUser = authState.userModel;
             myUser = UserModel(
-                displayName: myUser.displayName ?? myUser.email.split('@')[0],
+                displayName: myUser!.displayName ?? myUser.email!.split('@')[0],
                 profilePic: myUser.profilePic,
                 userId: myUser.userId,
-                isVerified: authState.userModel.isVerified,
-                userName: authState.userModel.userName);
+                isVerified: authState.userModel!.isVerified,
+                userName: authState.userModel!.userName);
             // Prepare current Tweet model to reply
-            FeedModel post = new FeedModel(
+            FeedModel post = FeedModel(
                 childRetwetkey: model.getTweetKeyToRetweet,
                 createdAt: DateTime.now().toUtc().toString(),
                 user: myUser,
-                userId: myUser.userId);
+                userId: myUser.userId!);
             state.createTweet(post);
 
             Navigator.pop(context);
-            var sharedPost = await state.fetchTweet(post.childRetwetkey);
-            if (sharedPost.retweetCount == null) {
-              sharedPost.retweetCount = 0;
-            }
-            sharedPost.retweetCount += 1;
+            var sharedPost = await state.fetchTweet(post.childRetwetkey!);
+            sharedPost.retweetCount ??= 0;
+            sharedPost.retweetCount = sharedPost.retweetCount! + 1;
             state.updateTweet(sharedPost);
           },
         ),
@@ -476,18 +476,18 @@ class TweetBottomSheet {
   }
 
   void openShareTweetBottomSheet(
-      BuildContext context, FeedModel model, TweetType type) async {
+      BuildContext context, FeedModel model, TweetType? type) async {
     await showModalBottomSheet(
       backgroundColor: Colors.transparent,
       context: context,
       builder: (context) {
         return Container(
-            padding: EdgeInsets.only(top: 5, bottom: 0),
+            padding: const EdgeInsets.only(top: 5, bottom: 0),
             height: 180,
             width: context.width,
             decoration: BoxDecoration(
               color: Theme.of(context).bottomSheetTheme.backgroundColor,
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(20),
                 topRight: Radius.circular(20),
               ),
@@ -497,10 +497,10 @@ class TweetBottomSheet {
     );
   }
 
-  Widget _shareTweet(BuildContext context, FeedModel model, TweetType type) {
+  Widget _shareTweet(BuildContext context, FeedModel model, TweetType? type) {
     var socialMetaTagParameters = SocialMetaTagParameters(
         description: model.description ?? "",
-        title: "${model.user.displayName} posted a tweet on Fwitter.",
+        title: "${model.user!.displayName} posted a tweet on Fwitter.",
         imageUrl: Uri.parse(model.user?.profilePic ??
             "https://play-lh.googleusercontent.com/e66XMuvW5hZ7HnFf8R_lcA3TFgkxm0SuyaMsBs3KENijNHZlogUAjxeu9COqsejV5w=s180-rw"));
     return Column(
@@ -510,12 +510,12 @@ class TweetBottomSheet {
           height: 5,
           decoration: BoxDecoration(
             color: Theme.of(context).dividerColor,
-            borderRadius: BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(10),
             ),
           ),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         _widgetBottomSheetRow(
           context,
           AppIcon.bookmark,
@@ -523,14 +523,14 @@ class TweetBottomSheet {
           text: 'Bookmark',
           onPressed: () async {
             var state = Provider.of<FeedState>(context, listen: false);
-            await state.addBookmark(model.key);
+            await state.addBookmark(model.key!);
             Navigator.pop(context);
-            ScaffoldMessenger.maybeOf(context).showSnackBar(
-              SnackBar(content: Text("Bookmark saved!!")),
+            ScaffoldMessenger.maybeOf(context)!.showSnackBar(
+              const SnackBar(content: Text("Bookmark saved!!")),
             );
           },
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         _widgetBottomSheetRow(
           context,
           AppIcon.link,
@@ -547,7 +547,7 @@ class TweetBottomSheet {
             Utility.share(uri.toString(), subject: "Tweet");
           },
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         _widgetBottomSheetRow(
           context,
           AppIcon.image,
@@ -556,23 +556,28 @@ class TweetBottomSheet {
           onPressed: () {
             socialMetaTagParameters = SocialMetaTagParameters(
                 description: model.description ?? "",
-                title: "${model.user.displayName} posted a tweet on Fwitter.",
+                title: "${model.user!.displayName} posted a tweet on Fwitter.",
                 imageUrl: Uri.parse(model.user?.profilePic ??
                     "https://play-lh.googleusercontent.com/e66XMuvW5hZ7HnFf8R_lcA3TFgkxm0SuyaMsBs3KENijNHZlogUAjxeu9COqsejV5w=s180-rw"));
             Navigator.pop(context);
             Navigator.push(
               context,
               ShareWidget.getRoute(
-                  child: Tweet(
-                    model: model,
-                    type: type,
-                  ),
+                  child: type != null
+                      ? Tweet(
+                          model: model,
+                          type: type,
+                          scaffoldKey: GlobalKey<ScaffoldState>(),
+                        )
+                      : Tweet(
+                          model: model,
+                          scaffoldKey: GlobalKey<ScaffoldState>()),
                   id: "tweet/${model.key}",
                   socialMetaTagParameters: socialMetaTagParameters),
             );
           },
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
       ],
     );
   }

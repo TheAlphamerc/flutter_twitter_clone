@@ -15,19 +15,19 @@ class TweetIconsRow extends StatelessWidget {
   final FeedModel model;
   final Color iconColor;
   final Color iconEnableColor;
-  final double size;
+  final double? size;
   final bool isTweetDetail;
-  final TweetType type;
+  final TweetType? type;
   final GlobalKey<ScaffoldState> scaffoldKey;
   const TweetIconsRow(
-      {Key key,
-      this.model,
-      this.iconColor,
-      this.iconEnableColor,
+      {Key? key,
+      required this.model,
+      required this.iconColor,
+      required this.iconEnableColor,
       this.size,
       this.isTweetDetail = false,
       this.type,
-      this.scaffoldKey})
+      required this.scaffoldKey})
       : super(key: key);
 
   Widget _likeCommentsIcons(BuildContext context, FeedModel model) {
@@ -35,11 +35,11 @@ class TweetIconsRow extends StatelessWidget {
 
     return Container(
       color: Colors.transparent,
-      padding: EdgeInsets.only(bottom: 0, top: 0),
+      padding: const EdgeInsets.only(bottom: 0, top: 0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          SizedBox(
+          const SizedBox(
             width: 20,
           ),
           _iconWidget(
@@ -65,14 +65,14 @@ class TweetIconsRow extends StatelessWidget {
           _iconWidget(
             context,
             text: isTweetDetail ? '' : model.likeCount.toString(),
-            icon: model.likeList.any((userId) => userId == authState.userId)
+            icon: model.likeList!.any((userId) => userId == authState.userId)
                 ? AppIcon.heartFill
                 : AppIcon.heartEmpty,
             onPressed: () {
               addLikeToTweet(context);
             },
             iconColor:
-                model.likeList.any((userId) => userId == authState.userId)
+                model.likeList!.any((userId) => userId == authState.userId)
                     ? iconEnableColor
                     : iconColor,
             size: size ?? 20,
@@ -87,41 +87,42 @@ class TweetIconsRow extends StatelessWidget {
   }
 
   Widget _iconWidget(BuildContext context,
-      {String text,
-      IconData icon,
-      Function onPressed,
-      IconData sysIcon,
-      Color iconColor,
+      {required String text,
+      IconData? icon,
+      Function? onPressed,
+      IconData? sysIcon,
+      required Color iconColor,
       double size = 20}) {
+    if (sysIcon == null) assert(icon != null);
+    if (icon == null) assert(sysIcon != null);
+
     return Expanded(
-      child: Container(
-        child: Row(
-          children: <Widget>[
-            IconButton(
-              onPressed: () {
-                if (onPressed != null) onPressed();
-              },
-              icon: sysIcon != null
-                  ? Icon(sysIcon, color: iconColor, size: size)
-                  : customIcon(
-                      context,
-                      size: size,
-                      icon: icon,
-                      istwitterIcon: true,
-                      iconColor: iconColor,
-                    ),
+      child: Row(
+        children: <Widget>[
+          IconButton(
+            onPressed: () {
+              if (onPressed != null) onPressed();
+            },
+            icon: sysIcon != null
+                ? Icon(sysIcon, color: iconColor, size: size)
+                : customIcon(
+                    context,
+                    size: size,
+                    icon: icon!,
+                    istwitterIcon: true,
+                    iconColor: iconColor,
+                  ),
+          ),
+          customText(
+            text,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: iconColor,
+              fontSize: size - 5,
             ),
-            customText(
-              text,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: iconColor,
-                fontSize: size - 5,
-              ),
-              context: context,
-            ),
-          ],
-        ),
+            context: context,
+          ),
+        ],
       ),
     );
   }
@@ -129,92 +130,94 @@ class TweetIconsRow extends StatelessWidget {
   Widget _timeWidget(BuildContext context) {
     return Column(
       children: <Widget>[
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Row(
           children: <Widget>[
-            SizedBox(width: 5),
+            const SizedBox(width: 5),
             customText(Utility.getPostTime2(model.createdAt),
                 style: TextStyles.textStyle14),
-            SizedBox(width: 10),
+            const SizedBox(width: 10),
             customText('Fwitter for Android',
                 style: TextStyle(color: Theme.of(context).primaryColor))
           ],
         ),
-        SizedBox(height: 5),
+        const SizedBox(height: 5),
       ],
     );
   }
 
   Widget _likeCommentWidget(BuildContext context) {
     bool isLikeAvailable =
-        model.likeCount != null ? model.likeCount > 0 : false;
-    bool isRetweetAvailable = model.retweetCount > 0;
+        model.likeCount != null ? model.likeCount! > 0 : false;
+    bool isRetweetAvailable = model.retweetCount! > 0;
     bool isLikeRetweetAvailable = isRetweetAvailable || isLikeAvailable;
     return Column(
       children: <Widget>[
-        Divider(
+        const Divider(
           endIndent: 10,
           height: 0,
         ),
         AnimatedContainer(
           padding:
               EdgeInsets.symmetric(vertical: isLikeRetweetAvailable ? 12 : 0),
-          duration: Duration(milliseconds: 500),
+          duration: const Duration(milliseconds: 500),
           child: !isLikeRetweetAvailable
-              ? SizedBox.shrink()
+              ? const SizedBox.shrink()
               : Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     !isRetweetAvailable
-                        ? SizedBox.shrink()
+                        ? const SizedBox.shrink()
                         : customText(model.retweetCount.toString(),
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                            style:
+                                const TextStyle(fontWeight: FontWeight.bold)),
                     !isRetweetAvailable
-                        ? SizedBox.shrink()
-                        : SizedBox(width: 5),
+                        ? const SizedBox.shrink()
+                        : const SizedBox(width: 5),
                     AnimatedCrossFade(
-                      firstChild: SizedBox.shrink(),
+                      firstChild: const SizedBox.shrink(),
                       secondChild: customText('Retweets',
                           style: TextStyles.subtitleStyle),
                       crossFadeState: !isRetweetAvailable
                           ? CrossFadeState.showFirst
                           : CrossFadeState.showSecond,
-                      duration: Duration(milliseconds: 800),
+                      duration: const Duration(milliseconds: 800),
                     ),
                     !isRetweetAvailable
-                        ? SizedBox.shrink()
-                        : SizedBox(width: 20),
+                        ? const SizedBox.shrink()
+                        : const SizedBox(width: 20),
                     InkWell(
                       onTap: () {
                         onLikeTextPressed(context);
                       },
                       child: AnimatedCrossFade(
-                        firstChild: SizedBox.shrink(),
+                        firstChild: const SizedBox.shrink(),
                         secondChild: Row(
                           children: <Widget>[
                             customSwitcherWidget(
-                              duraton: Duration(milliseconds: 300),
+                              duraton: const Duration(milliseconds: 300),
                               child: customText(model.likeCount.toString(),
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
                                   key: ValueKey(model.likeCount)),
                             ),
-                            SizedBox(width: 5),
+                            const SizedBox(width: 5),
                             customText('Likes', style: TextStyles.subtitleStyle)
                           ],
                         ),
                         crossFadeState: !isLikeAvailable
                             ? CrossFadeState.showFirst
                             : CrossFadeState.showSecond,
-                        duration: Duration(milliseconds: 300),
+                        duration: const Duration(milliseconds: 300),
                       ),
                     )
                   ],
                 ),
         ),
         !isLikeRetweetAvailable
-            ? SizedBox.shrink()
-            : Divider(
+            ? const SizedBox.shrink()
+            : const Divider(
                 endIndent: 10,
                 height: 0,
               ),
@@ -223,7 +226,7 @@ class TweetIconsRow extends StatelessWidget {
   }
 
   Widget customSwitcherWidget(
-      {@required child, Duration duraton = const Duration(milliseconds: 500)}) {
+      {required child, Duration duraton = const Duration(milliseconds: 500)}) {
     return AnimatedSwitcher(
       duration: duraton,
       transitionBuilder: (Widget child, Animation<double> animation) {
@@ -244,7 +247,7 @@ class TweetIconsRow extends StatelessWidget {
       CustomRoute<bool>(
         builder: (BuildContext context) => UsersListPage(
           pageTitle: "Liked by",
-          userIdsList: model.likeList.map((userId) => userId).toList(),
+          userIdsList: model.likeList!.map((userId) => userId).toList(),
           emptyScreenText: "This tweet has no like yet",
           emptyScreenSubTileText:
               "Once a user likes this tweet, user list will be shown here",
@@ -259,13 +262,12 @@ class TweetIconsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: Column(
+    return Column(
       children: <Widget>[
-        isTweetDetail ? _timeWidget(context) : SizedBox(),
-        isTweetDetail ? _likeCommentWidget(context) : SizedBox(),
+        isTweetDetail ? _timeWidget(context) : const SizedBox(),
+        isTweetDetail ? _likeCommentWidget(context) : const SizedBox(),
         _likeCommentsIcons(context, model)
       ],
-    ));
+    );
   }
 }

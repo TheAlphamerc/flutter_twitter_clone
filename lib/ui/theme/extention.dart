@@ -14,7 +14,7 @@ extension SizeHelper on BuildContext {
 }
 
 extension OnPressed on Widget {
-  Widget ripple(Function onPressed,
+  Widget ripple(Function? onPressed,
           {BorderRadiusGeometry borderRadius =
               const BorderRadius.all(Radius.circular(5))}) =>
       Stack(
@@ -44,15 +44,15 @@ extension OnPressed on Widget {
 
 extension StringHelper on String {
   String takeOnly(int value) {
-    if (this != null && length > value) {
-      return this.substring(0, value) + " ...";
+    if (length > value) {
+      return substring(0, value) + " ...";
     }
     return this;
   }
 
   String get removeSpaces {
-    if (this != null && length > 0) {
-      return this.replaceAll(new RegExp(r"\n+"), "\n");
+    if (length > 0) {
+      return replaceAll(RegExp(r"\n+"), "\n");
     }
     return this;
   }

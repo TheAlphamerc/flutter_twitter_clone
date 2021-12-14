@@ -10,8 +10,12 @@ import '../customWidgets.dart';
 // import 'customBottomNavigationBar.dart';
 
 class BottomMenubar extends StatefulWidget {
-  const BottomMenubar({this.pageController});
-  final PageController pageController;
+  const BottomMenubar({
+    Key? key,
+    /*this.pageController*/
+  });
+  // final PageController pageController;
+  @override
   _BottomMenubarState createState() => _BottomMenubarState();
 }
 
@@ -27,10 +31,12 @@ class _BottomMenubarState extends State<BottomMenubar> {
     );
     return Container(
       height: 50,
-      decoration:
-          BoxDecoration(color: Theme.of(context).bottomAppBarColor, boxShadow: [
-        BoxShadow(color: Colors.black12, offset: Offset(0, -.1), blurRadius: 0)
-      ]),
+      decoration: BoxDecoration(
+          color: Theme.of(context).bottomAppBarColor,
+          boxShadow: const [
+            BoxShadow(
+                color: Colors.black12, offset: Offset(0, -.1), blurRadius: 0)
+          ]),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -56,30 +62,35 @@ class _BottomMenubarState extends State<BottomMenubar> {
     );
   }
 
-  Widget _icon(IconData iconData, int index,
-      {bool isCustomIcon = false, IconData icon}) {
+  Widget _icon(IconData? iconData, int index,
+      {bool isCustomIcon = false, IconData? icon}) {
+    if (isCustomIcon) {
+      assert(icon != null);
+    } else {
+      assert(iconData != null);
+    }
     var state = Provider.of<AppState>(
       context,
     );
     return Expanded(
-      child: Container(
+      child: SizedBox(
         height: double.infinity,
         width: double.infinity,
         child: AnimatedAlign(
-          duration: Duration(milliseconds: ANIM_DURATION),
+          duration: const Duration(milliseconds: ANIM_DURATION),
           curve: Curves.easeIn,
-          alignment: Alignment(0, ICON_ON),
+          alignment: const Alignment(0, ICON_ON),
           child: AnimatedOpacity(
-            duration: Duration(milliseconds: ANIM_DURATION),
+            duration: const Duration(milliseconds: ANIM_DURATION),
             opacity: ALPHA_ON,
             child: IconButton(
               highlightColor: Colors.transparent,
               splashColor: Colors.transparent,
-              padding: EdgeInsets.all(0),
-              alignment: Alignment(0, 0),
+              padding: const EdgeInsets.all(0),
+              alignment: const Alignment(0, 0),
               icon: isCustomIcon
                   ? customIcon(context,
-                      icon: icon,
+                      icon: icon!,
                       size: 22,
                       istwitterIcon: true,
                       isEnable: index == state.pageIndex)
@@ -87,7 +98,7 @@ class _BottomMenubarState extends State<BottomMenubar> {
                       iconData,
                       color: index == state.pageIndex
                           ? Theme.of(context).primaryColor
-                          : Theme.of(context).textTheme.caption.color,
+                          : Theme.of(context).textTheme.caption!.color,
                     ),
               onPressed: () {
                 setState(() {

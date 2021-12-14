@@ -10,6 +10,7 @@ import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 import 'package:flutter_twitter_clone/widgets/tweet/widgets/parentTweet.dart';
 import 'package:flutter_twitter_clone/widgets/tweet/widgets/tweetIconsRow.dart';
+import 'package:flutter_twitter_clone/widgets/tweet/widgets/tweetTranslation.dart';
 import 'package:flutter_twitter_clone/widgets/url_text/customUrlText.dart';
 import 'package:flutter_twitter_clone/widgets/url_text/custom_link_media_info.dart';
 import 'package:provider/provider.dart';
@@ -20,17 +21,17 @@ import 'widgets/tweetImage.dart';
 
 class Tweet extends StatelessWidget {
   final FeedModel model;
-  final Widget trailing;
+  final Widget? trailing;
   final TweetType type;
   final bool isDisplayOnProfile;
   final GlobalKey<ScaffoldState> scaffoldKey;
   const Tweet({
-    Key key,
-    this.model,
+    Key? key,
+    required this.model,
     this.trailing,
     this.type = TweetType.Tweet,
     this.isDisplayOnProfile = false,
-    this.scaffoldKey,
+    required this.scaffoldKey,
   }) : super(key: key);
 
   void onLongPressedTweet(BuildContext context) {
@@ -51,7 +52,7 @@ class Tweet extends StatelessWidget {
       feedstate.clearAllDetailAndReplyTweetStack();
     }
     feedstate.getpostDetailFromDatabase(null, model: model);
-    Navigator.push(context, FeedPostDetail.getRoute(model.key));
+    Navigator.push(context, FeedPostDetail.getRoute(model.key!));
   }
 
   @override
@@ -61,10 +62,10 @@ class Tweet extends StatelessWidget {
       children: <Widget>[
         /// Left vertical bar of a tweet
         type != TweetType.ParentTweet
-            ? SizedBox.shrink()
+            ? const SizedBox.shrink()
             : Positioned.fill(
                 child: Container(
-                  margin: EdgeInsets.only(
+                  margin: const EdgeInsets.only(
                     left: 38,
                     top: 75,
                   ),
@@ -99,26 +100,26 @@ class Tweet extends StatelessWidget {
                         type: type,
                       )
                     : _TweetDetailBody(
-                        isDisplayOnProfile: isDisplayOnProfile,
+                        // isDisplayOnProfile: isDisplayOnProfile,
                         model: model,
                         trailing: trailing,
                         type: type,
                       ),
               ),
               Padding(
-                padding: EdgeInsets.only(right: 16),
+                padding: const EdgeInsets.only(right: 16),
                 child: TweetImage(
                   model: model,
                   type: type,
                 ),
               ),
               model.childRetwetkey == null
-                  ? SizedBox.shrink()
+                  ? const SizedBox.shrink()
                   : RetweetWidget(
-                      childRetwetkey: model.childRetwetkey,
+                      childRetwetkey: model.childRetwetkey!,
                       type: type,
-                      isImageAvailable:
-                          model.imagePath != null && model.imagePath.isNotEmpty,
+                      isImageAvailable: model.imagePath != null &&
+                          model.imagePath!.isNotEmpty,
                     ),
               Padding(
                 padding:
@@ -127,14 +128,15 @@ class Tweet extends StatelessWidget {
                   type: type,
                   model: model,
                   isTweetDetail: type == TweetType.Detail,
-                  iconColor: Theme.of(context).textTheme.caption.color,
+                  iconColor: Theme.of(context).textTheme.caption!.color!,
                   iconEnableColor: TwitterColor.ceriseRed,
                   size: 20,
+                  scaffoldKey: GlobalKey<ScaffoldState>(),
                 ),
               ),
               type == TweetType.ParentTweet
-                  ? SizedBox.shrink()
-                  : Divider(height: .5, thickness: .5)
+                  ? const SizedBox.shrink()
+                  : const Divider(height: .5, thickness: .5)
             ],
           ),
         ),
@@ -145,11 +147,15 @@ class Tweet extends StatelessWidget {
 
 class _TweetBody extends StatelessWidget {
   final FeedModel model;
-  final Widget trailing;
+  final Widget? trailing;
   final TweetType type;
   final bool isDisplayOnProfile;
   const _TweetBody(
-      {Key key, this.model, this.trailing, this.type, this.isDisplayOnProfile})
+      {Key? key,
+      required this.model,
+      this.trailing,
+      required this.type,
+      required this.isDisplayOnProfile})
       : super(key: key);
 
   @override
@@ -163,11 +169,19 @@ class _TweetBody extends StatelessWidget {
         type == TweetType.Tweet || type == TweetType.Tweet
             ? FontWeight.w400
             : FontWeight.w400;
+    TextStyle textStyle = TextStyle(
+        color: Colors.black,
+        fontSize: descriptionFontSize,
+        fontWeight: descriptionFontWeight);
+    TextStyle urlStyle = TextStyle(
+        color: Colors.blue,
+        fontSize: descriptionFontSize,
+        fontWeight: descriptionFontWeight);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        SizedBox(width: 10),
-        Container(
+        const SizedBox(width: 10),
+        SizedBox(
           width: 40,
           height: 40,
           child: GestureDetector(
@@ -179,11 +193,11 @@ class _TweetBody extends StatelessWidget {
               Navigator.push(
                   context, ProfilePage.getRoute(profileId: model.userId));
             },
-            child: CircularImage(path: model.user.profilePic),
+            child: CircularImage(path: model.user!.profilePic),
           ),
         ),
-        SizedBox(width: 20),
-        Container(
+        const SizedBox(width: 20),
+        SizedBox(
           width: context.width - 80,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -198,13 +212,13 @@ class _TweetBody extends StatelessWidget {
                         ConstrainedBox(
                           constraints: BoxConstraints(
                               minWidth: 0, maxWidth: context.width * .5),
-                          child: TitleText(model.user.displayName,
+                          child: TitleText(model.user!.displayName!,
                               fontSize: 16,
                               fontWeight: FontWeight.w800,
                               overflow: TextOverflow.ellipsis),
                         ),
-                        SizedBox(width: 3),
-                        model.user.isVerified
+                        const SizedBox(width: 3),
+                        model.user!.isVerified!
                             ? customIcon(
                                 context,
                                 icon: AppIcon.blueTick,
@@ -213,48 +227,54 @@ class _TweetBody extends StatelessWidget {
                                 size: 13,
                                 paddingIcon: 3,
                               )
-                            : SizedBox(width: 0),
+                            : const SizedBox(width: 0),
                         SizedBox(
-                          width: model.user.isVerified ? 5 : 0,
+                          width: model.user!.isVerified! ? 5 : 0,
                         ),
                         Flexible(
                           child: customText(
-                            '${model.user.userName}',
+                            '${model.user!.userName}',
                             style: TextStyles.userNameStyle,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        SizedBox(width: 4),
+                        const SizedBox(width: 4),
                         customText('· ${Utility.getChatTime(model.createdAt)}',
                             style: TextStyles.userNameStyle),
                       ],
                     ),
                   ),
-                  Container(child: trailing == null ? SizedBox() : trailing),
+                  Container(child: trailing ?? const SizedBox()),
                 ],
               ),
               model.description == null
-                  ? SizedBox()
-                  : UrlText(
-                      text: model.description.removeSpaces,
-                      onHashTagPressed: (tag) {
-                        cprint(tag);
-                      },
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: descriptionFontSize,
-                          fontWeight: descriptionFontWeight),
-                      urlStyle: TextStyle(
-                          color: Colors.blue,
-                          fontSize: descriptionFontSize,
-                          fontWeight: descriptionFontWeight),
+                  ? const SizedBox()
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        UrlText(
+                          text: model.description!.removeSpaces,
+                          onHashTagPressed: (tag) {
+                            cprint(tag);
+                          },
+                          style: textStyle,
+                          urlStyle: urlStyle,
+                        ),
+                        TweetTranslation(
+                          languageCode: model.lanCode,
+                          tweetKey: model.key!,
+                          description: model.description!,
+                          textStyle: textStyle,
+                          urlStyle: urlStyle,
+                        ),
+                      ],
                     ),
               if (model.imagePath == null && model.description != null)
-                CustomLinkMediaInfo(text: model.description),
+                CustomLinkMediaInfo(text: model.description!),
             ],
           ),
         ),
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
       ],
     );
   }
@@ -262,12 +282,16 @@ class _TweetBody extends StatelessWidget {
 
 class _TweetDetailBody extends StatelessWidget {
   final FeedModel model;
-  final Widget trailing;
+  final Widget? trailing;
   final TweetType type;
-  final bool isDisplayOnProfile;
-  const _TweetDetailBody(
-      {Key key, this.model, this.trailing, this.type, this.isDisplayOnProfile})
-      : super(key: key);
+  // final bool isDisplayOnProfile;
+  const _TweetDetailBody({
+    Key? key,
+    required this.model,
+    this.trailing,
+    required this.type,
+    /*this.isDisplayOnProfile*/
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -283,7 +307,14 @@ class _TweetDetailBody extends StatelessWidget {
         type == TweetType.Tweet || type == TweetType.Tweet
             ? FontWeight.w300
             : FontWeight.w400;
-
+    TextStyle textStyle = TextStyle(
+        color: Colors.black,
+        fontSize: descriptionFontSize,
+        fontWeight: descriptionFontWeight);
+    TextStyle urlStyle = TextStyle(
+        color: Colors.blue,
+        fontSize: descriptionFontSize,
+        fontWeight: descriptionFontWeight);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -291,36 +322,38 @@ class _TweetDetailBody extends StatelessWidget {
                 model.childRetwetkey == null &&
                 type != TweetType.ParentTweet
             ? ParentTweetWidget(
-                childRetwetkey: model.parentkey,
-                isImageAvailable: false,
-                trailing: trailing)
-            : SizedBox.shrink(),
-        Container(
+                childRetwetkey: model.parentkey!,
+                // isImageAvailable: false,
+                trailing: trailing,
+                type: type,
+              )
+            : const SizedBox.shrink(),
+        SizedBox(
           width: context.width,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               ListTile(
-                contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16),
                 leading: GestureDetector(
                   onTap: () {
                     Navigator.push(
                         context, ProfilePage.getRoute(profileId: model.userId));
                   },
-                  child: CircularImage(path: model.user.profilePic),
+                  child: CircularImage(path: model.user!.profilePic),
                 ),
                 title: Row(
                   children: <Widget>[
                     ConstrainedBox(
                       constraints: BoxConstraints(
                           minWidth: 0, maxWidth: context.width * .5),
-                      child: TitleText(model.user.displayName,
+                      child: TitleText(model.user!.displayName!,
                           fontSize: 16,
                           fontWeight: FontWeight.w800,
                           overflow: TextOverflow.ellipsis),
                     ),
-                    SizedBox(width: 3),
-                    model.user.isVerified
+                    const SizedBox(width: 3),
+                    model.user!.isVerified!
                         ? customIcon(
                             context,
                             icon: AppIcon.blueTick,
@@ -329,43 +362,45 @@ class _TweetDetailBody extends StatelessWidget {
                             size: 13,
                             paddingIcon: 3,
                           )
-                        : SizedBox(width: 0),
+                        : const SizedBox(width: 0),
                     SizedBox(
-                      width: model.user.isVerified ? 5 : 0,
+                      width: model.user!.isVerified! ? 5 : 0,
                     ),
                   ],
                 ),
-                subtitle: customText('${model.user.userName}',
+                subtitle: customText('${model.user!.userName}',
                     style: TextStyles.userNameStyle),
                 trailing: trailing,
               ),
               model.description == null
-                  ? SizedBox()
+                  ? const SizedBox()
                   : Padding(
                       padding: type == TweetType.ParentTweet
-                          ? EdgeInsets.only(left: 80, right: 16)
-                          : EdgeInsets.symmetric(horizontal: 16),
-                      child: UrlText(
-                        text: model.description.removeSpaces,
-                        onHashTagPressed: (tag) {
-                          cprint(tag);
-                        },
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: descriptionFontSize,
-                          fontWeight: descriptionFontWeight,
-                        ),
-                        urlStyle: TextStyle(
-                          color: Colors.blue,
-                          fontSize: descriptionFontSize,
-                          fontWeight: descriptionFontWeight,
-                        ),
+                          ? const EdgeInsets.only(left: 80, right: 16)
+                          : const EdgeInsets.symmetric(horizontal: 16),
+                      child: Column(
+                        children: [
+                          UrlText(
+                              text: model.description!.removeSpaces,
+                              onHashTagPressed: (tag) {
+                                cprint(tag);
+                              },
+                              style: textStyle,
+                              urlStyle: urlStyle),
+                          TweetTranslation(
+                            languageCode: model.lanCode,
+                            tweetKey: model.key!,
+                            description: model.description!,
+                            textStyle: textStyle,
+                            urlStyle: urlStyle,
+                          ),
+                        ],
                       ),
                     ),
               if (model.imagePath == null && model.description != null)
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: CustomLinkMediaInfo(text: model.description),
+                  child: CustomLinkMediaInfo(text: model.description!),
                 )
             ],
           ),

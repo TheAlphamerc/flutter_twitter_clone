@@ -13,11 +13,13 @@ import 'package:flutter_twitter_clone/widgets/newWidget/emptyList.dart';
 import 'package:provider/provider.dart';
 
 class NotificationPage extends StatefulWidget {
-  NotificationPage({Key key, this.scaffoldKey}) : super(key: key);
+  const NotificationPage({Key? key, required this.scaffoldKey})
+      : super(key: key);
 
   /// scaffoldKey used to open sidebaar drawer
   final GlobalKey<ScaffoldState> scaffoldKey;
 
+  @override
   _NotificationPageState createState() => _NotificationPageState();
 }
 
@@ -25,7 +27,7 @@ class _NotificationPageState extends State<NotificationPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
       var state = Provider.of<NotificationState>(context, listen: false);
       var authstate = Provider.of<AuthState>(context, listen: false);
       state.getDataFromDatabase(authstate.userId);
@@ -48,13 +50,13 @@ class _NotificationPageState extends State<NotificationPage> {
         icon: AppIcon.settings,
         onActionPressed: onSettingIconPressed,
       ),
-      body: NotificationPageBody(),
+      body: const NotificationPageBody(),
     );
   }
 }
 
 class NotificationPageBody extends StatelessWidget {
-  const NotificationPageBody({Key key}) : super(key: key);
+  const NotificationPageBody({Key? key}) : super(key: key);
 
   Widget _notificationRow(BuildContext context, NotificationModel model) {
     var state = Provider.of<NotificationState>(context);
@@ -64,21 +66,21 @@ class NotificationPageBody extends StatelessWidget {
       );
     }
     return FutureBuilder(
-      future: state.getTweetDetail(model.tweetKey),
-      builder: (BuildContext context, AsyncSnapshot<FeedModel> snapshot) {
+      future: state.getTweetDetail(model.tweetKey!),
+      builder: (BuildContext context, AsyncSnapshot<FeedModel?> snapshot) {
         if (snapshot.hasData) {
-          return PostLikeTile(model: snapshot.data);
+          return PostLikeTile(model: snapshot.data!);
         } else if (snapshot.connectionState == ConnectionState.waiting ||
             snapshot.connectionState == ConnectionState.active) {
-          return SizedBox(
+          return const SizedBox(
             height: 4,
             child: LinearProgressIndicator(),
           );
         } else {
           /// remove notification from firebase db if tweet in not available or deleted.
           var authstate = Provider.of<AuthState>(context);
-          state.removeNotification(authstate.userId, model.tweetKey);
-          return SizedBox();
+          state.removeNotification(authstate.userId, model.tweetKey!);
+          return const SizedBox();
         }
       },
     );
@@ -89,12 +91,12 @@ class NotificationPageBody extends StatelessWidget {
     var state = Provider.of<NotificationState>(context);
     var list = state.notificationList;
     if (state.isbusy) {
-      return SizedBox(
+      return const SizedBox(
         height: 3,
         child: LinearProgressIndicator(),
       );
     } else if (list == null || list.isEmpty) {
-      return Padding(
+      return const Padding(
         padding: EdgeInsets.symmetric(horizontal: 30),
         child: EmptyList(
           'No Notification available yet',

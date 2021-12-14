@@ -1,24 +1,30 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_link_preview/flutter_link_preview.dart';
-import 'package:flutter_twitter_clone/helper/utility.dart';
-import 'package:flutter_twitter_clone/ui/theme/theme.dart';
+import 'package:link_preview_generator/link_preview_generator.dart';
 
-class LinkPreview extends StatelessWidget {
-  const LinkPreview({Key key, this.url, this.text}) : super(key: key);
-  final String url;
-  final String text;
+import 'package:flutter_twitter_clone/helper/utility.dart';
+import 'package:flutter_twitter_clone/state/feedState.dart';
+import 'package:flutter_twitter_clone/ui/theme/theme.dart';
+import 'package:link_preview_generator/src/utils/analyzer.dart'
+    show
+        LinkPreviewAnalyzer; //FIXME Don't import implementation files from another package.
+import 'package:provider/provider.dart';
+
+class LinkPreviewer extends StatelessWidget {
+  const LinkPreviewer({Key? key, this.url, this.text}) : super(key: key);
+  final String? url;
+  final String? text;
 
   /// Extract the url from text
   /// If text contains multiple weburl then only first url will be returned to fetch the url meta
-  String getUrl() {
+  String? getUrl() {
     if (text == null) {
       return null;
     }
 
     RegExp reg = RegExp(
         r"(https?|http)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]*");
-    Iterable<Match> _matches = reg.allMatches(text);
+    Iterable<Match> _matches = reg.allMatches(text!);
     if (_matches.isNotEmpty) {
       return _matches.first.group(0);
     }
@@ -27,104 +33,130 @@ class LinkPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var state = Provider.of<FeedState>(context, listen: false);
+
     var uri = url ?? getUrl();
     if (uri == null) {
-      return SizedBox.shrink();
-    } else if (uri.contains("page.link/")) {
-      /// `flutter_link_preview` package is unable to fetch firebase dynamic link meta data
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     }
-    return FlutterLinkPreview(
-      url: uri,
-      showMultimedia: true,
-      useMultithread: true,
-      // cache: Duration(hours: 1),
-      builder: (info) {
-        if (info == null) return const SizedBox();
-        if (info is WebImageInfo) {
-          return CachedNetworkImage(
-            imageUrl: info.image,
-            fit: BoxFit.contain,
-          ).ripple(
-            () {
-              Utility.launchURL(url);
-            },
-            borderRadius: BorderRadius.circular(10),
-          );
-        }
-        final WebInfo webInfo = info;
-
-        if (!WebAnalyzer.isNotEmpty(webInfo.title)) return const SizedBox();
-        return Padding(
-          padding: const EdgeInsets.only(top: 8),
-          child: Container(
+    if (state.linkWebInfos.containsKey(uri))
+      return _buildLinkPreview(
+          state.linkWebInfos[uri]!, uri, Theme.of(context));
+    return FutureBuilder(
+        builder: (BuildContext context, AsyncSnapshot<InfoBase?> snapshot) {
+          if (snapshot.hasData) {
+            state.addWebInfo(uri, snapshot.data! as WebInfo);
+            return _buildLinkPreview(
+                snapshot.data! as WebInfo, uri, Theme.of(context));
+          }
+          if (snapshot.hasError) {
+            return SizedBox.shrink();
+          }
+          return Container(
+            width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: AppColor.extraLightGrey),
-              color: webInfo.image != null
-                  ? Theme.of(context).colorScheme.onPrimary
-                  : const Color(0xFFFAFAFA),
+              borderRadius: BorderRadius.circular(8),
+              color: const Color.fromRGBO(248, 248, 248, 1.0),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                if (webInfo.image != null && webInfo.image.isNotEmpty)
-                  ClipRRect(
-                    borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(10)),
-                    child: Container(
-                      height: 140,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                              color: Theme.of(context).dividerColor, width: 1),
-                        ),
-                      ),
-                      child: CachedNetworkImage(
-                        imageUrl: webInfo.image,
-                        fit: BoxFit.cover,
-                      ),
+            alignment: Alignment.center,
+            child: const Text('Fetching data...'),
+          );
+        },
+        future: LinkPreviewAnalyzer.getInfo(uri,
+            cacheDuration: Duration(hours: 24), multimedia: true));
+  }
+
+  Widget _buildLinkPreview(WebInfo info, String uri, ThemeData theme) {
+    var image = LinkPreviewAnalyzer.isNotEmpty(info.image)
+        ? info.image
+        : LinkPreviewAnalyzer.isNotEmpty(info.icon)
+            ? info.icon
+            : ""; //TODO Placeholder/error image
+    if (!LinkPreviewAnalyzer.isNotEmpty(info.title) &&
+        LinkPreviewAnalyzer.isNotEmpty(info.image)) {
+      return CachedNetworkImage(
+        imageUrl: image,
+        fit: BoxFit.contain,
+      ).ripple(
+        () {
+          Utility.launchURL(uri);
+        },
+        borderRadius: BorderRadius.circular(10),
+      );
+    }
+    if (!LinkPreviewAnalyzer.isNotEmpty(info.title)) return const SizedBox();
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: AppColor.extraLightGrey),
+            color: theme.colorScheme.onPrimary),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            if (LinkPreviewAnalyzer.isNotEmpty(image))
+              ClipRRect(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+                child: Container(
+                  height: 140,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(color: theme.dividerColor, width: 1),
                     ),
                   ),
-                const SizedBox(height: 4),
-                if (WebAnalyzer.isNotEmpty(webInfo.title))
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    child: Text(
-                      webInfo.title.trim(),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyles.titleStyle.copyWith(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87),
-                    ),
-                  ),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 5, left: 8, right: 8),
-                  child: Text(
-                    Uri.tryParse(url).authority,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyles.subtitleStyle.copyWith(
-                        fontWeight: FontWeight.w400,
-                        fontSize:
-                            WebAnalyzer.isNotEmpty(webInfo.title) ? 14 : 16),
+                  child: CachedNetworkImage(
+                    imageUrl: image,
+                    fit: BoxFit.cover,
                   ),
                 ),
-              ],
+              ),
+            const SizedBox(height: 4),
+            if (LinkPreviewAnalyzer.isNotEmpty(info.title))
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                child: Text(
+                  info.title.trim(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyles.titleStyle.copyWith(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87),
+                ),
+              ),
+            if (LinkPreviewAnalyzer.isNotEmpty(info.description))
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                child: Text(
+                  info.description.trim(),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyles.subtitleStyle.copyWith(fontSize: 12),
+                ),
+              ),
+            Padding(
+              padding: EdgeInsets.only(bottom: 5, left: 8, right: 8),
+              child: Text(
+                Uri.tryParse(uri)!.authority,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyles.subtitleStyle.copyWith(
+                    fontWeight: FontWeight.w400,
+                    fontSize: info.title.isNotEmpty ? 14 : 16),
+              ),
             ),
-          ).ripple(
-            () {
-              Utility.launchURL(url);
-            },
-            borderRadius: BorderRadius.circular(8),
-          ),
-        );
-      },
+          ],
+        ),
+      ).ripple(
+        () {
+          Utility.launchURL(uri);
+        },
+        borderRadius: BorderRadius.circular(8),
+      ),
     );
   }
 }

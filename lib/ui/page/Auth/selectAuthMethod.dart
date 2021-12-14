@@ -10,7 +10,7 @@ import '../homePage.dart';
 import 'signin.dart';
 
 class WelcomePage extends StatefulWidget {
-  WelcomePage({Key key}) : super(key: key);
+  const WelcomePage({Key? key}) : super(key: key);
 
   @override
   _WelcomePageState createState() => _WelcomePageState();
@@ -19,7 +19,7 @@ class WelcomePage extends StatefulWidget {
 class _WelcomePageState extends State<WelcomePage> {
   Widget _submitButton() {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 15),
+      margin: const EdgeInsets.symmetric(vertical: 15),
       width: MediaQuery.of(context).size.width,
       child: CustomFlatButton(
         label: "Create Account",
@@ -40,32 +40,32 @@ class _WelcomePageState extends State<WelcomePage> {
   Widget _body() {
     return SafeArea(
       child: Container(
-        padding: EdgeInsets.symmetric(
+        padding: const EdgeInsets.symmetric(
           horizontal: 40,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Container(
+            SizedBox(
               width: MediaQuery.of(context).size.width - 80,
               height: 40,
               child: Image.asset('assets/images/icon-480.png'),
             ),
-            Spacer(),
-            TitleText(
+            const Spacer(),
+            const TitleText(
               'See what\'s happening in the world right now.',
               fontSize: 25,
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             _submitButton(),
-            Spacer(),
+            const Spacer(),
             Wrap(
               alignment: WrapAlignment.center,
               crossAxisAlignment: WrapCrossAlignment.center,
               children: <Widget>[
-                TitleText(
+                const TitleText(
                   'Have an account already?',
                   fontSize: 14,
                   fontWeight: FontWeight.w300,
@@ -82,7 +82,8 @@ class _WelcomePageState extends State<WelcomePage> {
                     );
                   },
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 2, vertical: 10),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 2, vertical: 10),
                     child: TitleText(
                       ' Log in',
                       fontSize: 14,
@@ -93,7 +94,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 )
               ],
             ),
-            SizedBox(height: 20)
+            const SizedBox(height: 20)
           ],
         ),
       ),
@@ -107,7 +108,7 @@ class _WelcomePageState extends State<WelcomePage> {
       body: state.authStatus == AuthStatus.NOT_LOGGED_IN ||
               state.authStatus == AuthStatus.NOT_DETERMINED
           ? _body()
-          : HomePage(),
+          : const HomePage(),
     );
   }
 }

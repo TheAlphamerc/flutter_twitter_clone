@@ -3,9 +3,9 @@ import 'package:google_fonts/google_fonts.dart';
 
 class CustomFlatButton extends StatelessWidget {
   const CustomFlatButton(
-      {Key key,
-      this.onPressed,
-      this.label,
+      {Key? key,
+      required this.onPressed,
+      required this.label,
       this.isLoading,
       this.color,
       this.labelStyle,
@@ -13,17 +13,17 @@ class CustomFlatButton extends StatelessWidget {
       this.borderRadius = 6.0,
       this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 10)})
       : super(key: key);
-  final Function onPressed;
+  final void Function() onPressed;
   final String label;
-  final TextStyle labelStyle;
-  final ValueNotifier<bool> isLoading;
+  final TextStyle? labelStyle;
+  final ValueNotifier<bool>? isLoading;
   final bool isWraped;
-  final Color color;
+  final Color? color;
   final EdgeInsetsGeometry padding;
   final double borderRadius;
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: isWraped ? null : double.infinity,
       child: ValueListenableBuilder<bool>(
         valueListenable: isLoading ?? ValueNotifier(false),
@@ -58,7 +58,7 @@ class CustomFlatButton extends StatelessWidget {
                       ),
                     ),
                   )
-                : child,
+                : child!,
           );
         },
         child: Text(

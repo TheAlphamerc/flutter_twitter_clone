@@ -16,7 +16,7 @@ import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 
 class SplashPage extends StatefulWidget {
-  SplashPage({Key key}) : super(key: key);
+  const SplashPage({Key? key}) : super(key: key);
 
   @override
   _SplashPageState createState() => _SplashPageState();
@@ -25,7 +25,7 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
       timer();
     });
     super.initState();
@@ -37,7 +37,7 @@ class _SplashPageState extends State<SplashPage> {
     final isAppUpdated = await _checkAppVersion();
     if (isAppUpdated) {
       cprint("App is updated");
-      Future.delayed(Duration(seconds: 1)).then((_) {
+      Future.delayed(const Duration(seconds: 1)).then((_) {
         var state = Provider.of<AuthState>(context, listen: false);
         // state.authStatus = AuthStatus.NOT_DETERMINED;
         state.getCurrentUser();
@@ -53,7 +53,7 @@ class _SplashPageState extends State<SplashPage> {
   /// Once user update app with latest verson and back to app then user automatically redirected to welcome / Home page
   Future<bool> _checkAppVersion() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    final currentAppVersion = "${packageInfo.version}";
+    final currentAppVersion = packageInfo.version;
     final appVersion = await _getAppVersionFromFirebaseConfig();
     if (appVersion != currentAppVersion) {
       if (kDebugMode) {
@@ -67,7 +67,7 @@ class _SplashPageState extends State<SplashPage> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (_) => UpdateApp(),
+          builder: (_) => const UpdateApp(),
         ),
       );
       return false;
@@ -89,12 +89,12 @@ class _SplashPageState extends State<SplashPage> {
   ///  } ```
   /// After adding app version key click on Publish Change button
   /// For package detail check:-  https://pub.dev/packages/firebase_remote_config#-readme-tab-
-  Future<String> _getAppVersionFromFirebaseConfig() async {
-    final RemoteConfig remoteConfig = await RemoteConfig.instance;
+  Future<String?> _getAppVersionFromFirebaseConfig() async {
+    final RemoteConfig remoteConfig = RemoteConfig.instance;
     await remoteConfig.fetchAndActivate();
     // await remoteConfig.activateFetched();
     var data = remoteConfig.getString('appVersion');
-    if (data != null && data.isNotEmpty) {
+    if (data.isNotEmpty) {
       return jsonDecode(data)["key"];
     } else {
       cprint(
@@ -106,7 +106,7 @@ class _SplashPageState extends State<SplashPage> {
 
   Widget _body() {
     var height = 150.0;
-    return Container(
+    return SizedBox(
       height: context.height,
       width: context.width,
       child: Container(
@@ -114,8 +114,8 @@ class _SplashPageState extends State<SplashPage> {
         width: height,
         alignment: Alignment.center,
         child: Container(
-          padding: EdgeInsets.all(50),
-          decoration: BoxDecoration(
+          padding: const EdgeInsets.all(50),
+          decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.all(
               Radius.circular(10),
@@ -125,10 +125,10 @@ class _SplashPageState extends State<SplashPage> {
             alignment: Alignment.center,
             children: <Widget>[
               Platform.isIOS
-                  ? CupertinoActivityIndicator(
+                  ? const CupertinoActivityIndicator(
                       radius: 35,
                     )
-                  : CircularProgressIndicator(
+                  : const CircularProgressIndicator(
                       strokeWidth: 2,
                     ),
               Image.asset(
@@ -151,8 +151,8 @@ class _SplashPageState extends State<SplashPage> {
       body: state.authStatus == AuthStatus.NOT_DETERMINED
           ? _body()
           : state.authStatus == AuthStatus.NOT_LOGGED_IN
-              ? WelcomePage()
-              : HomePage(),
+              ? const WelcomePage()
+              : const HomePage(),
     );
   }
 }

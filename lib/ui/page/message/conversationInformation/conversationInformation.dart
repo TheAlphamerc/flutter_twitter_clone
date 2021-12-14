@@ -13,11 +13,11 @@ import 'package:flutter_twitter_clone/widgets/newWidget/rippleButton.dart';
 import 'package:provider/provider.dart';
 
 class ConversationInformation extends StatelessWidget {
-  const ConversationInformation({Key key}) : super(key: key);
+  const ConversationInformation({Key? key}) : super(key: key);
 
   Widget _header(BuildContext context, UserModel user) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 25),
+      padding: const EdgeInsets.symmetric(vertical: 25),
       child: Column(
         children: <Widget>[
           Container(
@@ -28,7 +28,7 @@ class ConversationInformation extends StatelessWidget {
                 child: RippleButton(
                   onPressed: () {
                     Navigator.push(
-                        context, ProfilePage.getRoute(profileId: user.userId));
+                        context, ProfilePage.getRoute(profileId: user.userId!));
                   },
                   borderRadius: BorderRadius.circular(40),
                   child: CircularImage(path: user.profilePic, height: 80),
@@ -38,16 +38,16 @@ class ConversationInformation extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               UrlText(
-                text: user.displayName,
+                text: user.displayName!,
                 style: TextStyles.onPrimaryTitleText.copyWith(
                   color: Colors.black,
                   fontSize: 20,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 3,
               ),
-              user.isVerified
+              user.isVerified!
                   ? customIcon(
                       context,
                       icon: AppIcon.blueTick,
@@ -56,7 +56,7 @@ class ConversationInformation extends StatelessWidget {
                       size: 18,
                       paddingIcon: 3,
                     )
-                  : SizedBox(width: 0),
+                  : const SizedBox(width: 0),
             ],
           ),
           customText(
@@ -85,8 +85,8 @@ class ConversationInformation extends StatelessWidget {
       body: ListView(
         children: <Widget>[
           _header(context, user),
-          HeaderWidget('Notifications'),
-          SettingRowWidget(
+          const HeaderWidget('Notifications'),
+          const SettingRowWidget(
             "Mute conversation",
             visibleSwitch: true,
           ),

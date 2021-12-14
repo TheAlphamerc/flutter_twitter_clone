@@ -1,26 +1,29 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+
 import 'package:flutter_twitter_clone/state/searchState.dart';
 import 'package:flutter_twitter_clone/ui/page/common/locator.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
+
 import 'helper/routes.dart';
 import 'state/appState.dart';
-import 'package:provider/provider.dart';
 import 'state/authState.dart';
 import 'state/chats/chatState.dart';
 import 'state/feedState.dart';
-import 'package:google_fonts/google_fonts.dart';
-
 import 'state/notificationState.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   setupDependencies();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(

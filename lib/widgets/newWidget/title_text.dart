@@ -10,7 +10,7 @@ class TitleText extends StatelessWidget {
   final TextOverflow overflow;
   const TitleText(
     this.text, {
-    Key key,
+    Key? key,
     this.fontSize = 18,
     this.color = Colors.black,
     this.fontWeight = FontWeight.w800,

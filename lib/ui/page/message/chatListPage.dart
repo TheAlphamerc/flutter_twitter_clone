@@ -19,7 +19,8 @@ import 'package:provider/provider.dart';
 class ChatListPage extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
 
-  const ChatListPage({Key key, this.scaffoldKey}) : super(key: key);
+  const ChatListPage({Key? key, required this.scaffoldKey}) : super(key: key);
+  @override
   _ChatListPageState createState() => _ChatListPageState();
 }
 
@@ -31,7 +32,7 @@ class _ChatListPageState extends State<ChatListPage> {
     chatState.setIsChatScreenOpen = true;
 
     // chatState.databaseInit(state.profileUserModel.userId,state.userId);
-    chatState.getUserchatList(state.user.uid);
+    chatState.getUserchatList(state.user!.uid);
     super.initState();
   }
 
@@ -39,7 +40,7 @@ class _ChatListPageState extends State<ChatListPage> {
     final state = Provider.of<ChatState>(context);
     final searchState = Provider.of<SearchState>(context, listen: false);
     if (state.chatUserList == null) {
-      return Padding(
+      return const Padding(
         padding: EdgeInsets.symmetric(horizontal: 30),
         child: EmptyList(
           'No message available ',
@@ -52,16 +53,16 @@ class _ChatListPageState extends State<ChatListPage> {
         searchState.resetFilterList();
       }
       return ListView.separated(
-        physics: BouncingScrollPhysics(),
-        itemCount: state.chatUserList.length,
+        physics: const BouncingScrollPhysics(),
+        itemCount: state.chatUserList!.length,
         itemBuilder: (context, index) => _userCard(
-            searchState.userlist.firstWhere(
-              (x) => x.userId == state.chatUserList[index].key,
+            searchState.userlist!.firstWhere(
+              (x) => x.userId == state.chatUserList![index].key,
               orElse: () => UserModel(userName: "Unknown"),
             ),
-            state.chatUserList[index]),
+            state.chatUserList![index]),
         separatorBuilder: (context, index) {
-          return Divider(
+          return const Divider(
             height: 0,
           );
         },
@@ -69,17 +70,17 @@ class _ChatListPageState extends State<ChatListPage> {
     }
   }
 
-  Widget _userCard(UserModel model, ChatMessage lastMessage) {
+  Widget _userCard(UserModel model, ChatMessage? lastMessage) {
     return Container(
       color: Colors.white,
       child: ListTile(
-        contentPadding: EdgeInsets.symmetric(horizontal: 10),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 10),
         onTap: () {
           final chatState = Provider.of<ChatState>(context, listen: false);
           final searchState = Provider.of<SearchState>(context, listen: false);
           chatState.setChatUser = model;
-          if (searchState.userlist.any((x) => x.userId == model.userId)) {
-            chatState.setChatUser = searchState.userlist
+          if (searchState.userlist!.any((x) => x.userId == model.userId)) {
+            chatState.setChatUser = searchState.userlist!
                 .where((x) => x.userId == model.userId)
                 .first;
           }
@@ -88,7 +89,7 @@ class _ChatListPageState extends State<ChatListPage> {
         leading: RippleButton(
           onPressed: () {
             Navigator.push(
-                context, ProfilePage.getRoute(profileId: model.userId));
+                context, ProfilePage.getRoute(profileId: model.userId!));
           },
           borderRadius: BorderRadius.circular(28),
           child: Container(
@@ -112,12 +113,12 @@ class _ChatListPageState extends State<ChatListPage> {
           overflow: TextOverflow.ellipsis,
         ),
         subtitle: customText(
-          getLastMessage(lastMessage.message) ?? '@${model.displayName}',
+          getLastMessage(lastMessage?.message) ?? '@${model.displayName}',
           style:
               TextStyles.onPrimarySubTitleText.copyWith(color: Colors.black54),
         ),
         trailing: lastMessage == null
-            ? SizedBox.shrink()
+            ? const SizedBox.shrink()
             : Text(
                 Utility.getChatTime(lastMessage.createdAt).toString(),
               ),
@@ -144,7 +145,7 @@ class _ChatListPageState extends State<ChatListPage> {
     Navigator.pushNamed(context, '/DirectMessagesPage');
   }
 
-  String getLastMessage(String message) {
+  String? getLastMessage(String? message) {
     if (message != null && message.isNotEmpty) {
       if (message.length > 100) {
         message = message.substring(0, 80) + '...';
