@@ -4,8 +4,9 @@ import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 
 class ComposeTweetImage extends StatelessWidget {
   final File? image;
-  final Function? onCrossIconPressed;
-  const ComposeTweetImage({Key? key, this.image, this.onCrossIconPressed})
+  final VoidCallback onCrossIconPressed;
+  const ComposeTweetImage(
+      {Key? key, this.image, required this.onCrossIconPressed})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -39,7 +40,7 @@ class ComposeTweetImage extends StatelessWidget {
                     child: IconButton(
                       padding: const EdgeInsets.all(0),
                       iconSize: 20,
-                      onPressed: onCrossIconPressed!(),
+                      onPressed: onCrossIconPressed,
                       icon: Icon(
                         Icons.close,
                         color: Theme.of(context).colorScheme.onPrimary,
