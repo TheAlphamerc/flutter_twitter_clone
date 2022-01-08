@@ -6,7 +6,7 @@ class NotificationModel {
   String? id;
   String? tweetKey;
   String? updatedAt;
-  late String createdAt;
+  late String? createdAt;
   late String type;
   late Map<String, dynamic> data;
 
@@ -20,7 +20,10 @@ class NotificationModel {
 
   NotificationModel.fromJson(String tweetId, Map<dynamic, dynamic> map) {
     id = tweetId;
-    final data = json.decode(json.encode(map["data"])) as Map<String, dynamic>;
+    Map<String, dynamic> data = {};
+    if (map.containsKey('data')) {
+      data = json.decode(json.encode(map["data"])) as Map<String, dynamic>;
+    }
     tweetKey = tweetId;
     updatedAt = map["updatedAt"];
     type = map["type"];
@@ -36,5 +39,5 @@ class NotificationModel {
 extension NotificationModelHelper on NotificationModel {
   UserModel get user => UserModel.fromJson(data);
 
-  DateTime? get timeStamp => DateTime.tryParse(updatedAt ?? createdAt);
+  DateTime? get timeStamp => DateTime.tryParse(updatedAt ?? createdAt!);
 }

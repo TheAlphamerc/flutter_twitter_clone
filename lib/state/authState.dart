@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -341,11 +342,12 @@ class AuthState extends AppState {
   /// `Fetch` user `detail` whoose userId is passed
   Future<UserModel?> getuserDetail(String userId) async {
     UserModel user;
-    var snapshot = await kDatabase.child('profile').child(userId).once();
-    if (snapshot.value != null) {
-      var map = snapshot.value;
+    var event = await kDatabase.child('profile').child(userId).once();
+
+    final map = event.snapshot.value as Map?;
+    if (map != null) {
       user = UserModel.fromJson(map);
-      user.key = snapshot.key!;
+      user.key = event.snapshot.key!;
       return user;
     } else {
       return null;
@@ -354,7 +356,7 @@ class AuthState extends AppState {
 
   /// Fetch user profile
   /// If `userProfileId` is null then logged in user's profile will fetched
-  getProfileUser({String? userProfileId}) {
+  FutureOr<void> getProfileUser({String? userProfileId}) {
     try {
       loading = true;
 
@@ -363,9 +365,10 @@ class AuthState extends AppState {
           .child("profile")
           .child(userProfileId)
           .once()
-          .then((DataSnapshot snapshot) {
+          .then((DatabaseEvent event) async {
+        final snapshot = event.snapshot;
         if (snapshot.value != null) {
-          var map = snapshot.value;
+          var map = snapshot.value as Map<dynamic, dynamic>?;
           if (map != null) {
             if (userProfileId == user!.uid) {
               _userModel = UserModel.fromJson(map);
@@ -409,9 +412,10 @@ class AuthState extends AppState {
 
   /// Trigger when logged-in user's profile change or updated
   /// Firebase event callback for profile update
-  void _onProfileChanged(Event event) {
+  void _onProfileChanged(DatabaseEvent event) {
     // if (event.snapshot != null) {
-    final updatedUser = UserModel.fromJson(event.snapshot.value);
+    final val = event.snapshot.value;
+    final updatedUser = UserModel.fromJson(val as Map);
     _userModel = updatedUser;
     cprint('UserModel Updated');
     notifyListeners();

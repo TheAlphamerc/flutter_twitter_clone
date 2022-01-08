@@ -15,8 +15,7 @@ class AppTheme {
       bottomSheetTheme:
           const BottomSheetThemeData(backgroundColor: AppColor.white),
       appBarTheme: AppBarTheme(
-          brightness: Brightness.light,
-          color: TwitterColor.white,
+          backgroundColor: TwitterColor.white,
           iconTheme: IconThemeData(
             color: TwitterColor.dodgetBlue,
           ),
@@ -57,7 +56,7 @@ class AppTheme {
     BoxShadow(
         blurRadius: 10,
         offset: const Offset(5, 5),
-        color: AppTheme.apptheme.accentColor,
+        color: AppTheme.apptheme.colorScheme.secondary,
         spreadRadius: 1)
   ];
   static BoxDecoration softDecoration =

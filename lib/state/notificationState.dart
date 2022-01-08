@@ -66,7 +66,8 @@ class NotificationState extends AppState {
           .child('notification')
           .child(userId)
           .once()
-          .then((DataSnapshot snapshot) {
+          .then((DatabaseEvent event) {
+        final snapshot = event.snapshot;
         if (snapshot.value != null) {
           var map = snapshot.value as Map<dynamic, dynamic>?;
           if (map != null) {
@@ -90,11 +91,11 @@ class NotificationState extends AppState {
   /// get `Tweet` present in notification
   Future<FeedModel?> getTweetDetail(String tweetId) async {
     FeedModel _tweetDetail;
-    var snapshot = await kDatabase.child('tweet').child(tweetId).once();
-    if (snapshot.value != null) {
-      var map = snapshot.value as Map<dynamic, dynamic>;
+    var event = await kDatabase.child('tweet').child(tweetId).once();
+    if (event.snapshot.value != null) {
+      var map = event.snapshot.value as Map<dynamic, dynamic>;
       _tweetDetail = FeedModel.fromJson(map);
-      _tweetDetail.key = snapshot.key!;
+      _tweetDetail.key = event.snapshot.key!;
       return _tweetDetail;
     } else {
       return null;
@@ -107,11 +108,12 @@ class NotificationState extends AppState {
     if (userList.isNotEmpty && userList.any((x) => x.userId == userId)) {
       return Future.value(userList.firstWhere((x) => x.userId == userId));
     }
-    var snapshot = await kDatabase.child('profile').child(userId).once();
-    if (snapshot.value != null) {
-      var map = snapshot.value as Map<dynamic, dynamic>;
+    var event = await kDatabase.child('profile').child(userId).once();
+
+    if (event.snapshot.value != null) {
+      var map = event.snapshot.value as Map<dynamic, dynamic>;
       user = UserModel.fromJson(map);
-      user.key = snapshot.key!;
+      user.key = event.snapshot.key!;
       userList.add(user);
       return user;
     } else {
@@ -125,7 +127,7 @@ class NotificationState extends AppState {
   }
 
   /// Trigger when somneone like your tweet
-  void _onNotificationAdded(Event event) {
+  void _onNotificationAdded(DatabaseEvent event) {
     if (event.snapshot.value != null) {
       var map = event.snapshot.value as Map<dynamic, dynamic>;
       var model = NotificationModel.fromJson(event.snapshot.key!, map);
@@ -138,7 +140,7 @@ class NotificationState extends AppState {
   }
 
   /// Trigger when someone changed his like preference
-  void _onNotificationChanged(Event event) {
+  void _onNotificationChanged(DatabaseEvent event) {
     if (event.snapshot.value != null) {
       notifyListeners();
       print("Notification changed");
@@ -146,7 +148,7 @@ class NotificationState extends AppState {
   }
 
   /// Trigger when someone undo his like on tweet
-  void _onNotificationRemoved(Event event) {
+  void _onNotificationRemoved(DatabaseEvent event) {
     if (event.snapshot.value != null) {
       var map = event.snapshot.value as Map<dynamic, dynamic>;
       var model = NotificationModel.fromJson(event.snapshot.key!, map);

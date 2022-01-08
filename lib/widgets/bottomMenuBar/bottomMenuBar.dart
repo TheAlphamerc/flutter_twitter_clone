@@ -1,5 +1,4 @@
 // import 'package:fancy_bottom_navigation/internal/tab_item.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/state/appState.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';

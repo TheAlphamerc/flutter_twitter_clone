@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
-import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/url_text/customUrlText.dart';
 import 'package:provider/provider.dart';
 import 'package:translator/translator.dart';
-import 'package:flutter_twitter_clone/helper/utility.dart';
 
 class TweetTranslation extends StatelessWidget {
   final String description;
@@ -77,22 +76,16 @@ Widget _translation(Translation translation, BuildContext context,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Divider(
-              thickness: 1,
-            ),
+            const Divider(thickness: 1),
             Row(
               children: [
                 Text(
-                  "Translated from ${translation.sourceLanguage} by ",
+                  "Translated from ${translation.sourceLanguage} ",
                   style: TextStyle(
                       fontSize: 11,
                       color: AppColor.lightGrey,
                       fontWeight: FontWeight.bold),
                 ),
-                customIcon(context,
-                    icon: Icons.g_translate,
-                    paddingIcon: 0,
-                    iconColor: AppColor.lightGrey),
               ],
             ),
           ],

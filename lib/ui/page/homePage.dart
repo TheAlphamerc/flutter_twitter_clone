@@ -143,14 +143,14 @@ class _HomePageState extends State<HomePage> {
 
   /// Initilise the firebase dynamic link sdk
   void initDynamicLinks() async {
-    FirebaseDynamicLinks.instance.onLink(
-        onSuccess: (PendingDynamicLinkData? dynamicLink) async {
+    FirebaseDynamicLinks.instance.onLink.listen(
+        (PendingDynamicLinkData? dynamicLink) async {
       final Uri? deepLink = dynamicLink?.link;
 
       if (deepLink != null) {
         redirectFromDeepLink(deepLink);
       }
-    }, onError: (OnLinkErrorException e) async {
+    }, onError: (e) async {
       cprint(e.message, errorIn: "onLinkError");
     });
 

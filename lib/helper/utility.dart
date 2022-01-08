@@ -15,8 +15,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../widgets/newWidget/customLoader.dart';
 
-final kAnalytics = FirebaseAnalytics();
-final DatabaseReference kDatabase = FirebaseDatabase.instance.reference();
+final kAnalytics = FirebaseAnalytics.instance;
+final DatabaseReference kDatabase = FirebaseDatabase.instance.ref();
 final kScreenloader = CustomLoader();
 void cprint(dynamic data,
     {String? errorIn, String? event, String label = 'Log'}) {
@@ -248,12 +248,10 @@ class Utility {
           packageName: 'com.thealphamerc.fwitter_dev',
           minimumVersion: 0,
         ),
-        dynamicLinkParametersOptions: DynamicLinkParametersOptions(
-          shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
-        ),
         socialMetaTagParameters: socialMetaTagParameters);
     Uri url;
-    final ShortDynamicLink shortLink = await parameters.buildShortLink();
+    final ShortDynamicLink shortLink =
+        await FirebaseDynamicLinks.instance.buildShortLink(parameters);
     url = shortLink.shortUrl;
     return url;
   }

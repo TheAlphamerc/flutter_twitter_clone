@@ -23,6 +23,7 @@ class PushNotificationService {
   Stream<PushNotificationModel> get pushNotificationResponseStream =>
       _pushNotificationSubject.stream;
 
+  // ignore: unused_field, cancel_subscriptions
   late StreamSubscription<RemoteMessage> _backgroundMessageSubscription;
 
   void initializeMessages() {

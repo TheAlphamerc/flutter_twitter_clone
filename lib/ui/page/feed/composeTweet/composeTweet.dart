@@ -94,7 +94,7 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
     kScreenloader.showLoader(context);
 
     FeedModel tweetModel = await createTweetModel();
-    late String tweetId;
+    String? tweetId;
 
     /// If tweet contain image
     /// First image is uploaded on firebase storage

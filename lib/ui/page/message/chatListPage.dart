@@ -33,7 +33,14 @@ class _ChatListPageState extends State<ChatListPage> {
 
     // chatState.databaseInit(state.profileUserModel.userId,state.userId);
     chatState.getUserchatList(state.user!.uid);
+
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (mounted) context.read<SearchState>().resetFilterList();
   }
 
   Widget _body() {
@@ -49,9 +56,6 @@ class _ChatListPageState extends State<ChatListPage> {
         ),
       );
     } else {
-      if (searchState.userList.isEmpty) {
-        searchState.resetFilterList();
-      }
       return ListView.separated(
         physics: const BouncingScrollPhysics(),
         itemCount: state.chatUserList!.length,

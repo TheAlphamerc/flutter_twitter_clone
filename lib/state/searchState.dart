@@ -23,11 +23,12 @@ class SearchState extends AppState {
     try {
       isBusy = true;
       kDatabase.child('profile').once().then(
-        (DataSnapshot snapshot) {
+        (DatabaseEvent event) {
+          final snapshot = event.snapshot;
           _userlist = <UserModel>[];
           _userFilterlist = <UserModel>[];
           if (snapshot.value != null) {
-            var map = snapshot.value;
+            var map = snapshot.value as Map?;
             if (map != null) {
               map.forEach((key, value) {
                 var model = UserModel.fromJson(value);
@@ -57,7 +58,7 @@ class SearchState extends AppState {
     if (_userlist != null && _userlist!.length != _userFilterlist!.length) {
       _userFilterlist = List.from(_userlist!);
       _userFilterlist!.sort((x, y) => y.followers!.compareTo(x.followers!));
-      notifyListeners();
+      // notifyListeners();
     }
   }
 

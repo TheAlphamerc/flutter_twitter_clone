@@ -379,6 +379,7 @@ class _TweetDetailBody extends StatelessWidget {
                           ? const EdgeInsets.only(left: 80, right: 16)
                           : const EdgeInsets.symmetric(horizontal: 16),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           UrlText(
                               text: model.description!.removeSpaces,

@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/firebase_database.dart' as dabase;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
-import 'package:firebase_database/firebase_database.dart' as dabase;
 
 class ProfileState extends ChangeNotifier {
   ProfileState(this.profileId) {
@@ -24,7 +24,7 @@ class ProfileState extends ChangeNotifier {
   UserModel get userModel => _userModel;
 
   dabase.Query? _profileQuery;
-  late StreamSubscription<Event> profileSubscription;
+  late StreamSubscription<DatabaseEvent> profileSubscription;
 
   /// This is the id of user whose profile is open.
   final String profileId;
@@ -55,13 +55,10 @@ class ProfileState extends ChangeNotifier {
 
   /// Fetch profile of logged in  user
   void _getloggedInUserProfile(String userId) async {
-    kDatabase
-        .child("profile")
-        .child(userId)
-        .once()
-        .then((DataSnapshot snapshot) {
+    kDatabase.child("profile").child(userId).once().then((DatabaseEvent event) {
+      final snapshot = event.snapshot;
       if (snapshot.value != null) {
-        var map = snapshot.value;
+        var map = snapshot.value as Map<dynamic, dynamic>?;
         if (map != null) {
           _userModel = UserModel.fromJson(map);
         }
@@ -78,9 +75,11 @@ class ProfileState extends ChangeNotifier {
           .child("profile")
           .child(userProfileId!)
           .once()
-          .then((DataSnapshot snapshot) {
+          .then((DatabaseEvent event) {
+        final snapshot = event.snapshot;
         if (snapshot.value != null) {
-          var map = snapshot.value;
+          var map = snapshot.value as Map;
+          // ignore: unnecessary_null_comparison
           if (map != null) {
             _profileUserModel = UserModel.fromJson(map);
             Utility.logEvent('get_profile', parameter: {});
@@ -166,9 +165,10 @@ class ProfileState extends ChangeNotifier {
 
   /// Trigger when logged-in user's profile change or updated
   /// Firebase event callback for profile update
-  void _onProfileChanged(Event event) {
+  void _onProfileChanged(DatabaseEvent event) {
     // if (event.snapshot != null) {
-    final updatedUser = UserModel.fromJson(event.snapshot.value);
+
+    final updatedUser = UserModel.fromJson(event.snapshot.value as Map);
     if (updatedUser.userId == profileId) {
       _profileUserModel = updatedUser;
     }

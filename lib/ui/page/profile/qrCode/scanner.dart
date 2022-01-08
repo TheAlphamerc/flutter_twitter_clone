@@ -111,7 +111,7 @@ class _ScanState extends State<ScanScreen> with SingleTickerProviderStateMixin {
                         borderRadius: 40,
                         borderColor: Theme.of(context).colorScheme.onPrimary,
                         borderWidth: 10,
-                        borderLength: MediaQuery.of(context).size.width * .5),
+                        borderLength: MediaQuery.of(context).size.width * .2),
                   );
                 } else {
                   return QrCode(user: widget.user, globalKey: globalKey);
@@ -180,10 +180,10 @@ class _ScanState extends State<ScanScreen> with SingleTickerProviderStateMixin {
       setState(() {
         result = scanData;
       });
-      if (result.code.contains("fwitter/profile/")) {
+      if (result.code!.contains("fwitter/profile/")) {
         isFound = true;
         Navigator.pop(context);
-        var userId = result.code.split("/")[2];
+        var userId = result.code!.split("/")[2];
         Navigator.push(context, ProfilePage.getRoute(profileId: userId));
       }
     });

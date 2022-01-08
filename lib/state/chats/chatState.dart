@@ -101,10 +101,11 @@ class ChatState extends AppState {
           .child('chatUsers')
           .child(userId)
           .once()
-          .then((DataSnapshot snapshot) {
+          .then((DatabaseEvent event) {
+        final snapshot = event.snapshot;
         _chatUserList = <ChatMessage>[];
         if (snapshot.value != null) {
-          var map = snapshot.value;
+          var map = snapshot.value as Map?;
           if (map != null) {
             map.forEach((key, value) {
               var model = ChatMessage.fromJson(value);
@@ -143,10 +144,11 @@ class ChatState extends AppState {
           .child('chats')
           .child(_channelName!)
           .once()
-          .then((DataSnapshot snapshot) {
+          .then((DatabaseEvent event) {
+        final snapshot = event.snapshot;
         _messageList = <ChatMessage>[];
         if (snapshot.value != null) {
-          var map = snapshot.value;
+          var map = snapshot.value as Map<dynamic, dynamic>?;
           if (map != null) {
             map.forEach((key, value) {
               var model = ChatMessage.fromJson(value);
@@ -209,10 +211,11 @@ class ChatState extends AppState {
   }
 
   /// Method will trigger every time when you send/recieve  from/to someone messgae.
-  void _onMessageAdded(Event event) {
+  void _onMessageAdded(DatabaseEvent event) {
     _messageList ??= <ChatMessage>[];
     if (event.snapshot.value != null) {
-      var map = event.snapshot.value;
+      var map = event.snapshot.value as Map;
+      // ignore: unnecessary_null_comparison
       if (map != null) {
         var model = ChatMessage.fromJson(map);
         model.key = event.snapshot.key!;
@@ -228,10 +231,11 @@ class ChatState extends AppState {
     notifyListeners();
   }
 
-  void _onMessageChanged(Event event) {
+  void _onMessageChanged(DatabaseEvent event) {
     _messageList ??= <ChatMessage>[];
     if (event.snapshot.value != null) {
-      var map = event.snapshot.value;
+      var map = event.snapshot.value as Map<dynamic, dynamic>;
+      // ignore: unnecessary_null_comparison
       if (map != null) {
         var model = ChatMessage.fromJson(map);
         model.key = event.snapshot.key!;
@@ -247,10 +251,11 @@ class ChatState extends AppState {
     notifyListeners();
   }
 
-  void _onChatUserAdded(Event event) {
+  void _onChatUserAdded(DatabaseEvent event) {
     _chatUserList ??= <ChatMessage>[];
     if (event.snapshot.value != null) {
-      var map = event.snapshot.value;
+      var map = event.snapshot.value as Map;
+      // ignore: unnecessary_null_comparison
       if (map != null) {
         var model = ChatMessage.fromJson(map);
         model.key = event.snapshot.key!;

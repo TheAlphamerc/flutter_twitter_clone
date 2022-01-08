@@ -39,7 +39,8 @@ class BookmarkState extends AppState {
           .child('bookmark')
           .child(userId)
           .once()
-          .then((DataSnapshot snapshot) async {
+          .then((DatabaseEvent event) async {
+        final snapshot = event.snapshot;
         if (snapshot.value != null) {
           var map = snapshot.value as Map<dynamic, dynamic>?;
           if (map != null) {
@@ -72,7 +73,9 @@ class BookmarkState extends AppState {
   /// get `Tweet` present in notification
   Future<FeedModel?> getTweetDetail(String tweetId) async {
     FeedModel _tweetDetail;
-    var snapshot = await kDatabase.child('tweet').child(tweetId).once();
+    final event = await kDatabase.child('tweet').child(tweetId).once();
+
+    final snapshot = event.snapshot;
     if (snapshot.value != null) {
       var map = snapshot.value as Map<dynamic, dynamic>;
       _tweetDetail = FeedModel.fromJson(map);

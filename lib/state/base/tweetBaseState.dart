@@ -21,9 +21,10 @@ class TweetBaseState extends AppState {
           .child('tweet')
           .child(postID)
           .once()
-          .then((DataSnapshot snapshot) {
+          .then((DatabaseEvent event) {
+        final snapshot = event.snapshot;
         if (snapshot.value != null) {
-          var map = snapshot.value;
+          var map = snapshot.value as Map;
           tweet = FeedModel.fromJson(map);
           tweet.key = snapshot.key!;
         }
@@ -52,9 +53,10 @@ class TweetBaseState extends AppState {
               .child('tweet')
               .child(replyTweetId)
               .once()
-              .then((DataSnapshot snapshot) {
+              .then((DatabaseEvent event) {
+            final snapshot = event.snapshot;
             if (snapshot.value != null) {
-              var commentmodel = FeedModel.fromJson(snapshot.value);
+              var commentmodel = FeedModel.fromJson(snapshot.value as Map);
               var key = snapshot.key!;
               commentmodel.key = key;
 
@@ -142,7 +144,7 @@ class TweetBaseState extends AppState {
 
   /// Add new [tweet]
   /// Returns new tweet id
-  String createPost(FeedModel tweet) {
+  String? createPost(FeedModel tweet) {
     var json = tweet.toJson();
     var refence = kDatabase.child('tweet').push();
     refence.set(json);
