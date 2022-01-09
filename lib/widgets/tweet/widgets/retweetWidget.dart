@@ -106,7 +106,7 @@ class RetweetWidget extends StatelessWidget {
     var feedstate = Provider.of<FeedState>(context, listen: false);
     return FutureBuilder(
       future: feedstate.fetchTweet(childRetwetkey),
-      builder: (context, AsyncSnapshot<FeedModel> snapshot) {
+      builder: (context, AsyncSnapshot<FeedModel?> snapshot) {
         if (snapshot.hasData) {
           return Container(
             margin: EdgeInsets.only(

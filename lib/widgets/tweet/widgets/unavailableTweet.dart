@@ -7,7 +7,7 @@ class UnavailableTweet extends StatelessWidget {
   const UnavailableTweet({Key? key, required this.snapshot, required this.type})
       : super(key: key);
 
-  final AsyncSnapshot<FeedModel> snapshot;
+  final AsyncSnapshot<FeedModel?> snapshot;
   final TweetType type;
 
   @override

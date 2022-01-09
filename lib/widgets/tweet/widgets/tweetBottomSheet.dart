@@ -450,9 +450,11 @@ class TweetBottomSheet {
 
             Navigator.pop(context);
             var sharedPost = await state.fetchTweet(post.childRetwetkey!);
-            sharedPost.retweetCount ??= 0;
-            sharedPost.retweetCount = sharedPost.retweetCount! + 1;
-            state.updateTweet(sharedPost);
+            if (sharedPost != null) {
+              sharedPost.retweetCount ??= 0;
+              sharedPost.retweetCount = sharedPost.retweetCount! + 1;
+              state.updateTweet(sharedPost);
+            }
           },
         ),
         _widgetBottomSheetRow(

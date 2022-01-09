@@ -267,8 +267,8 @@ class FeedState extends AppState {
 
   /// Fetch `Retweet` model from firebase realtime kDatabase.
   /// Retweet itself  is a type of `Tweet`
-  Future<FeedModel> fetchTweet(String postID) async {
-    late FeedModel _tweetDetail;
+  Future<FeedModel?> fetchTweet(String postID) async {
+    FeedModel? _tweetDetail;
 
     /// If tweet is availabe in feedlist then no need to fetch it from firebase
     if (feedlist!.any((x) => x.key == postID)) {
@@ -284,8 +284,8 @@ class FeedState extends AppState {
           if (snapshot.value != null) {
             var map = snapshot.value as Map<dynamic, dynamic>;
             _tweetDetail = FeedModel.fromJson(map);
-            _tweetDetail.key = snapshot.key!;
-            print(_tweetDetail.description);
+            _tweetDetail!.key = snapshot.key!;
+            print(_tweetDetail!.description);
           }
         },
       );
@@ -408,7 +408,7 @@ class FeedState extends AppState {
   }
 
   /// [update] tweet
-  updateTweet(FeedModel model) async {
+  Future<void> updateTweet(FeedModel model) async {
     await kDatabase.child('tweet').child(model.key!).set(model.toJson());
   }
 
@@ -454,7 +454,7 @@ class FeedState extends AppState {
 
   /// Add [new comment tweet] to any tweet
   /// Comment is a Tweet itself
-  Future addcommentToPost(FeedModel replyTweet) async {
+  Future<String?> addcommentToPost(FeedModel replyTweet) async {
     try {
       isBusy = true;
       notifyListeners();
@@ -466,7 +466,8 @@ class FeedState extends AppState {
         DatabaseReference ref = kDatabase.child('tweet').push();
         await ref.set(json);
         tweet.replyTweetKeyList!.add(ref.key);
-        updateTweet(tweet);
+        await updateTweet(tweet);
+        return ref.key;
       }
     } catch (error) {
       cprint(error, errorIn: 'addcommentToPost');
