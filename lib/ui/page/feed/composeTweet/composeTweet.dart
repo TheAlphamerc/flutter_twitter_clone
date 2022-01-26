@@ -202,9 +202,7 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: customTitleText(
-          '',
-        ),
+        title: customTitleText(''),
         onActionPressed: _submitButton,
         isCrossButton: true,
         submitButtonText: widget.isTweet
@@ -589,6 +587,7 @@ class _UserList extends StatelessWidget {
                 const BoxConstraints(minHeight: 30, maxHeight: double.infinity),
             child: ListView.builder(
               itemCount: list!.length,
+              physics: ClampingScrollPhysics(),
               itemBuilder: (context, index) {
                 return _UserTile(
                   user: list![index],

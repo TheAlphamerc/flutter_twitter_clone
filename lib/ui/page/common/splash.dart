@@ -39,7 +39,6 @@ class _SplashPageState extends State<SplashPage> {
       cprint("App is updated");
       Future.delayed(const Duration(seconds: 1)).then((_) {
         var state = Provider.of<AuthState>(context, listen: false);
-        // state.authStatus = AuthStatus.NOT_DETERMINED;
         state.getCurrentUser();
       });
     }
@@ -54,25 +53,24 @@ class _SplashPageState extends State<SplashPage> {
   Future<bool> _checkAppVersion() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     final currentAppVersion = packageInfo.version;
-    final appVersion = await _getAppVersionFromFirebaseConfig();
-    if (appVersion != currentAppVersion) {
+    final buildNo = packageInfo.buildNumber;
+    final config = await _getAppVersionFromFirebaseConfig();
+
+    if (config != null &&
+        config['name'] == currentAppVersion &&
+        config['versions'].contains(int.tryParse(buildNo))) {
+      return true;
+    } else {
       if (kDebugMode) {
         cprint("Latest version of app is not installed on your system");
         cprint(
-            "In debug mode we are not restrict devlopers to redirect to update screen");
+            "This is for testing purpose only. In debug mode update screen will not be open up");
         cprint(
-            "Redirect devs to update screen can put other devs in confusion");
+            "If you are planning to publish app on store then please update app version in firebase config");
         return true;
       }
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (_) => const UpdateApp(),
-        ),
-      );
+      Navigator.pushReplacement(context, UpdateApp.getRoute());
       return false;
-    } else {
-      return true;
     }
   }
 
@@ -82,20 +80,24 @@ class _SplashPageState extends State<SplashPage> {
   /// you have to add latest app version in firebase remote config
   /// To fetch this key go to project setting in firebase
   /// Open `Remote Config` section in fireabse
-  /// Add [appVersion]  as paramerter key and below json in Default value
-  ///  ``` json
+  /// Add [supportedBuild]  as paramerter key and below json in Default value
+  ///  ```
   ///  {
-  ///    "key": "1.0.0"
+  ///    "supportedBuild":
+  ///    {
+  ///       "name": "<Current Build Version>","
+  ///       "versions": [ <Current Build Version> ]
+  ///     }
   ///  } ```
   /// After adding app version key click on Publish Change button
   /// For package detail check:-  https://pub.dev/packages/firebase_remote_config#-readme-tab-
-  Future<String?> _getAppVersionFromFirebaseConfig() async {
+  Future<Map?> _getAppVersionFromFirebaseConfig() async {
     final RemoteConfig remoteConfig = RemoteConfig.instance;
     await remoteConfig.fetchAndActivate();
     // await remoteConfig.activateFetched();
-    var data = remoteConfig.getString('appVersion');
+    var data = remoteConfig.getString('supportedBuild');
     if (data.isNotEmpty) {
-      return jsonDecode(data)["key"];
+      return jsonDecode(data) as Map;
     } else {
       cprint(
           "Please add your app's current version into Remote config in firebase",

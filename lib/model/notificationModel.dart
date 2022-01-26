@@ -6,9 +6,9 @@ class NotificationModel {
   String? id;
   String? tweetKey;
   String? updatedAt;
-  late String? createdAt;
+  String? createdAt;
   late String type;
-  late Map<String, dynamic> data;
+  Map<String, dynamic>? data;
 
   NotificationModel(
       {this.id,
@@ -30,10 +30,6 @@ class NotificationModel {
     createdAt = map["createdAt"];
     this.data = data;
   }
-
-  Map<String, dynamic> toJson() => {
-        "tweetKey": tweetKey,
-      };
 }
 
 extension NotificationModelHelper on NotificationModel {

@@ -75,8 +75,10 @@ class RetweetWidget extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 4),
-              customText('· ${Utility.getChatTime(model.createdAt)}',
-                  style: TextStyles.userNameStyle),
+              customText(
+                '· ${Utility.getChatTime(model.createdAt)}',
+                style: TextStyles.userNameStyle.copyWith(fontSize: 12),
+              ),
             ],
           ),
         ),

@@ -3,10 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
 
 class CacheImage extends StatelessWidget {
-  const CacheImage({Key? key, this.path, this.fit = BoxFit.contain})
-      : super(key: key);
+  const CacheImage({
+    Key? key,
+    this.path,
+    this.fit = BoxFit.contain,
+    this.errorWidget,
+  }) : super(key: key);
   final String? path;
   final BoxFit fit;
+  final Widget? errorWidget;
 
   Widget customNetworkImage(String? path, {BoxFit fit = BoxFit.contain}) {
     return CachedNetworkImage(
@@ -24,7 +29,16 @@ class CacheImage extends StatelessWidget {
       placeholder: (context, url) => Container(
         color: const Color(0xffeeeeee),
       ),
-      errorWidget: (context, url, error) => const Icon(Icons.error),
+      cacheKey: path,
+      errorWidget: (context, url, error) =>
+          errorWidget ??
+          Container(
+            color: const Color(0xffeeeeee),
+            child: Icon(
+              Icons.error,
+              color: Colors.grey[700],
+            ),
+          ),
     );
   }
 

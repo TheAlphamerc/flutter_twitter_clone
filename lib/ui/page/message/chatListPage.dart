@@ -60,11 +60,12 @@ class _ChatListPageState extends State<ChatListPage> {
         physics: const BouncingScrollPhysics(),
         itemCount: state.chatUserList!.length,
         itemBuilder: (context, index) => _userCard(
-            searchState.userlist!.firstWhere(
-              (x) => x.userId == state.chatUserList![index].key,
-              orElse: () => UserModel(userName: "Unknown"),
-            ),
-            state.chatUserList![index]),
+          searchState.userlist!.firstWhere(
+            (x) => x.userId == state.chatUserList![index].key,
+            orElse: () => UserModel(userName: "Unknown"),
+          ),
+          state.chatUserList![index],
+        ),
         separatorBuilder: (context, index) {
           return const Divider(
             height: 0,
@@ -120,11 +121,17 @@ class _ChatListPageState extends State<ChatListPage> {
           getLastMessage(lastMessage?.message) ?? '@${model.displayName}',
           style:
               TextStyles.onPrimarySubTitleText.copyWith(color: Colors.black54),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
         ),
         trailing: lastMessage == null
             ? const SizedBox.shrink()
             : Text(
                 Utility.getChatTime(lastMessage.createdAt).toString(),
+                style: TextStyles.onPrimarySubTitleText.copyWith(
+                  color: Colors.black54,
+                  fontSize: 12,
+                ),
               ),
       ),
     );

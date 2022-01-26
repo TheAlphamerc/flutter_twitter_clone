@@ -23,9 +23,7 @@ class TweetImage extends StatelessWidget {
       child: model.imagePath == null
           ? const SizedBox.shrink()
           : Padding(
-              padding: const EdgeInsets.only(
-                top: 8,
-              ),
+              padding: const EdgeInsets.only(top: 8),
               child: InkWell(
                 borderRadius: BorderRadius.all(
                   Radius.circular(isRetweetImage ? 0 : 20),
@@ -52,8 +50,10 @@ class TweetImage extends StatelessWidget {
                     ),
                     child: AspectRatio(
                       aspectRatio: 4 / 3,
-                      child:
-                          CacheImage(path: model.imagePath, fit: BoxFit.cover),
+                      child: CacheImage(
+                        path: model.imagePath,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),

@@ -37,13 +37,16 @@ Widget customIcon(
   );
 }
 
-Widget customText(String? msg,
-    {Key? key,
-    TextStyle? style,
-    TextAlign textAlign = TextAlign.justify,
-    TextOverflow overflow = TextOverflow.visible,
-    BuildContext? context,
-    bool softwrap = true}) {
+Widget customText(
+  String? msg, {
+  Key? key,
+  TextStyle? style,
+  TextAlign textAlign = TextAlign.justify,
+  TextOverflow overflow = TextOverflow.visible,
+  BuildContext? context,
+  bool softwrap = true,
+  int? maxLines,
+}) {
   if (msg == null) {
     return const SizedBox(
       height: 0,
@@ -64,6 +67,7 @@ Widget customText(String? msg,
       overflow: overflow,
       softWrap: softwrap,
       key: key,
+      maxLines: maxLines,
     );
   }
 }

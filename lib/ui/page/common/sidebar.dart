@@ -255,7 +255,6 @@ class _SidebarMenuState extends State<SidebarMenu> {
                     Navigator.push(
                         context, ProfilePage.getRoute(profileId: state.userId));
                   }),
-                  _menuListRowButton('Lists', icon: AppIcon.lists),
                   _menuListRowButton(
                     'Bookmark',
                     icon: AppIcon.bookmark,
@@ -264,8 +263,8 @@ class _SidebarMenuState extends State<SidebarMenu> {
                       Navigator.push(context, BookmarkPage.getRoute());
                     },
                   ),
+                  _menuListRowButton('Lists', icon: AppIcon.lists),
                   _menuListRowButton('Moments', icon: AppIcon.moments),
-                  _menuListRowButton('Fwitter ads', icon: AppIcon.twitterAds),
                   const Divider(),
                   _menuListRowButton('Settings and privacy', isEnable: true,
                       onPressed: () {

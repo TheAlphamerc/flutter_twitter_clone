@@ -60,7 +60,7 @@ class AuthState extends AppState {
     notifyListeners();
   }
 
-  databaseInit() {
+  void databaseInit() {
     try {
       if (_profileQuery == null) {
         _profileQuery = kDatabase.child("profile").child(user!.uid);
@@ -135,7 +135,7 @@ class AuthState extends AppState {
   }
 
   /// Create user profile from google login
-  createUserFromGoogleSignIn(User user) {
+  void createUserFromGoogleSignIn(User user) {
     var diff = DateTime.now().difference(user.metadata.creationTime!);
     // Check if user is new or old
     // If user is new then add new user to firebase realtime kDatabase
@@ -193,7 +193,7 @@ class AuthState extends AppState {
   /// `Create` and `Update` user
   /// IF `newUser` is true new user is created
   /// Else existing user will update with new values
-  createUser(UserModel user, {bool newUser = false}) {
+  void createUser(UserModel user, {bool newUser = false}) {
     if (newUser) {
       // Create username by the combination of name and id
       user.userName =
@@ -233,7 +233,7 @@ class AuthState extends AppState {
   }
 
   /// Reload user to get refresh user data
-  reloadUser() async {
+  void reloadUser() async {
     await user!.reload();
     user = _firebaseAuth.currentUser;
     if (user!.emailVerified) {
@@ -308,6 +308,7 @@ class AuthState extends AppState {
           var name = userModel.displayName ?? user!.displayName;
           _firebaseAuth.currentUser!.updateDisplayName(name);
           _firebaseAuth.currentUser!.updatePhotoURL(userModel.profilePic);
+          Utility.logEvent('user_profile_image');
         }
 
         /// upload banner image if not null
@@ -315,6 +316,7 @@ class AuthState extends AppState {
           /// get banner storage path from server
           userModel!.bannerImage = await _uploadFileToStorage(bannerImage,
               'user/profile/${userModel.userName}/${path.basename(bannerImage.path)}');
+          Utility.logEvent('user_banner_image');
         }
 
         if (userModel != null) {
@@ -324,7 +326,7 @@ class AuthState extends AppState {
         }
       }
 
-      Utility.logEvent('update_user', parameter: {});
+      Utility.logEvent('update_user');
     } catch (error) {
       cprint(error, errorIn: 'updateUserProfile');
     }
@@ -333,7 +335,7 @@ class AuthState extends AppState {
   Future<String> _uploadFileToStorage(File file, path) async {
     var task = _firebaseStorage.ref().child(path);
     var status = await task.putFile(file);
-    print(status.state);
+    cprint(status.state);
 
     /// get file storage path from server
     return await task.getDownloadURL();

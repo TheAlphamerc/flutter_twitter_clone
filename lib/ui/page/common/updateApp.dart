@@ -8,6 +8,12 @@ import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 class UpdateApp extends StatefulWidget {
   const UpdateApp({Key? key}) : super(key: key);
 
+  static Route<T> getRoute<T>() {
+    return MaterialPageRoute(
+      builder: (_) => UpdateApp(),
+    );
+  }
+
   @override
   _UpdateAppState createState() => _UpdateAppState();
 }

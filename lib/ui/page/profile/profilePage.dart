@@ -315,13 +315,13 @@ class _ProfilePageState extends State<ProfilePage>
   late TabController _tabController;
 
   void shareProfile(BuildContext context) async {
-    var authstate = context.read<AuthState>();
+    var authstate = context.read<ProfileState>();
     var user = authstate.profileUserModel;
     Utility.createLinkAndShare(
       context,
       "profilePage/${widget.profileId}/",
       socialMetaTagParameters: SocialMetaTagParameters(
-        description: !user!.bio!.contains("Edit profile")
+        description: !user.bio!.contains("Edit profile")
             ? user.bio
             : "Checkout ${user.displayName}'s profile on Fwitter app",
         title: "${user.displayName} is on Fwitter app",

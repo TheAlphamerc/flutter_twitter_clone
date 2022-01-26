@@ -79,9 +79,13 @@ class Utility {
     }
 
     var dur = DateTime.now().toLocal().difference(dt);
-    if (dur.inDays > 0) {
+    if (dur.inDays > 365) {
+      msg = DateFormat.yMMMd().format(dt);
+    } else if (dur.inDays > 30) {
+      msg = DateFormat.yMMMd().format(dt);
+    } else if (dur.inDays > 0) {
       msg = '${dur.inDays} d';
-      return dur.inDays == 1 ? '1d' : DateFormat("dd MMM").format(dt);
+      return dur.inDays == 1 ? '1d' : DateFormat.MMMd().format(dt);
     } else if (dur.inHours > 0) {
       msg = '${dur.inHours} h';
     } else if (dur.inMinutes > 0) {
@@ -146,8 +150,7 @@ class Utility {
     }
   }
 
-  static void logEvent(String event,
-      {required Map<String, dynamic> parameter}) {
+  static void logEvent(String event, {Map<String, dynamic>? parameter}) {
     kReleaseMode
         ? kAnalytics.logEvent(name: event, parameters: parameter)
         : print("[EVENT]: $event");

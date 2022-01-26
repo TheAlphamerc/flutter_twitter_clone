@@ -29,8 +29,14 @@ class CircularImage extends StatelessWidget {
 }
 
 CachedNetworkImageProvider customAdvanceNetworkImage(String? path) {
-  path ??= Constants.dummyProfilePic;
+  if (path ==
+      'http://www.azembelani.co.za/wp-content/uploads/2016/07/20161014_58006bf6e7079-3.png') {
+    path = Constants.dummyProfilePic;
+  } else {
+    path ??= Constants.dummyProfilePic;
+  }
   return CachedNetworkImageProvider(
     path,
+    cacheKey: path,
   );
 }
