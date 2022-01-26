@@ -3,6 +3,7 @@ import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/ui/page/bookmark/bookmarkPage.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/follow/followerListPage.dart';
+import 'package:flutter_twitter_clone/ui/page/profile/follow/followingListPage.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/profilePage.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/qrCode/scanner.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/widgets/circular_image.dart';
@@ -126,15 +127,25 @@ class _SidebarMenuState extends State<SidebarMenu> {
         switch (navigateTo) {
           case "FollowerListPage":
             usersList = authstate.userModel!.followersList!;
+            Navigator.push(
+              context,
+              FollowerListPage.getRoute(
+                profile: authstate.userModel!,
+                userList: usersList,
+              ),
+            );
             break;
           case "FollowingListPage":
             usersList = authstate.userModel!.followingList!;
+            Navigator.push(
+              context,
+              FollowingListPage.getRoute(
+                profile: authstate.userModel!,
+                userList: usersList,
+              ),
+            );
             break;
         }
-        Navigator.push(
-            context,
-            FollowerListPage.getRoute(
-                profile: authstate.userModel!, userList: usersList));
       },
       child: Row(
         children: <Widget>[

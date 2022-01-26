@@ -10,7 +10,6 @@ import 'package:flutter_twitter_clone/ui/page/homePage.dart';
 import 'package:flutter_twitter_clone/ui/page/message/conversationInformation/conversationInformation.dart';
 import 'package:flutter_twitter_clone/ui/page/message/newMessagePage.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/follow/followerListPage.dart';
-import 'package:flutter_twitter_clone/ui/page/profile/follow/followingListPage.dart';
 import 'package:flutter_twitter_clone/ui/page/search/SearchPage.dart';
 import 'package:flutter_twitter_clone/ui/page/settings/accountSettings/about/aboutTwitter.dart';
 import 'package:flutter_twitter_clone/ui/page/settings/accountSettings/accessibility/accessibility.dart';
@@ -171,10 +170,6 @@ class Routes {
       case "ConversationInformation":
         return CustomRoute<bool>(
           builder: (BuildContext context) => const ConversationInformation(),
-        );
-      case "FollowingListPage":
-        return CustomRoute<bool>(
-          builder: (BuildContext context) => const FollowingListPage(),
         );
       case "FollowerListPage":
         return CustomRoute<bool>(

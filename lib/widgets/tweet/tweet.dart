@@ -10,7 +10,6 @@ import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 import 'package:flutter_twitter_clone/widgets/tweet/widgets/parentTweet.dart';
 import 'package:flutter_twitter_clone/widgets/tweet/widgets/tweetIconsRow.dart';
-import 'package:flutter_twitter_clone/widgets/tweet/widgets/tweetTranslation.dart';
 import 'package:flutter_twitter_clone/widgets/url_text/customUrlText.dart';
 import 'package:flutter_twitter_clone/widgets/url_text/custom_link_media_info.dart';
 import 'package:provider/provider.dart';

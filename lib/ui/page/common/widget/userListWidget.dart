@@ -11,25 +11,35 @@ import 'package:provider/provider.dart';
 
 class UserListWidget extends StatelessWidget {
   final List<UserModel> list;
+
   final String? emptyScreenText;
   final String? emptyScreenSubTileText;
+  final Function(UserModel user)? onFollowPressed;
+  final bool Function(UserModel user)? isFollowing;
   const UserListWidget({
     Key? key,
     required this.list,
     this.emptyScreenText,
     this.emptyScreenSubTileText,
+    this.onFollowPressed,
+    this.isFollowing,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var state = Provider.of<AuthState>(context, listen: false);
-    String myId = state.userModel!.key!;
+    final currentUser = state.userModel!;
     return ListView.separated(
       itemBuilder: (context, index) {
         return UserTile(
           user: list[index],
-          myId: myId,
-          onTrailingPressed: () {},
+          currentUser: currentUser,
+          isFollowing: isFollowing,
+          onTrailingPressed: () {
+            if (onFollowPressed != null) {
+              onFollowPressed!(list[index]);
+            }
+          },
         );
       },
       separatorBuilder: (context, index) {
@@ -44,17 +54,21 @@ class UserListWidget extends StatelessWidget {
 }
 
 class UserTile extends StatelessWidget {
-  const UserTile(
-      {Key? key,
-      required this.user,
-      required this.myId,
-      required this.onTrailingPressed,
-      this.trailing})
-      : super(key: key);
+  const UserTile({
+    Key? key,
+    required this.user,
+    required this.currentUser,
+    required this.onTrailingPressed,
+    this.trailing,
+    this.isFollowing,
+  }) : super(key: key);
   final UserModel user;
-  final String myId;
+
+  /// User profile of logged-in user
+  final UserModel currentUser;
   final VoidCallback onTrailingPressed;
   final Widget? trailing;
+  final bool Function(UserModel user)? isFollowing;
 
   /// Return empty string for default bio
   /// Max length of bio is 100
@@ -72,9 +86,12 @@ class UserTile extends StatelessWidget {
 
   /// Check if user followerlist contain your or not
   /// If your id exist in follower list it mean you are following him
-  bool isFollowing() {
-    if (user.followersList != null &&
-        user.followersList!.any((x) => x == myId)) {
+  bool checkIfFollowing() {
+    if (isFollowing != null) {
+      return isFollowing!(user);
+    }
+    if (currentUser.followingList != null &&
+        currentUser.followingList!.any((x) => x == user.userId)) {
       return true;
     } else {
       return false;
@@ -83,7 +100,7 @@ class UserTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isFollow = isFollowing();
+    bool isFollow = checkIfFollowing();
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10),
       color: TwitterColor.white,

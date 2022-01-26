@@ -10,13 +10,14 @@ class NotificationModel {
   late String type;
   Map<String, dynamic>? data;
 
-  NotificationModel(
-      {this.id,
-      this.tweetKey,
-      required this.type,
-      required this.createdAt,
-      this.updatedAt,
-      required this.data});
+  NotificationModel({
+    this.id,
+    this.tweetKey,
+    required this.type,
+    required this.createdAt,
+    this.updatedAt,
+    required this.data,
+  });
 
   NotificationModel.fromJson(String tweetId, Map<dynamic, dynamic> map) {
     id = tweetId;

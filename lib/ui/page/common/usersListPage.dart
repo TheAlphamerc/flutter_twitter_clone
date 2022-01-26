@@ -16,13 +16,16 @@ class UsersListPage extends StatelessWidget {
     required this.emptyScreenText,
     required this.emptyScreenSubTileText,
     this.userIdsList,
+    this.onFollowPressed,
+    this.isFollowing,
   }) : super(key: key);
 
   final String pageTitle;
   final String emptyScreenText;
   final String emptyScreenSubTileText;
-  // final IconData appBarIcon;
+  final bool Function(UserModel user)? isFollowing;
   final List<String>? userIdsList;
+  final Function(UserModel user)? onFollowPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +48,8 @@ class UsersListPage extends StatelessWidget {
                   list: userList!,
                   emptyScreenText: emptyScreenText,
                   emptyScreenSubTileText: emptyScreenSubTileText,
+                  onFollowPressed: onFollowPressed,
+                  isFollowing: isFollowing,
                 )
               : Container(
                   width: context.width,

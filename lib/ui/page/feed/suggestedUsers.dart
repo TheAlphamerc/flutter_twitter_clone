@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
-import 'package:flutter_twitter_clone/state/chats/suggestionUserState.dart';
+import 'package:flutter_twitter_clone/state/suggestionUserState.dart';
 import 'package:flutter_twitter_clone/state/searchState.dart';
 import 'package:flutter_twitter_clone/ui/page/common/widget/userListWidget.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
@@ -197,7 +197,7 @@ class _SuggestedUsersState extends State<SuggestedUsers> {
                                 }
                                 return UserTile(
                                   user: user,
-                                  myId: authstate.userId,
+                                  currentUser: authstate.userModel!,
                                   onTrailingPressed: () {
                                     state.toggleUserSelection(user);
                                   },

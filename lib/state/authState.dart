@@ -65,6 +65,7 @@ class AuthState extends AppState {
       if (_profileQuery == null) {
         _profileQuery = kDatabase.child("profile").child(user!.uid);
         _profileQuery!.onValue.listen(_onProfileChanged);
+        _profileQuery!.onChildChanged.listen(_onProfileupdated);
       }
     } catch (error) {
       cprint(error, errorIn: 'databaseInit');
@@ -423,12 +424,35 @@ class AuthState extends AppState {
   /// Trigger when logged-in user's profile change or updated
   /// Firebase event callback for profile update
   void _onProfileChanged(DatabaseEvent event) {
-    // if (event.snapshot != null) {
     final val = event.snapshot.value;
-    final updatedUser = UserModel.fromJson(val as Map);
-    _userModel = updatedUser;
-    cprint('UserModel Updated');
-    notifyListeners();
-    // }
+    if (val is Map) {
+      final updatedUser = UserModel.fromJson(val);
+      _userModel = updatedUser;
+      cprint('UserModel Updated');
+      getIt<SharedPreferenceHelper>().saveUserProfile(_userModel!);
+      notifyListeners();
+    }
+  }
+
+  void _onProfileupdated(DatabaseEvent event) {
+    final val = event.snapshot.value;
+    if (val is List &&
+        ['following', 'followers'].contains(event.snapshot.key)) {
+      final list = val.cast<String>().map((e) => e).toList();
+      if (event.previousChildKey == 'following') {
+        _userModel = _userModel!.copyWith(
+          followingList: val.cast<String>().map((e) => e).toList(),
+          following: list.length,
+        );
+      } else if (event.previousChildKey == 'followers') {
+        _userModel = _userModel!.copyWith(
+          followersList: list,
+          followers: list.length,
+        );
+      }
+      getIt<SharedPreferenceHelper>().saveUserProfile(_userModel!);
+      cprint('UserModel Updated');
+      notifyListeners();
+    }
   }
 }

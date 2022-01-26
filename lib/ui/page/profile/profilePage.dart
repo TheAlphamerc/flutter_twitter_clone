@@ -1,28 +1,28 @@
-import 'package:flutter_twitter_clone/state/profile_state.dart';
-import 'package:flutter_twitter_clone/ui/page/profile/EditProfilePage.dart';
-import 'package:flutter_twitter_clone/ui/page/profile/follow/followerListPage.dart';
-import 'package:flutter_twitter_clone/ui/page/profile/profileImageView.dart';
-import 'package:flutter_twitter_clone/ui/page/profile/qrCode/scanner.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
-import 'package:flutter_twitter_clone/ui/page/profile/widgets/circular_image.dart';
-import 'package:flutter_twitter_clone/ui/page/profile/widgets/tabPainter.dart';
-import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/chats/chatState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
+import 'package:flutter_twitter_clone/state/profile_state.dart';
+import 'package:flutter_twitter_clone/ui/page/profile/EditProfilePage.dart';
+import 'package:flutter_twitter_clone/ui/page/profile/follow/followerListPage.dart';
+import 'package:flutter_twitter_clone/ui/page/profile/follow/followingListPage.dart';
+import 'package:flutter_twitter_clone/ui/page/profile/profileImageView.dart';
+import 'package:flutter_twitter_clone/ui/page/profile/qrCode/scanner.dart';
+import 'package:flutter_twitter_clone/ui/page/profile/widgets/circular_image.dart';
+import 'package:flutter_twitter_clone/ui/page/profile/widgets/tabPainter.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/cache_image.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customLoader.dart';
-import 'package:flutter_twitter_clone/widgets/url_text/customUrlText.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/emptyList.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/rippleButton.dart';
 import 'package:flutter_twitter_clone/widgets/tweet/tweet.dart';
 import 'package:flutter_twitter_clone/widgets/tweet/widgets/tweetBottomSheet.dart';
+import 'package:flutter_twitter_clone/widgets/url_text/customUrlText.dart';
 import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -232,9 +232,11 @@ class _ProfilePageState extends State<ProfilePage>
                                     vertical: 5,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: isFollower()
-                                        ? TwitterColor.dodgetBlue
-                                        : TwitterColor.white,
+                                    color: isMyProfile
+                                        ? TwitterColor.white
+                                        : isFollower()
+                                            ? TwitterColor.dodgetBlue
+                                            : TwitterColor.white,
                                     border: Border.all(
                                         color: isMyProfile
                                             ? Colors.black87.withAlpha(180)
@@ -618,19 +620,23 @@ class UserNameRowWidget extends StatelessWidget {
               _tappbleText(context, user.getFollower, ' Followers', () {
                 var state = context.read<ProfileState>();
                 Navigator.push(
-                    context,
-                    FollowerListPage.getRoute(
-                        profile: state.profileUserModel,
-                        userList: state.profileUserModel.followersList!));
+                  context,
+                  FollowerListPage.getRoute(
+                    profile: state.profileUserModel,
+                    userList: state.profileUserModel.followersList!,
+                  ),
+                );
               }),
               const SizedBox(width: 40),
               _tappbleText(context, user.getFollowing, ' Following', () {
                 var state = context.read<ProfileState>();
                 Navigator.push(
-                    context,
-                    FollowerListPage.getRoute(
-                        profile: state.profileUserModel,
-                        userList: state.profileUserModel.followingList!));
+                  context,
+                  FollowingListPage.getRoute(
+                    profile: state.profileUserModel,
+                    userList: state.profileUserModel.followingList!,
+                  ),
+                );
               }),
             ],
           ),

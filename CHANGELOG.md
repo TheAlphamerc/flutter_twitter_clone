@@ -14,6 +14,7 @@
 * Added link preview in tweet.
 * Bug fixed and performance improvements.
 * Display suggested users list to follow
+* Follow/Un-follow user from follower/following users list
 ## [1.0.6] - 17 Jul 2020
 
 * In user profile page three tabs are added to filter tweet and comment tweet and tweet with media.

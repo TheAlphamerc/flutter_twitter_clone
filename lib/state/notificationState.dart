@@ -29,7 +29,7 @@ class NotificationState extends AppState {
     _notificationList ??= <NotificationModel>[];
 
     if (!_notificationList!.any((element) => element.id == model.id)) {
-      _notificationList!.add(model);
+      _notificationList!.insert(0, model);
     }
   }
 
@@ -77,7 +77,7 @@ class NotificationState extends AppState {
               addNotificationList(model);
             });
             _notificationList!
-                .sort((x, y) => y.timeStamp!.compareTo(x.timeStamp!));
+                .sort((x, y) => x.timeStamp!.compareTo(y.timeStamp!));
           }
         }
         isBusy = false;
