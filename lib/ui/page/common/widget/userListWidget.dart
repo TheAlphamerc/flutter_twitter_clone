@@ -29,6 +29,7 @@ class UserListWidget extends StatelessWidget {
         return UserTile(
           user: list[index],
           myId: myId,
+          onTrailingPressed: () {},
         );
       },
       separatorBuilder: (context, index) {
@@ -43,10 +44,17 @@ class UserListWidget extends StatelessWidget {
 }
 
 class UserTile extends StatelessWidget {
-  const UserTile({Key? key, required this.user, required this.myId})
+  const UserTile(
+      {Key? key,
+      required this.user,
+      required this.myId,
+      required this.onTrailingPressed,
+      this.trailing})
       : super(key: key);
   final UserModel user;
   final String myId;
+  final VoidCallback onTrailingPressed;
+  final Widget? trailing;
 
   /// Return empty string for default bio
   /// Max length of bio is 100
@@ -120,29 +128,32 @@ class UserTile extends StatelessWidget {
             ),
             subtitle: Text(user.userName!),
             trailing: RippleButton(
-              onPressed: () {},
+              onPressed: onTrailingPressed,
               splashColor: TwitterColor.dodgetBlue_50.withAlpha(100),
               borderRadius: BorderRadius.circular(25),
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: isFollow ? 15 : 20,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color:
-                      isFollow ? TwitterColor.dodgetBlue : TwitterColor.white,
-                  border: Border.all(color: TwitterColor.dodgetBlue, width: 1),
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                child: Text(
-                  isFollow ? 'Following' : 'Follow',
-                  style: TextStyle(
-                    color: isFollow ? TwitterColor.white : Colors.blue,
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
+              child: trailing ??
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: isFollow ? 15 : 20,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: isFollow
+                          ? TwitterColor.dodgetBlue
+                          : TwitterColor.white,
+                      border:
+                          Border.all(color: TwitterColor.dodgetBlue, width: 1),
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                    child: Text(
+                      isFollow ? 'Following' : 'Follow',
+                      style: TextStyle(
+                        color: isFollow ? TwitterColor.white : Colors.blue,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                ),
-              ),
             ),
           ),
           getBio(user.bio) == null

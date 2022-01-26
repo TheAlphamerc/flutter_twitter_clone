@@ -13,6 +13,7 @@
 * New comment will be displayed on top.
 * Added link preview in tweet.
 * Bug fixed and performance improvements.
+* Display suggested users list to follow
 ## [1.0.6] - 17 Jul 2020
 
 * In user profile page three tabs are added to filter tweet and comment tweet and tweet with media.

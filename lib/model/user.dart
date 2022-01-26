@@ -1,4 +1,7 @@
-class UserModel {
+import 'package:equatable/equatable.dart';
+
+// ignore: must_be_immutable
+class UserModel extends Equatable {
   String? key;
   String? email;
   String? userId;
@@ -152,4 +155,27 @@ class UserModel {
   String get getFollowing {
     return '${following ?? 0}';
   }
+
+  @override
+  List<Object?> get props => [
+        key,
+        email,
+        userId,
+        displayName,
+        userName,
+        webSite,
+        profilePic,
+        bannerImage,
+        contact,
+        bio,
+        location,
+        dob,
+        createdAt,
+        isVerified,
+        followers,
+        following,
+        fcmToken,
+        followersList,
+        followingList
+      ];
 }

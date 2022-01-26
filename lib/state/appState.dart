@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 class AppState extends ChangeNotifier {
   bool _isBusy = false;
   bool get isbusy => _isBusy;
-  set loading(bool value) {
-    _isBusy = value;
-    notifyListeners();
+  set isBusy(bool value) {
+    if (value != _isBusy) {
+      _isBusy = value;
+      notifyListeners();
+    }
   }
 
   int _pageIndex = 0;

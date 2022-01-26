@@ -75,19 +75,29 @@ class AuthState extends AppState {
   Future<String?> signIn(String email, String password,
       {required GlobalKey<ScaffoldState> scaffoldKey}) async {
     try {
-      loading = true;
+      isBusy = true;
       var result = await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
       user = result.user;
       userId = user!.uid;
       return user!.uid;
-    } catch (error) {
-      loading = false;
+    } on FirebaseException catch (error) {
+      if (error.code == 'firebase_auth/user-not-found') {
+        Utility.customSnackBar(scaffoldKey, 'User not found');
+      } else {
+        Utility.customSnackBar(
+          scaffoldKey,
+          error.message ?? 'Somethimg went wrong',
+        );
+      }
       cprint(error, errorIn: 'signIn');
-      kAnalytics.logLogin(loginMethod: 'email_login');
+    } catch (error) {
       Utility.customSnackBar(scaffoldKey, error.toString());
-      // logoutCallback();
+      cprint(error, errorIn: 'signIn');
+
       return null;
+    } finally {
+      isBusy = false;
     }
   }
 
@@ -164,7 +174,7 @@ class AuthState extends AppState {
       {required GlobalKey<ScaffoldState> scaffoldKey,
       required String password}) async {
     try {
-      loading = true;
+      isBusy = true;
       var result = await _firebaseAuth.createUserWithEmailAndPassword(
         email: userModel.email!,
         password: password,
@@ -183,7 +193,7 @@ class AuthState extends AppState {
       createUser(_userModel!, newUser: true);
       return user!.uid;
     } catch (error) {
-      loading = false;
+      isBusy = false;
       cprint(error, errorIn: 'signUp');
       Utility.customSnackBar(scaffoldKey, error.toString());
       return null;
@@ -206,26 +216,26 @@ class AuthState extends AppState {
 
     kDatabase.child('profile').child(user.userId!).set(user.toJson());
     _userModel = user;
-    loading = false;
+    isBusy = false;
   }
 
   /// Fetch current user profile
   Future<User?> getCurrentUser() async {
     try {
-      loading = true;
+      isBusy = true;
       Utility.logEvent('get_currentUSer', parameter: {});
       user = _firebaseAuth.currentUser;
       if (user != null) {
+        await getProfileUser();
         authStatus = AuthStatus.LOGGED_IN;
         userId = user!.uid;
-        getProfileUser();
       } else {
         authStatus = AuthStatus.NOT_LOGGED_IN;
       }
-      loading = false;
+      isBusy = false;
       return user;
     } catch (error) {
-      loading = false;
+      isBusy = false;
       cprint(error, errorIn: 'getCurrentUser');
       authStatus = AuthStatus.NOT_LOGGED_IN;
       return null;
@@ -360,8 +370,6 @@ class AuthState extends AppState {
   /// If `userProfileId` is null then logged in user's profile will fetched
   FutureOr<void> getProfileUser({String? userProfileId}) {
     try {
-      loading = true;
-
       userProfileId = userProfileId ?? user!.uid;
       kDatabase
           .child("profile")
@@ -377,7 +385,7 @@ class AuthState extends AppState {
               _userModel!.isVerified = user!.emailVerified;
               if (!user!.emailVerified) {
                 // Check if logged in user verified his email address or not
-                reloadUser();
+                // reloadUser();
               }
               if (_userModel!.fcmToken == null) {
                 updateFCMToken();
@@ -389,10 +397,10 @@ class AuthState extends AppState {
             Utility.logEvent('get_profile', parameter: {});
           }
         }
-        loading = false;
+        isBusy = false;
       });
     } catch (error) {
-      loading = false;
+      isBusy = false;
       cprint(error, errorIn: 'getProfileUser');
     }
   }

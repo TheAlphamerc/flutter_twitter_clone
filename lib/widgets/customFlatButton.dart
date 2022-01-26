@@ -13,7 +13,7 @@ class CustomFlatButton extends StatelessWidget {
       this.borderRadius = 6.0,
       this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 10)})
       : super(key: key);
-  final void Function() onPressed;
+  final VoidCallback? onPressed;
   final String label;
   final TextStyle? labelStyle;
   final ValueNotifier<bool>? isLoading;

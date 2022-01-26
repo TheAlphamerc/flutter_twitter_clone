@@ -5,8 +5,8 @@ import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 class EmptyList extends StatelessWidget {
   const EmptyList(this.title, {Key? key, required this.subTitle});
 
-  final String subTitle;
-  final String title;
+  final String? subTitle;
+  final String? title;
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +21,12 @@ class EmptyList extends StatelessWidget {
 }
 
 class NotifyText extends StatelessWidget {
-  final String subTitle;
-  final String title;
-  const NotifyText({Key? key, required this.subTitle, required this.title})
-      : super(key: key);
+  final String? subTitle;
+  final String? title;
+  const NotifyText({Key? key, this.subTitle, this.title})
+      : assert(title != null || subTitle != null,
+            'title and subTitle must not be null'),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,17 +34,18 @@ class NotifyText extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        TitleText(title, fontSize: 20, textAlign: TextAlign.center),
-        const SizedBox(
-          height: 20,
-        ),
-        TitleText(
-          subTitle,
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-          color: AppColor.darkGrey,
-          textAlign: TextAlign.center,
-        ),
+        if (title != null)
+          TitleText(title!, fontSize: 20, textAlign: TextAlign.center),
+        if (subTitle != null) ...[
+          const SizedBox(height: 20),
+          TitleText(
+            subTitle!,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: AppColor.darkGrey,
+            textAlign: TextAlign.center,
+          ),
+        ],
       ],
     );
   }

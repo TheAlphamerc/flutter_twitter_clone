@@ -61,7 +61,7 @@ class NotificationState extends AppState {
       if (_notificationList != null) {
         return;
       }
-      loading = true;
+      isBusy = true;
       kDatabase
           .child('notification')
           .child(userId)
@@ -80,10 +80,10 @@ class NotificationState extends AppState {
                 .sort((x, y) => y.timeStamp!.compareTo(x.timeStamp!));
           }
         }
-        loading = false;
+        isBusy = false;
       });
     } catch (error) {
-      loading = false;
+      isBusy = false;
       cprint(error, errorIn: 'getDataFromDatabase');
     }
   }

@@ -38,6 +38,7 @@ class SearchState extends AppState {
               });
               _userFilterlist!
                   .sort((x, y) => y.followers!.compareTo(x.followers!));
+              notifyListeners();
             }
           } else {
             _userlist = null;

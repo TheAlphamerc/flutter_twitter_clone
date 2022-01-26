@@ -27,7 +27,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: state.user!.emailVerified
             ? <Widget>[
-                const NotifyText(
+                NotifyText(
                   title: 'Your email address is verified',
                   subTitle:
                       'You have got your blue tick on your name. Cheers !!',

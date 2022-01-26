@@ -34,7 +34,7 @@ class BookmarkState extends AppState {
       if (_tweetList != null) {
         return;
       }
-      loading = true;
+      isBusy = true;
       kDatabase
           .child('bookmark')
           .child(userId)
@@ -62,10 +62,10 @@ class BookmarkState extends AppState {
             }
           }
         }
-        loading = false;
+        isBusy = false;
       });
     } catch (error) {
-      loading = false;
+      isBusy = false;
       cprint(error, errorIn: 'getDataFromDatabase');
     }
   }
