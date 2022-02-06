@@ -1,13 +1,16 @@
-## Fwitter - Twitter clone in flutter ![Twitter URL](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Ftwitter.com%2Fthealphamerc) [![GitHub stars](https://img.shields.io/github/stars/Thealphamerc/flutter_twitter_clone?style=social)](https://github.com/login?return_to=%2FTheAlphamerc%flutter_twitter_clone) ![GitHub forks](https://img.shields.io/github/forks/TheAlphamerc/flutter_twitter_clone?style=social) 
-![Dart CI](https://github.com/TheAlphamerc/flutter_twitter_clone/workflows/Dart%20CI/badge.svg) ![GitHub pull requests](https://img.shields.io/github/issues-pr/TheAlphamerc/flutter_twitter_clone) ![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/Thealphamerc/flutter_twitter_clone) ![GitHub last commit](https://img.shields.io/github/last-commit/Thealphamerc/flutter_twitter_clone)  ![GitHub issues](https://img.shields.io/github/issues-raw/Thealphamerc/flutter_twitter_clone) [![Open Source Love](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)](https://github.com/Thealphamerc/flutter_twitter_clone) 
+## Fwitter - Twitter clone in flutter [![GitHub stars](https://img.shields.io/github/stars/Thealphamerc/flutter_twitter_clone?style=social)](https://github.com/login?return_to=%2FTheAlphamerc%flutter_twitter_clone) ![GitHub forks](https://img.shields.io/github/forks/TheAlphamerc/flutter_twitter_clone?style=social) 
 
-<a href="https://github.com/Solido/awesome-flutter">
-   <img alt="Awesome Flutter" src="https://img.shields.io/badge/Awesome-Flutter-blue.svg?longCache=true&style=flat-square" />
+A working Twitter clone built in Flutter using Firebase auth,realtime,firestore database and storage.
+
+<a href="https://play.google.com/store/apps/details?id=com.thealphamerc.flutter_twitter_clone">
+  <img width="100%" alt="Fwiiter Banner" src="https://user-images.githubusercontent.com/37103237/152671482-885fd940-f4ea-4fb6-8baf-816c17b541d7.png">
 </a>
 
+![Dart CI](https://github.com/TheAlphamerc/flutter_twitter_clone/workflows/Dart%20CI/badge.svg) ![GitHub pull requests](https://img.shields.io/github/issues-pr/TheAlphamerc/flutter_twitter_clone) ![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/Thealphamerc/flutter_twitter_clone) ![GitHub last commit](https://img.shields.io/github/last-commit/Thealphamerc/flutter_twitter_clone)  ![GitHub issues](https://img.shields.io/github/issues-raw/Thealphamerc/flutter_twitter_clone) [![Open Source Love](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)](https://github.com/Thealphamerc/flutter_twitter_clone) 
 
-A working Twitter clone written in Flutter using Firebase auth,realtime,firestore database and storage.
-
+<a href="https://github.com/Solido/awesome-flutter#top">
+   <img alt="Awesome Flutter" src="https://img.shields.io/badge/Awesome-Flutter-blue.svg?longCache=true&style=flat-square" />
+</a>
 
 ## Download App
 <a href="https://play.google.com/store/apps/details?id=com.thealphamerc.flutter_twitter_clone"><img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" width="200"></img></a>
