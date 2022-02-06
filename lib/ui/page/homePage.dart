@@ -210,7 +210,8 @@ class _HomePageState extends State<HomePage> {
     final state = context.watch<AuthState>();
     context.read<SuggestionsState>().initUser(state.userModel);
 
-    if (context.watch<SuggestionsState>().displaySuggestions) {
+    if (context
+        .select<SuggestionsState, bool>((state) => state.displaySuggestions)) {
       return SuggestedUsers();
     }
 

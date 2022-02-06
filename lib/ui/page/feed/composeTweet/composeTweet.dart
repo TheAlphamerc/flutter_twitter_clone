@@ -144,7 +144,7 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
 
     /// Checks for username in tweet description
     /// If foud sends notification to all tagged user
-    /// If no user found or not compost tweet screen is closed and redirect back to home page.
+    /// If no user found, compose tweet screen is closed and redirect back to home page.
     await Provider.of<ComposeTweetState>(context, listen: false)
         .sendNotification(
             tweetModel, Provider.of<SearchState>(context, listen: false))

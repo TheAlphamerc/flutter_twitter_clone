@@ -71,9 +71,7 @@ class _SuggestedUsersState extends State<SuggestedUsers> {
                                 await state.followUsers();
                                 isLoading.value = false;
                               },
-                        label: state.selectedusersCount < 5
-                            ? '${5 - state.selectedusersCount} more to follow'
-                            : 'Follow ${state.selectedusersCount}',
+                        label: 'Follow ${state.selectedusersCount}',
                         isWraped: true,
                         borderRadius: 50,
                         labelStyle: TextStyles.onPrimaryTitleText,

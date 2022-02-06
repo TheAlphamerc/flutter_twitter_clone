@@ -7,7 +7,7 @@ class NotificationModel {
   String? tweetKey;
   String? updatedAt;
   String? createdAt;
-  late String type;
+  late String? type;
   Map<String, dynamic>? data;
 
   NotificationModel({
@@ -36,5 +36,7 @@ class NotificationModel {
 extension NotificationModelHelper on NotificationModel {
   UserModel get user => UserModel.fromJson(data);
 
-  DateTime? get timeStamp => DateTime.tryParse(updatedAt ?? createdAt!);
+  DateTime? get timeStamp => updatedAt != null || createdAt != null
+      ? DateTime.tryParse(updatedAt ?? createdAt!)
+      : null;
 }
