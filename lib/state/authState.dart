@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/firebase_database.dart' as dabase;
+import 'package:firebase_database/firebase_database.dart' as db;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +27,7 @@ class AuthState extends AppState {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
-  dabase.Query? _profileQuery;
+  db.Query? _profileQuery;
   // List<UserModel> _profileUserModelList;
   UserModel? _userModel;
 
@@ -65,7 +65,7 @@ class AuthState extends AppState {
       if (_profileQuery == null) {
         _profileQuery = kDatabase.child("profile").child(user!.uid);
         _profileQuery!.onValue.listen(_onProfileChanged);
-        _profileQuery!.onChildChanged.listen(_onProfileupdated);
+        _profileQuery!.onChildChanged.listen(_onProfileUpdated);
       }
     } catch (error) {
       cprint(error, errorIn: 'databaseInit');
@@ -88,10 +88,11 @@ class AuthState extends AppState {
       } else {
         Utility.customSnackBar(
           scaffoldKey,
-          error.message ?? 'Somethimg went wrong',
+          error.message ?? 'Something went wrong',
         );
       }
       cprint(error, errorIn: 'signIn');
+      return null;
     } catch (error) {
       Utility.customSnackBar(scaffoldKey, error.toString());
       cprint(error, errorIn: 'signIn');
@@ -249,7 +250,7 @@ class AuthState extends AppState {
     user = _firebaseAuth.currentUser;
     if (user!.emailVerified) {
       userModel!.isVerified = true;
-      // If user verifed his email
+      // If user verified his email
       // Update user in firebase realtime kDatabase
       createUser(userModel!);
       cprint('UserModel email verification complete');
@@ -263,7 +264,7 @@ class AuthState extends AppState {
       GlobalKey<ScaffoldState> scaffoldKey) async {
     User user = _firebaseAuth.currentUser!;
     user.sendEmailVerification().then((_) {
-      Utility.logEvent('email_verifcation_sent',
+      Utility.logEvent('email_verification_sent',
           parameter: {userModel!.displayName!: user.email});
       Utility.customSnackBar(
         scaffoldKey,
@@ -271,7 +272,7 @@ class AuthState extends AppState {
       );
     }).catchError((error) {
       cprint(error.message, errorIn: 'sendEmailVerification');
-      Utility.logEvent('email_verifcation_block',
+      Utility.logEvent('email_verification_block',
           parameter: {userModel!.displayName!: user.email});
       Utility.customSnackBar(
         scaffoldKey,
@@ -346,14 +347,14 @@ class AuthState extends AppState {
   Future<String> _uploadFileToStorage(File file, path) async {
     var task = _firebaseStorage.ref().child(path);
     var status = await task.putFile(file);
-    cprint(status.state);
+    cprint(status.state.name);
 
     /// get file storage path from server
     return await task.getDownloadURL();
   }
 
-  /// `Fetch` user `detail` whoose userId is passed
-  Future<UserModel?> getuserDetail(String userId) async {
+  /// `Fetch` user `detail` whose userId is passed
+  Future<UserModel?> getUserDetail(String userId) async {
     UserModel user;
     var event = await kDatabase.child('profile').child(userId).once();
 
@@ -434,7 +435,7 @@ class AuthState extends AppState {
     }
   }
 
-  void _onProfileupdated(DatabaseEvent event) {
+  void _onProfileUpdated(DatabaseEvent event) {
     final val = event.snapshot.value;
     if (val is List &&
         ['following', 'followers'].contains(event.snapshot.key)) {
