@@ -103,7 +103,7 @@ class NotificationState extends AppState {
   }
 
   /// get user who liked your tweet
-  Future<UserModel?> getuserDetail(String userId) async {
+  Future<UserModel?> getUserDetail(String userId) async {
     UserModel user;
     if (userList.isNotEmpty && userList.any((x) => x.userId == userId)) {
       return Future.value(userList.firstWhere((x) => x.userId == userId));
@@ -160,7 +160,7 @@ class NotificationState extends AppState {
   }
 
   /// Initilise push notification services
-  void initfirebaseService() {
+  void initFirebaseService() {
     if (!getIt.isRegistered<PushNotificationService>()) {
       getIt.registerSingleton<PushNotificationService>(
           PushNotificationService(FirebaseMessaging.instance));

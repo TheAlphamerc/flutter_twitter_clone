@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Fwitter',
-        theme: AppTheme.apptheme.copyWith(
+        theme: AppTheme.appTheme.copyWith(
           textTheme: GoogleFonts.mulishTextTheme(
             Theme.of(context).textTheme,
           ),

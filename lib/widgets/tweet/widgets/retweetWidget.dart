@@ -58,7 +58,7 @@ class RetweetWidget extends StatelessWidget {
                   ? customIcon(
                       context,
                       icon: AppIcon.blueTick,
-                      istwitterIcon: true,
+                      isTwitterIcon: true,
                       iconColor: AppColor.primary,
                       size: 13,
                       paddingIcon: 3,
@@ -125,7 +125,7 @@ class RetweetWidget extends StatelessWidget {
             child: RippleButton(
               borderRadius: const BorderRadius.all(Radius.circular(15)),
               onPressed: () {
-                feedstate.getpostDetailFromDatabase(null,
+                feedstate.getPostDetailFromDatabase(null,
                     model: snapshot.data!);
                 Navigator.push(
                     context, FeedPostDetail.getRoute(snapshot.data!.key!));

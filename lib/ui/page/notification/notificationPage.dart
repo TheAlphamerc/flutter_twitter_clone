@@ -16,7 +16,7 @@ class NotificationPage extends StatefulWidget {
   const NotificationPage({Key? key, required this.scaffoldKey})
       : super(key: key);
 
-  /// scaffoldKey used to open sidebaar drawer
+  /// scaffoldKey used to open sidebar drawer
   final GlobalKey<ScaffoldState> scaffoldKey;
 
   @override
@@ -27,10 +27,10 @@ class _NotificationPageState extends State<NotificationPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       var state = Provider.of<NotificationState>(context, listen: false);
-      var authstate = Provider.of<AuthState>(context, listen: false);
-      state.getDataFromDatabase(authstate.userId);
+      var authState = Provider.of<AuthState>(context, listen: false);
+      state.getDataFromDatabase(authState.userId);
     });
   }
 
@@ -78,8 +78,8 @@ class NotificationPageBody extends StatelessWidget {
           );
         } else {
           /// remove notification from firebase db if tweet in not available or deleted.
-          var authstate = Provider.of<AuthState>(context);
-          state.removeNotification(authstate.userId, model.tweetKey!);
+          var authState = Provider.of<AuthState>(context);
+          state.removeNotification(authState.userId, model.tweetKey!);
           return const SizedBox();
         }
       },
@@ -100,7 +100,7 @@ class NotificationPageBody extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 30),
         child: EmptyList(
           'No Notification available yet',
-          subTitle: 'When new notifiction found, they\'ll show up here.',
+          subTitle: 'When new notification found, they\'ll show up here.',
         ),
       );
     }

@@ -35,7 +35,7 @@ class _SuggestedUsersState extends State<SuggestedUsers> {
   @override
   Widget build(BuildContext context) {
     final searchState = context.watch<SearchState>();
-    final authstate = context.watch<AuthState>();
+    final authState = context.watch<AuthState>();
     final state = context.watch<SuggestionsState>();
     state.setUserlist(searchState.userlist);
 
@@ -77,7 +77,7 @@ class _SuggestedUsersState extends State<SuggestedUsers> {
                         labelStyle: TextStyles.onPrimaryTitleText,
                         color: state.selectedusersCount < 5
                             ? Colors.grey[350]
-                            : TwitterColor.dodgetBlue,
+                            : TwitterColor.dodgeBlue,
                         isLoading: isLoading,
                       ),
                     ),
@@ -151,7 +151,7 @@ class _SuggestedUsersState extends State<SuggestedUsers> {
                                               state.userlist!.length
                                           ? Icon(
                                               Icons.check_circle,
-                                              color: TwitterColor.dodgetBlue,
+                                              color: TwitterColor.dodgeBlue,
                                             )
                                           : Icon(
                                               Icons.add_circle_outline_outlined,
@@ -195,7 +195,7 @@ class _SuggestedUsersState extends State<SuggestedUsers> {
                                 }
                                 return UserTile(
                                   user: user,
-                                  currentUser: authstate.userModel!,
+                                  currentUser: authState.userModel!,
                                   onTrailingPressed: () {
                                     state.toggleUserSelection(user);
                                   },
@@ -204,7 +204,7 @@ class _SuggestedUsersState extends State<SuggestedUsers> {
                                     icon: state.isSelected(user)
                                         ? Icon(
                                             Icons.check_circle,
-                                            color: TwitterColor.dodgetBlue,
+                                            color: TwitterColor.dodgeBlue,
                                           )
                                         : Icon(
                                             Icons.add_circle_outline_outlined),

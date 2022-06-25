@@ -17,7 +17,7 @@ import '../widgets/newWidget/customLoader.dart';
 
 final kAnalytics = FirebaseAnalytics.instance;
 final DatabaseReference kDatabase = FirebaseDatabase.instance.ref();
-final kScreenloader = CustomLoader();
+final kScreenLoader = CustomLoader();
 void cprint(dynamic data,
     {String? errorIn, String? event, String label = 'Log'}) {
   /// Print logs only in development mode
@@ -49,7 +49,7 @@ class Utility {
     return dat;
   }
 
-  static String getdob(String? date) {
+  static String getDob(String? date) {
     if (date == null || date.isEmpty) {
       return '';
     }
@@ -101,12 +101,12 @@ class Utility {
   static String getPollTime(String date) {
     int hr, mm;
     String msg = 'Poll ended';
-    var enddate = DateTime.parse(date);
-    if (DateTime.now().isAfter(enddate)) {
+    var endDate = DateTime.parse(date);
+    if (DateTime.now().isAfter(endDate)) {
       return msg;
     }
     msg = 'Poll ended in';
-    var dur = enddate.difference(DateTime.now());
+    var dur = endDate.difference(DateTime.now());
     hr = dur.inHours - dur.inDays * 24;
     mm = dur.inMinutes - (dur.inHours * 60);
     if (dur.inDays > 0) {
@@ -143,8 +143,12 @@ class Utility {
   }
 
   static launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
+    if (url == "") {
+      return;
+    }
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchURL(url);
     } else {
       cprint('Could not launch $url');
     }
@@ -206,7 +210,7 @@ class Utility {
       return false;
     }
 
-    var status = validateEmal(email);
+    var status = validateEmail(email);
     if (!status) {
       customSnackBar(_scaffoldKey, 'Please enter valid email id');
       return false;
@@ -232,7 +236,7 @@ class Utility {
     _scaffoldKey.currentState!.showSnackBar(snackBar);
   }
 
-  static bool validateEmal(String email) {
+  static bool validateEmail(String email) {
     String p =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
 
@@ -245,13 +249,14 @@ class Utility {
   static Future<Uri> createLinkToShare(BuildContext context, String id,
       {required SocialMetaTagParameters socialMetaTagParameters}) async {
     final DynamicLinkParameters parameters = DynamicLinkParameters(
-        uriPrefix: 'https://fwitterdev.page.link',
-        link: Uri.parse('https://twitter.com/$id'),
-        androidParameters: AndroidParameters(
-          packageName: 'com.thealphamerc.fwitter_dev',
-          minimumVersion: 0,
-        ),
-        socialMetaTagParameters: socialMetaTagParameters);
+      uriPrefix: 'https://fwitter.page.link',
+      link: Uri.parse('https://twitter.com/$id'),
+      androidParameters: AndroidParameters(
+        packageName: 'com.thealphamerc.flutter_twitter_clone_dev',
+        minimumVersion: 0,
+      ),
+      socialMetaTagParameters: socialMetaTagParameters,
+    );
     Uri url;
     final ShortDynamicLink shortLink =
         await FirebaseDynamicLinks.instance.buildShortLink(parameters);

@@ -48,7 +48,7 @@ class PostLikeTile extends StatelessWidget {
             customIcon(context,
                 icon: AppIcon.heartFill,
                 iconColor: TwitterColor.ceriseRed,
-                istwitterIcon: true,
+                isTwitterIcon: true,
                 size: 25),
             const SizedBox(width: 10),
             Row(children: avaterList),
@@ -72,7 +72,7 @@ class PostLikeTile extends StatelessWidget {
   Widget _userAvater(
       String userId, NotificationState state, ValueChanged<String> name) {
     return FutureBuilder(
-      future: state.getuserDetail(userId),
+      future: state.getUserDetail(userId),
       //  initialData: InitialData,
       builder: (BuildContext context, AsyncSnapshot<UserModel?> snapshot) {
         if (snapshot.hasData) {
@@ -110,7 +110,7 @@ class PostLikeTile extends StatelessWidget {
           child: ListTile(
             onTap: () {
               var state = Provider.of<FeedState>(context, listen: false);
-              state.getpostDetailFromDatabase(null, model: model);
+              state.getPostDetailFromDatabase(null, model: model);
 
               Navigator.push(context, FeedPostDetail.getRoute(model.key!));
             },

@@ -119,7 +119,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
       Utility.customSnackBar(_scaffoldKey, 'Email field cannot be empty');
       return;
     }
-    var isValidEmail = Utility.validateEmal(
+    var isValidEmail = Utility.validateEmail(
       _emailController.text,
     );
     if (!isValidEmail) {

@@ -32,7 +32,7 @@ class _ChatListPageState extends State<ChatListPage> {
     chatState.setIsChatScreenOpen = true;
 
     // chatState.databaseInit(state.profileUserModel.userId,state.userId);
-    chatState.getUserchatList(state.user!.uid);
+    chatState.getUserChatList(state.user!.uid);
 
     super.initState();
   }
@@ -145,7 +145,7 @@ class _ChatListPageState extends State<ChatListPage> {
       child: customIcon(
         context,
         icon: AppIcon.newMessage,
-        istwitterIcon: true,
+        isTwitterIcon: true,
         iconColor: Theme.of(context).colorScheme.onPrimary,
         size: 25,
       ),

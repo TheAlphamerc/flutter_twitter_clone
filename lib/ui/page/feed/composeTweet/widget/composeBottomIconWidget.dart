@@ -7,11 +7,11 @@ import 'package:image_picker/image_picker.dart';
 
 class ComposeBottomIconWidget extends StatefulWidget {
   final TextEditingController textEditingController;
-  final Function(File) onImageIconSelcted;
+  final Function(File) onImageIconSelected;
   const ComposeBottomIconWidget(
       {Key? key,
       required this.textEditingController,
-      required this.onImageIconSelcted})
+      required this.onImageIconSelected})
       : super(key: key);
 
   @override
@@ -64,7 +64,7 @@ class _ComposeBottomIconWidgetState extends State<ComposeBottomIconWidget> {
               },
               icon: customIcon(context,
                   icon: AppIcon.image,
-                  istwitterIcon: true,
+                  isTwitterIcon: true,
                   iconColor: AppColor.primary)),
           IconButton(
               onPressed: () {
@@ -72,7 +72,7 @@ class _ComposeBottomIconWidgetState extends State<ComposeBottomIconWidget> {
               },
               icon: customIcon(context,
                   icon: AppIcon.camera,
-                  istwitterIcon: true,
+                  isTwitterIcon: true,
                   iconColor: AppColor.primary)),
           Expanded(
               child: Align(
@@ -115,7 +115,7 @@ class _ComposeBottomIconWidgetState extends State<ComposeBottomIconWidget> {
         .then((XFile? file) {
       setState(() {
         // _image = file;
-        widget.onImageIconSelcted(File(file!.path));
+        widget.onImageIconSelected(File(file!.path));
       });
     });
   }

@@ -23,7 +23,7 @@ class ProfileImageView extends StatelessWidget {
           isEnable: true),
       Choice(title: 'Save', icon: Icons.save),
     ];
-    // var authstate = Provider.of<AuthState>(context, listen: false);
+    // var authState = Provider.of<AuthState>(context, listen: false);
     return Scaffold(
       backgroundColor: TwitterColor.white,
       appBar: AppBar(

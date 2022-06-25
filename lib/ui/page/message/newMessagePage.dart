@@ -49,7 +49,7 @@ class _NewMessagePageState extends State<NewMessagePage> {
           user.isVerified!
               ? customIcon(context,
                   icon: AppIcon.blueTick,
-                  istwitterIcon: true,
+                  isTwitterIcon: true,
                   iconColor: AppColor.primary,
                   size: 13,
                   paddingIcon: 3)
@@ -74,7 +74,7 @@ class _NewMessagePageState extends State<NewMessagePage> {
         appBar: CustomAppBar(
           scaffoldKey: widget.scaffoldKey,
           isBackButton: true,
-          isbootomLine: true,
+          isBottomLine: true,
           title: customTitleText(
             'New Message',
           ),
@@ -93,7 +93,7 @@ class _NewMessagePageState extends State<NewMessagePage> {
                     prefixIcon: customIcon(
                       context,
                       icon: AppIcon.search,
-                      istwitterIcon: true,
+                      isTwitterIcon: true,
                       iconColor: TwitterColor.woodsmoke_50,
                       size: 25,
                       paddingIcon: 5,

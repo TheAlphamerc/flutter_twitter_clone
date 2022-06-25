@@ -10,7 +10,7 @@ import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/state/appState.dart';
 
 class ChatState extends AppState {
-  late bool setIsChatScreenOpen; //!obselete
+  late bool setIsChatScreenOpen; //!obsolete
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
   List<ChatMessage>? _messageList;
@@ -28,7 +28,7 @@ class ChatState extends AppState {
   Query? messageQuery;
 
   /// Contains list of chat messages on main chat screen
-  /// List is sortBy mesage timeStamp
+  /// List is sortBy message timeStamp
   /// Last message will be display on the bottom of screen
   List<ChatMessage>? get messageList {
     if (_messageList == null) {
@@ -67,14 +67,14 @@ class ChatState extends AppState {
     }
   }
 
-  /// Fecth FCM server key from firebase Remote config
+  /// Fetch FCM server key from firebase Remote config
   /// FCM server key is stored in firebase remote config
   /// you have to add server key in firebase remote config
   /// To fetch this key go to project setting in firebase
   /// Click on `cloud messaging` tab
   /// Copy server key from `Project credentials`
-  /// Now goto `Remote Congig` section in fireabse
-  /// Add [FcmServerKey]  as paramerter key and below json in Default vslue
+  /// Now goto `Remote Config` section in Firebase
+  /// Add [FcmServerKey]  as parameter key and below json in Default value
   ///  ``` json
   ///  {
   ///    "key": "FCM server key here"
@@ -82,7 +82,7 @@ class ChatState extends AppState {
   /// For more detail visit:- https://github.com/TheAlphamerc/flutter_twitter_clone/issues/28#issue-611695533
   /// For package detail check:-  https://pub.dev/packages/firebase_remote_config#-readme-tab-
   void getFCMServerKey() async {
-    final RemoteConfig remoteConfig = RemoteConfig.instance;
+    final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
     await remoteConfig.fetchAndActivate();
     // await remoteConfig.
     var data = remoteConfig.getString('FcmServerKey');
@@ -95,7 +95,7 @@ class ChatState extends AppState {
   }
 
   /// Fetch users list to who have ever engaged in chat message with logged-in user
-  void getUserchatList(String userId) {
+  void getUserChatList(String userId) {
     try {
       kDatabase
           .child('chatUsers')
@@ -135,10 +135,10 @@ class ChatState extends AppState {
     }
   }
 
-  /// Fetch chat  all chat messages
+  /// Fetch all chat messages
   /// `_channelName` is used as primary key for chat message table
   /// `_channelName` is created from  by combining first 5 letters from user ids of two users
-  void getchatDetailAsync() async {
+  void getChatDetailAsync() async {
     try {
       kDatabase
           .child('chats')
@@ -210,7 +210,7 @@ class ChatState extends AppState {
     return _channelName!;
   }
 
-  /// Method will trigger every time when you send/recieve  from/to someone messgae.
+  /// Method will trigger every time when you send/receive  from/to someone message.
   void _onMessageAdded(DatabaseEvent event) {
     _messageList ??= <ChatMessage>[];
     if (event.snapshot.value != null) {
@@ -271,7 +271,7 @@ class ChatState extends AppState {
     notifyListeners();
   }
 
-  // update last message on chat user list screen when manin chat screen get closed.
+  // update last message on chat user list screen when main chat screen get closed.
   void onChatScreenClosed() {
     if (_chatUserList != null &&
         _chatUserList!.isNotEmpty &&

@@ -44,7 +44,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
     chatState.setIsChatScreenOpen = true;
     senderId = state.userId;
     chatState.databaseInit(chatState.chatUser!.userId!, state.userId);
-    chatState.getchatDetailAsync();
+    chatState.getChatDetailAsync();
     super.initState();
   }
 
@@ -114,7 +114,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                       decoration: BoxDecoration(
                         borderRadius: getBorder(myMessage),
                         color: myMessage
-                            ? TwitterColor.dodgetBlue
+                            ? TwitterColor.dodgeBlue
                             : TwitterColor.mystic,
                       ),
                       child: UrlText(
@@ -127,7 +127,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                           fontSize: 16,
                           color: myMessage
                               ? TwitterColor.white
-                              : TwitterColor.dodgetBlue,
+                              : TwitterColor.dodgeBlue,
                           decoration: TextDecoration.underline,
                         ),
                       ),
@@ -223,24 +223,24 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
 
   void submitMessage() {
     // var state = Provider.of<ChatState>(context, listen: false);
-    var authstate = Provider.of<AuthState>(context, listen: false);
+    var authState = Provider.of<AuthState>(context, listen: false);
     ChatMessage message;
     message = ChatMessage(
         message: messageController.text,
         createdAt: DateTime.now().toUtc().toString(),
-        senderId: authstate.userModel!.userId!,
+        senderId: authState.userModel!.userId!,
         receiverId: state.chatUser!.userId!,
         seen: false,
         timeStamp: DateTime.now().toUtc().millisecondsSinceEpoch.toString(),
-        senderName: authstate.user!.displayName!);
+        senderName: authState.user!.displayName!);
     if (messageController.text.isEmpty) {
       return;
     }
     UserModel myUser = UserModel(
-        displayName: authstate.userModel!.displayName,
-        userId: authstate.userModel!.userId,
-        userName: authstate.userModel!.userName,
-        profilePic: authstate.userModel!.profilePic);
+        displayName: authState.userModel!.displayName,
+        userId: authState.userModel!.userId,
+        userName: authState.userModel!.userName,
+        profilePic: authState.userModel!.profilePic);
     UserModel secondUser = UserModel(
       displayName: state.chatUser!.displayName,
       userId: state.chatUser!.userId,

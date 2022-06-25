@@ -72,7 +72,7 @@ class TrendsPage extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 5),
       child: RadioListTile<SortUser>(
         value: sortBy,
-        activeColor: TwitterColor.dodgetBlue,
+        activeColor: TwitterColor.dodgeBlue,
         groupValue: state.sortBy,
         onChanged: (val) {
           context.read<SearchState>().updateUserSortPrefrence = val!;

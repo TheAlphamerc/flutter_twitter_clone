@@ -51,7 +51,7 @@ class ConversationInformation extends StatelessWidget {
                   ? customIcon(
                       context,
                       icon: AppIcon.blueTick,
-                      istwitterIcon: true,
+                      isTwitterIcon: true,
                       iconColor: AppColor.primary,
                       size: 18,
                       paddingIcon: 3,
@@ -96,11 +96,11 @@ class ConversationInformation extends StatelessWidget {
           ),
           SettingRowWidget(
             "Block ${user.userName}",
-            textColor: TwitterColor.dodgetBlue,
+            textColor: TwitterColor.dodgeBlue,
             showDivider: false,
           ),
           SettingRowWidget("Report ${user.userName}",
-              textColor: TwitterColor.dodgetBlue, showDivider: false),
+              textColor: TwitterColor.dodgeBlue, showDivider: false),
           SettingRowWidget("Delete conversation",
               textColor: TwitterColor.ceriseRed, showDivider: false),
         ],

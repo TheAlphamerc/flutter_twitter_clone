@@ -10,9 +10,9 @@ import 'package:flutter_twitter_clone/state/appState.dart';
 class TweetBaseState extends AppState {
   /// get [Tweet Detail] from firebase realtime kDatabase
   /// If model is null then fetch tweet from firebase
-  /// [getpostDetailFromDatabase] is used to set prepare Tweetr to display Tweet detail
-  /// After getting tweet detail fetch tweet coments from firebase
-  Future<FeedModel?> getpostDetailFromDatabase(String postID) async {
+  /// [getPostDetailFromDatabase] is used to set prepare Tweet to display Tweet detail
+  /// After getting tweet detail fetch tweet comments from firebase
+  Future<FeedModel?> getPostDetailFromDatabase(String postID) async {
     try {
       late FeedModel tweet;
 
@@ -31,13 +31,13 @@ class TweetBaseState extends AppState {
         return tweet;
       });
     } catch (error) {
-      cprint(error, errorIn: 'getpostDetailFromDatabase');
+      cprint(error, errorIn: 'getPostDetailFromDatabase');
       return null;
     }
   }
 
   Future<List<FeedModel>?> getTweetsComments(FeedModel post) async {
-    late List<FeedModel> _commentlist;
+    late List<FeedModel> _commentList;
     // Check if parent tweet has reply tweets or not
     if (post.replyTweetKeyList != null && post.replyTweetKeyList!.isNotEmpty) {
       // for (String? x in post.replyTweetKeyList!) {
@@ -46,7 +46,7 @@ class TweetBaseState extends AppState {
       //   }
       // }
       //FIXME
-      _commentlist = [];
+      _commentList = [];
       for (String? replyTweetId in post.replyTweetKeyList!) {
         if (replyTweetId != null) {
           await kDatabase
@@ -56,27 +56,27 @@ class TweetBaseState extends AppState {
               .then((DatabaseEvent event) {
             final snapshot = event.snapshot;
             if (snapshot.value != null) {
-              var commentmodel = FeedModel.fromJson(snapshot.value as Map);
+              var commentModel = FeedModel.fromJson(snapshot.value as Map);
               var key = snapshot.key!;
-              commentmodel.key = key;
+              commentModel.key = key;
 
               /// add comment tweet to list if tweet is not present in [comment tweet ]list
-              /// To reduce duplicacy
-              if (!_commentlist.any((x) => x.key == key)) {
-                _commentlist.add(commentmodel);
+              /// To reduce delicacy
+              if (!_commentList.any((x) => x.key == key)) {
+                _commentList.add(commentModel);
               }
             } else {}
             if (replyTweetId == post.replyTweetKeyList!.last) {
               /// Sort comment by time
               /// It helps to display newest Tweet first.
-              _commentlist.sort((x, y) => DateTime.parse(y.createdAt)
+              _commentList.sort((x, y) => DateTime.parse(y.createdAt)
                   .compareTo(DateTime.parse(x.createdAt)));
             }
           });
         }
       }
     }
-    return _commentlist;
+    return _commentList;
   }
 
   /// [Delete tweet] in Firebase kDatabase
@@ -118,7 +118,7 @@ class TweetBaseState extends AppState {
         tweet.likeList!.add(userId);
         tweet.likeCount = tweet.likeCount! + 1;
       }
-      // update likelist of a tweet
+      // update likeList of a tweet
       kDatabase
           .child('tweet')
           .child(tweet.key!)
@@ -146,9 +146,9 @@ class TweetBaseState extends AppState {
   /// Returns new tweet id
   String? createPost(FeedModel tweet) {
     var json = tweet.toJson();
-    var refence = kDatabase.child('tweet').push();
-    refence.set(json);
-    return refence.key;
+    var reference = kDatabase.child('tweet').push();
+    reference.set(json);
+    return reference.key;
   }
 
   /// upload [file] to firebase storage and return its  path url

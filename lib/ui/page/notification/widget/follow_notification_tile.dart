@@ -85,7 +85,7 @@ class _UserCard extends StatelessWidget {
                     user.isVerified!
                         ? customIcon(context,
                             icon: AppIcon.blueTick,
-                            istwitterIcon: true,
+                            isTwitterIcon: true,
                             iconColor: AppColor.primary,
                             size: 13,
                             paddingIcon: 3)

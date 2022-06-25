@@ -23,7 +23,7 @@ class ParentTweetWidget extends StatelessWidget {
 
   void onTweetPressed(BuildContext context, FeedModel model) {
     var feedstate = Provider.of<FeedState>(context, listen: false);
-    feedstate.getpostDetailFromDatabase(null, model: model);
+    feedstate.getPostDetailFromDatabase(null, model: model);
     Navigator.push(context, FeedPostDetail.getRoute(model.key!));
   }
 

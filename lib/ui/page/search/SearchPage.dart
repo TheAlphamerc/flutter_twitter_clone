@@ -23,7 +23,7 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       final state = Provider.of<SearchState>(context, listen: false);
       state.resetFilterList();
     });
@@ -94,7 +94,7 @@ class _UserTile extends StatelessWidget {
               ? customIcon(
                   context,
                   icon: AppIcon.blueTick,
-                  istwitterIcon: true,
+                  isTwitterIcon: true,
                   iconColor: AppColor.primary,
                   size: 13,
                   paddingIcon: 3,

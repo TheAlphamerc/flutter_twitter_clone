@@ -35,14 +35,14 @@ class ComposeTweetPage extends StatefulWidget {
 class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
   bool isScrollingDown = false;
   late FeedModel? model;
-  late ScrollController scrollcontroller;
+  late ScrollController scrollController;
 
   File? _image;
   late TextEditingController _textEditingController;
 
   @override
   void dispose() {
-    scrollcontroller.dispose();
+    scrollController.dispose();
     _textEditingController.dispose();
     super.dispose();
   }
@@ -51,24 +51,24 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
   void initState() {
     var feedState = Provider.of<FeedState>(context, listen: false);
     model = feedState.tweetToReplyModel;
-    scrollcontroller = ScrollController();
+    scrollController = ScrollController();
     _textEditingController = TextEditingController();
-    scrollcontroller.addListener(_scrollListener);
+    scrollController.addListener(_scrollListener);
     super.initState();
   }
 
   _scrollListener() {
-    if (scrollcontroller.position.userScrollDirection ==
+    if (scrollController.position.userScrollDirection ==
         ScrollDirection.reverse) {
       if (!isScrollingDown) {
         Provider.of<ComposeTweetState>(context, listen: false)
-            .setIsScrolllingDown = true;
+            .setIsScrollingDown = true;
       }
     }
-    if (scrollcontroller.position.userScrollDirection ==
+    if (scrollController.position.userScrollDirection ==
         ScrollDirection.forward) {
       Provider.of<ComposeTweetState>(context, listen: false)
-          .setIsScrolllingDown = false;
+          .setIsScrollingDown = false;
     }
   }
 
@@ -78,7 +78,7 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
     });
   }
 
-  void _onImageIconSelcted(File file) {
+  void _onImageIconSelected(File file) {
     setState(() {
       _image = file;
     });
@@ -91,14 +91,14 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
       return;
     }
     var state = Provider.of<FeedState>(context, listen: false);
-    kScreenloader.showLoader(context);
+    kScreenLoader.showLoader(context);
 
     FeedModel tweetModel = await createTweetModel();
     String? tweetId;
 
     /// If tweet contain image
     /// First image is uploaded on firebase storage
-    /// After sucessfull image upload to firebase storage it returns image path
+    /// After successful image upload to firebase storage it returns image path
     /// Add this image path to tweet model and save to firebase database
     if (_image != null) {
       await state.uploadFile(_image!).then((imagePath) async {
@@ -117,7 +117,7 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
 
           /// If type of tweet is new comment tweet
           else {
-            tweetId = await state.addcommentToPost(tweetModel);
+            tweetId = await state.addCommentToPost(tweetModel);
           }
         }
       });
@@ -137,20 +137,20 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
 
       /// If type of tweet is new comment tweet
       else {
-        tweetId = await state.addcommentToPost(tweetModel);
+        tweetId = await state.addCommentToPost(tweetModel);
       }
     }
     tweetModel.key = tweetId;
 
     /// Checks for username in tweet description
-    /// If foud sends notification to all tagged user
+    /// If username found, sends notification to all tagged user
     /// If no user found, compose tweet screen is closed and redirect back to home page.
     await Provider.of<ComposeTweetState>(context, listen: false)
         .sendNotification(
             tweetModel, Provider.of<SearchState>(context, listen: false))
         .then((_) {
       /// Hide running loader on screen
-      kScreenloader.hideLoader();
+      kScreenLoader.hideLoader();
 
       /// Navigate back to home page
       Navigator.pop(context);
@@ -167,7 +167,7 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
     var myUser = authState.userModel;
     var profilePic = myUser!.profilePic ?? Constants.dummyProfilePic;
 
-    /// User who are creting reply tweet
+    /// User who are creating reply tweet
     var commentedUser = UserModel(
         displayName: myUser.displayName ?? myUser.email!.split('@')[0],
         profilePic: profilePic,
@@ -213,14 +213,14 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
         isSubmitDisable:
             !Provider.of<ComposeTweetState>(context).enableSubmitButton ||
                 Provider.of<FeedState>(context).isBusy,
-        isbootomLine: Provider.of<ComposeTweetState>(context).isScrollingDown,
+        isBottomLine: Provider.of<ComposeTweetState>(context).isScrollingDown,
       ),
       backgroundColor: Theme.of(context).backgroundColor,
       body: Stack(
         //!Removed container
         children: <Widget>[
           SingleChildScrollView(
-            controller: scrollcontroller,
+            controller: scrollController,
             child:
                 widget.isRetweet ? _ComposeRetweet(this) : _ComposeTweet(this),
           ),
@@ -228,7 +228,7 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
             alignment: Alignment.bottomCenter,
             child: ComposeBottomIconWidget(
               textEditingController: _textEditingController,
-              onImageIconSelcted: _onImageIconSelcted,
+              onImageIconSelected: _onImageIconSelected,
             ),
           ),
         ],
@@ -277,7 +277,7 @@ class _ComposeRetweet
                       ? customIcon(
                           context,
                           icon: AppIcon.blueTick,
-                          istwitterIcon: true,
+                          isTwitterIcon: true,
                           iconColor: AppColor.primary,
                           size: 13,
                           paddingIcon: 3,
@@ -389,7 +389,7 @@ class _ComposeTweet
 
   final _ComposeTweetReplyPageState viewState;
 
-  Widget _tweerCard(BuildContext context) {
+  Widget _tweetCard(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -458,7 +458,7 @@ class _ComposeTweet
                     ? customIcon(
                         context,
                         icon: AppIcon.blueTick,
-                        istwitterIcon: true,
+                        isTwitterIcon: true,
                         iconColor: AppColor.primary,
                         size: 13,
                         paddingIcon: 3,
@@ -493,7 +493,7 @@ class _ComposeTweet
         children: <Widget>[
           viewState.widget.isTweet
               ? const SizedBox.shrink()
-              : _tweerCard(context),
+              : _tweetCard(context),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -636,7 +636,7 @@ class _UserTile extends StatelessWidget {
               ? customIcon(
                   context,
                   icon: AppIcon.blueTick,
-                  istwitterIcon: true,
+                  isTwitterIcon: true,
                   iconColor: AppColor.primary,
                   size: 13,
                   paddingIcon: 3,

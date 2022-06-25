@@ -76,7 +76,7 @@ class _SidebarMenuState extends State<SidebarMenu> {
                   state.userModel!.isVerified ?? false
                       ? customIcon(context,
                           icon: AppIcon.blueTick,
-                          istwitterIcon: true,
+                          isTwitterIcon: true,
                           iconColor: AppColor.primary,
                           size: 18,
                           paddingIcon: 3)
@@ -120,27 +120,27 @@ class _SidebarMenuState extends State<SidebarMenu> {
       BuildContext context, String count, String text, String navigateTo) {
     return InkWell(
       onTap: () {
-        var authstate = context.read<AuthState>();
+        var authState = context.read<AuthState>();
         late List<String> usersList;
-        authstate.getProfileUser();
+        authState.getProfileUser();
         Navigator.pop(context);
         switch (navigateTo) {
           case "FollowerListPage":
-            usersList = authstate.userModel!.followersList!;
+            usersList = authState.userModel!.followersList!;
             Navigator.push(
               context,
               FollowerListPage.getRoute(
-                profile: authstate.userModel!,
+                profile: authState.userModel!,
                 userList: usersList,
               ),
             );
             break;
           case "FollowingListPage":
-            usersList = authstate.userModel!.followingList!;
+            usersList = authState.userModel!.followingList!;
             Navigator.push(
               context,
               FollowingListPage.getRoute(
-                profile: authstate.userModel!,
+                profile: authState.userModel!,
                 userList: usersList,
               ),
             );
@@ -207,9 +207,9 @@ class _SidebarMenuState extends State<SidebarMenu> {
               ),
               customIcon(context,
                   icon: AppIcon.bulbOn,
-                  istwitterIcon: true,
+                  isTwitterIcon: true,
                   size: 25,
-                  iconColor: TwitterColor.dodgetBlue),
+                  iconColor: TwitterColor.dodgeBlue),
               const Spacer(),
               TextButton(
                 onPressed: () {

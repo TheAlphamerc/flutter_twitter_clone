@@ -22,12 +22,12 @@ class _UpdateAppState extends State<UpdateApp> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -56,7 +56,7 @@ class _UpdateAppState extends State<UpdateApp> with WidgetsBindingObserver {
             ),
             const SizedBox(height: 20),
             const TitleText(
-              "The current version of app is no longer supported. We aploigize for any inconveiience we may have caused you",
+              "The current version of app is no longer supported. We apologized for any inconvenience we may have caused you",
               fontSize: 14,
               color: AppColor.darkGrey,
               textAlign: TextAlign.center,

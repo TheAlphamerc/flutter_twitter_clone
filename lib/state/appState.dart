@@ -15,7 +15,7 @@ class AppState extends ChangeNotifier {
     return _pageIndex;
   }
 
-  set setpageIndex(int index) {
+  set setPageIndex(int index) {
     _pageIndex = index;
     notifyListeners();
   }

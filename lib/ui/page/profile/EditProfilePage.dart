@@ -41,7 +41,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     _name.text = state.userModel?.displayName ?? '';
     _bio.text = state.userModel?.bio ?? '';
     _location.text = state.userModel?.location ?? '';
-    _dob.text = Utility.getdob(state.userModel?.dob);
+    _dob.text = Utility.getDob(state.userModel?.dob);
     super.initState();
   }
 
@@ -55,7 +55,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Widget _body() {
-    var authstate = Provider.of<AuthState>(context, listen: false);
+    var authState = Provider.of<AuthState>(context, listen: false);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -63,10 +63,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
           height: 180,
           child: Stack(
             children: <Widget>[
-              _bannerImage(authstate),
+              _bannerImage(authState),
               Align(
                 alignment: Alignment.bottomLeft,
-                child: _userImage(authstate),
+                child: _userImage(authState),
               ),
             ],
           ),
@@ -76,13 +76,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
         _entry('Location', controller: _location),
         InkWell(
           onTap: showCalender,
-          child: _entry('Date of birth', isenable: false, controller: _dob),
+          child: _entry('Date of birth', enabled: false, controller: _dob),
         )
       ],
     );
   }
 
-  Widget _userImage(AuthState authstate) {
+  Widget _userImage(AuthState authState) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 0),
       height: 90,
@@ -91,14 +91,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
         border: Border.all(color: Colors.white, width: 5),
         shape: BoxShape.circle,
         image: DecorationImage(
-            image: customAdvanceNetworkImage(authstate.userModel!.profilePic),
+            image: customAdvanceNetworkImage(authState.userModel!.profilePic),
             fit: BoxFit.cover),
       ),
       child: CircleAvatar(
         radius: 40,
         backgroundImage: (_image != null
                 ? FileImage(_image!)
-                : customAdvanceNetworkImage(authstate.userModel!.profilePic))
+                : customAdvanceNetworkImage(authState.userModel!.profilePic))
             as ImageProvider,
         child: Container(
           decoration: const BoxDecoration(
@@ -116,15 +116,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  Widget _bannerImage(AuthState authstate) {
+  Widget _bannerImage(AuthState authState) {
     return Container(
       height: 180,
       decoration: BoxDecoration(
-        image: authstate.userModel!.bannerImage == null
+        image: authState.userModel!.bannerImage == null
             ? null
             : DecorationImage(
                 image:
-                    customAdvanceNetworkImage(authstate.userModel!.bannerImage),
+                    customAdvanceNetworkImage(authState.userModel!.bannerImage),
                 fit: BoxFit.cover),
       ),
       child: Container(
@@ -137,7 +137,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 ? Image.file(_banner!,
                     fit: BoxFit.fill, width: MediaQuery.of(context).size.width)
                 : CacheImage(
-                    path: authstate.userModel!.bannerImage ??
+                    path: authState.userModel!.bannerImage ??
                         'https://pbs.twimg.com/profile_banners/457684585/1510495215/1500x500',
                     fit: BoxFit.fill),
             Center(
@@ -160,7 +160,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget _entry(String title,
       {required TextEditingController controller,
       int maxLine = 1,
-      bool isenable = true}) {
+      bool enabled = true}) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
       child: Column(
@@ -168,7 +168,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         children: <Widget>[
           customText(title, style: const TextStyle(color: Colors.black54)),
           TextField(
-            enabled: isenable,
+            enabled: enabled,
             controller: controller,
             maxLines: maxLine,
             decoration: const InputDecoration(
@@ -190,7 +190,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     setState(() {
       if (picked != null) {
         dob = picked.toString();
-        _dob.text = Utility.getdob(dob);
+        _dob.text = Utility.getDob(dob);
       }
     });
   }

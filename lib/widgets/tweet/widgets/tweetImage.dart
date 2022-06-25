@@ -33,7 +33,7 @@ class TweetImage extends StatelessWidget {
                     return;
                   }
                   var state = Provider.of<FeedState>(context, listen: false);
-                  state.getpostDetailFromDatabase(model.key);
+                  state.getPostDetailFromDatabase(model.key);
                   state.setTweetToReply = model;
                   Navigator.pushNamed(context, '/ImageViewPge');
                 },

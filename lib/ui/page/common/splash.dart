@@ -25,7 +25,7 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       timer();
     });
     super.initState();
@@ -49,7 +49,7 @@ class _SplashPageState extends State<SplashPage> {
   /// If an old version of app is installed on user's device then
   /// User will not be able to see home screen
   /// User will redirected to update app screen.
-  /// Once user update app with latest verson and back to app then user automatically redirected to welcome / Home page
+  /// Once user update app with latest version and back to app then user automatically redirected to welcome / Home page
   Future<bool> _checkAppVersion() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     final currentAppVersion = packageInfo.version;
@@ -75,12 +75,12 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   /// Returns app version from firebase config
-  /// Fecth Latest app version from firebase Remote config
+  /// Fetch Latest app version from firebase Remote config
   /// To check current installed app version check [version] in pubspec.yaml
   /// you have to add latest app version in firebase remote config
   /// To fetch this key go to project setting in firebase
-  /// Open `Remote Config` section in fireabse
-  /// Add [supportedBuild]  as paramerter key and below json in Default value
+  /// Open `Remote Config` section in Firebase
+  /// Add [supportedBuild]  as parameter key and below json in Default value
   ///  ```
   ///  {
   ///    "supportedBuild":
@@ -92,7 +92,7 @@ class _SplashPageState extends State<SplashPage> {
   /// After adding app version key click on Publish Change button
   /// For package detail check:-  https://pub.dev/packages/firebase_remote_config#-readme-tab-
   Future<Map?> _getAppVersionFromFirebaseConfig() async {
-    final RemoteConfig remoteConfig = RemoteConfig.instance;
+    final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
     await remoteConfig.fetchAndActivate();
     // await remoteConfig.activateFetched();
     var data = remoteConfig.getString('supportedBuild');

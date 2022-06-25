@@ -5,7 +5,7 @@ part 'text_styles.dart';
 part 'extention.dart';
 
 class AppTheme {
-  static final ThemeData apptheme = ThemeData(
+  static final ThemeData appTheme = ThemeData(
       backgroundColor: TwitterColor.white,
       brightness: Brightness.light,
       primaryColor: AppColor.primary,
@@ -17,7 +17,7 @@ class AppTheme {
       appBarTheme: AppBarTheme(
           backgroundColor: TwitterColor.white,
           iconTheme: IconThemeData(
-            color: TwitterColor.dodgetBlue,
+            color: TwitterColor.dodgeBlue,
           ),
           elevation: 0,
           // ignore: deprecated_member_use
@@ -27,15 +27,15 @@ class AppTheme {
           )),
       tabBarTheme: TabBarTheme(
         labelStyle:
-            TextStyles.titleStyle.copyWith(color: TwitterColor.dodgetBlue),
+            TextStyles.titleStyle.copyWith(color: TwitterColor.dodgeBlue),
         unselectedLabelColor: AppColor.darkGrey,
         unselectedLabelStyle:
             TextStyles.titleStyle.copyWith(color: AppColor.darkGrey),
-        labelColor: TwitterColor.dodgetBlue,
+        labelColor: TwitterColor.dodgeBlue,
         labelPadding: const EdgeInsets.symmetric(vertical: 12),
       ),
       floatingActionButtonTheme: FloatingActionButtonThemeData(
-        backgroundColor: TwitterColor.dodgetBlue,
+        backgroundColor: TwitterColor.dodgeBlue,
       ),
       colorScheme: const ColorScheme(
           background: Colors.white,
@@ -46,9 +46,9 @@ class AppTheme {
           onSurface: Colors.black,
           error: Colors.red,
           primary: Colors.blue,
-          primaryVariant: Colors.blue,
+          primaryContainer: Colors.blue,
           secondary: AppColor.secondary,
-          secondaryVariant: AppColor.darkGrey,
+          secondaryContainer: AppColor.darkGrey,
           surface: Colors.white,
           brightness: Brightness.light));
 
@@ -56,7 +56,7 @@ class AppTheme {
     BoxShadow(
         blurRadius: 10,
         offset: const Offset(5, 5),
-        color: AppTheme.apptheme.colorScheme.secondary,
+        color: AppTheme.appTheme.colorScheme.secondary,
         spreadRadius: 1)
   ];
   static BoxDecoration softDecoration =

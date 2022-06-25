@@ -20,7 +20,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.isCrossButton = false,
       this.submitButtonText,
       this.isSubmitDisable = true,
-      this.isbootomLine = true,
+      this.isBottomLine = true,
       this.onSearchChanged})
       : super(key: key);
 
@@ -28,7 +28,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Size appBarHeight = const Size.fromHeight(56.0);
   final IconData? icon;
   final bool isBackButton;
-  final bool isbootomLine;
+  final bool isBottomLine;
   final bool isCrossButton;
   final bool isSubmitDisable;
   // final Widget leading;
@@ -100,7 +100,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   },
                   icon: customIcon(context,
                       icon: icon!,
-                      istwitterIcon: true,
+                      isTwitterIcon: true,
                       iconColor: AppColor.primary,
                       size: 25),
                 )
@@ -139,7 +139,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: _getActionButtons(context),
       bottom: PreferredSize(
         child: Container(
-          color: isbootomLine
+          color: isBottomLine
               ? Colors.grey.shade200
               : Theme.of(context).backgroundColor,
           height: 1.0,

@@ -25,7 +25,7 @@ class TweetBottomSheet {
       ),
       child: customIcon(context,
           icon: AppIcon.arrowDown,
-          istwitterIcon: true,
+          isTwitterIcon: true,
           iconColor: AppColor.lightGrey),
     ).ripple(
       () {
@@ -136,7 +136,7 @@ class TweetBottomSheet {
                         TextButton(
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(
-                              TwitterColor.dodgetBlue,
+                              TwitterColor.dodgeBlue,
                             ),
                             foregroundColor: MaterialStateProperty.all(
                               TwitterColor.white,
@@ -267,7 +267,7 @@ class TweetBottomSheet {
                         TextButton(
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(
-                              TwitterColor.dodgetBlue,
+                              TwitterColor.dodgeBlue,
                             ),
                             foregroundColor: MaterialStateProperty.all(
                               TwitterColor.white,
@@ -344,7 +344,7 @@ class TweetBottomSheet {
             customIcon(
               context,
               icon: icon,
-              istwitterIcon: true,
+              isTwitterIcon: true,
               size: 25,
               paddingIcon: 8,
               iconColor:

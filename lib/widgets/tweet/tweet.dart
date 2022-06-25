@@ -50,7 +50,7 @@ class Tweet extends StatelessWidget {
     if (type == TweetType.Tweet && !isDisplayOnProfile) {
       feedstate.clearAllDetailAndReplyTweetStack();
     }
-    feedstate.getpostDetailFromDatabase(null, model: model);
+    feedstate.getPostDetailFromDatabase(null, model: model);
     Navigator.push(context, FeedPostDetail.getRoute(model.key!));
   }
 
@@ -221,7 +221,7 @@ class _TweetBody extends StatelessWidget {
                             ? customIcon(
                                 context,
                                 icon: AppIcon.blueTick,
-                                istwitterIcon: true,
+                                isTwitterIcon: true,
                                 iconColor: AppColor.primary,
                                 size: 13,
                                 paddingIcon: 3,
@@ -359,7 +359,7 @@ class _TweetDetailBody extends StatelessWidget {
                         ? customIcon(
                             context,
                             icon: AppIcon.blueTick,
-                            istwitterIcon: true,
+                            isTwitterIcon: true,
                             iconColor: AppColor.primary,
                             size: 13,
                             paddingIcon: 3,

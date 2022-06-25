@@ -28,7 +28,7 @@ class FeedPage extends StatelessWidget {
       child: customIcon(
         context,
         icon: AppIcon.fabTweet,
-        istwitterIcon: true,
+        isTwitterIcon: true,
         iconColor: Theme.of(context).colorScheme.onPrimary,
         size: 25,
       ),
@@ -74,10 +74,10 @@ class _FeedPageBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var authstate = Provider.of<AuthState>(context, listen: false);
+    var authState = Provider.of<AuthState>(context, listen: false);
     return Consumer<FeedState>(
       builder: (context, state, child) {
-        final List<FeedModel>? list = state.getTweetList(authstate.userModel);
+        final List<FeedModel>? list = state.getTweetList(authState.userModel);
         return CustomScrollView(
           slivers: <Widget>[
             child!,

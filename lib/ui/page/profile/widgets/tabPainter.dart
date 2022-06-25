@@ -22,7 +22,7 @@ class _TabPainter extends BoxPainter {
         offset + Offset(cfg.size!.width * 3, cfg.size!.height + 1);
 
     var blueLinePaint = Paint()
-      ..color = TwitterColor.dodgetBlue
+      ..color = TwitterColor.dodgeBlue
       ..strokeWidth = 2;
     var greyLinePaint = Paint()
       ..color = AppColor.lightGrey
