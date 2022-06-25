@@ -36,11 +36,11 @@ class SuggestionsState extends AppState {
 
       _userlist = list.take(20).toList();
       _userlist!.removeWhere((element) => isFollowing(element));
-      _selectedusers = List.from(_userlist!);
+      _selectedUsers = List.from(_userlist!);
     }
   }
 
-  /// Check if user followerlist contain your or not
+  /// Check if user followerList contain your or not
   /// If your id exist in follower list it mean you are following him
   bool isFollowing(UserModel user) {
     if (user.followersList != null &&
@@ -51,27 +51,27 @@ class SuggestionsState extends AppState {
     }
   }
 
-  List<UserModel> _selectedusers = [];
-  int get selectedusersCount => _selectedusers.length;
+  List<UserModel> _selectedUsers = [];
+  int get selectedUsersCount => _selectedUsers.length;
 
   bool isSelected(UserModel user) {
-    return _selectedusers.contains(user);
+    return _selectedUsers.contains(user);
   }
 
   void toggleAllSelections() {
-    if (_selectedusers.length == _userlist!.length) {
-      _selectedusers = [];
+    if (_selectedUsers.length == _userlist!.length) {
+      _selectedUsers = [];
     } else {
-      _selectedusers = List.from(_userlist!);
+      _selectedUsers = List.from(_userlist!);
     }
     notifyListeners();
   }
 
   void toggleUserSelection(UserModel user) {
     if (isSelected(user)) {
-      _selectedusers.remove(user);
+      _selectedUsers.remove(user);
     } else {
-      _selectedusers.add(user);
+      _selectedUsers.add(user);
     }
 
     notifyListeners();
@@ -87,9 +87,9 @@ class SuggestionsState extends AppState {
 
   Future<void> followUsers() async {
     try {
-      if (_selectedusers.length > 0) {
+      if (_selectedUsers.length > 0) {
         /// Add current user id to the following list of all selected users
-        for (final user in _selectedusers) {
+        for (final user in _selectedUsers) {
           user.followersList ??= [];
           user.followersList!.add(currentUser!.userId!);
           user.followers = user.followersList!.length;
@@ -105,7 +105,7 @@ class SuggestionsState extends AppState {
         /// Add all selected users to current user following list
         currentUser!.followingList ??= [];
         currentUser!.followingList!
-            .addAll(_selectedusers.map((e) => e.userId!));
+            .addAll(_selectedUsers.map((e) => e.userId!));
         currentUser!.following = currentUser!.followingList!.length;
         await kDatabase
             .child('profile')

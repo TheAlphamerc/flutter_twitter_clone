@@ -43,6 +43,12 @@ class _SuggestedUsersState extends State<SuggestedUsers> {
         searchState.userlist != null &&
         searchState.userlist!.isNotEmpty;
 
+    final userToFollowCount = isFollowListAvailable
+        ? state.userlist!.length > 5
+            ? 5
+            : state.userlist!.length
+        : 0;
+
     return Scaffold(
       bottomNavigationBar: !isFollowListAvailable
           ? null
@@ -54,28 +60,28 @@ class _SuggestedUsersState extends State<SuggestedUsers> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(left: 16),
-                      child: state.selectedusersCount >= 5
+                      child: state.selectedUsersCount >= userToFollowCount
                           ? SizedBox()
                           : Text(
-                              '${5 - state.selectedusersCount} more to follow',
+                              '${userToFollowCount - state.selectedUsersCount} more to follow',
                               style: TextStyles.titleStyle,
                             ),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       child: CustomFlatButton(
-                        onPressed: state.selectedusersCount < 5
+                        onPressed: state.selectedUsersCount < userToFollowCount
                             ? null
                             : () async {
                                 isLoading.value = true;
                                 await state.followUsers();
                                 isLoading.value = false;
                               },
-                        label: 'Follow ${state.selectedusersCount}',
-                        isWraped: true,
+                        label: 'Follow ${state.selectedUsersCount}',
+                        isWrapped: true,
                         borderRadius: 50,
                         labelStyle: TextStyles.onPrimaryTitleText,
-                        color: state.selectedusersCount < 5
+                        color: state.selectedUsersCount < userToFollowCount
                             ? Colors.grey[350]
                             : TwitterColor.dodgeBlue,
                         isLoading: isLoading,
@@ -147,7 +153,7 @@ class _SuggestedUsersState extends State<SuggestedUsers> {
                                       onPressed: () {
                                         state.toggleAllSelections();
                                       },
-                                      icon: state.selectedusersCount ==
+                                      icon: state.selectedUsersCount ==
                                               state.userlist!.length
                                           ? Icon(
                                               Icons.check_circle,

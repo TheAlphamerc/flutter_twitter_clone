@@ -102,10 +102,10 @@ class _SidebarMenuState extends State<SidebarMenu> {
                   const SizedBox(
                     width: 17,
                   ),
-                  _tappbleText(context, state.userModel!.getFollower,
+                  _textButton(context, state.userModel!.getFollower,
                       ' Followers', 'FollowerListPage'),
                   const SizedBox(width: 10),
-                  _tappbleText(context, state.userModel!.getFollowing,
+                  _textButton(context, state.userModel!.getFollowing,
                       ' Following', 'FollowingListPage'),
                 ],
               ),
@@ -116,7 +116,7 @@ class _SidebarMenuState extends State<SidebarMenu> {
     }
   }
 
-  Widget _tappbleText(
+  Widget _textButton(
       BuildContext context, String count, String text, String navigateTo) {
     return InkWell(
       onTap: () {

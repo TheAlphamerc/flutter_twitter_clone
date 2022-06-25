@@ -7,14 +7,14 @@ import 'appState.dart';
 class SearchState extends AppState {
   bool isBusy = false;
   SortUser sortBy = SortUser.MaxFollower;
-  List<UserModel>? _userFilterlist;
+  List<UserModel>? _userFilterList;
   List<UserModel>? _userlist;
 
   List<UserModel>? get userlist {
-    if (_userFilterlist == null) {
+    if (_userFilterList == null) {
       return null;
     } else {
-      return List.from(_userFilterlist!);
+      return List.from(_userFilterList!);
     }
   }
 
@@ -26,7 +26,7 @@ class SearchState extends AppState {
         (DatabaseEvent event) {
           final snapshot = event.snapshot;
           _userlist = <UserModel>[];
-          _userFilterlist = <UserModel>[];
+          _userFilterList = <UserModel>[];
           if (snapshot.value != null) {
             var map = snapshot.value as Map?;
             if (map != null) {
@@ -34,9 +34,9 @@ class SearchState extends AppState {
                 var model = UserModel.fromJson(value);
                 model.key = key;
                 _userlist!.add(model);
-                _userFilterlist!.add(model);
+                _userFilterList!.add(model);
               });
-              _userFilterlist!
+              _userFilterList!
                   .sort((x, y) => y.followers!.compareTo(x.followers!));
               notifyListeners();
             }
@@ -56,9 +56,9 @@ class SearchState extends AppState {
   /// If user has use search filter and change screen and came back to search screen It will reset user list.
   /// This function call when search page open.
   void resetFilterList() {
-    if (_userlist != null && _userlist!.length != _userFilterlist!.length) {
-      _userFilterlist = List.from(_userlist!);
-      _userFilterlist!.sort((x, y) => y.followers!.compareTo(x.followers!));
+    if (_userlist != null && _userlist!.length != _userFilterList!.length) {
+      _userFilterList = List.from(_userlist!);
+      _userFilterList!.sort((x, y) => y.followers!.compareTo(x.followers!));
       // notifyListeners();
     }
   }
@@ -69,8 +69,8 @@ class SearchState extends AppState {
     if (name != null &&
         name.isEmpty &&
         _userlist != null &&
-        _userlist!.length != _userFilterlist!.length) {
-      _userFilterlist = List.from(_userlist!);
+        _userlist!.length != _userFilterList!.length) {
+      _userFilterList = List.from(_userlist!);
     }
     // return if userList is empty or null
     if (_userlist == null && _userlist!.isEmpty) {
@@ -79,7 +79,7 @@ class SearchState extends AppState {
     }
     // sortBy userlist on the basis of username
     else if (name != null) {
-      _userFilterlist = _userlist!
+      _userFilterList = _userlist!
           .where((x) =>
               x.userName != null &&
               x.userName!.toLowerCase().contains(name.toLowerCase()))
@@ -97,26 +97,26 @@ class SearchState extends AppState {
   String get selectedFilter {
     switch (sortBy) {
       case SortUser.Alphabetically:
-        _userFilterlist!
+        _userFilterList!
             .sort((x, y) => x.displayName!.compareTo(y.displayName!));
         return "Alphabetically";
 
       case SortUser.MaxFollower:
-        _userFilterlist!.sort((x, y) => y.followers!.compareTo(x.followers!));
+        _userFilterList!.sort((x, y) => y.followers!.compareTo(x.followers!));
         return "Popular";
 
       case SortUser.Newest:
-        _userFilterlist!.sort((x, y) => DateTime.parse(y.createdAt!)
+        _userFilterList!.sort((x, y) => DateTime.parse(y.createdAt!)
             .compareTo(DateTime.parse(x.createdAt!)));
         return "Newest user";
 
       case SortUser.Oldest:
-        _userFilterlist!.sort((x, y) => DateTime.parse(x.createdAt!)
+        _userFilterList!.sort((x, y) => DateTime.parse(x.createdAt!)
             .compareTo(DateTime.parse(y.createdAt!)));
         return "Oldest user";
 
       case SortUser.Verified:
-        _userFilterlist!.sort((x, y) =>
+        _userFilterList!.sort((x, y) =>
             y.isVerified.toString().compareTo(x.isVerified.toString()));
         return "Verified user";
 

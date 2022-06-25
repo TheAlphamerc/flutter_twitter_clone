@@ -9,7 +9,7 @@ class CustomFlatButton extends StatelessWidget {
       this.isLoading,
       this.color,
       this.labelStyle,
-      this.isWraped = false,
+      this.isWrapped = false,
       this.borderRadius = 6.0,
       this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 10)})
       : super(key: key);
@@ -17,14 +17,14 @@ class CustomFlatButton extends StatelessWidget {
   final String label;
   final TextStyle? labelStyle;
   final ValueNotifier<bool>? isLoading;
-  final bool isWraped;
+  final bool isWrapped;
   final Color? color;
   final EdgeInsetsGeometry padding;
   final double borderRadius;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: isWraped ? null : double.infinity,
+      width: isWrapped ? null : double.infinity,
       child: ValueListenableBuilder<bool>(
         valueListenable: isLoading ?? ValueNotifier(false),
         builder: (context, loading, child) {
