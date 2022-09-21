@@ -255,6 +255,11 @@ class Utility {
         packageName: 'com.thealphamerc.flutter_twitter_clone_dev',
         minimumVersion: 0,
       ),
+      iosParameters: IOSParameters(
+        bundleId: 'com.thealphamerc.fwitter_dev',
+        appStoreId: '00000',// change to your app store id
+        minimumVersion: "1.0.0", // change to your minimumVersion
+      ),
       socialMetaTagParameters: socialMetaTagParameters,
     );
     Uri url;
