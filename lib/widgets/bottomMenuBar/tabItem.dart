@@ -60,7 +60,7 @@ class TabItem extends StatelessWidget {
                     style: TextStyle(
                         fontWeight: FontWeight.w600,
                         color: textColor,
-                        fontSize: context.getDimention(context, 12)),
+                        fontSize: context.getDimension(context, 12)),
                   ),
                 )),
           ),

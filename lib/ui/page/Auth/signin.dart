@@ -45,8 +45,8 @@ class _SignInState extends State<SignIn> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             const SizedBox(height: 150),
-            _entryFeild('Enter email', controller: _emailController),
-            _entryFeild('Enter password',
+            _entryField('Enter email', controller: _emailController),
+            _entryField('Enter password',
                 controller: _passwordController, isPassword: true),
             _emailLoginButton(context),
             const SizedBox(height: 20),
@@ -70,7 +70,7 @@ class _SignInState extends State<SignIn> {
     );
   }
 
-  Widget _entryFeild(String hint,
+  Widget _entryField(String hint,
       {required TextEditingController controller, bool isPassword = false}) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 15),
@@ -132,11 +132,11 @@ class _SignInState extends State<SignIn> {
     }
     loader.showLoader(context);
     var isValid = Utility.validateCredentials(
-        _scaffoldKey, _emailController.text, _passwordController.text);
+        context, _emailController.text, _passwordController.text);
     if (isValid) {
       state
           .signIn(_emailController.text, _passwordController.text,
-              scaffoldKey: _scaffoldKey)
+              context: context)
           .then((status) {
         if (state.user != null) {
           loader.hideLoader();

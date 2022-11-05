@@ -29,14 +29,14 @@ class TweetBottomSheet {
           iconColor: AppColor.lightGrey),
     ).ripple(
       () {
-        _openbottomSheet(context,
+        _openBottomSheet(context,
             type: type, model: model, scaffoldKey: scaffoldKey);
       },
       borderRadius: BorderRadius.circular(20),
     );
   }
 
-  void _openbottomSheet(BuildContext context,
+  void _openBottomSheet(BuildContext context,
       {required TweetType type,
       required FeedModel model,
       required GlobalKey<ScaffoldState> scaffoldKey}) async {
@@ -107,7 +107,7 @@ class TweetBottomSheet {
           );
 
           Utility.copyToClipBoard(
-              scaffoldKey: scaffoldKey,
+              context: context,
               text: uri.toString(),
               message: "Tweet link copy to clipboard");
         }),
@@ -124,8 +124,8 @@ class TweetBottomSheet {
                       content: const Text('Do you want to delete this Tweet?'),
                       actions: [
                         // ignore: deprecated_member_use
-                        FlatButton(
-                          textColor: Colors.black,
+                        TextButton(
+                          // textColor: Colors.black,
                           onPressed: () {
                             Navigator.pop(context);
                             Navigator.pop(context);
@@ -181,7 +181,7 @@ class TweetBottomSheet {
         _widgetBottomSheetRow(
           context,
           AppIcon.mute,
-          text: 'Mute this convertion',
+          text: 'Mute this conversation',
         ),
         _widgetBottomSheetRow(
           context,
@@ -238,7 +238,7 @@ class TweetBottomSheet {
 
           Navigator.pop(context);
           Utility.copyToClipBoard(
-              scaffoldKey: scaffoldKey,
+              context: context,
               text: uri.toString(),
               message: "Tweet link copy to clipboard");
         }),
@@ -255,8 +255,8 @@ class TweetBottomSheet {
                       content: const Text('Do you want to delete this Tweet?'),
                       actions: [
                         // ignore: deprecated_member_use
-                        FlatButton(
-                          textColor: Colors.black,
+                        TextButton(
+                          // textColor: Colors.black,
                           onPressed: () {
                             Navigator.pop(context);
                             Navigator.pop(context);
@@ -388,7 +388,7 @@ class TweetBottomSheet {
     }
   }
 
-  void openRetweetbottomSheet(BuildContext context,
+  void openRetweetBottomSheet(BuildContext context,
       {TweetType? type,
       required FeedModel model,
       required GlobalKey<ScaffoldState> scaffoldKey}) async {

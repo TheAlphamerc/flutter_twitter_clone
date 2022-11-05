@@ -198,32 +198,29 @@ class Utility {
   }
 
   static bool validateCredentials(
-      GlobalKey<ScaffoldState> _scaffoldKey, String? email, String? password) {
+      BuildContext context, String? email, String? password) {
     if (email == null || email.isEmpty) {
-      customSnackBar(_scaffoldKey, 'Please enter email id');
+      customSnackBar(context, 'Please enter email id');
       return false;
     } else if (password == null || password.isEmpty) {
-      customSnackBar(_scaffoldKey, 'Please enter password');
+      customSnackBar(context, 'Please enter password');
       return false;
     } else if (password.length < 8) {
-      customSnackBar(_scaffoldKey, 'Password must me 8 character long');
+      customSnackBar(context, 'Password must me 8 character long');
       return false;
     }
 
     var status = validateEmail(email);
     if (!status) {
-      customSnackBar(_scaffoldKey, 'Please enter valid email id');
+      customSnackBar(context, 'Please enter valid email id');
       return false;
     }
     return true;
   }
 
-  static customSnackBar(GlobalKey<ScaffoldState>? _scaffoldKey, String msg,
+  static customSnackBar(BuildContext context, String msg,
       {double height = 30, Color backgroundColor = Colors.black}) {
-    if (_scaffoldKey == null || _scaffoldKey.currentState == null) {
-      return;
-    }
-    _scaffoldKey.currentState!.hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     final snackBar = SnackBar(
       backgroundColor: backgroundColor,
       content: Text(
@@ -233,7 +230,7 @@ class Utility {
         ),
       ),
     );
-    _scaffoldKey.currentState!.showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   static bool validateEmail(String email) {
@@ -281,13 +278,13 @@ class Utility {
   }
 
   static void copyToClipBoard({
-    required GlobalKey<ScaffoldState> scaffoldKey,
+    required BuildContext context,
     required String text,
     required String message,
   }) {
     var data = ClipboardData(text: text);
     Clipboard.setData(data);
-    customSnackBar(scaffoldKey, message);
+    customSnackBar(context, message);
   }
 
   static Locale getLocale(BuildContext context) {

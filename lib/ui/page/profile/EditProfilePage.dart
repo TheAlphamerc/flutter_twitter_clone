@@ -197,8 +197,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   void _submitButton() {
     if (_name.text.length > 27) {
-      Utility.customSnackBar(
-          _scaffoldKey, 'Name length cannot exceed 27 character');
+      Utility.customSnackBar(context, 'Name length cannot exceed 27 character');
       return;
     }
     var state = Provider.of<AuthState>(context, listen: false);

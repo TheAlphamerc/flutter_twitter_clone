@@ -28,7 +28,6 @@ class _SignupState extends State<Signup> {
   late TextEditingController _confirmController;
   late CustomLoader loader;
   final _formKey = GlobalKey<FormState>();
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
     loader = CustomLoader();
@@ -58,13 +57,12 @@ class _SignupState extends State<Signup> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            _entryFeild('Name', controller: _nameController),
-            _entryFeild('Enter email',
+            _entryField('Name', controller: _nameController),
+            _entryField('Enter email',
                 controller: _emailController, isEmail: true),
-            // _entryFeild('Mobile no',controller: _mobileController),
-            _entryFeild('Enter password',
+            _entryField('Enter password',
                 controller: _passwordController, isPassword: true),
-            _entryFeild('Confirm password',
+            _entryField('Confirm password',
                 controller: _confirmController, isPassword: true),
             _submitButton(context),
 
@@ -82,7 +80,7 @@ class _SignupState extends State<Signup> {
     );
   }
 
-  Widget _entryFeild(String hint,
+  Widget _entryField(String hint,
       {required TextEditingController controller,
       bool isPassword = false,
       bool isEmail = false}) {
@@ -121,28 +119,27 @@ class _SignupState extends State<Signup> {
       margin: const EdgeInsets.symmetric(vertical: 35),
       child: CustomFlatButton(
         label: "Sign up",
-        onPressed: _submitForm,
+        onPressed: () => _submitForm(context),
         borderRadius: 30,
       ),
     );
   }
 
-  void _submitForm() {
+  void _submitForm(BuildContext context) {
     if (_emailController.text.isEmpty) {
-      Utility.customSnackBar(_scaffoldKey, 'Please enter name');
+      Utility.customSnackBar(context, 'Please enter name');
       return;
     }
     if (_emailController.text.length > 27) {
-      Utility.customSnackBar(
-          _scaffoldKey, 'Name length cannot exceed 27 character');
+      Utility.customSnackBar(context, 'Name length cannot exceed 27 character');
       return;
     }
     if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
-      Utility.customSnackBar(_scaffoldKey, 'Please fill form carefully');
+      Utility.customSnackBar(context, 'Please fill form carefully');
       return;
     } else if (_passwordController.text != _confirmController.text) {
       Utility.customSnackBar(
-          _scaffoldKey, 'Password and confirm password did not match');
+          context, 'Password and confirm password did not match');
       return;
     }
 
@@ -166,7 +163,7 @@ class _SignupState extends State<Signup> {
         .signUp(
       user,
       password: _passwordController.text,
-      scaffoldKey: _scaffoldKey,
+      context: context,
     )
         .then((status) {
       print(status);
@@ -184,7 +181,6 @@ class _SignupState extends State<Signup> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
       appBar: AppBar(
         title: customText(
           'Sign Up',

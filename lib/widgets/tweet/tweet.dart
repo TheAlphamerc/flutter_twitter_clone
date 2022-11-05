@@ -36,21 +36,21 @@ class Tweet extends StatelessWidget {
   void onLongPressedTweet(BuildContext context) {
     if (type == TweetType.Detail || type == TweetType.ParentTweet) {
       Utility.copyToClipBoard(
-          scaffoldKey: scaffoldKey,
+          context: context,
           text: model.description ?? "",
           message: "Tweet copy to clipboard");
     }
   }
 
   void onTapTweet(BuildContext context) {
-    var feedstate = Provider.of<FeedState>(context, listen: false);
+    var feedState = Provider.of<FeedState>(context, listen: false);
     if (type == TweetType.Detail || type == TweetType.ParentTweet) {
       return;
     }
     if (type == TweetType.Tweet && !isDisplayOnProfile) {
-      feedstate.clearAllDetailAndReplyTweetStack();
+      feedState.clearAllDetailAndReplyTweetStack();
     }
-    feedstate.getPostDetailFromDatabase(null, model: model);
+    feedState.getPostDetailFromDatabase(null, model: model);
     Navigator.push(context, FeedPostDetail.getRoute(model.key!));
   }
 
@@ -298,11 +298,11 @@ class _TweetDetailBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double descriptionFontSize = type == TweetType.Tweet
-        ? context.getDimention(context, 15)
+        ? context.getDimension(context, 15)
         : type == TweetType.Detail
-            ? context.getDimention(context, 18)
+            ? context.getDimension(context, 18)
             : type == TweetType.ParentTweet
-                ? context.getDimention(context, 14)
+                ? context.getDimension(context, 14)
                 : 10;
 
     FontWeight descriptionFontWeight =

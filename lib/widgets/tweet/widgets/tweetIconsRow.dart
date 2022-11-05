@@ -59,7 +59,7 @@ class TweetIconsRow extends StatelessWidget {
               icon: AppIcon.retweet,
               iconColor: iconColor,
               size: size ?? 20, onPressed: () {
-            TweetBottomSheet().openRetweetbottomSheet(context,
+            TweetBottomSheet().openRetweetBottomSheet(context,
                 type: type, model: model, scaffoldKey: scaffoldKey);
           }),
           _iconWidget(

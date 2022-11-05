@@ -20,7 +20,6 @@ class ForgetPasswordPage extends StatefulWidget {
 class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
   late FocusNode _focusNode;
   late TextEditingController _emailController;
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
     _focusNode = FocusNode();
@@ -48,14 +47,14 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
             const SizedBox(
               height: 50,
             ),
-            _entryFeild('Enter email', controller: _emailController),
+            _entryField('Enter email', controller: _emailController),
             // SizedBox(height: 10,),
             _submitButton(context),
           ],
         ));
   }
 
-  Widget _entryFeild(String hint,
+  Widget _entryField(String hint,
       {required TextEditingController controller, bool isPassword = false}) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 15),
@@ -116,26 +115,25 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
 
   void _submit() {
     if (_emailController.text.isEmpty) {
-      Utility.customSnackBar(_scaffoldKey, 'Email field cannot be empty');
+      Utility.customSnackBar(context, 'Email field cannot be empty');
       return;
     }
     var isValidEmail = Utility.validateEmail(
       _emailController.text,
     );
     if (!isValidEmail) {
-      Utility.customSnackBar(_scaffoldKey, 'Please enter valid email address');
+      Utility.customSnackBar(context, 'Please enter valid email address');
       return;
     }
 
     _focusNode.unfocus();
     var state = Provider.of<AuthState>(context, listen: false);
-    state.forgetPassword(_emailController.text, scaffoldKey: _scaffoldKey);
+    state.forgetPassword(_emailController.text, context: context);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
       appBar: AppBar(
         title: customText('Forget Password',
             context: context, style: const TextStyle(fontSize: 20)),

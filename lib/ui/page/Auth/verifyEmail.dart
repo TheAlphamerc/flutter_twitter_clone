@@ -74,7 +74,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
 
   void _submit() {
     var state = Provider.of<AuthState>(context, listen: false);
-    state.sendEmailVerification(_scaffoldKey);
+    state.sendEmailVerification(context);
   }
 
   @override
