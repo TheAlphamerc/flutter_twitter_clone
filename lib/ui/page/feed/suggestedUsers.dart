@@ -96,9 +96,9 @@ class _SuggestedUsersState extends State<SuggestedUsers> {
           child: searchState.isBusy
               ? SizedBox(
                   height: context.height,
-                  child: CustomScreenLoader(
+                  child: const CustomScreenLoader(
                     height: double.infinity,
-                    width: context.width,
+                    width: double.infinity,
                     backgroundColor: Colors.white,
                   ),
                 )

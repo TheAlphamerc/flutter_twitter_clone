@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -17,16 +16,15 @@ class CustomLoader {
     }
   }
 
-  //static OverlayEntry _overlayEntry;
-  OverlayState? _overlayState; //= new OverlayState();
+  OverlayState? _overlayState;
   OverlayEntry? _overlayEntry;
 
   _buildLoader() {
     _overlayEntry = OverlayEntry(
       builder: (context) {
         return SizedBox(
-            height: context.height,
-            width: context.width,
+            height: double.infinity,
+            width: double.infinity,
             child: buildLoader(context));
       },
     );

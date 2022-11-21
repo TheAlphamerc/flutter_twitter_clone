@@ -169,7 +169,6 @@ class ChatState extends AppState {
   /// Send message to other user
   void onMessageSubmitted(
     ChatMessage message,
-    /*{UserModel myUser, UserModel secondUser}*/
   ) {
     print(chatUser!.userId);
     try {
@@ -206,7 +205,6 @@ class ChatState extends AppState {
     List<String> list = [user1, user2];
     list.sort();
     _channelName = '${list[0]}-${list[1]}';
-    // cprint(_channelName); //2RhfE-5kyFB
     return _channelName!;
   }
 

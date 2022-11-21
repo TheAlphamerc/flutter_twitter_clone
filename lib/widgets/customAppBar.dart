@@ -9,9 +9,7 @@ import 'customWidgets.dart';
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar(
       {Key? key,
-      // this.leading,
       this.title,
-      // this.actions,
       this.scaffoldKey,
       this.icon,
       this.onActionPressed,
@@ -24,14 +22,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.onSearchChanged})
       : super(key: key);
 
-  // final List<Widget>? actions;
   final Size appBarHeight = const Size.fromHeight(56.0);
   final IconData? icon;
   final bool isBackButton;
   final bool isBottomLine;
   final bool isCrossButton;
   final bool isSubmitDisable;
-  // final Widget leading;
   final Function? onActionPressed;
   final GlobalKey<ScaffoldState>? scaffoldKey;
   final String? submitButtonText;

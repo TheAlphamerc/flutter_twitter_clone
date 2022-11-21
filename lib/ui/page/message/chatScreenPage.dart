@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/chatModel.dart';
-import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/chats/chatState.dart';
 import 'package:flutter_twitter_clone/ui/page/profile/widgets/circular_image.dart';
@@ -12,10 +11,7 @@ import 'package:provider/provider.dart';
 class ChatScreenPage extends StatefulWidget {
   const ChatScreenPage({
     Key? key,
-    /*this.userProfileId*/
   }) : super(key: key);
-
-  // final String userProfileId;
 
   @override
   _ChatScreenPageState createState() => _ChatScreenPageState();
@@ -132,30 +128,6 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                         ),
                       ),
                     ),
-                    // Positioned(
-                    //   top: 0,
-                    //   bottom: 0,
-                    //   right: 0,
-                    //   left: 0,
-                    //   child: InkWell(
-                    //     borderRadius: getBorder(myMessage),
-                    //     onLongPress: () {
-                    //       var text = ClipboardData(text: chat.message);
-                    //       Clipboard.setData(text);
-                    //       _scaffoldKey.currentState.hideCurrentSnackBar();
-                    //       _scaffoldKey.currentState.showSnackBar(
-                    //         SnackBar(
-                    //           backgroundColor: TwitterColor.white,
-                    //           content: Text(
-                    //             'Message copied',
-                    //             style: TextStyle(color: Colors.black),
-                    //           ),
-                    //         ),
-                    //       );
-                    //     },
-                    //     child: SizedBox(),
-                    //   ),
-                    // ),
                   ],
                 ),
               ),
@@ -206,7 +178,6 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
               hintText: 'Start with a message...',
               suffixIcon: IconButton(
                   icon: const Icon(Icons.send), onPressed: submitMessage),
-              // fillColor: Colors.black12, filled: true
             ),
           ),
         ],
@@ -215,14 +186,12 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
   }
 
   Future<bool> _onWillPop() async {
-    // final chatState = Provider.of<ChatState>(context,listen: false);
     state.setIsChatScreenOpen = false;
     state.onChatScreenClosed();
     return true;
   }
 
   void submitMessage() {
-    // var state = Provider.of<ChatState>(context, listen: false);
     var authState = Provider.of<AuthState>(context, listen: false);
     ChatMessage message;
     message = ChatMessage(
@@ -236,17 +205,6 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
     if (messageController.text.isEmpty) {
       return;
     }
-    UserModel myUser = UserModel(
-        displayName: authState.userModel!.displayName,
-        userId: authState.userModel!.userId,
-        userName: authState.userModel!.userName,
-        profilePic: authState.userModel!.profilePic);
-    UserModel secondUser = UserModel(
-      displayName: state.chatUser!.displayName,
-      userId: state.chatUser!.userId,
-      userName: state.chatUser!.userName,
-      profilePic: state.chatUser!.profilePic,
-    );
     state.onMessageSubmitted(
       message, /*myUser: myUser, secondUser: secondUser*/
     );
@@ -254,7 +212,6 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
       messageController.clear();
     });
     try {
-      // final state = Provider.of<ChatState>(context,listen: false);
       if (state.messageList != null &&
           state.messageList!.length > 1 &&
           _controller.offset > 0) {

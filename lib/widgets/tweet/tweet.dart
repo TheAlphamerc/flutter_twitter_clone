@@ -99,7 +99,6 @@ class Tweet extends StatelessWidget {
                         type: type,
                       )
                     : _TweetDetailBody(
-                        // isDisplayOnProfile: isDisplayOnProfile,
                         model: model,
                         trailing: trailing,
                         type: type,
@@ -262,13 +261,6 @@ class _TweetBody extends StatelessWidget {
                           style: textStyle,
                           urlStyle: urlStyle,
                         ),
-                        // TweetTranslation(
-                        //   languageCode: model.lanCode,
-                        //   tweetKey: model.key!,
-                        //   description: model.description!,
-                        //   textStyle: textStyle,
-                        //   urlStyle: urlStyle,
-                        // ),
                       ],
                     ),
               if (model.imagePath == null && model.description != null)
@@ -286,7 +278,6 @@ class _TweetDetailBody extends StatelessWidget {
   final FeedModel model;
   final Widget? trailing;
   final TweetType type;
-  // final bool isDisplayOnProfile;
   const _TweetDetailBody({
     Key? key,
     required this.model,
@@ -325,13 +316,12 @@ class _TweetDetailBody extends StatelessWidget {
                 type != TweetType.ParentTweet
             ? ParentTweetWidget(
                 childRetwetkey: model.parentkey!,
-                // isImageAvailable: false,
                 trailing: trailing,
                 type: type,
               )
             : const SizedBox.shrink(),
         SizedBox(
-          width: context.width,
+          width: double.infinity,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -390,13 +380,6 @@ class _TweetDetailBody extends StatelessWidget {
                               },
                               style: textStyle,
                               urlStyle: urlStyle),
-                          // TweetTranslation(
-                          //   languageCode: model.lanCode,
-                          //   tweetKey: model.key!,
-                          //   description: model.description!,
-                          //   textStyle: textStyle,
-                          //   urlStyle: urlStyle,
-                          // ),
                         ],
                       ),
                     ),

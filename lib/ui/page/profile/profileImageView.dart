@@ -23,7 +23,6 @@ class ProfileImageView extends StatelessWidget {
           isEnable: true),
       Choice(title: 'Save', icon: Icons.save),
     ];
-    // var authState = Provider.of<AuthState>(context, listen: false);
     return Scaffold(
       backgroundColor: TwitterColor.white,
       appBar: AppBar(
@@ -60,8 +59,7 @@ class ProfileImageView extends StatelessWidget {
         child: InteractiveViewer(
           child: Container(
             alignment: Alignment.center,
-            width: context.width,
-            // height: context.width,
+            width: double.infinity,
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: customAdvanceNetworkImage(avatar),

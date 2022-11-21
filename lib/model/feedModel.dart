@@ -58,8 +58,6 @@ class FeedModel {
     key = map['key'];
     description = map['description'];
     userId = map['userId'];
-    //  name = map['name'];
-    //  profilePic = map['profilePic'];
     likeCount = map['likeCount'] ?? 0;
     commentCount = map['commentCount'];
     retweetCount = map["retweetCount"] ?? 0;
@@ -67,7 +65,6 @@ class FeedModel {
     createdAt = map['createdAt'];
     imagePath = map['imagePath'];
     lanCode = map['lanCode'];
-    //  username = map['username'];
     user = UserModel.fromJson(map['user']);
     parentkey = map['parentkey'];
     childRetwetkey = map['childRetwetkey'];

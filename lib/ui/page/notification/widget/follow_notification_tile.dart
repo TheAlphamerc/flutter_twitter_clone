@@ -102,7 +102,6 @@ class _UserCard extends StatelessWidget {
                 ),
               ),
               if (getBio(user.bio!).isNotEmpty) ...[
-                // SizedBox(height: 4),
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 10),

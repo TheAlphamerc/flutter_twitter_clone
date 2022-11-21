@@ -24,7 +24,6 @@ class CustomLinkMediaInfo extends StatelessWidget {
     Iterable<Match> _matches = reg.allMatches(text!);
     if (_matches.isNotEmpty) {
       return _matches.first.group(0);
-      // return "https://vimeo.com/498010744";
     }
     return null;
   }

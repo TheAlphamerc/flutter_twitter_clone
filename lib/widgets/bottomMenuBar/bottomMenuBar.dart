@@ -1,4 +1,3 @@
-// import 'package:fancy_bottom_navigation/internal/tab_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/state/appState.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
@@ -6,14 +5,11 @@ import 'package:flutter_twitter_clone/widgets/bottomMenuBar/tabItem.dart';
 import 'package:provider/provider.dart';
 
 import '../customWidgets.dart';
-// import 'customBottomNavigationBar.dart';
 
 class BottomMenubar extends StatefulWidget {
   const BottomMenubar({
     Key? key,
-    /*this.pageController*/
   });
-  // final PageController pageController;
   @override
   _BottomMenubarState createState() => _BottomMenubarState();
 }

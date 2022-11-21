@@ -60,7 +60,6 @@ class _ScanState extends State<ScanScreen> with SingleTickerProviderStateMixin {
 
   _capturePng() async {
     try {
-      // isLoading.value = true;
       RenderRepaintBoundary boundary = globalKey.currentContext!
           .findRenderObject() as RenderRepaintBoundary; //FIXME
       ui.Image image = await boundary.toImage(pixelRatio: 3.0);
@@ -70,7 +69,6 @@ class _ScanState extends State<ScanScreen> with SingleTickerProviderStateMixin {
       await writeToFile(byteData!, path);
 
       Utility.shareFile([path], text: "");
-      // isLoading.value = false;
     } catch (e) {
       print(e);
     }
@@ -99,10 +97,6 @@ class _ScanState extends State<ScanScreen> with SingleTickerProviderStateMixin {
               itemCount: 2,
               itemBuilder: (BuildContext context, int index) {
                 if (index == 0) {
-                  // return QrCode(
-                  //   user: widget.user,
-                  //   globalKey: globalKey,
-                  // );
                   return QRView(
                     key: qrKey,
                     onQRViewCreated: _onQRViewCreated,
@@ -221,7 +215,6 @@ class _QrCodeState extends State<QrCode> {
       const Color(0xffF14CD7),
       const Color(0xffFF5757),
       const Color(0xff28B446),
-      // Color(0xffffffff)
     ];
 
     Random ran = Random.secure();
@@ -259,7 +252,6 @@ class _QrCodeState extends State<QrCode> {
                     embeddedImageStyle:
                         QrEmbeddedImageStyle(size: const Size(60, 60)),
                     version: QrVersions.auto,
-                    // foregroundColor: Theme.of(context).colorScheme.onPrimary,
                     backgroundColor: color,
                     size: MediaQuery.of(context).size.width * .7,
                   ),

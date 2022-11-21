@@ -52,7 +52,7 @@ class TweetBottomSheet {
                 (type == TweetType.Tweet
                     ? (isMyTweet ? .25 : .44)
                     : (isMyTweet ? .38 : .52)),
-            width: context.width,
+            width: double.infinity,
             decoration: BoxDecoration(
               color: Theme.of(context).bottomSheetTheme.backgroundColor,
               borderRadius: const BorderRadius.only(
@@ -123,16 +123,13 @@ class TweetBottomSheet {
                       title: const Text("Delete"),
                       content: const Text('Do you want to delete this Tweet?'),
                       actions: [
-                        // ignore: deprecated_member_use
                         TextButton(
-                          // textColor: Colors.black,
                           onPressed: () {
                             Navigator.pop(context);
                             Navigator.pop(context);
                           },
                           child: const Text('Cancel'),
                         ),
-                        // ignore: deprecated_member_use
                         TextButton(
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(
@@ -254,16 +251,13 @@ class TweetBottomSheet {
                       title: const Text("Delete"),
                       content: const Text('Do you want to delete this Tweet?'),
                       actions: [
-                        // ignore: deprecated_member_use
                         TextButton(
-                          // textColor: Colors.black,
                           onPressed: () {
                             Navigator.pop(context);
                             Navigator.pop(context);
                           },
                           child: const Text('Cancel'),
                         ),
-                        // ignore: deprecated_member_use
                         TextButton(
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(

@@ -10,7 +10,6 @@ class ComposeTweetImage extends StatelessWidget {
       : super(key: key);
   @override
   Widget build(BuildContext context) {
-    if (image != null) assert(onCrossIconPressed != null);
     return Container(
       child: image == null
           ? Container()

@@ -12,14 +12,12 @@ class ParentTweetWidget extends StatelessWidget {
       {Key? key,
       required this.childRetwetkey,
       required this.type,
-      // this.isImageAvailable,
       this.trailing})
       : super(key: key);
 
   final String childRetwetkey;
   final TweetType type;
   final Widget? trailing;
-  // final bool isImageAvailable;
 
   void onTweetPressed(BuildContext context, FeedModel model) {
     var feedstate = Provider.of<FeedState>(context, listen: false);

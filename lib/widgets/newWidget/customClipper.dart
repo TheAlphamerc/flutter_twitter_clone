@@ -14,8 +14,7 @@ class _WavyHeaderState extends State<WavyHeaderImage> {
   @override
   Widget build(BuildContext context) {
     return ClipPath(
-      child: widget
-          .child, // Container(height:context.height,width: context.width,color:Colors.grey.shade100,),
+      child: widget.child,
       clipper: BottomWaveClipper(),
     );
   }
@@ -44,15 +43,12 @@ class BottomWaveClipper extends CustomClipper<Path> {
     path.quadraticBezierTo(thirdControlPoint.dx, thirdControlPoint.dy,
         thirdEndPoint.dx, thirdEndPoint.dy);
 
-    // path.lineTo(size.width, 0);
-
     var fourthControlPoint = Offset(size.width, size.height / 4);
     var fourthEndPoint = Offset(size.width - 40, 0);
     path.quadraticBezierTo(fourthControlPoint.dx, fourthControlPoint.dy,
         fourthEndPoint.dx, fourthEndPoint.dy);
 
     path.lineTo(size.width, 0);
-    // path.lineTo(size.width, 0.0);
     path.close();
 
     return path;

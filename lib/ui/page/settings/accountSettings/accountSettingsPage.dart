@@ -25,7 +25,6 @@ class AccountSettingsPage extends StatelessWidget {
           SettingRowWidget(
             "Username",
             subtitle: user.userName,
-            // navigateTo: 'AccountSettingsPage',
           ),
           const Divider(height: 0),
           SettingRowWidget(

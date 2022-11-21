@@ -12,7 +12,6 @@ class UsersListPage extends StatelessWidget {
   const UsersListPage({
     Key? key,
     this.pageTitle = "",
-    // this.appBarIcon,
     required this.emptyScreenText,
     required this.emptyScreenSubTileText,
     this.userIdsList,
@@ -35,7 +34,7 @@ class UsersListPage extends StatelessWidget {
       appBar: CustomAppBar(
         isBackButton: true,
         title: customTitleText(
-          pageTitle, /*icon: appBarIcon*/
+          pageTitle,
         ),
       ),
       body: Consumer<SearchState>(
@@ -52,7 +51,7 @@ class UsersListPage extends StatelessWidget {
                   isFollowing: isFollowing,
                 )
               : Container(
-                  width: context.width,
+                  width: double.infinity,
                   padding: const EdgeInsets.only(top: 0, left: 30, right: 30),
                   child: NotifyText(
                     title: emptyScreenText,

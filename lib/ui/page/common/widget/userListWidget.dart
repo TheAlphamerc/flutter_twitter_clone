@@ -49,7 +49,6 @@ class UserListWidget extends StatelessWidget {
       },
       itemCount: list.length,
     );
-    // : LinearProgressIndicator();
   }
 }
 

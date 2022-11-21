@@ -5,7 +5,6 @@ import 'package:flutter_twitter_clone/model/feedModel.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/state/feedState.dart';
-import 'package:flutter_twitter_clone/ui/theme/theme.dart';
 import 'package:flutter_twitter_clone/widgets/cache_image.dart';
 import 'package:flutter_twitter_clone/widgets/tweet/widgets/tweetIconsRow.dart';
 import 'package:provider/provider.dart';
@@ -37,8 +36,8 @@ class _ImageViewPgeState extends State<ImageViewPge> {
         SingleChildScrollView(
           child: Container(
             color: Colors.brown.shade700,
-            constraints: BoxConstraints(
-              maxHeight: context.height,
+            constraints: const BoxConstraints(
+              maxHeight: double.infinity,
             ),
             child: InkWell(
               onTap: () {

@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
   int pageIndex = 0;
-  // ignore: cancel_subscriptions
+  // ignore: cancel_subscription
   late StreamSubscription<PushNotificationModel> pushNotificationSubscription;
   @override
   void initState() {
@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
-    // getIt<PushNotificationService>().pushBehaviorSubject.close();
+    pushNotificationSubscription.cancel();
     super.dispose();
   }
 
