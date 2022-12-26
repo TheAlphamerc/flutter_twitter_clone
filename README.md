@@ -259,4 +259,4 @@ and send a [pull request](https://github.com/TheAlphamerc/flutter_twitter_clone/
 * [Suriyan](https://github.com/imsuriyan)
 ## Visitors Count
 
-<img align="left" src = "https://profile-counter.glitch.me/flutter_twitter_clone/count.svg" alt ="Loading">
+<img align="right" src = "https://profile-counter.glitch.me/flutter_twitter_clone/count.svg" alt ="Loading">
