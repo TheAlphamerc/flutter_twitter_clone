@@ -104,7 +104,7 @@ class _HomePageState extends State<HomePage> {
     /// Redirect to chat screen
     /// `model.data.senderId` is a user id who sends you a message
     /// `model.data.receiverId` is a your user id.
-    if (model.type == NotificationType.Message.toString() &&
+    if (model.type == NotificationType.MESSAGE.toString() &&
         model.receiverId == authState.user!.uid) {
       /// Get sender profile detail from firebase
       state.getUserDetail(model.senderId).then((user) {
@@ -120,7 +120,7 @@ class _HomePageState extends State<HomePage> {
     /// If you are mentioned in tweet then it redirect to user profile who mentioned you in a tweet
     /// You can check that tweet on his profile timeline
     /// `model.data.senderId` is user id who tagged you in a tweet
-    else if (model.type == NotificationType.Mention.toString() &&
+    else if (model.type == NotificationType.MENTION.toString() &&
         model.receiverId == authState.user!.uid) {
       var feedState = Provider.of<FeedState>(context, listen: false);
       feedState.getPostDetailFromDatabase(model.tweetId);

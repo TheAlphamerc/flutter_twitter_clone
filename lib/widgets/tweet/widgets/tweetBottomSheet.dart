@@ -49,7 +49,7 @@ class TweetBottomSheet {
         return Container(
             padding: const EdgeInsets.only(top: 5, bottom: 0),
             height: context.height *
-                (type == TweetType.Tweet
+                (type == TweetType.TWEET
                     ? (isMyTweet ? .25 : .44)
                     : (isMyTweet ? .38 : .52)),
             width: context.width,
@@ -60,7 +60,7 @@ class TweetBottomSheet {
                 topRight: Radius.circular(20),
               ),
             ),
-            child: type == TweetType.Tweet
+            child: type == TweetType.TWEET
                 ? _tweetOptions(context,
                     scaffoldKey: scaffoldKey,
                     isMyTweet: isMyTweet,
@@ -380,7 +380,7 @@ class TweetBottomSheet {
     state.deleteTweet(tweetId, type, parentkey: parentkey);
     // CLose bottom sheet
     Navigator.of(context).pop();
-    if (type == TweetType.Detail) {
+    if (type == TweetType.DETAIL) {
       // Close Tweet detail page
       Navigator.of(context).pop();
       // Remove last tweet from tweet detail stack page

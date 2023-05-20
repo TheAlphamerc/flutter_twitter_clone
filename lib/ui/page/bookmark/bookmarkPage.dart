@@ -46,7 +46,7 @@ class BookmarkPageBody extends StatelessWidget {
       color: Colors.white,
       child: Tweet(
         model: model,
-        type: TweetType.Tweet,
+        type: TweetType.TWEET,
         scaffoldKey: GlobalKey<ScaffoldState>(),
       ),
     );

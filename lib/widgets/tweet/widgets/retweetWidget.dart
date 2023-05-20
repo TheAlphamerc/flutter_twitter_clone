@@ -112,7 +112,7 @@ class RetweetWidget extends StatelessWidget {
         if (snapshot.hasData) {
           return Container(
             margin: EdgeInsets.only(
-                left: type == TweetType.Tweet || type == TweetType.ParentTweet
+                left: type == TweetType.TWEET || type == TweetType.PARENT_TWEET
                     ? 70
                     : 12,
                 right: 16,
