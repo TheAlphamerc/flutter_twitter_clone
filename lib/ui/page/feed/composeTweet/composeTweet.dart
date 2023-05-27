@@ -215,7 +215,7 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
                 Provider.of<FeedState>(context).isBusy,
         isBottomLine: Provider.of<ComposeTweetState>(context).isScrollingDown,
       ),
-      backgroundColor: Theme.of(context).backgroundColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
         //!Removed container
         children: <Widget>[

@@ -138,7 +138,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
           padding: const EdgeInsets.only(right: 10, left: 10),
           child: Text(
             Utility.getChatTime(chat.createdAt),
-            style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 12),
+            style: Theme.of(context).textTheme.bodySmall,
           ),
         )
       ],

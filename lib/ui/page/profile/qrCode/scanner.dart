@@ -247,7 +247,7 @@ class _QrCodeState extends State<QrCode> {
                       ),
                       borderRadius: BorderRadius.circular(10)),
                   padding: const EdgeInsets.all(22),
-                  child: QrImage(
+                  child: QrImageView(
                     data: "fwitter/profile/${widget.user.userId}",
                     embeddedImageStyle:
                         QrEmbeddedImageStyle(size: const Size(60, 60)),

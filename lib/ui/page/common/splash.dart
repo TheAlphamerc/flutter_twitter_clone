@@ -12,7 +12,7 @@ import 'package:flutter_twitter_clone/ui/page/Auth/selectAuthMethod.dart';
 import 'package:flutter_twitter_clone/ui/page/common/updateApp.dart';
 import 'package:flutter_twitter_clone/ui/page/homePage.dart';
 import 'package:flutter_twitter_clone/ui/theme/theme.dart';
-import 'package:package_info/package_info.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 
 class SplashPage extends StatefulWidget {

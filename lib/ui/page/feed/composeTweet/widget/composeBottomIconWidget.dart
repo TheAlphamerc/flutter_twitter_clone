@@ -40,7 +40,7 @@ class _ComposeBottomIconWidgetState extends State<ComposeBottomIconWidget> {
             widget.textEditingController.text.length < 280) {
           wordCountColor = Colors.orange;
         } else if (widget.textEditingController.text.length >= 280) {
-          wordCountColor = Theme.of(context).errorColor;
+          wordCountColor = Theme.of(context).colorScheme.error;
         } else {
           wordCountColor = Colors.blue;
         }
@@ -53,9 +53,9 @@ class _ComposeBottomIconWidgetState extends State<ComposeBottomIconWidget> {
       width: double.infinity,
       height: 50,
       decoration: BoxDecoration(
-          border:
-              Border(top: BorderSide(color: Theme.of(context).dividerColor)),
-          color: Theme.of(context).backgroundColor),
+        border: Border(top: BorderSide(color: Theme.of(context).dividerColor)),
+        color: Theme.of(context).scaffoldBackgroundColor,
+      ),
       child: Row(
         children: <Widget>[
           IconButton(
@@ -83,9 +83,11 @@ class _ComposeBottomIconWidgetState extends State<ComposeBottomIconWidget> {
                 child: /*tweet != null &&*/ tweet.length > 289
                     ? Padding(
                         padding: const EdgeInsets.only(right: 10),
-                        child: customText('${280 - tweet.length}',
-                            style:
-                                TextStyle(color: Theme.of(context).errorColor)),
+                        child: customText(
+                          '${280 - tweet.length}',
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.error),
+                        ),
                       )
                     : Stack(
                         alignment: Alignment.center,

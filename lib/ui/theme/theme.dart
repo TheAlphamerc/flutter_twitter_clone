@@ -5,52 +5,54 @@ part 'text_styles.dart';
 part 'extention.dart';
 
 class AppTheme {
-  static final ThemeData appTheme = ThemeData(
+  static final ThemeData appTheme = ThemeData.light().copyWith(
+    scaffoldBackgroundColor: TwitterColor.white,
+    brightness: Brightness.light,
+    primaryColor: AppColor.primary,
+    cardColor: Colors.white,
+    unselectedWidgetColor: Colors.grey,
+    bottomSheetTheme: const BottomSheetThemeData(
+      backgroundColor: AppColor.white,
+    ),
+    appBarTheme: AppBarTheme(
       backgroundColor: TwitterColor.white,
-      brightness: Brightness.light,
-      primaryColor: AppColor.primary,
-      cardColor: Colors.white,
-      unselectedWidgetColor: Colors.grey,
-      bottomAppBarColor: Colors.white,
-      bottomSheetTheme:
-          const BottomSheetThemeData(backgroundColor: AppColor.white),
-      appBarTheme: AppBarTheme(
-          backgroundColor: TwitterColor.white,
-          iconTheme: IconThemeData(
-            color: TwitterColor.dodgeBlue,
-          ),
+      iconTheme: IconThemeData(
+        color: TwitterColor.dodgeBlue,
+      ),
+      elevation: 0,
+      // ignore: deprecated_member_use
+    ),
+    bottomAppBarTheme: ThemeData.light().bottomAppBarTheme.copyWith(
+          color: Colors.white,
           elevation: 0,
-          // ignore: deprecated_member_use
-          textTheme: const TextTheme(
-            headline5: TextStyle(
-                color: Colors.black, fontSize: 26, fontStyle: FontStyle.normal),
-          )),
-      tabBarTheme: TabBarTheme(
-        labelStyle:
-            TextStyles.titleStyle.copyWith(color: TwitterColor.dodgeBlue),
-        unselectedLabelColor: AppColor.darkGrey,
-        unselectedLabelStyle:
-            TextStyles.titleStyle.copyWith(color: AppColor.darkGrey),
-        labelColor: TwitterColor.dodgeBlue,
-        labelPadding: const EdgeInsets.symmetric(vertical: 12),
-      ),
-      floatingActionButtonTheme: FloatingActionButtonThemeData(
-        backgroundColor: TwitterColor.dodgeBlue,
-      ),
-      colorScheme: const ColorScheme(
-          background: Colors.white,
-          onPrimary: Colors.white,
-          onBackground: Colors.black,
-          onError: Colors.white,
-          onSecondary: Colors.white,
-          onSurface: Colors.black,
-          error: Colors.red,
-          primary: Colors.blue,
-          primaryContainer: Colors.blue,
-          secondary: AppColor.secondary,
-          secondaryContainer: AppColor.darkGrey,
-          surface: Colors.white,
-          brightness: Brightness.light));
+        ),
+    tabBarTheme: TabBarTheme(
+      labelStyle: TextStyles.titleStyle.copyWith(color: TwitterColor.dodgeBlue),
+      unselectedLabelColor: AppColor.darkGrey,
+      unselectedLabelStyle:
+          TextStyles.titleStyle.copyWith(color: AppColor.darkGrey),
+      labelColor: TwitterColor.dodgeBlue,
+      labelPadding: const EdgeInsets.symmetric(vertical: 12),
+    ),
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      backgroundColor: TwitterColor.dodgeBlue,
+    ),
+    colorScheme: const ColorScheme(
+      background: Colors.white,
+      onPrimary: Colors.white,
+      onBackground: Colors.black,
+      onError: Colors.white,
+      onSecondary: Colors.white,
+      onSurface: Colors.black,
+      error: Colors.red,
+      primary: Colors.blue,
+      primaryContainer: Colors.blue,
+      secondary: AppColor.secondary,
+      secondaryContainer: AppColor.darkGrey,
+      surface: Colors.white,
+      brightness: Brightness.light,
+    ),
+  );
 
   static List<BoxShadow> shadow = <BoxShadow>[
     BoxShadow(

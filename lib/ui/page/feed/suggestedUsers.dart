@@ -54,7 +54,7 @@ class _SuggestedUsersState extends State<SuggestedUsers> {
           ? null
           : BottomAppBar(
               child: Container(
-                color: Theme.of(context).backgroundColor,
+                color: Theme.of(context).scaffoldBackgroundColor,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

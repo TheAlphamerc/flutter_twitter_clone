@@ -10,7 +10,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../widgets/newWidget/customLoader.dart';
@@ -271,7 +271,8 @@ class Utility {
 
   static shareFile(List<String> path, {String text = ""}) {
     try {
-      Share.shareFiles(path, text: text);
+      final files = path.map((path) => XFile(path)).toList();
+      Share.shareXFiles(files, text: text);
     } catch (error) {
       print(error);
     }

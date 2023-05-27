@@ -46,7 +46,7 @@ class TweetImage extends StatelessWidget {
                         context.width * (type == TweetType.Detail ? .95 : .8) -
                             8,
                     decoration: BoxDecoration(
-                      color: Theme.of(context).backgroundColor,
+                      color: Theme.of(context).scaffoldBackgroundColor,
                     ),
                     child: AspectRatio(
                       aspectRatio: 4 / 3,

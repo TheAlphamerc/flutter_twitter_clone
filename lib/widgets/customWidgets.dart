@@ -44,7 +44,7 @@ Widget customText(
   TextAlign textAlign = TextAlign.justify,
   TextOverflow overflow = TextOverflow.visible,
   BuildContext? context,
-  bool softwrap = true,
+  bool softWrap = true,
   int? maxLines,
 }) {
   if (msg == null) {
@@ -55,7 +55,7 @@ Widget customText(
   } else {
     if (context != null && style != null) {
       var fontSize =
-          style.fontSize ?? Theme.of(context).textTheme.bodyText1!.fontSize;
+          style.fontSize ?? Theme.of(context).textTheme.bodyMedium!.fontSize;
       style = style.copyWith(
         fontSize: fontSize! - (context.width <= 375 ? 2 : 0),
       );
@@ -65,7 +65,7 @@ Widget customText(
       style: style,
       textAlign: textAlign,
       overflow: overflow,
-      softWrap: softwrap,
+      softWrap: softWrap,
       key: key,
       maxLines: maxLines,
     );
