@@ -257,6 +257,8 @@ and send a [pull request](https://github.com/TheAlphamerc/flutter_twitter_clone/
 * [Liel Beigel](https://github.com/lielb100)
 * [Riccardo Montagnin](https://github.com/RiccardoM)
 * [Suriyan](https://github.com/imsuriyan)
+* [Liel Beigel](https://github.com/lielb100)
+* [Rodriguezv](https://github.com/aa-rodriguezv)
 ## Visitors Count
 
 <img align="left" src = "https://profile-counter.glitch.me/flutter_twitter_clone/count.svg" alt ="Loading">
