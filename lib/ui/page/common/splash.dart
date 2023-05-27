@@ -109,8 +109,8 @@ class _SplashPageState extends State<SplashPage> {
   Widget _body() {
     var height = 150.0;
     return SizedBox(
-      height: context.height,
-      width: context.width,
+      height: double.infinity,
+      width: double.infinity,
       child: Container(
         height: height,
         width: height,

@@ -70,18 +70,20 @@ class LinkPreviewer extends StatelessWidget {
         ? info.image
         : LinkPreviewAnalyzer.isNotEmpty(info.icon)
             ? info.icon
-            : ""; //TODO Placeholder/error image
+            : 'assets/images/error_image.png';
     if (!LinkPreviewAnalyzer.isNotEmpty(info.title) &&
         LinkPreviewAnalyzer.isNotEmpty(info.image)) {
-      return CachedNetworkImage(
-        imageUrl: image,
-        fit: BoxFit.contain,
-      ).ripple(
-        () {
-          Utility.launchURL(uri);
-        },
-        borderRadius: BorderRadius.circular(10),
-      );
+      return image == 'assets/images/error_image.png'
+          ? Image.asset('assets/images/error_image.png')
+          : CachedNetworkImage(
+              imageUrl: image,
+              fit: BoxFit.contain,
+            ).ripple(
+              () {
+                Utility.launchURL(uri);
+              },
+              borderRadius: BorderRadius.circular(10),
+            );
     }
     if (!LinkPreviewAnalyzer.isNotEmpty(info.title)) return const SizedBox();
 

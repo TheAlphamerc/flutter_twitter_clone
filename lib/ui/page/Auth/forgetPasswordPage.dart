@@ -7,11 +7,8 @@ import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:provider/provider.dart';
 
 class ForgetPasswordPage extends StatefulWidget {
-  // final VoidCallback loginCallback;
-
   const ForgetPasswordPage({
     Key? key,
-    /*this.loginCallback*/
   }) : super(key: key);
   @override
   State<StatefulWidget> createState() => _ForgetPasswordPageState();

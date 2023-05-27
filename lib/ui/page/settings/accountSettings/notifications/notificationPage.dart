@@ -27,7 +27,6 @@ class NotificationPage extends StatelessWidget {
             showCheckBox: true,
             subtitle:
                 'Filter lower-quality from your notifications. This won\'t filter out notifications from people you follow or account you\'ve inteacted with recently.',
-            // navigateTo: 'AccountSettingsPage',
           ),
           Divider(height: 0),
           SettingRowWidget("Advanced filter"),

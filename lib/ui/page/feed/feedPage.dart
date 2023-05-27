@@ -87,7 +87,7 @@ class _FeedPageBody extends StatelessWidget {
                       height: context.height - 135,
                       child: CustomScreenLoader(
                         height: double.infinity,
-                        width: context.width,
+                        width: double.infinity,
                         backgroundColor: Colors.white,
                       ),
                     ),

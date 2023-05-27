@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.thealphamerc.flutter_twitter_clone">
+    package="com.thealphamerc.flutter_twitter_clone_dev">
     <!-- Flutter needs it to communicate with the running application
          to allow setting breakpoints, to provide hot reload, etc.
     -->

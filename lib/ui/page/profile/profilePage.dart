@@ -123,9 +123,6 @@ class _ProfilePageState extends State<ProfilePage>
                       color: Colors.white,
                     ),
                   ),
-                  // Container(height: 50, color: Colors.black),
-
-                  /// Banner image
                   Container(
                     height: 180,
                     padding: const EdgeInsets.only(top: 28),
@@ -135,8 +132,6 @@ class _ProfilePageState extends State<ProfilePage>
                       fit: BoxFit.fill,
                     ),
                   ),
-
-                  /// UserModel avatar, message icon, profile edit and follow/following button
                   Container(
                     alignment: Alignment.bottomLeft,
                     child: Row(
@@ -348,7 +343,6 @@ class _ProfilePageState extends State<ProfilePage>
         floatingActionButton: !isMyProfile ? null : _floatingActionButton(),
         backgroundColor: TwitterColor.mystic,
         body: NestedScrollView(
-          // controller: _scrollController,
           headerSliverBuilder: (BuildContext context, bool boxIsScrolled) {
             return <Widget>[
               getAppbar(),
@@ -433,9 +427,9 @@ class _ProfilePageState extends State<ProfilePage>
     return authState.isbusy
         ? SizedBox(
             height: context.height - 180,
-            child: CustomScreenLoader(
+            child: const CustomScreenLoader(
               height: double.infinity,
-              width: context.width,
+              width: double.infinity,
               backgroundColor: Colors.white,
             ),
           )

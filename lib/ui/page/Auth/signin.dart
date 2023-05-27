@@ -9,7 +9,7 @@ import 'package:flutter_twitter_clone/widgets/newWidget/customLoader.dart';
 import 'package:provider/provider.dart';
 
 class SignIn extends StatefulWidget {
-  final VoidCallback? loginCallback; //!
+  final VoidCallback? loginCallback;
 
   const SignIn({Key? key, this.loginCallback}) : super(key: key);
   @override

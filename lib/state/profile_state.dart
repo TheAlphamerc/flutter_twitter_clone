@@ -166,21 +166,17 @@ class ProfileState extends ChangeNotifier {
   /// Trigger when logged-in user's profile change or updated
   /// Firebase event callback for profile update
   void _onProfileChanged(DatabaseEvent event) {
-    // if (event.snapshot != null) {
-
     final updatedUser = UserModel.fromJson(event.snapshot.value as Map);
     if (updatedUser.userId == profileId) {
       _profileUserModel = updatedUser;
     }
     notifyListeners();
-    // }
   }
 
   @override
   void dispose() {
     _profileQuery!.onValue.drain();
     profileSubscription.cancel();
-    // _profileQuery.
     super.dispose();
   }
 }

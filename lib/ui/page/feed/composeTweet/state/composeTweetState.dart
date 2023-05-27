@@ -118,8 +118,6 @@ class ComposeTweetState extends ChangeNotifier {
         return Future.value(null);
       }
       final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
-      // await remoteConfig.fetch(expiration: const Duration(hours: 5));
-      // await remoteConfig.activateFetched();
       var data = remoteConfig.getString('FcmServerKey');
       serverToken = jsonDecode(data)["key"];
     } catch (error) {

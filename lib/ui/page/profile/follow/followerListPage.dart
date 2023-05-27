@@ -29,9 +29,9 @@ class FollowerListPage extends StatelessWidget {
     if (context.watch<FollowListState>().isbusy) {
       return SizedBox(
         height: context.height,
-        child: CustomScreenLoader(
+        child: const CustomScreenLoader(
           height: double.infinity,
-          width: context.width,
+          width: double.infinity,
           backgroundColor: Colors.white,
         ),
       );
@@ -39,7 +39,6 @@ class FollowerListPage extends StatelessWidget {
     return UsersListPage(
       pageTitle: 'Followers',
       userIdsList: userList,
-      // appBarIcon: AppIcon.follow,
       emptyScreenText: '${profile?.userName} doesn\'t have any followers',
       emptyScreenSubTileText:
           'When someone follow them, they\'ll be listed here.',

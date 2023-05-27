@@ -50,7 +50,7 @@ class _ComposeBottomIconWidgetState extends State<ComposeBottomIconWidget> {
 
   Widget _bottomIconWidget() {
     return Container(
-      width: context.width,
+      width: double.infinity,
       height: 50,
       decoration: BoxDecoration(
           border:
@@ -121,7 +121,7 @@ class _ComposeBottomIconWidgetState extends State<ComposeBottomIconWidget> {
   }
 
   double getTweetLimit() {
-    if (/*tweet == null || */ tweet.isEmpty) {
+    if (tweet.isEmpty) {
       return 0.0;
     }
     if (tweet.length > 280) {

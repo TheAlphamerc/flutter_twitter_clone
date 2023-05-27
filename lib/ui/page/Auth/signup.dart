@@ -65,10 +65,8 @@ class _SignupState extends State<Signup> {
             _entryField('Confirm password',
                 controller: _confirmController, isPassword: true),
             _submitButton(context),
-
             const Divider(height: 30),
             const SizedBox(height: 30),
-            // _googleLoginButton(context),
             GoogleLoginButton(
               loginCallback: widget.loginCallback,
               loader: loader,

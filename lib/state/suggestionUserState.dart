@@ -113,8 +113,6 @@ class SuggestionsState extends AppState {
             .child('followingList')
             .set(currentUser!.followingList);
 
-        // await getIt<SharedPreferenceHelper>().saveUserProfile(currentUser!);
-
         displaySuggestions = false;
       }
     } catch (error) {

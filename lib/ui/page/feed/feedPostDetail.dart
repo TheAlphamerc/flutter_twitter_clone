@@ -32,8 +32,6 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
   @override
   void initState() {
     postId = widget.postId;
-    // var state = Provider.of<FeedState>(context, listen: false);
-    // state.getpostDetailFromDatabase(postId);
     super.initState();
   }
 
@@ -125,7 +123,7 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
                       : _tweetDetail(state.tweetDetailModel!.last),
                   Container(
                     height: 6,
-                    width: context.width,
+                    width: double.infinity,
                     color: TwitterColor.mystic,
                   )
                 ],
@@ -138,9 +136,7 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
                         state.tweetReplyMap![postId] == null
                     ? [
                         //!Removed container
-                        const Center(
-                            //  child: Text('No comments'),
-                            )
+                        const Center()
                       ]
                     : state.tweetReplyMap![postId]!
                         .map((x) => _commentRow(x))

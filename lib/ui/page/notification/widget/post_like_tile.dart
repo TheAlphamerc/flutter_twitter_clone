@@ -16,7 +16,6 @@ class PostLikeTile extends StatelessWidget {
   final FeedModel model;
   const PostLikeTile({Key? key, required this.model}) : super(key: key);
   Widget _userList(BuildContext context, List<String>? list) {
-    // List<String> names = [];
     int length = list?.length ?? 0;
     List<Widget> avaterList = [];
     var state = Provider.of<NotificationState>(context);
@@ -25,9 +24,7 @@ class PostLikeTile extends StatelessWidget {
         list = list.take(5).toList();
       }
       avaterList = list.map((userId) {
-        return _userAvater(userId, state, (name) {
-          // names.add(name);
-        });
+        return _userAvater(userId, state, (name) {});
       }).toList();
     }
     if (length > 5) {
@@ -54,7 +51,6 @@ class PostLikeTile extends StatelessWidget {
             Row(children: avaterList),
           ],
         ),
-        // names.length > 0 ? Text(names[0]) : SizedBox(),
         Padding(
           padding: const EdgeInsets.only(left: 60, bottom: 5, top: 5),
           child: TitleText(
@@ -73,7 +69,6 @@ class PostLikeTile extends StatelessWidget {
       String userId, NotificationState state, ValueChanged<String> name) {
     return FutureBuilder(
       future: state.getUserDetail(userId),
-      //  initialData: InitialData,
       builder: (BuildContext context, AsyncSnapshot<UserModel?> snapshot) {
         if (snapshot.hasData) {
           name(snapshot.data!.displayName!);

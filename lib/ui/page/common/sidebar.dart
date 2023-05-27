@@ -35,7 +35,6 @@ class _SidebarMenuState extends State<SidebarMenu> {
         ),
       ).ripple(() {
         _logOut();
-        //  Navigator.of(context).pushNamed('/signIn');
       });
     } else {
       return Center(

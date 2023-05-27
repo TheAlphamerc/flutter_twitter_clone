@@ -154,7 +154,6 @@ class TweetBaseState extends AppState {
   /// upload [file] to firebase storage and return its  path url
   Future<String?> uploadFile(File file) async {
     try {
-      // isBusy = true;
       notifyListeners();
       var storageReference = FirebaseStorage.instance
           .ref()

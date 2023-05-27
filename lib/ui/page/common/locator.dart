@@ -5,6 +5,4 @@ final getIt = GetIt.instance;
 
 void setupDependencies() {
   getIt.registerSingleton<SharedPreferenceHelper>(SharedPreferenceHelper());
-  // getIt.registerSingleton<PushNotificationService>(
-  //     PushNotificationService(FirebaseMessaging()));
 }
