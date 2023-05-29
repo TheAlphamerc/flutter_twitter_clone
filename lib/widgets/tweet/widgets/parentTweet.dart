@@ -34,7 +34,7 @@ class ParentTweetWidget extends StatelessWidget {
         if (snapshot.hasData) {
           return Tweet(
             model: snapshot.data!,
-            type: TweetType.ParentTweet,
+            type: TweetType.PARENT_TWEET,
             trailing: trailing,
             scaffoldKey: GlobalKey<ScaffoldState>(),
           );

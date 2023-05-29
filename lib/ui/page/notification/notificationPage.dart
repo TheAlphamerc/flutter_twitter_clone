@@ -60,7 +60,7 @@ class NotificationPageBody extends StatelessWidget {
 
   Widget _notificationRow(BuildContext context, NotificationModel model) {
     var state = Provider.of<NotificationState>(context);
-    if (model.type == NotificationType.Follow.toString()) {
+    if (model.type == NotificationType.FOLLOW.toString()) {
       return FollowNotificationTile(
         model: model,
       );

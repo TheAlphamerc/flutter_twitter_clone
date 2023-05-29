@@ -345,7 +345,7 @@ class FeedState extends AppState {
     try {
       /// Delete tweet if it is in nested tweet detail page
       kDatabase.child('tweet').child(tweetId).remove().then((_) {
-        if (type == TweetType.Detail &&
+        if (type == TweetType.DETAIL &&
             _tweetDetailModelList != null &&
             _tweetDetailModelList!.isNotEmpty) {
           // var deletedTweet =
@@ -441,7 +441,7 @@ class FeedState extends AppState {
           .child(tweet.key!)
           .set({
         'type':
-            tweet.likeList!.isEmpty ? null : NotificationType.Like.toString(),
+            tweet.likeList!.isEmpty ? null : NotificationType.LIKE.toString(),
         'updatedAt':
             tweet.likeList!.isEmpty ? null : DateTime.now().toUtc().toString(),
       });

@@ -97,7 +97,7 @@ class FollowListState extends AppState {
         .child(profileId)
         .child(_currentUser!.userId!)
         .set({
-      'type': NotificationType.Follow.toString(),
+      'type': NotificationType.FOLLOW.toString(),
       'createdAt': DateTime.now().toUtc().toString(),
       'data': UserModel(
               displayName: _currentUser!.displayName,

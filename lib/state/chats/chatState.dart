@@ -305,7 +305,7 @@ class ChatState extends AppState {
         'click_action': 'FLUTTER_NOTIFICATION_CLICK',
         'id': '1',
         'status': 'done',
-        "type": NotificationType.Message.toString(),
+        "type": NotificationType.MESSAGE.toString(),
         "senderId": model.senderId,
         "receiverId": model.receiverId,
         "title": "title",

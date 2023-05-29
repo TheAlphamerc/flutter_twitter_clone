@@ -49,9 +49,9 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
   Widget _commentRow(FeedModel model) {
     return Tweet(
       model: model,
-      type: TweetType.Reply,
+      type: TweetType.REPLY,
       trailing: TweetBottomSheet().tweetOptionIcon(context,
-          scaffoldKey: scaffoldKey, model: model, type: TweetType.Reply),
+          scaffoldKey: scaffoldKey, model: model, type: TweetType.REPLY),
       scaffoldKey: scaffoldKey,
     );
   }
@@ -59,9 +59,9 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
   Widget _tweetDetail(FeedModel model) {
     return Tweet(
       model: model,
-      type: TweetType.Detail,
+      type: TweetType.DETAIL,
       trailing: TweetBottomSheet().tweetOptionIcon(context,
-          scaffoldKey: scaffoldKey, model: model, type: TweetType.Detail),
+          scaffoldKey: scaffoldKey, model: model, type: TweetType.DETAIL),
       scaffoldKey: scaffoldKey,
     );
   }
@@ -81,7 +81,7 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
     var state = Provider.of<FeedState>(context, listen: false);
     state.deleteTweet(tweetId, type, parentkey: parentkey);
     Navigator.of(context).pop();
-    if (type == TweetType.Detail) Navigator.of(context).pop();
+    if (type == TweetType.DETAIL) Navigator.of(context).pop();
   }
 
   @override

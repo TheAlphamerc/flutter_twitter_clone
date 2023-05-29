@@ -460,7 +460,7 @@ class _ProfilePageState extends State<ProfilePage>
                     trailing: TweetBottomSheet().tweetOptionIcon(
                       context,
                       model: list[index],
-                      type: TweetType.Tweet,
+                      type: TweetType.TWEET,
                       scaffoldKey: scaffoldKey,
                     ),
                     scaffoldKey: scaffoldKey,

@@ -3,28 +3,29 @@ enum AuthStatus {
   NOT_LOGGED_IN,
   LOGGED_IN,
 }
+
 enum TweetType {
-  Tweet,
-  Detail,
-  Reply,
-  ParentTweet,
+  TWEET,
+  DETAIL,
+  REPLY,
+  PARENT_TWEET,
 }
 
 enum SortUser {
-  Verified,
-  Alphabetically,
-  Newest,
-  Oldest,
-  MaxFollower,
+  VERIFIED,
+  ALPHABETICALLY,
+  NEWEST,
+  OLDEST,
+  MAX_FOLLOWER,
 }
 
 enum NotificationType {
   NOT_DETERMINED,
-  Message,
-  Tweet,
-  Reply,
-  Retweet,
-  Follow,
-  Mention,
-  Like
+  MESSAGE,
+  TWEET,
+  REPLY,
+  RETWEET,
+  FOLLOW,
+  MENTION,
+  LIKE
 }

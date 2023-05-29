@@ -29,7 +29,7 @@ class TweetImage extends StatelessWidget {
                   Radius.circular(isRetweetImage ? 0 : 20),
                 ),
                 onTap: () {
-                  if (type == TweetType.ParentTweet) {
+                  if (type == TweetType.PARENT_TWEET) {
                     return;
                   }
                   var state = Provider.of<FeedState>(context, listen: false);
@@ -43,7 +43,7 @@ class TweetImage extends StatelessWidget {
                   ),
                   child: Container(
                     width:
-                        context.width * (type == TweetType.Detail ? .95 : .8) -
+                        context.width * (type == TweetType.DETAIL ? .95 : .8) -
                             8,
                     decoration: BoxDecoration(
                       color: Theme.of(context).scaffoldBackgroundColor,

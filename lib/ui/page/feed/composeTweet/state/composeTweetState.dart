@@ -179,7 +179,7 @@ class ComposeTweetState extends ChangeNotifier {
         'click_action': 'FLUTTER_NOTIFICATION_CLICK',
         'id': '1',
         'status': 'done',
-        "type": NotificationType.Mention.toString(),
+        "type": NotificationType.MENTION.toString(),
         "senderId": model.user!.userId,
         "receiverId": user.userId,
         "title": "title",

@@ -129,7 +129,7 @@ class FeedModel {
 
   /// get tweet key to retweet.
   ///
-  /// If tweet [TweetType] is [TweetType.Retweet] and its description is null
+  /// If tweet [TweetType] is [TweetType.RETWEET] and its description is null
   /// then its retweeted child tweet will be shared.
   String get getTweetKeyToRetweet {
     if (description == null && imagePath == null && childRetwetkey != null) {

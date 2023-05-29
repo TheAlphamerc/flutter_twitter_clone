@@ -148,7 +148,7 @@ class ProfileState extends ChangeNotifier {
     // Sends notification to user who created tweet
     // UserModel owner can see notification on notification page
     kDatabase.child('notification').child(profileId).child(userId).set({
-      'type': NotificationType.Follow.toString(),
+      'type': NotificationType.FOLLOW.toString(),
       'createdAt': DateTime.now().toUtc().toString(),
       'data': UserModel(
               displayName: userModel.displayName,

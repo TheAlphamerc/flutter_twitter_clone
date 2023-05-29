@@ -111,7 +111,7 @@ class _FeedPageBody extends StatelessWidget {
                                   trailing: TweetBottomSheet().tweetOptionIcon(
                                       context,
                                       model: model,
-                                      type: TweetType.Tweet,
+                                      type: TweetType.TWEET,
                                       scaffoldKey: scaffoldKey),
                                   scaffoldKey: scaffoldKey,
                                 ),

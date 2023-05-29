@@ -133,7 +133,7 @@ class TweetBaseState extends AppState {
           .child(tweet.key!)
           .set({
         'type':
-            tweet.likeList!.isEmpty ? null : NotificationType.Like.toString(),
+            tweet.likeList!.isEmpty ? null : NotificationType.LIKE.toString(),
         'updatedAt':
             tweet.likeList!.isEmpty ? null : DateTime.now().toUtc().toString(),
       });
