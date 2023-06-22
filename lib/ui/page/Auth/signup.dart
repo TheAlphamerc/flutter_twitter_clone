@@ -124,11 +124,11 @@ class _SignupState extends State<Signup> {
   }
 
   void _submitForm(BuildContext context) {
-    if (_emailController.text.isEmpty) {
+    if (_nameController.text.isEmpty) {
       Utility.customSnackBar(context, 'Please enter name');
       return;
     }
-    if (_emailController.text.length > 27) {
+    if (_nameController.text.length > 27) {
       Utility.customSnackBar(context, 'Name length cannot exceed 27 character');
       return;
     }
