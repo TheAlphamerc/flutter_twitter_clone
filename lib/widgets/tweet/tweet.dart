@@ -126,7 +126,7 @@ class Tweet extends StatelessWidget {
                   type: type,
                   model: model,
                   isTweetDetail: type == TweetType.Detail,
-                  iconColor: Theme.of(context).textTheme.caption!.color!,
+                  iconColor: Theme.of(context).textTheme.bodySmall!.color!,
                   iconEnableColor: TwitterColor.ceriseRed,
                   size: 20,
                   scaffoldKey: GlobalKey<ScaffoldState>(),

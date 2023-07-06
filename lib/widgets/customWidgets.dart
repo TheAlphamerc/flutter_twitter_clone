@@ -26,7 +26,7 @@ Widget customIcon(
   Color? iconColor,
   double paddingIcon = 10,
 }) {
-  iconColor = iconColor ?? Theme.of(context).textTheme.caption!.color;
+  iconColor = iconColor ?? Theme.of(context).textTheme.bodySmall!.color;
   return Padding(
     padding: EdgeInsets.only(bottom: isTwitterIcon ? paddingIcon : 0),
     child: Icon(
