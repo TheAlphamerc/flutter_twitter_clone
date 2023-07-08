@@ -14,8 +14,6 @@ import 'package:flutter_twitter_clone/ui/page/common/locator.dart';
 //     show WebInfo;
 import 'package:path/path.dart' as path;
 import 'package:translator/translator.dart';
-// import 'package:flutter_chat_types/flutter_chat_types.dart' show PreviewData;
-// import 'authState.dart';
 
 class FeedState extends AppState {
   bool isBusy = false;
@@ -61,13 +59,14 @@ class FeedState extends AppState {
         }
 
         /// Only include Tweets of logged-in user's and his following user's
-        if (x.user!.userId == userModel.userId ||
-            (userModel.followingList != null &&
-                userModel.followingList!.contains(x.user!.userId))) {
-          return true;
-        } else {
-          return false;
-        }
+        // if (x.user!.userId == userModel.userId ||
+        //     (userModel.followingList != null &&
+        //         userModel.followingList!.contains(x.user!.userId))) {
+        //   return true;
+        // } else {
+        //   return false;
+        // }
+        return true;
       }).toList();
       if (list.isEmpty) {
         list = null;

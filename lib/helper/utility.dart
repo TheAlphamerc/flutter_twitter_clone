@@ -148,7 +148,10 @@ class Utility {
     }
     final uri = Uri.parse(url);
     if (await canLaunchUrl(uri)) {
-      await launchURL(url);
+      await launchUrl(
+        Uri.parse(url),
+        mode: LaunchMode.externalApplication,
+      );
     } else {
       cprint('Could not launch $url');
     }

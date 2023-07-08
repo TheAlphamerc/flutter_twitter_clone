@@ -35,7 +35,7 @@ dependencies:
   cloud_firestore: ^4.7.1
   firebase_storage: ^11.2.1
   equatable: ^2.0.3
-  image_picker: ^0.8.4+2
+  image_picker: ^1.0.0
   package_info_plus: ^4.0.1
   shared_preferences: ^2.0.8
   firebase_messaging: ^14.6.1
@@ -50,7 +50,6 @@ dependencies:
   qr_flutter: ^4.1.0
   rxdart: ^0.27.2
   translator: ^0.1.7
-  flutter_chat_types: ^3.1.4
   # link_preview_generator: ^1.2.0
 
 dev_dependencies:
