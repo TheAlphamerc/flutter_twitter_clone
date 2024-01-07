@@ -11,6 +11,7 @@ Fwitter app is Open Source! I love it when people contribute!
 
 ## Making Changes
 
+- [Clone the repo](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) to open it on your code editor.
 - [Create a branch](https://help.github.com/articles/creating-and-deleting-branches-within-your-repository) for your changes.
 - [Commit your code](http://git-scm.com/book/en/Git-Basics-Recording-Changes-to-the-Repository) for each logical change (see [tips for creating better commit messages](http://robots.thoughtbot.com/5-useful-tips-for-a-better-commit-message)).
 - [Push your change](https://help.github.com/articles/pushing-to-a-remote) to your fork.
@@ -28,7 +29,7 @@ Fwitter is committed to efficiency as much as possible. If your code is not effi
 
 ## Rejections
 
-Pull Request rejections are not a bad thing. It just means you need to fix something. Perhaps it is important to define 'rejection' as it is used in this case. A rejection is when a Fwitter committer comments on a Pull Request with a comment like 'rejected due to incorrect formatting'.
+Pull Request rejections are not bad things. It just means you need to fix something. Perhaps it is important to define 'rejection' as it is used in this case. A rejection is when a Fwitter committer comments on a Pull Request with a comment like 'rejected due to incorrect formatting'.
 
 ## Contacting Us
 

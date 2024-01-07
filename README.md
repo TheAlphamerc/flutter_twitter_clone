@@ -1,6 +1,6 @@
 ## Fwitter - Twitter clone in flutter [![GitHub stars](https://img.shields.io/github/stars/Thealphamerc/flutter_twitter_clone?style=social)](https://github.com/login?return_to=%2FTheAlphamerc%flutter_twitter_clone) ![GitHub forks](https://img.shields.io/github/forks/TheAlphamerc/flutter_twitter_clone?style=social) 
 
-A working Twitter clone built in Flutter using Firebase auth,realtime,firestore database and storage.
+A working Twitter clone built in Flutter using Firebase auth, realtime, firestore database and storage.
 
 <a href="https://play.google.com/store/apps/details?id=com.thealphamerc.flutter_twitter_clone">
   <img width="100%" alt="Fwiiter Banner" src="https://user-images.githubusercontent.com/37103237/152671482-885fd940-f4ea-4fb6-8baf-816c17b541d7.png">
@@ -18,7 +18,7 @@ A working Twitter clone built in Flutter using Firebase auth,realtime,firestore 
 
 
 ## Features
-* App features is mentioned at project section [ Click here](https://github.com/TheAlphamerc/flutter_twitter_clone/projects/1)
+* App features are mentioned at project section [ Click here](https://github.com/TheAlphamerc/flutter_twitter_clone/projects/1)
 * Messaging chat section status can be seen at [here](https://github.com/TheAlphamerc/flutter_twitter_clone/projects/2)
 
  :boom: Fwitter app now uses both firebase `realtime` and `firestore` database.:boom:
@@ -235,7 +235,7 @@ Content Prefrences Page      |  Display Setting Page    |  Data Settings Page   
      
 ## Contributing
 
-If you wish to contribute a change to any of the existing feature or add new in this repo,
+If you wish to contribute your change to any of the existing feature or add new feature in this repo,
 please review our [contribution guide](https://github.com/TheAlphamerc/flutter_twitter_clone/blob/master/CONTRIBUTING.md),
 and send a [pull request](https://github.com/TheAlphamerc/flutter_twitter_clone/pulls). I welcome and encourage all pull requests. It usually will take me within 24-48 hours to respond to any issue or request.
 
