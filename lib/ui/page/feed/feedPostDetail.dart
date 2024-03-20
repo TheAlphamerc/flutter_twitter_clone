@@ -47,6 +47,7 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
   }
 
   Widget _commentRow(FeedModel model) {
+    // Tweet
     return Tweet(
       model: model,
       type: TweetType.Reply,
@@ -56,6 +57,7 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
     );
   }
 
+// Tweet Details
   Widget _tweetDetail(FeedModel model) {
     return Tweet(
       model: model,
@@ -66,16 +68,19 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
     );
   }
 
+// Addong a like to a comment
   void addLikeToComment(String commentId) {
     var state = Provider.of<FeedState>(context, listen: false);
     var authState = Provider.of<AuthState>(context, listen: false);
     state.addLikeToTweet(state.tweetDetailModel!.last, authState.userId);
   }
 
+  // opening an image
   void openImage() async {
     Navigator.pushNamed(context, '/ImageViewPge');
   }
 
+// deleting a tweet
   void deleteTweet(TweetType type, String tweetId,
       {required String parentkey}) {
     var state = Provider.of<FeedState>(context, listen: false);
