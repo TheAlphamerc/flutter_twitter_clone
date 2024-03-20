@@ -39,6 +39,7 @@ class FeedPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: _floatingActionButton(context),
+      // background Color
       backgroundColor: TwitterColor.mystic,
       body: SafeArea(
         child: SizedBox(
