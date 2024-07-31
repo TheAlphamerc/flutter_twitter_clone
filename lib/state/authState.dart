@@ -254,7 +254,7 @@ class AuthState extends AppState {
       createUser(userModel!);
       cprint('UserModel email verification complete');
       Utility.logEvent('email_verification_complete',
-          parameter: {userModel!.userName!: user!.email});
+          parameter: {userModel!.userName!: user!.email!});
     }
   }
 
@@ -263,7 +263,7 @@ class AuthState extends AppState {
     User user = _firebaseAuth.currentUser!;
     user.sendEmailVerification().then((_) {
       Utility.logEvent('email_verification_sent',
-          parameter: {userModel!.displayName!: user.email});
+          parameter: {userModel!.displayName!: user.email!});
       Utility.customSnackBar(
         context,
         'An email verification link is send to your email.',
@@ -271,7 +271,7 @@ class AuthState extends AppState {
     }).catchError((error) {
       cprint(error.message, errorIn: 'sendEmailVerification');
       Utility.logEvent('email_verification_block',
-          parameter: {userModel!.displayName!: user.email});
+          parameter: {userModel!.displayName!: user.email!});
       Utility.customSnackBar(
         context,
         error.message,

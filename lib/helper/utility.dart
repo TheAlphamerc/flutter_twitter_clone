@@ -157,7 +157,7 @@ class Utility {
     }
   }
 
-  static void logEvent(String event, {Map<String, dynamic>? parameter}) {
+  static void logEvent(String event, {Map<String, String>? parameter}) {
     kReleaseMode
         ? kAnalytics.logEvent(name: event, parameters: parameter)
         : print("[EVENT]: $event");
