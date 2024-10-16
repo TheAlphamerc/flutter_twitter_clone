@@ -433,8 +433,10 @@ class AuthState extends AppState {
     }
   }
 
+  /// Trigger when updates related to the logged-in user’s followers or following lists occur.
   void _onProfileUpdated(DatabaseEvent event) {
     final val = event.snapshot.value;
+    // Check if the value is a List and if the key is either 'following' or 'followers'
     if (val is List &&
         ['following', 'followers'].contains(event.snapshot.key)) {
       final list = val.cast<String>().map((e) => e).toList();
